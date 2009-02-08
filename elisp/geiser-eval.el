@@ -37,16 +37,19 @@
         ((eq code :f) "#f")
         ((eq code :t) "#t")
         ((listp code)
-         (cond ((eq (car code) :gs) (concat "((@ (geiser eval) eval-in) (quote "
-                                            (geiser-eval--scheme-str (nth 1 code))
-                                            ") "
-                                            (or (nth 2 code)
-                                                (geiser-eval--buffer-module))
-                                            ")"))
+         (cond ((eq (car code) :gs) (geiser-eval--gs (cdr code)))
                ((eq (car code) :scm) (cadr code))
                (t (concat "(" (mapconcat 'geiser-eval--scheme-str code " ") ")"))))
         (t (format "%S" code))))
 
+(defsubst geiser-eval--gs (code)
+  (concat "((@ (geiser eval) eval-in) (quote "
+          (geiser-eval--scheme-str (nth 0 code))
+          ") (quote "
+          (or (and (nth 1 code)
+                   (geiser-eval--scheme-str (nth 1 code)))
+              (geiser-eval--buffer-module))
+          "))"))
 
 ;;; Current module:
 

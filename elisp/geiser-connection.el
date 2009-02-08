@@ -156,14 +156,20 @@
 (defsubst geiser-con--comint-buffer ()
   (get-buffer-create " *geiser connection retort*"))
 
+(defun geiser-con--cleaunp-result-str ()
+  (goto-char (point-min))
+  (while (re-search-forward "#(" nil t) (replace-match "(vector "))
+  (goto-char (point-min))
+  (while (re-search-forward "#" nil t) (replace-match "\\\\#")))
+
 (defun geiser-con--comint-buffer-form ()
   (with-current-buffer (geiser-con--comint-buffer)
-    (replace-string "#" ":" nil (point-min) (point-max))
+    (geiser-con--cleaunp-result-str)
     (goto-char (point-min))
     (condition-case nil
         (let ((form (read (current-buffer))))
           (if (listp form) form (error)))
-      (error `((error geiser-con-error ,(buffer-string)))))))
+      (error `((error (key . geiser-con-error) (msg . ,(buffer-string))))))))
 
 (defun geiser-con--process-next (con)
   (when (not (geiser-con--connection-current-request con))
