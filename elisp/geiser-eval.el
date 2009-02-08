@@ -108,6 +108,7 @@
 (defsubst geiser-eval--retort-p (ret)
   (and (listp ret) (or (assoc 'error ret) (assoc 'result ret))))
 (defsubst geiser-eval--retort-result (ret) (cdr (assoc 'result ret)))
+(defsubst geiser-eval--retort-output (ret) (cdr (assoc 'output ret)))
 (defsubst geiser-eval--retort-error (ret) (cdr (assoc 'error ret)))
 
 (defsubst geiser-eval--error-key (err) (cdr (assoc 'key err)))
