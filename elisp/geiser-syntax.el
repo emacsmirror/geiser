@@ -53,7 +53,7 @@
 ;;; Code parsing:
 
 (defsubst geiser-syntax--end-of-thing ()
-  (let ((sc (syntax-class (syntax-after (point)))))
+  (let ((sc (or (syntax-class (syntax-after (point))) 0)))
     (when (= sc 7) (forward-char))
     (cond ((nth 3 (syntax-ppss))
            (skip-syntax-forward "^\"")
@@ -76,6 +76,21 @@
           (forward-sexp)
           (when (< (point) p) (setq arg-no (1+ arg-no))))
         (cons proc arg-no)))))
+
+(defun geiser-syntax--prepare-scheme-for-elisp-reader ()
+  (goto-char (point-min))
+  (while (re-search-forward "#\<\\([^>]*?\\)\>" nil t)
+    (let ((from (match-beginning 1))
+          (to (match-end 1)))
+      (goto-char from)
+      (while (re-search-forward "\\([() ;'`]\\)" to t)
+        (replace-match "\\\\\\1"))
+      (goto-char to)))
+  (goto-char (point-min))
+  (while (re-search-forward "#(" nil t) (replace-match "(vector "))
+  (goto-char (point-min))
+  (while (re-search-forward "#" nil t) (replace-match "\\\\#")))
+
 
 
 ;;; Fontify strings as Scheme code:

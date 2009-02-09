@@ -26,6 +26,7 @@
 ;;; Code:
 
 (require 'geiser-log)
+(require 'geiser-syntax)
 (require 'geiser-base)
 
 (require 'comint)
@@ -156,15 +157,9 @@
 (defsubst geiser-con--comint-buffer ()
   (get-buffer-create " *geiser connection retort*"))
 
-(defun geiser-con--cleaunp-result-str ()
-  (goto-char (point-min))
-  (while (re-search-forward "#(" nil t) (replace-match "(vector "))
-  (goto-char (point-min))
-  (while (re-search-forward "#" nil t) (replace-match "\\\\#")))
-
 (defun geiser-con--comint-buffer-form ()
   (with-current-buffer (geiser-con--comint-buffer)
-    (geiser-con--cleaunp-result-str)
+    (geiser-syntax--prepare-scheme-for-elisp-reader)
     (goto-char (point-min))
     (condition-case nil
         (let ((form (read (current-buffer))))
