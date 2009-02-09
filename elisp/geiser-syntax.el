@@ -68,15 +68,14 @@
     (let ((p (geiser-syntax--end-of-thing))
           (arg-no 0)
           (proc))
-      (condition-case nil
-          (progn (backward-up-list)
-                 (forward-char)
-                 (setq proc (symbol-at-point))
-                 (while (< (point) p)
-                   (forward-sexp)
-                   (when (< (point) p) (setq arg-no (1+ arg-no))))
-                 (cons proc arg-no))
-        (error nil)))))
+      (ignore-errors
+        (backward-up-list)
+        (forward-char)
+        (setq proc (symbol-at-point))
+        (while (< (point) p)
+          (forward-sexp)
+          (when (< (point) p) (setq arg-no (1+ arg-no))))
+        (cons proc arg-no)))))
 
 
 ;;; Fontify strings as Scheme code:

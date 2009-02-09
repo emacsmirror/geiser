@@ -61,9 +61,9 @@
       (cdr geiser-autodoc--last)
     (let* ((cmd `(:gs ((:ge proc-args) ',fun)))
            (result (geiser-eval--retort-result (geiser-eval--send/wait cmd))))
-      (when (and (not (eq result :f)) (listp result))
-        (setq geiser-autodoc--last (cons fun result))
-        result))))
+      (when (not (listp result)) (setq result 'undefined))
+      (setq geiser-autodoc--last (cons fun result))
+      result)))
 
 (defun geiser-autodoc--insert (sym current pos)
   (let ((str (format "%s" sym)))
@@ -99,7 +99,8 @@
          (arg-no (cdr f/a)))
     (when fun
       (let ((args (geiser-autodoc--function-args fun)))
-        (geiser-autodoc--fun-args-str fun args arg-no)))))
+        (when (listp args)
+          (geiser-autodoc--fun-args-str fun args arg-no))))))
 
 
 ;;; Autodoc mode:
