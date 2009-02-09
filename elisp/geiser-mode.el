@@ -25,6 +25,7 @@
 
 ;;; Code:
 
+(require 'geiser-completion)
 (require 'geiser-autodoc)
 (require 'geiser-eval)
 (require 'geiser-popup)
@@ -135,6 +136,7 @@ interacting with the Geiser REPL is at your disposal.
 
 ;;; Keys:
 
+(define-key geiser-mode-map (kbd "M-TAB") 'geiser-completion--complete-symbol)
 (define-key geiser-mode-map "\M-\C-x" 'geiser-send-definition)
 (define-key geiser-mode-map "\C-c\C-a" 'geiser-autodoc-mode)
 (define-key geiser-mode-map "\C-x\C-e" 'geiser-send-last-sexp)

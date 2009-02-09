@@ -147,11 +147,12 @@ the Geiser REPL buffer."
 (define-key geiser-repl-mode-map "\C-c\M-p" 'comint-previous-input)
 (define-key geiser-repl-mode-map "\C-c\M-n" 'comint-next-input))
 
+(define-key geiser-repl-mode-map (kbd "TAB") 'geiser-completion--complete-symbol)
+
 ;; (define-key geiser-repl-mode-map "\C-ch" 'geiser-help)
 ;; (define-key geiser-repl-mode-map "\C-cp" 'geiser-apropos)
 ;; (define-key geiser-repl-mode-map "\M-." 'geiser-edit-word-at-point)
 ;; (define-key geiser-repl-mode-map "\C-ck" 'geiser-compile-file)
-;; (define-key geiser-repl-mode-map (kbd "TAB") 'geiser-completion--complete-symbol)
 
 
 (provide 'geiser-repl)
