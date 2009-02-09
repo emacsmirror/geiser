@@ -46,10 +46,13 @@
 ;;; Autoloads:
 
 (autoload 'run-guile "geiser-repl.el"
-  "Start a Geiser Guile REPL, or switch to a running one" t)
+  "Start a Geiser Guile REPL, or switch to a running one." t)
 
 (autoload 'switch-to-guile "geiser-repl.el"
-  "Start a Geiser Guile REPL, or switch to a running one" t)
+  "Start a Geiser Guile REPL, or switch to a running one." t)
+
+(autoload 'geiser-mode "geiser-mode.el"
+  "Minor mode adding Geiser REPL interaction to Scheme buffers." t)
 
 
 (provide 'geiser)

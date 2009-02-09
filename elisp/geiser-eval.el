@@ -26,6 +26,7 @@
 ;;; Code:
 
 (require 'geiser-connection)
+(require 'geiser-syntax)
 (require 'geiser-log)
 (require 'geiser-base)
 
@@ -38,8 +39,10 @@
         ((eq code :t) "#t")
         ((listp code)
          (cond ((eq (car code) :gs) (geiser-eval--gs (cdr code)))
+               ((eq (car code) :ge) (format "(@ (geiser emacs) %s)" (cadr code)))
                ((eq (car code) :scm) (cadr code))
                (t (concat "(" (mapconcat 'geiser-eval--scheme-str code " ") ")"))))
+        ((symbolp code) (format "%s" code))
         (t (format "%S" code))))
 
 (defsubst geiser-eval--gs (code)
@@ -48,19 +51,8 @@
           ") (quote "
           (or (and (nth 1 code)
                    (geiser-eval--scheme-str (nth 1 code)))
-              (geiser-eval--buffer-module))
+              (geiser-syntax--buffer-module))
           "))"))
-
-;;; Current module:
-
-(defun geiser-eval--buffer-module (&optional buffer)
-  (let ((buffer (or buffer (current-buffer))))
-    (with-current-buffer buffer
-      (save-excursion
-        (goto-char (point-min))
-        (if (re-search-forward "(define-module +\\(([^)]+)\\)" nil t)
-            (match-string-no-properties 1)
-          "#f")))))
 
 
 ;;; Code sending:
@@ -115,6 +107,17 @@
 (defsubst geiser-eval--error-subr (err) (cdr (assoc 'subr err)))
 (defsubst geiser-eval--error-msg (err) (cdr (assoc 'msg err)))
 (defsubst geiser-eval--error-rest (err) (cdr (assoc 'rest err)))
+
+(defun geiser-eval--error-str (err)
+  (let* ((key (geiser-eval--error-key err))
+         (subr (geiser-eval--error-subr err))
+         (subr-str (if subr (format " (%s)" subr) ""))
+         (msg (geiser-eval--error-msg err))
+         (msg-str (if msg (format ": %s" msg) ""))
+         (rest (geiser-eval--error-rest err))
+         (rest-str (if rest (format " %s" rest) "")))
+    (format "Error%s: %s%s%s" subr-str key msg-str rest-str)))
+
 
 
 (provide 'geiser-eval)
