@@ -55,5 +55,15 @@
   "Minor mode adding Geiser REPL interaction to Scheme buffers." t)
 
 
+;;; Scheme mode setup:
+
+(defun geiser-setup-scheme-mode ()
+  (eval-after-load "scheme"
+    '(add-hook 'scheme-mode-hook (lambda () (interactive) (geiser-mode 1)))))
+
+(defun geiser-setup ()
+  (geiser-setup-scheme-mode))
+
+
 (provide 'geiser)
 ;;; geiser.el ends here
