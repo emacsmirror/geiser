@@ -52,14 +52,20 @@
 
 ;;; Code parsing:
 
+(defsubst geiser-syntax--end-of-thing ()
+  (let ((sc (syntax-class (syntax-after (point)))))
+    (when (= sc 7) (forward-char))
+    (cond ((nth 3 (syntax-ppss))
+           (skip-syntax-forward "^\"")
+           (forward-char))
+          ((= sc 5) (forward-char))
+          ((not (or (= sc 0) (= sc 12))) ;; comment, whitespace
+           (ignore-errors (forward-sexp))))
+    (point)))
+
 (defun geiser-syntax--enclosing-form-data ()
   (save-excursion
-    (let ((p (progn (ignore-errors
-                      (unless (zerop (car (syntax-after (point))))
-                        (forward-sexp)
-                        (when (= 7 (car (syntax-after (point))))
-                          (forward-char))))
-                    (point)))
+    (let ((p (geiser-syntax--end-of-thing))
           (arg-no 0)
           (proc))
       (condition-case nil
