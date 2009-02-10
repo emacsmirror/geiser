@@ -76,7 +76,7 @@ the Geiser REPL buffer."
                            (current-buffer)
                            guile
                            nil
-                           "-L" geiser-scheme-dir "-q")
+                           "-L" (concat geiser-scheme-dir "/guile/")  "-q")
     (geiser-repl--wait-for-prompt 10000)
     (geiser-con--setup-connection (current-buffer))))
 

@@ -39,7 +39,7 @@
         ((eq code :t) "#t")
         ((listp code)
          (cond ((eq (car code) :gs) (geiser-eval--gs (cdr code)))
-               ((eq (car code) :ge) (format "(@ (geiser emacs) %s)" (cadr code)))
+               ((eq (car code) :ge) (geiser-eval--ge (cadr code)))
                ((eq (car code) :scm) (cadr code))
                (t (concat "(" (mapconcat 'geiser-eval--scheme-str code " ") ")"))))
         ((symbolp code) (format "%s" code))
@@ -53,6 +53,9 @@
                    (geiser-eval--scheme-str (nth 1 code)))
               (geiser-syntax--buffer-module))
           "))"))
+
+(defsubst geiser-eval--ge (proc)
+  (format "(@ (geiser emacs) ge:%s)" proc))
 
 
 ;;; Code sending:
