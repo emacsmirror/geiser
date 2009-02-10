@@ -50,6 +50,17 @@
   :type 'number
   :group 'geiser-autodoc)
 
+(defcustom geiser-autodoc-display-module-p t
+  "Whether to display procedure module in autodoc strings."
+  :type 'boolean
+  :group 'geiser-autodoc)
+
+(defcustom geiser-autodoc-procedure-name-format "%s:%s"
+  "Format for displaying module and procedure name, in that order,
+when `geiser-autodoc-display-module-p' is on."
+  :type 'string
+  :group 'geiser-autodoc)
+
 
 ;;; Procedure arguments:
 
@@ -75,7 +86,9 @@
   (save-current-buffer
     (set-buffer (geiser-syntax--font-lock-buffer))
     (erase-buffer)
-    (let ((current 0))
+    (let* ((current 0)
+           (module (and geiser-autodoc-display-module-p (cdr (assoc 'module args))))
+           (fun (if module (format geiser-autodoc-procedure-name-format module fun) fun)))
       (insert "(")
       (geiser-autodoc--insert fun current pos)
       (dolist (arg (cdr (assoc 'required args)))
