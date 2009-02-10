@@ -70,8 +70,7 @@ when `geiser-autodoc-display-module-p' is on."
 (defun geiser-autodoc--function-args (fun)
   (if (eq fun (car geiser-autodoc--last))
       (cdr geiser-autodoc--last)
-    (let* ((cmd `(:gs ((:ge proc-args) ',fun)))
-           (result (geiser-eval--retort-result (geiser-eval--send/wait cmd))))
+    (let ((result (geiser-eval--send/result `(:gs ((:ge proc-args) ',fun)))))
       (when (not (listp result)) (setq result 'undefined))
       (setq geiser-autodoc--last (cons fun result))
       result)))
@@ -79,7 +78,9 @@ when `geiser-autodoc-display-module-p' is on."
 (defun geiser-autodoc--insert (sym current pos)
   (let ((str (format "%s" sym)))
     (when (= current pos)
-      (put-text-property 0 (length str) 'face 'geiser-font-lock-autodoc-current-arg str))
+      (put-text-property 0 (length str)
+                         'face 'geiser-font-lock-autodoc-current-arg
+                         str))
     (insert str)))
 
 (defun geiser-autodoc--fun-args-str (fun args pos)
@@ -87,8 +88,11 @@ when `geiser-autodoc-display-module-p' is on."
     (set-buffer (geiser-syntax--font-lock-buffer))
     (erase-buffer)
     (let* ((current 0)
-           (module (and geiser-autodoc-display-module-p (cdr (assoc 'module args))))
-           (fun (if module (format geiser-autodoc-procedure-name-format module fun) fun)))
+           (module (and geiser-autodoc-display-module-p
+                        (cdr (assoc 'module args))))
+           (fun (if module
+                    (format geiser-autodoc-procedure-name-format module fun)
+                  fun)))
       (insert "(")
       (geiser-autodoc--insert fun current pos)
       (dolist (arg (cdr (assoc 'required args)))
@@ -107,13 +111,13 @@ when `geiser-autodoc-display-module-p' is on."
 ;;; Autodoc function:
 
 (defun geiser-autodoc--eldoc-function ()
-  (let* ((f/a (geiser-syntax--enclosing-form-data))
-         (fun (car f/a))
-         (arg-no (cdr f/a)))
-    (when fun
-      (let ((args (geiser-autodoc--function-args fun)))
-        (when (listp args)
-          (geiser-autodoc--fun-args-str fun args arg-no))))))
+  (let ((data (geiser-syntax--enclosing-form-data)))
+    (catch 'doc-msg
+      (dolist (f/a data)
+        (let ((args (geiser-autodoc--function-args (car f/a))))
+          (when (listp args)
+            (throw 'doc-msg
+                   (geiser-autodoc--fun-args-str (car f/a) args (cdr f/a)))))))))
 
 
 ;;; Autodoc mode:
