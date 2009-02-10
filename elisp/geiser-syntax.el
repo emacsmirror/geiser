@@ -58,7 +58,7 @@
     (cond ((nth 3 (syntax-ppss))
            (skip-syntax-forward "^\"")
            (forward-char))
-          ((= sc 5) (forward-char))
+          ((and (= sc 5) (eq ?\( (char-before))) (forward-char))
           ((not (or (= sc 0) (= sc 12))) ;; comment, whitespace
            (ignore-errors (forward-sexp))))
     (point)))
