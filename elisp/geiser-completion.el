@@ -169,9 +169,8 @@ terminates a current completion."
 
 ;;; Completion functionality:
 
-(defun geiser-completion--symbol-list (prefix)
-  (geiser-eval--retort-result
-   (geiser-eval--send/wait `(:gs ((:ge completions) ,prefix)))))
+(defsubst geiser-completion--symbol-list (prefix)
+  (geiser-eval--send/result `(:gs ((:ge completions) ,prefix))))
 
 (defvar geiser-completion--symbol-list-func
   (completion-table-dynamic 'geiser-completion--symbol-list))
@@ -204,7 +203,7 @@ terminates a current completion."
 Perform completion similar to Emacs' complete-symbol."
   (interactive)
   (let* ((end (point))
-         (beg (save-excursion (beginning-of-sexp) (point)))
+         (beg (save-excursion (skip-syntax-backward "^-()") (point)))
          (prefix (buffer-substring-no-properties beg end))
          (result (geiser-completion--complete prefix nil))
          (completions (car result))

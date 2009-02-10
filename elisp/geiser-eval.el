@@ -79,6 +79,12 @@
 (defun geiser-eval--set-sync-retort (s)
   (setq geiser-eval--sync-retort (geiser-eval--log s)))
 
+(defsubst geiser-eval--send (code cont &optional buffer)
+  (geiser-con--send-string (geiser-eval--proc)
+                           (geiser-eval--code-str code)
+                           `(lambda (s) (,cont (geiser-eval--log s)))
+                           buffer))
+
 (defun geiser-eval--send/wait (code &optional timeout buffer)
   (setq geiser-eval--sync-retort nil)
   (geiser-con--send-string/wait (geiser-eval--proc)
@@ -88,11 +94,8 @@
                                 buffer)
   geiser-eval--sync-retort)
 
-(defsubst geiser-eval--send (code cont &optional buffer)
-  (geiser-con--send-string (geiser-eval--proc)
-                           (geiser-eval--code-str code)
-                           `(lambda (s) (,cont (geiser-eval--log s)))
-                           buffer))
+(defsubst geiser-eval--send/result (code &optional timeout buffer)
+  (geiser-eval--retort-result (geiser-eval--send/wait code timeout buffer)))
 
 
 ;;; Retort parsing:
