@@ -160,7 +160,6 @@
 (defun geiser-con--comint-buffer-form ()
   (with-current-buffer (geiser-con--comint-buffer)
     (geiser-syntax--prepare-scheme-for-elisp-reader)
-    (goto-char (point-min))
     (condition-case nil
         (let ((form (read (current-buffer))))
           (if (listp form) form (error)))

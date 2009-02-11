@@ -93,7 +93,10 @@
   (goto-char (point-min))
   (while (re-search-forward "#(" nil t) (replace-match "(vector "))
   (goto-char (point-min))
-  (while (re-search-forward "#" nil t) (replace-match "\\\\#")))
+  (while (re-search-forward "#" nil t) (replace-match "\\\\#"))
+  (goto-char (point-min))
+  (skip-syntax-forward "^("))
+)
 
 
 
