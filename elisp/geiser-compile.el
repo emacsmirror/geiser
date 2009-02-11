@@ -79,7 +79,7 @@
      msg (geiser-eval--send/wait `(:gs ((:ge ,op) ,path))))))
 
 
-;;; User commands::
+;;; User commands:
 
 (defun geiser-compile-file (path)
   "Compile and load Scheme file."

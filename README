@@ -1,0 +1,11 @@
+
+* Install
+
+  - In your .emacs:
+
+    (load-file "<path-to-geiser>/elisp/geiser.el")
+    (geiser-setup)
+
+  - Check the geiser customization group for some options. In
+    particular, geiser-repl-guile-binary, which should point to a
+    guile-vm executable.

@@ -1,2 +1,3 @@
 /scheme/guile/geiser/emacs.go
 /scheme/guile/geiser/eval.go
+/scheme/guile/geiser/introspection.go
