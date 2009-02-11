@@ -143,6 +143,7 @@ the Geiser REPL buffer."
 (define-key geiser-repl-mode-map "\C-a" 'geiser-repl--bol)
 (define-key geiser-repl-mode-map "\C-ca" 'geiser-autodoc-mode)
 (define-key geiser-repl-mode-map "\C-ck" 'geiser-compile-file)
+(define-key geiser-repl-mode-map "\C-cl" 'geiser-load-file)
 
 (define-key geiser-repl-mode-map "\M-p" 'comint-previous-matching-input-from-input)
 (define-key geiser-repl-mode-map "\M-n" 'comint-next-matching-input-from-input)

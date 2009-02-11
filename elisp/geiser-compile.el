@@ -38,38 +38,68 @@
 (geiser-popup--define compile "*Geiser compilation*" geiser-compile-mode)
 
 
-;;; Compile file command:
+;;; Auxiliary functions:
 
-(defun geiser-compile-file (&optional path)
-  "Compile and load Scheme file."
-  (interactive (or path (read-file-name "Scheme file: " nil nil t)))
-  (let ((buffer (find-file-noselect path))
-        (msg (format "Compiling %s ..." path)))
-    (when (and (buffer-modified-p buffer)
-               (y-or-n-p "Save buffer? "))
-      (save-buffer buffer))
+(defun geiser-compile--buffer/path (&optional path)
+  (let ((path (or path (read-file-name "Scheme file: " nil nil t))))
+    (let ((buffer (find-file-noselect path)))
+      (when (and (buffer-modified-p buffer)
+                 (y-or-n-p "Save buffer? "))
+        (save-buffer buffer))
+      (cons buffer path))))
+
+(defun geiser-compile--display-result (title ret)
+  (let ((err (geiser-eval--retort-error ret))
+        (output (geiser-eval--retort-output ret)))
+    (geiser-compile--with-buffer
+      (erase-buffer)
+      (insert title)
+      (newline)
+      (when output
+        (insert output)
+        (newline))
+      (when err
+        (insert "\n" (geiser-eval--error-msg err) "\n"))
+      (goto-char (point-min)))
+    (if (not err)
+        (message "%s %s" title (if (> 0 (length output))
+                                   (geiser--chomp output)
+                                 (or (geiser-eval--retort-result ret)
+                                     "OK!")))
+      (message "")
+      (geiser-compile--pop-to-buffer))))
+
+(defun geiser-compile--file-op (path op msg)
+  (let* ((b/p (geiser-compile--buffer/path path))
+         (buffer (car b/p))
+         (path (cdr b/p))
+         (msg (format "%s %s ..." msg path)))
     (message msg)
-    (let* ((ret (geiser-eval--send/wait `(:gs ((:ge compile-file) ,path))))
-           (err (geiser-eval--retort-error ret))
-           (output (geiser-eval--retort-output ret)))
-      (geiser-compile--with-buffer
-        (erase-buffer)
-        (insert msg)
-        (newline)
-        (when output
-          (insert output)
-          (newline))
-        (when err
-          (insert "\n" (geiser-eval--error-str  err) "\n")))
-      (if (not err)
-          (message "%s %s" msg (if output (geiser--chomp output) "OK!"))
-        (message "")
-        (geiser-compile--pop-to-buffer)))))
+    (geiser-compile--display-result
+     msg (geiser-eval--send/wait `(:gs ((:ge ,op) ,path))))))
+
+
+;;; User commands::
+
+(defun geiser-compile-file (path)
+  "Compile and load Scheme file."
+  (interactive "FScheme file: ")
+  (geiser-compile--file-op path 'compile-file "Compiling"))
 
 (defun geiser-compile-current-buffer ()
   "Compile and load current Scheme file."
   (interactive)
   (geiser-compile-file (buffer-file-name (current-buffer))))
+
+(defun geiser-load-file (path)
+  "Load Scheme file."
+  (interactive "FScheme file: ")
+  (geiser-compile--file-op path 'load-file "Loading"))
+
+(defun geiser-load-current-buffer ()
+  "Load current Scheme file."
+  (interactive)
+  (geiser-load-file (buffer-file-name (current-buffer))))
 
 
 
