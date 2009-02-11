@@ -25,6 +25,7 @@
 
 ;;; Code:
 
+(require 'geiser-compile)
 (require 'geiser-completion)
 (require 'geiser-autodoc)
 (require 'geiser-eval)
@@ -150,7 +151,7 @@ interacting with the Geiser REPL is at your disposal.
 (define-key geiser-mode-map "\C-c\C-x" 'geiser-expand-current-form)
 (define-key geiser-mode-map "\C-c\C-z" 'switch-to-guile)
 (define-key geiser-mode-map "\C-c\C-l" 'geiser-load-file)
-(define-key geiser-mode-map "\C-c\C-k" 'geiser-compile-file)
+(define-key geiser-mode-map "\C-c\C-k" 'geiser-compile-current-buffer)
 
 
 (provide 'geiser-mode)

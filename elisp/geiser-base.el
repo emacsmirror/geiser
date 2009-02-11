@@ -77,6 +77,9 @@
 
 ;;; Utilities:
 
+(defsubst geiser--chomp (str)
+  (if (string-match-p ".*\n$" str) (substring str 0 -1) str))
+
 (defun geiser--shorten-str (str len &optional sep)
   (let ((str-len (length str)))
     (if (<= str-len len)
