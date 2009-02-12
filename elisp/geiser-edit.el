@@ -63,14 +63,17 @@
   (regexp-opt '("define" "defmacro" "define-macro" "define-syntax" "define*")))
 
 (defsubst geiser-edit--def-re (symbol)
-  (format "(%s +(?%s" geiser-edit--def-re symbol))
+  (format "(%s +(?%s" geiser-edit--def-re (regexp-quote (symbol-name symbol))))
+
+(defsubst geiser-edit--symbol-re (symbol)
+  (format "\\_<%s\\_>" (regexp-quote (symbol-name symbol))))
 
 (defun geiser-edit--goto-line (symbol line)
   (if (numberp line)
       (goto-line line)
     (goto-char (point-min))
     (when (or (re-search-forward (geiser-edit--def-re symbol) nil t)
-              (re-search-forward (format "\\_<%s\\_>" symbol) nil t))
+              (re-search-forward (geiser-edit--symbol-re symbol) nil t))
       (goto-char (match-beginning 0)))))
 
 (defun geiser-edit--try-edit (symbol ret)
