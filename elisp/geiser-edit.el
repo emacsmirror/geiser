@@ -60,7 +60,7 @@
   (cdr (assoc 'line loc)))
 
 (defconst geiser-edit--def-re
-  (regexp-opt '("define" "defmacro" "define-macro" "define-syntax")))
+  (regexp-opt '("define" "defmacro" "define-macro" "define-syntax" "define*")))
 
 (defsubst geiser-edit--def-re (symbol)
   (format "(%s +(?%s" geiser-edit--def-re symbol))
@@ -69,8 +69,9 @@
   (if (numberp line)
       (goto-line line)
     (goto-char (point-min))
-    (when (re-search-forward (geiser-edit--def-re symbol) nil t)
-      (beginning-of-line))))
+    (when (or (re-search-forward (geiser-edit--def-re symbol) nil t)
+              (re-search-forward (format "\\_<%s\\_>" symbol) nil t))
+      (goto-char (match-beginning 0)))))
 
 (defun geiser-edit--try-edit (symbol ret)
   (let* ((loc (geiser-eval--retort-result ret))
