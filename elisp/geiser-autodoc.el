@@ -67,13 +67,29 @@ when `geiser-autodoc-display-module-p' is on."
 (make-variable-buffer-local
  (defvar geiser-autodoc--last nil))
 
-(defun geiser-autodoc--function-args (fun)
-  (if (eq fun (car geiser-autodoc--last))
-      (cdr geiser-autodoc--last)
-    (let ((result (geiser-eval--send/result `(:gs ((:ge proc-args) ',fun)))))
-      (when (not (listp result)) (setq result 'undefined))
-      (setq geiser-autodoc--last (cons fun result))
-      result)))
+(make-variable-buffer-local
+ (defvar geiser-autodoc--last-funs nil))
+
+(defun geiser-autodoc--function-args (funs)
+  (let ((pr (and (eq (car geiser-autodoc--last) (caar funs)) (car funs))))
+    (if pr (geiser-autodoc--fun-args-str (car pr)
+                                         (cdr geiser-autodoc--last)
+                                         (cdr pr))
+      (setq geiser-autodoc--last-funs funs)
+      (geiser-eval--send `(:gs ((:ge arguments) ,@(mapcar (lambda (f) (list 'quote (car f)))
+                                                          funs)))
+                         'geiser-autodoc--function-args-cont)
+      nil)))
+
+(defun geiser-autodoc--function-args-cont (ret)
+  (let ((result (geiser-eval--retort-result ret)))
+    (when (listp result)
+      (setq geiser-autodoc--last result)
+      (eldoc-message
+       (geiser-autodoc--fun-args-str (car result)
+                                     (cdr result)
+                                     (or (cdr (assoc (car result)
+                                                     geiser-autodoc--last-funs))))))))
 
 (defun geiser-autodoc--insert (sym current pos)
   (let ((str (format "%s" sym)))
@@ -111,13 +127,7 @@ when `geiser-autodoc-display-module-p' is on."
 ;;; Autodoc function:
 
 (defun geiser-autodoc--eldoc-function ()
-  (let ((data (geiser-syntax--enclosing-form-data)))
-    (catch 'doc-msg
-      (dolist (f/a data)
-        (let ((args (geiser-autodoc--function-args (car f/a))))
-          (when (listp args)
-            (throw 'doc-msg
-                   (geiser-autodoc--fun-args-str (car f/a) args (cdr f/a)))))))))
+  (geiser-autodoc--function-args (geiser-syntax--enclosing-form-data)))
 
 
 ;;; Autodoc mode:
