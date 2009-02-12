@@ -96,8 +96,6 @@
   (while (re-search-forward "#" nil t) (replace-match "\\\\#"))
   (goto-char (point-min))
   (skip-syntax-forward "^("))
-)
-
 
 
 ;;; Fontify strings as Scheme code:

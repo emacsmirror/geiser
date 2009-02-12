@@ -26,6 +26,7 @@
 ;;; Code:
 
 (require 'geiser-compile)
+(require 'geiser-edit)
 (require 'geiser-eval)
 (require 'geiser-connection)
 (require 'geiser-base)
@@ -151,10 +152,9 @@ the Geiser REPL buffer."
 (define-key geiser-repl-mode-map "\C-c\M-n" 'comint-next-input)
 
 (define-key geiser-repl-mode-map (kbd "TAB") 'geiser-completion--complete-symbol)
+(define-key geiser-repl-mode-map "\M-." 'geiser-edit-symbol-at-point)
+(define-key geiser-repl-mode-map "\M-," 'geiser-edit-pop-edit-symbol-stack)
 
-;; (define-key geiser-repl-mode-map "\C-ch" 'geiser-help)
-;; (define-key geiser-repl-mode-map "\C-cp" 'geiser-apropos)
-;; (define-key geiser-repl-mode-map "\M-." 'geiser-edit-word-at-point)
 
 
 (provide 'geiser-repl)
