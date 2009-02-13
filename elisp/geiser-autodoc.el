@@ -79,7 +79,7 @@ when `geiser-autodoc-display-module-p' is on."
       (geiser-eval--send `(:gs ((:ge arguments) ,@(mapcar (lambda (f) (list 'quote (car f)))
                                                           funs)))
                          'geiser-autodoc--function-args-cont)
-      nil)))
+      "")))
 
 (defun geiser-autodoc--function-args-cont (ret)
   (let ((result (geiser-eval--retort-result ret)))

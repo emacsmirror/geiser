@@ -63,7 +63,7 @@
   (regexp-opt '("define" "defmacro" "define-macro" "define-syntax" "define*")))
 
 (defsubst geiser-edit--def-re (symbol)
-  (format "(%s +(?%s" geiser-edit--def-re (regexp-quote (symbol-name symbol))))
+  (format "(%s +(?%s\\_>" geiser-edit--def-re (regexp-quote (symbol-name symbol))))
 
 (defsubst geiser-edit--symbol-re (symbol)
   (format "\\_<%s\\_>" (regexp-quote (symbol-name symbol))))

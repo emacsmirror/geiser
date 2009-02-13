@@ -76,8 +76,7 @@
          (msg (format "%s %s ..." msg path)))
     (message msg)
     (geiser-compile--display-result
-;;     msg (geiser-eval--send/wait `(:gs ((:ge ,op) ,path) (geiser eval))))))
-     msg (geiser-eval--send/wait `(compile-file ,path)))))
+     msg (geiser-eval--send/wait `(:gs ((:ge ,op) ,path) (geiser eval))))))
 
 
 ;;; User commands:

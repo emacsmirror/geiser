@@ -75,11 +75,12 @@
             (forward-char)
             (let ((proc (symbol-at-point))
                   (arg-no 0))
-              (while (< (point) p)
-                (forward-sexp)
-                (when (< (point) p) (setq arg-no (1+ arg-no))))
-              (push (cons proc arg-no) data)))))
-      (reverse (push current data)))))
+              (when proc
+                (while (< (point) p)
+                  (forward-sexp)
+                  (when (< (point) p) (setq arg-no (1+ arg-no))))
+                (push (cons proc arg-no) data))))))
+      (reverse (if (car current) (push current data) data)))))
 
 (defun geiser-syntax--prepare-scheme-for-elisp-reader ()
   (goto-char (point-min))
