@@ -43,13 +43,6 @@
   (message "Geiser %s" (geiser-version-string)))
 
 
-;;; Customization group:
-
-(defgroup geiser nil
-  "Geiser framework for Guile-Emacs interaction."
-  :group 'languages)
-
-
 ;;; Emacs compatibility:
 
 (eval-after-load "ring"

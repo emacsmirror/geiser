@@ -65,9 +65,9 @@
 
 (defun geiser-syntax--enclosing-form-data ()
   (save-excursion
-    (let ((p (geiser-syntax--end-of-thing))
-          (current (cons (symbol-at-point) 0))
-          (data))
+    (let* ((p (geiser-syntax--end-of-thing))
+           (current (cons (symbol-at-point) 0))
+           (data (when (car current) (list current))))
       (ignore-errors
         (while (not (bobp))
           (backward-up-list)
@@ -80,7 +80,7 @@
                   (forward-sexp)
                   (when (< (point) p) (setq arg-no (1+ arg-no))))
                 (push (cons proc arg-no) data))))))
-      (reverse (if (car current) (push current data) data)))))
+      (reverse data))))
 
 (defun geiser-syntax--prepare-scheme-for-elisp-reader ()
   (goto-char (point-min))

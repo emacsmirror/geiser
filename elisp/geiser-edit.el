@@ -26,6 +26,7 @@
 
 (require 'geiser-completion)
 (require 'geiser-eval)
+(require 'geiser-custom)
 (require 'geiser-base)
 
 (require 'etags)
@@ -42,7 +43,7 @@
                     (const :tag "Current window" nil))))
 
 (geiser-edit--define-custom-visit
- geiser-edit-symbol-method geiser
+ geiser-edit-symbol-method geiser-mode
  "How the new buffer is opened when invoking \\[geiser-edit-symbol-at-point]")
 
 

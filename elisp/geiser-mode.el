@@ -32,6 +32,7 @@
 (require 'geiser-autodoc)
 (require 'geiser-eval)
 (require 'geiser-popup)
+(require 'geiser-custom)
 (require 'geiser-base)
 
 

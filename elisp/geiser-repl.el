@@ -29,32 +29,35 @@
 (require 'geiser-edit)
 (require 'geiser-eval)
 (require 'geiser-connection)
+(require 'geiser-custom)
 (require 'geiser-base)
+
 (require 'comint)
 
 
 ;;; Customization:
 
 (defgroup geiser-repl nil
-  "Interacting with a Guile process inside Emacs."
+  "Interacting with the Geiser REPL."
   :group 'geiser)
 
 (defcustom geiser-repl-guile-binary
   (cond ((eq system-type 'windows-nt) "guile.exe")
         ((eq system-type 'darwin) "guile")
         (t "guile"))
-  "Name to use to call the guile executable when starting a REPL."
+  "Name to use to call the Guile executable when starting a REPL."
   :type 'string
   :group 'geiser-repl)
 
 (defcustom geiser-repl-use-other-window t
-  "Use a window other than the current buffer's when switching to
-the Geiser REPL buffer."
+  "Whether to Use a window other than the current buffer's when
+switching to the Geiser REPL buffer."
   :type 'boolean
   :group 'geiser-repl)
 
 (defcustom geiser-repl-window-allow-split t
-  "Allow window splitting when switching to the Geiser REPL buffer."
+  "Whether to allow window splitting when switching to the Geiser
+REPL buffer."
   :type 'boolean
   :group 'geiser-repl)
 

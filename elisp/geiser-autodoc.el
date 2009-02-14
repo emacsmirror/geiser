@@ -27,6 +27,7 @@
 
 (require 'geiser-eval)
 (require 'geiser-syntax)
+(require 'geiser-custom)
 (require 'geiser-base)
 
 (require 'eldoc)
@@ -38,12 +39,8 @@
   "Options for displaying autodoc strings in the echo area."
   :group 'geiser)
 
-(defface geiser-font-lock-autodoc-current-arg
-  '((t (:background unspecified :foreground "red" :bold t)))
-  "Face for highlighting current argument in autodoc messages."
-  :group 'faces
-  :group 'geiser-faces
-  :group 'geiser-autodoc)
+(geiser-custom--defface fuel-font-lock-markup-title
+  'bold geiser-autodoc "highlighting current argument in autodoc messages")
 
 (defcustom geiser-autodoc-delay 0.2
   "Delay before autodoc messages are fetched and displayed, in seconds."
