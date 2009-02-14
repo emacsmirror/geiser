@@ -143,6 +143,7 @@ the Geiser REPL buffer."
 (define-key geiser-repl-mode-map "\C-c\C-z" 'run-guile)
 (define-key geiser-repl-mode-map "\C-a" 'geiser-repl--bol)
 (define-key geiser-repl-mode-map "\C-ca" 'geiser-autodoc-mode)
+(define-key geiser-repl-mode-map "\C-cd" 'geiser-doc-symbol-at-point)
 (define-key geiser-repl-mode-map "\C-ck" 'geiser-compile-file)
 (define-key geiser-repl-mode-map "\C-cl" 'geiser-load-file)
 

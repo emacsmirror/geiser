@@ -25,6 +25,7 @@
 
 ;;; Code:
 
+(require 'geiser-doc)
 (require 'geiser-compile)
 (require 'geiser-completion)
 (require 'geiser-edit)
@@ -154,6 +155,7 @@ interacting with the Geiser REPL is at your disposal.
 (define-key geiser-mode-map "\C-c\M-r" 'geiser-send-region-and-go)
 
 (define-key geiser-mode-map "\C-c\C-a" 'geiser-autodoc-mode)
+(define-key geiser-mode-map "\C-c\C-d" 'geiser-doc-symbol-at-point)
 
 (define-key geiser-mode-map "\C-c\M-c" 'geiser-compile-definition)
 (define-key geiser-mode-map "\C-c\C-c" 'geiser-compile-definition-and-go)

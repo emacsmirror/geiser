@@ -183,12 +183,14 @@ terminates a current completion."
          (partial (if (eq partial t) prefix partial)))
     (cons completions partial)))
 
+(defvar geiser-completion--symbol-history nil)
+
 (defun geiser-completion--read-symbol (prompt &optional default history)
   (let ((minibuffer-local-completion-map geiser-completion--minibuffer-map))
     (completing-read prompt
                      geiser-completion--symbol-list-func
                      nil nil nil
-                     history
+                     (or history geiser-completion--symbol-history)
                      (or default (symbol-at-point)))))
 
 (defun geiser--respecting-message (format &rest format-args)
