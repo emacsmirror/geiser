@@ -9,3 +9,44 @@
   - Check the geiser customization group for some options. In
     particular, geiser-repl-guile-binary, which should point to a
     guile-vm executable.
+
+* Quick key reference
+
+*** In Scheme buffers:
+
+    |---------------+-------------------------------------------------|
+    | C-cC-z        | Switch to REPL                                  |
+    |---------------+-------------------------------------------------|
+    | M-.           | Edit symbol at point                            |
+    | M-,           | Go back to where M-. was last invoked           |
+    | M-TAB         | Complete symbol at point                        |
+    |---------------+-------------------------------------------------|
+    | C-M-x, C-cC-e | Eval definition around point                    |
+    | C-cMe         | Eval definition around point and switch to REPL |
+    | C-xC-e        | Eval sexp before point                          |
+    | C-cC-r        | Eval region                                     |
+    | C-cM-r        | Eval region and switch to REPL                  |
+    |---------------+-------------------------------------------------|
+    | C-cC-k        | Compile and load current file                   |
+    | C-cC-l        | Load current file                               |
+    |---------------+-------------------------------------------------|
+    | C-cC-d        | See docstring for symbol at point               |
+    | C-cC-a        | Toggle autodoc mode                             |
+    |---------------+-------------------------------------------------|
+
+*** In the REPL
+
+    |--------------+-----------------------------------------|
+    | C-cC-z, C-cz | Start Scheme REPL (if it's not running) |
+    |--------------+-----------------------------------------|
+    | M-.          | Edit symbol at point                    |
+    | TAB          | Complete symbol at point                |
+    |--------------+-----------------------------------------|
+    | M-p, M-n     | Prompt history, matching current prefix |
+    |--------------+-----------------------------------------|
+    | C-ck         | Compile and load scheme file            |
+    | C-cl         | Load scheme file                        |
+    |--------------+-----------------------------------------|
+    | C-cd         | See docstring for symbol at point       |
+    | C-ca         | Toggle autodoc mode                     |
+    |--------------+-----------------------------------------|
