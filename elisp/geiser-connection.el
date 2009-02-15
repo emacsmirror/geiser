@@ -135,20 +135,18 @@
 (defun geiser-con--cleanup-connection (c)
   (geiser-con--connection-cancel-timer c))
 
-(defun geiser-con--setup-connection (buffer)
+(defun geiser-con--setup-connection (buffer prompt-regexp)
   (with-current-buffer buffer
     (when geiser-con--connection
       (geiser-con--cleanup-connection geiser-con--connection))
     (setq geiser-con--connection (geiser-con--make-connection buffer))
-    (geiser-con--setup-comint)
+    (geiser-con--setup-comint prompt-regexp)
     (geiser-con--connection-start-timer geiser-con--connection)
     (message "Geiser REPL up and running!")))
 
-(defconst geiser-con--prompt-regex "^[^() \n]+@([^)]*?)> ")
-
-(defun geiser-con--setup-comint ()
+(defun geiser-con--setup-comint (prompt-regexp)
   (set (make-local-variable 'comint-redirect-insert-matching-regexp) nil)
-  (set (make-local-variable 'comint-redirect-finished-regexp) geiser-con--prompt-regex)
+  (set (make-local-variable 'comint-redirect-finished-regexp) prompt-regexp)
   (add-hook 'comint-redirect-hook 'geiser-con--comint-redirect-hook nil t))
 
 
@@ -202,6 +200,12 @@
       (if (not req) (geiser-log--error "No current request")
         (geiser-con--process-completed-request req)
         (geiser-con--connection-clean-current-request geiser-con--connection)))))
+
+(defadvice comint-redirect-setup
+  (after geiser-con--advice (output-buffer comint-buffer finished-regexp &optional echo))
+  (with-current-buffer comint-buffer
+    (when geiser-con--connection (setq mode-line-process nil))))
+(ad-activate 'comint-redirect-setup)
 
 
 ;;; Message sending interface:

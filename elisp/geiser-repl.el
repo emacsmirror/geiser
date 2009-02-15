@@ -67,6 +67,8 @@ REPL buffer."
 (defvar geiser-repl--buffer nil
   "The buffer in which the Guile REPL is running.")
 
+(defconst geiser-repl--prompt-regex "^[^() \n]+@([^)]*?)> ")
+
 (defun geiser-repl--buffer ()
   (if (buffer-live-p geiser-repl--buffer) geiser-repl--buffer
     (with-current-buffer (get-buffer-create "*Geiser REPL*")
@@ -83,7 +85,7 @@ REPL buffer."
                            nil
                            "-L" (concat geiser-scheme-dir "/guile/")  "-q")
     (geiser-repl--wait-for-prompt 10000)
-    (geiser-con--setup-connection (current-buffer))))
+    (geiser-con--setup-connection (current-buffer) geiser-repl--prompt-regex)))
 
 (defun geiser-repl--process (&optional start)
   (or (and (buffer-live-p (geiser-repl--buffer))
@@ -138,7 +140,8 @@ REPL buffer."
 (define-derived-mode geiser-repl-mode comint-mode "Geiser REPL"
   "Major mode for interacting with an inferior Guile repl process.
 \\{geiser-repl-mode-map}"
-  (set (make-local-variable 'comint-prompt-regexp) geiser-con--prompt-regex)
+  (set (make-local-variable 'mode-line-process) nil)
+  (set (make-local-variable 'comint-prompt-regexp) geiser-repl--prompt-regex)
   (set (make-local-variable 'comint-use-prompt-regexp) t)
   (set (make-local-variable 'comint-prompt-read-only) t))
 
