@@ -43,11 +43,12 @@
   :group 'faces)
 
 (defmacro geiser-custom--defface (face def group doc)
-  `(defface ,face (face-default-spec ,def)
-     ,(format "Face for %s." doc)
-     :group ',group
-     :group 'geiser-faces
-     :group 'faces))
+  (let ((face (intern (format "geiser-font-lock-%s" face))))
+    `(defface ,face (face-default-spec ,def)
+       ,(format "Face for %s." doc)
+       :group ',group
+       :group 'geiser-faces
+       :group 'faces)))
 
 (put 'geiser-custom--defface 'lisp-indent-function 1)
 

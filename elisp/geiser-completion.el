@@ -26,6 +26,7 @@
 
 (require 'geiser-eval)
 (require 'geiser-log)
+(require 'geiser-syntax)
 (require 'geiser-base)
 
 
@@ -172,13 +173,13 @@ terminates a current completion."
 
 (defvar geiser-completion--module-history nil)
 
-(defun geiser-completion--read-module ()
-  (let ((minibuffer-local-completion-map geiser-completion--module-minibuffer-map)
-        (modules (geiser-completion--module-list))
-        (prompt "Module name: "))
-    (if modules
-        (completing-read prompt modules nil nil nil geiser-completion--module-history)
-      (read-string prompt nil geiser-completion--module-history))))
+(defun geiser-completion--read-module (&optional prompt default history)
+  (let ((minibuffer-local-completion-map geiser-completion--module-minibuffer-map))
+    (completing-read (or prompt "Module name: ")
+                     (geiser-completion--module-list)
+                     nil nil
+                     (or default (geiser-syntax--buffer-module))
+                     (or history geiser-completion--module-history))))
 
 (defun geiser--respecting-message (format &rest format-args)
   "Display TEXT as a message, without hiding any minibuffer contents."

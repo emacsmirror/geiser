@@ -39,7 +39,7 @@
   "Options for displaying autodoc strings in the echo area."
   :group 'geiser)
 
-(geiser-custom--defface fuel-font-lock-markup-title
+(geiser-custom--defface autodoc-current-arg
   'bold geiser-autodoc "highlighting current argument in autodoc messages")
 
 (defcustom geiser-autodoc-delay 0.2

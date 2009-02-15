@@ -29,8 +29,9 @@
     | C-cC-k        | Compile and load current file                   |
     | C-cC-l        | Load current file                               |
     |---------------+-------------------------------------------------|
-    | C-cC-d        | See docstring for symbol at point               |
-    | C-cC-a        | Toggle autodoc mode                             |
+    | C-cC-dd       | See docstring for symbol at point               |
+    | C-cC-dm       | See module documentation                        |
+    | C-cC-da       | Toggle autodoc mode                             |
     |---------------+-------------------------------------------------|
 
        If `geiser-mode-smart-tab-p' is nil
@@ -59,6 +60,7 @@
     | C-ck         | Compile and load scheme file            |
     | C-cl         | Load scheme file                        |
     |--------------+-----------------------------------------|
-    | C-cd         | See docstring for symbol at point       |
+    | C-cd         | See documentation for symbol at point   |
+    | C-cm         | See module documentation                |
     | C-ca         | Toggle autodoc mode                     |
     |--------------+-----------------------------------------|

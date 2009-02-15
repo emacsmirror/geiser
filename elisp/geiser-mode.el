@@ -147,6 +147,10 @@ interacting with the Geiser REPL is at your disposal.
 
 ;;; Keys:
 
+(defun geiser-mode--triple-chord (p k c)
+  (define-key geiser-mode-map (vector '(control ?c) `(control ,p) k) c)
+  (define-key geiser-mode-map (vector '(control ?c) `(control ,p) `(control ,k)) c))
+
 (define-key geiser-mode-map "\C-c\C-z" 'switch-to-guile)
 (define-key geiser-mode-map "\C-c\C-l" 'geiser-load-current-buffer)
 (define-key geiser-mode-map "\C-c\C-k" 'geiser-compile-current-buffer)
@@ -162,8 +166,9 @@ interacting with the Geiser REPL is at your disposal.
 (define-key geiser-mode-map "\C-c\C-r" 'geiser-send-region)
 (define-key geiser-mode-map "\C-c\M-r" 'geiser-send-region-and-go)
 
-(define-key geiser-mode-map "\C-c\C-a" 'geiser-autodoc-mode)
-(define-key geiser-mode-map "\C-c\C-d" 'geiser-doc-symbol-at-point)
+(geiser-mode--triple-chord ?d ?a 'geiser-autodoc-mode)
+(geiser-mode--triple-chord ?d ?d 'geiser-doc-symbol-at-point)
+(geiser-mode--triple-chord ?d ?m 'geiser-doc-module)
 
 (define-key geiser-mode-map "\C-c\M-c" 'geiser-compile-definition)
 (define-key geiser-mode-map "\C-c\C-c" 'geiser-compile-definition-and-go)

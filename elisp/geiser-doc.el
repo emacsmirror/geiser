@@ -26,8 +26,23 @@
 
 (require 'geiser-completion)
 (require 'geiser-eval)
+(require 'geiser-syntax)
 (require 'geiser-popup)
+(require 'geiser-custom)
 (require 'geiser-base)
+
+
+;;; Customization:
+
+(defgroup geiser-doc nil
+  "Options for documentation buffers."
+  :group 'geiser)
+
+(geiser-custom--defface doc-title
+  'bold geiser-doc "article titles in documentation buffers")
+
+(geiser-custom--defface doc-link
+  'link geiser-doc "links in documentation buffers")
 
 
 ;;; Documentation buffer:
@@ -39,6 +54,26 @@
 
 (defun geiser-doc--get-docstring (symbol)
   (geiser-eval--send/result `(:gs ((:ge docstring) ',symbol))))
+
+(defun geiser-doc--get-module-children (module)
+  (geiser-eval--send/result `(:gs ((:ge module-children) (quote (:scm ,module))))))
+
+
+;;; Auxiliary functions:
+
+(defun geiser-doc--insert-title (title)
+  (let ((p (point)))
+    (insert title)
+    (put-text-property p (point) 'face 'geiser-font-lock-doc-title))
+  (newline))
+
+(defun geiser-doc--insert-list (title lst)
+  (when lst
+    (geiser-doc--insert-title title)
+    (newline)
+    (dolist (w lst)
+      (insert (format "\t- %s\n" w)))
+    (newline)))
 
 
 ;;; Commands:
@@ -57,6 +92,23 @@ With prefix argument, ask for symbol (with completion)."
             (erase-buffer)
             (insert ds))
           (geiser-doc--pop-to-buffer))))))
+
+(defun geiser-doc-module (module)
+  "Display information about a given module."
+  (interactive (list (geiser-completion--read-module)))
+  (let ((children (geiser-doc--get-module-children module)))
+    (if (not children)
+        (message "No info available for %s" module)
+      (geiser-doc--with-buffer
+        (erase-buffer)
+        (geiser-doc--insert-title (format "%s" module))
+        (newline)
+        (geiser-doc--insert-list "Procedures:" (cdr (assoc 'procs children)))
+        (geiser-doc--insert-list "Variables:" (cdr (assoc 'vars children)))
+        (geiser-doc--insert-list "Submodules:" (cdr (assoc 'modules children)))
+        (goto-char (point-min)))
+      (geiser-doc--pop-to-buffer))))
+
 
 
 (provide 'geiser-doc)
