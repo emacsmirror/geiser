@@ -51,8 +51,8 @@ With prefix argument, ask for symbol (with completion)."
                     (geiser-completion--read-symbol "Symbol: " (symbol-at-point)))))
     (when symbol
       (let ((ds (geiser-doc--get-docstring symbol)))
-        (if (not (stringp ds))
-            (message "No docstring available for '%s'" symbol)
+        (if (or (not (stringp ds)) (zerop (length ds)))
+            (message "No documentation available for '%s'" symbol)
           (geiser-doc--with-buffer
             (erase-buffer)
             (insert ds))
