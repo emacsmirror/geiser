@@ -156,6 +156,8 @@ REPL buffer."
 (define-key geiser-repl-mode-map "\C-c\M-n" 'comint-next-input)
 
 (define-key geiser-repl-mode-map (kbd "TAB") 'geiser-completion--complete-symbol)
+(define-key geiser-repl-mode-map (kbd "M-TAB")
+  '(lambda () (interactive) (geiser-completion--complete-symbol t)))
 (define-key geiser-repl-mode-map "\M-." 'geiser-edit-symbol-at-point)
 (define-key geiser-repl-mode-map "\M-," 'geiser-edit-pop-edit-symbol-stack)
 

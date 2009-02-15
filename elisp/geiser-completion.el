@@ -29,48 +29,6 @@
 (require 'geiser-base)
 
 
-;;; Minibuffer map:
-
-(defvar geiser-completion--minibuffer-map
-  (let ((map (make-keymap)))
-    (set-keymap-parent map minibuffer-local-completion-map)
-    (define-key map "?" 'self-insert-command)
-    map))
-
-
-;;; Modules dictionary:
-
-;; (defvar geiser-completion--modules nil)
-
-;; (defun geiser-completion--modules (&optional reload)
-;;   (when (or reload (not geiser-completion--modules))
-;;     (geiser--respecting-message "Retrieving modules list")
-;;     (let ((geiser-log--inhibit-p t))
-;;       (setq geiser-completion--modules
-;;             (geiser-eval--retort-result
-;;              (geiser-eval--send/wait '(:gs (:ge (module-list :t)))))))
-;;   geiser-completion--modules)
-
-;; (defun geiser-completion--read-module (&optional reload init-input history)
-;;   (let ((minibuffer-local-completion-map geiser-completion--minibuffer-map)
-;;         (modules (geiser-completion--modules reload)))
-;;     (completing-read "Module name: " modules nil nil init-input history)))
-
-;; (defsubst geiser-completion--module-list (prefix)
-;;   (geiser-eval--retort-result
-;;    (geiser-eval--send/wait `(:gs (:ge (module-list ,prefix))))))
-
-;; (defvar geiser-completion--module-history nil)
-
-;; (defun geiser-completion--read-module (refresh)
-;;   (let ((minibuffer-local-completion-map geiser-completion--minibuffer-map)
-;;         (modules (geiser-completion--modules refresh))
-;;         (prompt "Module name: "))
-;;     (if modules
-;;         (completing-read prompt modules nil nil nil geiser-completion--module-history)
-;;       (read-string prompt nil geiser-completion--module-history))))
-
-
 ;;; Completions window handling, heavily inspired in slime's:
 
 (defvar geiser-completion--comp-buffer "*Completions*")
@@ -167,16 +125,35 @@ terminates a current completion."
           (scroll-up))))))
 
 
+;;; Minibuffer maps:
+
+(defvar geiser-completion--minibuffer-map
+  (let ((map (make-keymap)))
+    (set-keymap-parent map minibuffer-local-completion-map)
+    (define-key map "?" 'self-insert-command)
+    map))
+
+(defvar geiser-completion--module-minibuffer-map
+  (let ((map (make-keymap)))
+    (set-keymap-parent map minibuffer-local-completion-map)
+    (define-key map " " 'self-insert-command)
+    (define-key map "?" 'self-insert-command)
+    map))
+
+
 ;;; Completion functionality:
 
 (defsubst geiser-completion--symbol-list (prefix)
   (geiser-eval--send/result `(:gs ((:ge completions) ,prefix))))
 
+(defsubst geiser-completion--module-list ()
+  (geiser-eval--send/result '(:gs ((:ge all-modules)))))
+
 (defvar geiser-completion--symbol-list-func
   (completion-table-dynamic 'geiser-completion--symbol-list))
 
 (defun geiser-completion--complete (prefix modules)
-  (let* ((symbols (if modules nil ;; (geiser-completion--modules)
+  (let* ((symbols (if modules (geiser-completion--module-list)
                     (geiser-completion--symbol-list prefix)))
          (completions (all-completions prefix symbols))
          (partial (try-completion prefix symbols))
@@ -193,6 +170,16 @@ terminates a current completion."
                      (or history geiser-completion--symbol-history)
                      (or default (symbol-at-point)))))
 
+(defvar geiser-completion--module-history nil)
+
+(defun geiser-completion--read-module ()
+  (let ((minibuffer-local-completion-map geiser-completion--module-minibuffer-map)
+        (modules (geiser-completion--module-list))
+        (prompt "Module name: "))
+    (if modules
+        (completing-read prompt modules nil nil nil geiser-completion--module-history)
+      (read-string prompt nil geiser-completion--module-history))))
+
 (defun geiser--respecting-message (format &rest format-args)
   "Display TEXT as a message, without hiding any minibuffer contents."
   (let ((text (format " [%s]" (apply #'format format format-args))))
@@ -200,14 +187,21 @@ terminates a current completion."
         (minibuffer-message text)
       (message "%s" text))))
 
-(defun geiser-completion--complete-symbol ()
+(defsubst geiser-completion--beg-pos (module)
+  (if module
+      (max (save-excursion (beginning-of-line) (point))
+           (save-excursion (skip-syntax-backward "^(") (1- (point))))
+    (save-excursion (skip-syntax-backward "^-()") (point))))
+
+(defun geiser-completion--complete-symbol (&optional arg)
   "Complete the symbol at point.
-Perform completion similar to Emacs' complete-symbol."
-  (interactive)
+Perform completion similar to Emacs' complete-symbol.
+With prefix, complete module name."
+  (interactive "P")
   (let* ((end (point))
-         (beg (save-excursion (skip-syntax-backward "^-()") (point)))
+         (beg (geiser-completion--beg-pos arg))
          (prefix (buffer-substring-no-properties beg end))
-         (result (geiser-completion--complete prefix nil))
+         (result (geiser-completion--complete prefix arg))
          (completions (car result))
          (partial (cdr result)))
     (cond ((null completions)
