@@ -215,6 +215,43 @@ With prefix, complete module name."
                       (geiser-completion--display-or-scroll completions
                                                             partial)))))))
 
+(defun geiser-completion--complete-module ()
+  (interactive)
+  (geiser-completion--complete-symbol t))
+
+
+;;; Smart tab mode:
+
+(make-variable-buffer-local
+ (defvar geiser-smart-tab-mode-string " SmartTab"
+   "Modeline indicator for geiser-smart-tab-mode"))
+
+(defun geiser-completion--maybe-complete ()
+  "Indent if at beginning of line or after a white space or
+closing parenthesis, try completion otherwise."
+  (interactive)
+  (let ((indent (or (bolp) (memq (syntax-class (syntax-after (1- (point))))
+                                 '(0 5)))))
+    (if indent (indent-according-to-mode) (geiser-completion--complete-symbol))))
+
+(define-minor-mode geiser-smart-tab-mode
+  "Toggle smart tab mode.
+With no argument, this command toggles the mode.
+Non-null prefix argument turns on the mode.
+Null prefix argument turns off the mode.
+
+When this mode is enable, TAB will indent if at point is at
+beginning of line or after a white space or closing parenthesis,
+and will try completing symbol at point otherwise. In addition,
+M-TAB will try module name completion."
+  :init-value nil
+  :lighter geiser-smart-tab-mode-string
+  :group 'geiser-mode
+  :keymap `((,(kbd "TAB") . geiser-completion--maybe-complete)
+            (,(kbd "M-TAB") . geiser-completion--complete-module)))
+
+
+
 
 (provide 'geiser-completion)
 ;;; geiser-completion.el ends here

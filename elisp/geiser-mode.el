@@ -43,9 +43,14 @@
   :group 'geiser)
 
 (defcustom geiser-mode-autodoc-p t
-  "Whether `geiser-autodoc-mode' gets enabled by default in factor buffers."
+  "Whether `geiser-autodoc-mode' gets enabled by default in Scheme buffers."
   :group 'geiser-mode
   :group 'geiser-autodoc
+  :type 'boolean)
+
+(defcustom geiser-mode-smart-tab-p t
+  "Whether `geiser-smart-tab-mode' gets enabled by default in Scheme buffers."
+  :group 'geiser-mode
   :type 'boolean)
 
 
@@ -132,10 +137,12 @@ interacting with the Geiser REPL is at your disposal.
 \\{geiser-mode-map}"
   :init-value nil
   :lighter geiser-mode-string
-  :group 'geiser
+  :group 'geiser-mode
   :keymap geiser-mode-map
   (setq geiser-autodoc-mode-string "/A")
-  (when geiser-mode-autodoc-p (geiser-autodoc-mode geiser-mode)))
+  (setq geiser-smart-tab-mode-string "/T")
+  (when geiser-mode-autodoc-p (geiser-autodoc-mode geiser-mode))
+  (when geiser-mode-smart-tab-p (geiser-smart-tab-mode geiser-mode)))
 
 
 ;;; Keys:
