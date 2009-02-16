@@ -40,13 +40,15 @@
       (save-excursion
         (goto-char (point-min))
         (when (re-search-forward geiser-syntax--module-definition-re nil t)
-          (match-string-no-properties 1))))))
+          (car (read-from-string (match-string-no-properties 1))))))))
 
 ;;; Indentation:
 
 (defun geiser-syntax--setup-scheme-indent ()
   (let ((defuns '(catch)))
     (mapc (lambda (d) (put d 'scheme-indent-function 'defun)) defuns)))
+
+(geiser-syntax--setup-scheme-indent)
 
 
 ;;; Code parsing:

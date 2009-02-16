@@ -74,9 +74,10 @@ when `geiser-autodoc-display-module-p' is on."
                                            (cdr geiser-autodoc--last)
                                            (cdr pr))
         (setq geiser-autodoc--last-funs funs)
-        (geiser-eval--send `(:gs ((:ge arguments) ,@(mapcar (lambda (f) (list 'quote (car f)))
-                                                            funs)))
-                           'geiser-autodoc--function-args-cont)
+        (geiser-eval--send
+         `(:eval ((:ge arguments)
+                  ,@(mapcar (lambda (f) (list 'quote (car f))) funs)))
+         'geiser-autodoc--function-args-cont)
         ""))))
 
 (defun geiser-autodoc--function-args-cont (ret)

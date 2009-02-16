@@ -38,22 +38,30 @@
         ((eq code :f) "#f")
         ((eq code :t) "#t")
         ((listp code)
-         (cond ((eq (car code) :gs) (geiser-eval--gs (cdr code)))
+         (cond ((eq (car code) :eval) (geiser-eval--eval (cdr code)))
+               ((eq (car code) :comp) (geiser-eval--comp (cdr code)))
+               ((eq (car code) :module) (geiser-eval--module (cadr code)))
                ((eq (car code) :ge) (geiser-eval--ge (cadr code)))
                ((eq (car code) :scm) (cadr code))
                (t (concat "(" (mapconcat 'geiser-eval--scheme-str code " ") ")"))))
         ((symbolp code) (format "%s" code))
         (t (format "%S" code))))
 
-(defsubst geiser-eval--gs (code)
-  (concat "((@ (geiser eval) eval-in) (quote "
-          (geiser-eval--scheme-str (nth 0 code))
-          ") (quote "
-          (or (and (nth 1 code)
-                   (geiser-eval--scheme-str (nth 1 code)))
-              (geiser-syntax--buffer-module)
-              "#f")
-          "))"))
+(defsubst geiser-eval--eval (code)
+  (geiser-eval--scheme-str
+   `((@ (geiser eval) eval-in) (quote ,(nth 0 code)) (:module ,(nth 1 code)))))
+
+(defsubst geiser-eval--comp (code)
+  (geiser-eval--scheme-str
+   `((@ (geiser eval) compile-in) (quote ,(nth 0 code)) (:module ,(nth 1 code)))))
+
+(defsubst geiser-eval--module (code)
+  (geiser-eval--scheme-str
+   (cond ((or (eq code '(())) (null code))
+          `(quote ,(or (geiser-syntax--buffer-module) :f)))
+         ((listp code) `(quote ,code))
+         ((stringp code) (:scm code))
+         (t (error "Invalid module spec: %S" code)))))
 
 (defsubst geiser-eval--ge (proc)
   (format "(@ (geiser emacs) ge:%s)" proc))

@@ -95,7 +95,7 @@
   (let* ((symbol (geiser-completion--read-symbol "Edit symbol: "
                                                 nil
                                                 geiser-edit--symbol-history))
-         (cmd `(:gs ((:ge symbol-location) ',symbol))))
+         (cmd `(:eval ((:ge symbol-location) ',symbol))))
     (geiser-edit--try-edit symbol (geiser-eval--send/wait cmd))))
 
 (defun geiser-edit-symbol-at-point (&optional arg)
@@ -104,7 +104,7 @@ With prefix, asks for the symbol to edit."
   (interactive "P")
   (let* ((symbol (or (and (not arg) (symbol-at-point))
                      (geiser-completion--read-symbol "Edit symbol: ")))
-         (cmd `(:gs ((:ge symbol-location) ',symbol)))
+         (cmd `(:eval ((:ge symbol-location) ',symbol)))
          (marker (point-marker)))
     (geiser-edit--try-edit symbol (geiser-eval--send/wait cmd))
     (when marker (ring-insert find-tag-marker-ring marker))))
@@ -119,7 +119,7 @@ With prefix, asks for the symbol to edit."
 (defun geiser-edit-module (module)
   "Asks for a module and opens it in a new buffer."
   (interactive (list (geiser-completion--read-module)))
-  (let ((cmd `(:gs ((:ge module-location) (quote (:scm ,module))))))
+  (let ((cmd `(:eval ((:ge module-location) (quote (:scm ,module))))))
     (geiser-edit--try-edit module (geiser-eval--send/wait cmd))))
 
 

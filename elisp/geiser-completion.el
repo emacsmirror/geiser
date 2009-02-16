@@ -145,10 +145,10 @@ terminates a current completion."
 ;;; Completion functionality:
 
 (defsubst geiser-completion--symbol-list (prefix)
-  (geiser-eval--send/result `(:gs ((:ge completions) ,prefix))))
+  (geiser-eval--send/result `(:eval ((:ge completions) ,prefix))))
 
 (defsubst geiser-completion--module-list ()
-  (geiser-eval--send/result '(:gs ((:ge all-modules)))))
+  (geiser-eval--send/result '(:eval ((:ge all-modules)))))
 
 (defvar geiser-completion--symbol-list-func
   (completion-table-dynamic 'geiser-completion--symbol-list))
@@ -178,7 +178,7 @@ terminates a current completion."
     (completing-read (or prompt "Module name: ")
                      (geiser-completion--module-list)
                      nil nil
-                     (or default (geiser-syntax--buffer-module))
+                     (or default (format "%s" (or (geiser-syntax--buffer-module) "(")))
                      (or history geiser-completion--module-history))))
 
 (defun geiser--respecting-message (format &rest format-args)

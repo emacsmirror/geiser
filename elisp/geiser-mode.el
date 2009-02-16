@@ -70,16 +70,9 @@
       (newline))
     (geiser-mode--pop-to-buffer)))
 
-
-;;; Evaluation commands:
-
-(defun geiser-send-region (start end &optional and-go)
-  "Send the current region to the Geiser REPL.
-With prefix, goes to the REPL buffer afterwards (as
-`geiser-send-region-and-go')"
-  (interactive "rP")
+(defun geiser-eval--send-region (compile start end and-go)
   (let* ((str (buffer-substring-no-properties start end))
-         (code `(:gs (:scm ,str)))
+         (code `(,(if compile :comp :eval) (:scm ,str)))
          (ret (geiser-eval--send/wait code))
          (err (geiser-eval--retort-error ret)))
     (when and-go
@@ -90,31 +83,57 @@ With prefix, goes to the REPL buffer afterwards (as
         (message (format "=> %s" (geiser-eval--retort-result ret)))
       (geiser-eval--display-error err (geiser-eval--retort-output ret)))))
 
-(defun geiser-send-region-and-go (start end)
-  "Send the current region to the Geiser REPL and visit it afterwads."
-  (interactive "r")
-  (geiser-send-region start end t))
+
+;;; Evaluation commands:
 
-(defun geiser-send-definition (&optional and-go)
-  "Send the current definition to the Geiser REPL.
+(defun geiser-eval-region (start end &optional and-go)
+  "Eval the current region in the Geiser REPL.
 With prefix, goes to the REPL buffer afterwards (as
-`geiser-send-definition-and-go')"
+`geiser-eval-region-and-go')"
+  (interactive "rP")
+  (geiser-eval--send-region nil start end and-go))
+
+(defun geiser-eval-region-and-go (start end)
+  "Eval the current region in the Geiser REPL and visit it afterwads."
+  (interactive "r")
+  (geiser-eval-region start end t))
+
+(defun geiser-eval-definition (&optional and-go)
+  "Eval the current definition in the Geiser REPL.
+With prefix, goes to the REPL buffer afterwards (as
+`geiser-eval-definition-and-go')"
   (interactive "P")
   (save-excursion
     (end-of-defun)
     (let ((end (point)))
       (beginning-of-defun)
-      (geiser-send-region (point) end and-go))))
+      (geiser-eval-region (point) end and-go))))
 
-(defun geiser-send-definition-and-go ()
-  "Send the current definition to the Geiser REPL and visit it afterwads."
+(defun geiser-eval-definition-and-go ()
+  "Eval the current definition in the Geiser REPL and visit it afterwads."
   (interactive)
-  (geiser-send-definition t))
+  (geiser-eval-definition t))
 
-(defun geiser-send-last-sexp ()
-  "Send the previous sexp to the Geiser REPL."
+(defun geiser-eval-last-sexp ()
+  "Eval the previous sexp in the Geiser REPL."
   (interactive)
-  (geiser-send-region (save-excursion (backward-sexp) (point)) (point)))
+  (geiser-eval-region (save-excursion (backward-sexp) (point)) (point)))
+
+(defun geiser-compile-definition (&optional and-go)
+  "Compile the current definition in the Geiser REPL.
+With prefix, goes to the REPL buffer afterwards (as
+`geiser-eval-definition-and-go')"
+  (interactive "P")
+  (save-excursion
+    (end-of-defun)
+    (let ((end (point)))
+      (beginning-of-defun)
+      (geiser-eval--send-region t (point) end and-go))))
+
+(defun geiser-compile-definition-and-go ()
+  "Compile the current definition in the Geiser REPL and visit it afterwads."
+  (interactive)
+  (geiser-compile-definition t))
 
 
 ;;; Geiser mode:
@@ -159,11 +178,13 @@ interacting with the Geiser REPL is at your disposal.
 (define-key geiser-mode-map "\M-." 'geiser-edit-symbol-at-point)
 (define-key geiser-mode-map "\M-," 'geiser-edit-pop-edit-symbol-stack)
 
-(define-key geiser-mode-map "\M-\C-x" 'geiser-send-definition)
-(define-key geiser-mode-map "\C-x\C-e" 'geiser-send-last-sexp)
-(define-key geiser-mode-map "\C-c\M-e" 'geiser-send-definition-and-go)
-(define-key geiser-mode-map "\C-c\C-r" 'geiser-send-region)
-(define-key geiser-mode-map "\C-c\M-r" 'geiser-send-region-and-go)
+(define-key geiser-mode-map "\M-\C-x" 'geiser-eval-definition)
+(define-key geiser-mode-map "\C-x\C-e" 'geiser-eval-last-sexp)
+(define-key geiser-mode-map "\C-c\M-e" 'geiser-eval-definition-and-go)
+(define-key geiser-mode-map "\C-c\C-r" 'geiser-eval-region)
+(define-key geiser-mode-map "\C-c\M-r" 'geiser-eval-region-and-go)
+(define-key geiser-mode-map "\C-c\M-c" 'geiser-compile-definition)
+(define-key geiser-mode-map "\C-c\C-c" 'geiser-compile-definition-and-go)
 
 (geiser-mode--triple-chord ?d ?a 'geiser-autodoc-mode)
 (geiser-mode--triple-chord ?d ?d 'geiser-doc-symbol-at-point)
@@ -171,8 +192,6 @@ interacting with the Geiser REPL is at your disposal.
 
 (geiser-mode--triple-chord ?e ?m 'geiser-edit-module)
 
-(define-key geiser-mode-map "\C-c\M-c" 'geiser-compile-definition)
-(define-key geiser-mode-map "\C-c\C-c" 'geiser-compile-definition-and-go)
 (define-key geiser-mode-map "\C-c\C-t" 'geiser-trace-procedure)
 (define-key geiser-mode-map "\C-c\C-x" 'geiser-expand-current-form)
 

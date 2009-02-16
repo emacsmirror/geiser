@@ -53,10 +53,10 @@
 ;;; Docstrings:
 
 (defun geiser-doc--get-docstring (symbol)
-  (geiser-eval--send/result `(:gs ((:ge docstring) ',symbol))))
+  (geiser-eval--send/result `(:eval ((:ge docstring) ',symbol))))
 
 (defun geiser-doc--get-module-children (module)
-  (geiser-eval--send/result `(:gs ((:ge module-children) (quote (:scm ,module))))))
+  (geiser-eval--send/result `(:eval ((:ge module-children) (quote (:scm ,module))))))
 
 
 ;;; Auxiliary functions:
