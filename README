@@ -14,25 +14,26 @@
 
 *** In Scheme buffers:
 
-    |---------------+-------------------------------------------------|
-    | C-cC-z        | Switch to REPL                                  |
-    |---------------+-------------------------------------------------|
-    | M-.           | Edit symbol at point                            |
-    | M-,           | Go back to where M-. was last invoked           |
-    |---------------+-------------------------------------------------|
-    | C-M-x, C-cC-e | Eval definition around point                    |
-    | C-cMe         | Eval definition around point and switch to REPL |
-    | C-xC-e        | Eval sexp before point                          |
-    | C-cC-r        | Eval region                                     |
-    | C-cM-r        | Eval region and switch to REPL                  |
-    |---------------+-------------------------------------------------|
-    | C-cC-k        | Compile and load current file                   |
-    | C-cC-l        | Load current file                               |
-    |---------------+-------------------------------------------------|
-    | C-cC-dd       | See docstring for symbol at point               |
-    | C-cC-dm       | See module documentation                        |
-    | C-cC-da       | Toggle autodoc mode                             |
-    |---------------+-------------------------------------------------|
+    |---------+-------------------------------------------------|
+    | C-cC-z  | Switch to REPL                                  |
+    |---------+-------------------------------------------------|
+    | M-.     | Edit symbol at point                            |
+    | M-,     | Go back to where M-. was last invoked           |
+    | C-cC-em | Ask for a module and open its file              |
+    |---------+-------------------------------------------------|
+    | C-M-x   | Eval definition around point                    |
+    | C-cM-e  | Eval definition around point and switch to REPL |
+    | C-xC-e  | Eval sexp before point                          |
+    | C-cC-r  | Eval region                                     |
+    | C-cM-r  | Eval region and switch to REPL                  |
+    |---------+-------------------------------------------------|
+    | C-cC-k  | Compile and load current file                   |
+    | C-cC-l  | Load current file                               |
+    |---------+-------------------------------------------------|
+    | C-cC-dd | See documentation for symbol at point           |
+    | C-cC-dm | See module documentation                        |
+    | C-cC-da | Toggle autodoc mode                             |
+    |---------+-------------------------------------------------|
 
        If `geiser-mode-smart-tab-p' is nil
     |----------+-------------------------------|

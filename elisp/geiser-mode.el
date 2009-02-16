@@ -161,7 +161,6 @@ interacting with the Geiser REPL is at your disposal.
 
 (define-key geiser-mode-map "\M-\C-x" 'geiser-send-definition)
 (define-key geiser-mode-map "\C-x\C-e" 'geiser-send-last-sexp)
-(define-key geiser-mode-map "\C-c\C-e" 'geiser-send-definition)
 (define-key geiser-mode-map "\C-c\M-e" 'geiser-send-definition-and-go)
 (define-key geiser-mode-map "\C-c\C-r" 'geiser-send-region)
 (define-key geiser-mode-map "\C-c\M-r" 'geiser-send-region-and-go)
@@ -169,6 +168,8 @@ interacting with the Geiser REPL is at your disposal.
 (geiser-mode--triple-chord ?d ?a 'geiser-autodoc-mode)
 (geiser-mode--triple-chord ?d ?d 'geiser-doc-symbol-at-point)
 (geiser-mode--triple-chord ?d ?m 'geiser-doc-module)
+
+(geiser-mode--triple-chord ?e ?m 'geiser-edit-module)
 
 (define-key geiser-mode-map "\C-c\M-c" 'geiser-compile-definition)
 (define-key geiser-mode-map "\C-c\C-c" 'geiser-compile-definition-and-go)

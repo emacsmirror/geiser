@@ -51,7 +51,8 @@
           ") (quote "
           (or (and (nth 1 code)
                    (geiser-eval--scheme-str (nth 1 code)))
-              (geiser-syntax--buffer-module))
+              (geiser-syntax--buffer-module)
+              "#f")
           "))"))
 
 (defsubst geiser-eval--ge (proc)

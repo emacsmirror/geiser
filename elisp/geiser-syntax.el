@@ -39,9 +39,8 @@
     (with-current-buffer buffer
       (save-excursion
         (goto-char (point-min))
-        (if (re-search-forward geiser-syntax--module-definition-re nil t)
-            (match-string-no-properties 1)
-          "#f")))))
+        (when (re-search-forward geiser-syntax--module-definition-re nil t)
+          (match-string-no-properties 1))))))
 
 ;;; Indentation:
 

@@ -63,11 +63,11 @@
 (defconst geiser-edit--def-re
   (regexp-opt '("define" "defmacro" "define-macro" "define-syntax" "define*")))
 
-(defsubst geiser-edit--def-re (symbol)
-  (format "(%s +(?%s\\_>" geiser-edit--def-re (regexp-quote (symbol-name symbol))))
+(defsubst geiser-edit--def-re (thing)
+  (format "(%s +(?%s\\_>" geiser-edit--def-re (regexp-quote (format "%s" thing))))
 
-(defsubst geiser-edit--symbol-re (symbol)
-  (format "\\_<%s\\_>" (regexp-quote (symbol-name symbol))))
+(defsubst geiser-edit--symbol-re (thing)
+  (format "\\_<%s\\_>" (regexp-quote (format "%s" thing))))
 
 (defun geiser-edit--goto-line (symbol line)
   (if (numberp line)
@@ -81,7 +81,7 @@
   (let* ((loc (geiser-eval--retort-result ret))
          (file (geiser-edit--location-file loc))
          (line (geiser-edit--location-line loc)))
-    (unless file (error "Couldn't find edit location"))
+    (unless file (error "Couldn't find edit location for '%s'" symbol))
     (unless (file-readable-p file) (error "Couldn't open '%s' for read" file))
     (geiser-edit--visit-file file geiser-edit-symbol-method)
     (geiser-edit--goto-line symbol line)))
@@ -115,6 +115,12 @@ With prefix, asks for the symbol to edit."
   (condition-case nil
       (pop-tag-mark)
     (error "No previous location for find symbol invocation")))
+
+(defun geiser-edit-module (module)
+  "Asks for a module and opens it in a new buffer."
+  (interactive (list (geiser-completion--read-module)))
+  (let ((cmd `(:gs ((:ge module-location) (quote (:scm ,module))))))
+    (geiser-edit--try-edit module (geiser-eval--send/wait cmd))))
 
 
 (provide 'geiser-edit)
