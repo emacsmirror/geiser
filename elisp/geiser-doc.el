@@ -53,7 +53,7 @@
 ;;; Docstrings:
 
 (defun geiser-doc--get-docstring (symbol)
-  (geiser-eval--send/result `(:eval ((:ge docstring) ',symbol))))
+  (geiser-eval--send/result `(:eval ((:ge symbol-documentation) ',symbol))))
 
 (defun geiser-doc--get-module-children (module)
   (geiser-eval--send/result `(:eval ((:ge module-children) (quote (:scm ,module))))))
@@ -63,7 +63,7 @@
 
 (defun geiser-doc--insert-title (title)
   (let ((p (point)))
-    (insert title)
+    (insert (format "%s" title))
     (put-text-property p (point) 'face 'geiser-font-lock-doc-title))
   (newline))
 
@@ -86,11 +86,14 @@ With prefix argument, ask for symbol (with completion)."
                     (geiser-completion--read-symbol "Symbol: " (symbol-at-point)))))
     (when symbol
       (let ((ds (geiser-doc--get-docstring symbol)))
-        (if (or (not (stringp ds)) (zerop (length ds)))
+        (if (or (not ds) (not (listp ds)))
             (message "No documentation available for '%s'" symbol)
           (geiser-doc--with-buffer
             (erase-buffer)
-            (insert ds))
+            (geiser-doc--insert-title (cdr (assoc 'signature ds)))
+            (newline)
+            (insert (or (cdr (assoc 'docstring ds)) ""))
+            (goto-line (point-min)))
           (geiser-doc--pop-to-buffer))))))
 
 (defun geiser-doc-module (module)
