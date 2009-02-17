@@ -65,3 +65,18 @@
     | C-cm         | See module documentation                |
     | C-ca         | Toggle autodoc mode                     |
     |--------------+-----------------------------------------|
+
+*** In the documentation browser:
+
+    |-----------+----------------------------------------------|
+    | n/p       | next/previous page                           |
+    | l         | previous page                                |
+    | SPC/S-SPC | scroll up/down                               |
+    | TAB/S-TAB | next/previous link                           |
+    | k         | kill current page and go to previous or next |
+    | r         | refresh page                                 |
+    | c         | clean browsing history                       |
+    | M-.       | edit symbol at point                         |
+    | C-cz      | switch to REPL                               |
+    | q         | bury buffer                                  |
+    |-----------+----------------------------------------------|
