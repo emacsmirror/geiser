@@ -49,11 +49,11 @@
 
 (defsubst geiser-eval--eval (code)
   (geiser-eval--scheme-str
-   `((@ (geiser eval) eval-in) (quote ,(nth 0 code)) (:module ,(nth 1 code)))))
+   `((@ (geiser emacs) ge:eval) (quote ,(nth 0 code)) (:module ,(nth 1 code)))))
 
 (defsubst geiser-eval--comp (code)
   (geiser-eval--scheme-str
-   `((@ (geiser eval) compile-in) (quote ,(nth 0 code)) (:module ,(nth 1 code)))))
+   `((@ (geiser emacs) ge:compile) (quote ,(nth 0 code)) (:module ,(nth 1 code)))))
 
 (defsubst geiser-eval--module (code)
   (geiser-eval--scheme-str
