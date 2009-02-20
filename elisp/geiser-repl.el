@@ -49,6 +49,11 @@
   :type 'string
   :group 'geiser-repl)
 
+(defcustom geiser-repl-guile-init-file "~/.guile-geiser"
+  "Initialization file with user code for the Guile REPL."
+  :type 'string
+  :group 'geiser-repl)
+
 (defcustom geiser-repl-use-other-window t
   "Whether to Use a window other than the current buffer's when
 switching to the Geiser REPL buffer."
@@ -76,14 +81,16 @@ REPL buffer."
       (setq geiser-repl--buffer (current-buffer)))))
 
 (defun geiser-repl--start-process ()
-  (let ((guile geiser-repl-guile-binary))
+  (let* ((guile geiser-repl-guile-binary)
+         (args `("-q" "-L" ,(concat geiser-scheme-dir "/guile/")))
+         (init-file (and geiser-repl-guile-init-file
+                         (expand-file-name geiser-repl-guile-init-file)))
+         (args (if (and init-file (file-readable-p init-file))
+                   `(,@args "-l" ,init-file)
+                 args)))
     (message "Starting Geiser REPL ...")
     (pop-to-buffer (geiser-repl--buffer))
-    (make-comint-in-buffer "Geiser REPL"
-                           (current-buffer)
-                           guile
-                           nil
-                           "-L" (concat geiser-scheme-dir "/guile/")  "-q")
+    (apply 'make-comint-in-buffer `("Geiser REPL" ,(current-buffer) ,guile nil ,@args))
     (geiser-repl--wait-for-prompt 10000)
     (geiser-con--setup-connection (current-buffer) geiser-repl--prompt-regex)))
 
