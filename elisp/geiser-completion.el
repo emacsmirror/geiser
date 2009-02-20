@@ -155,7 +155,8 @@ terminates a current completion."
 
 (defun geiser-completion--complete (prefix modules)
   (let* ((symbols (if modules (geiser-completion--module-list)
-                    (geiser-completion--symbol-list prefix)))
+                    (append (geiser-syntax--local-bindings)
+                            (geiser-completion--symbol-list prefix))))
          (completions (all-completions prefix symbols))
          (partial (try-completion prefix symbols))
          (partial (if (eq partial t) prefix partial)))

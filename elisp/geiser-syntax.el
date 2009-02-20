@@ -53,6 +53,53 @@
 
 ;;; Code parsing:
 
+(geiser-popup--define syntax " *geiser syntax analyst*" scheme-mode)
+
+(defun geiser-syntax--complete-partial-sexp (buffer begin end)
+  (set-buffer buffer)
+  (let ((inhibit-read-only t))
+    (copy-to-buffer (geiser-syntax--buffer) begin end))
+  (geiser-syntax--with-buffer
+    (goto-char (point-max))
+    (skip-syntax-backward "-")
+    (let ((pps (parse-partial-sexp (point-min) (point))))
+      (cond ((nth 8 pps) ;; inside a comment or string
+             (delete-region (nth 8 pps) (point-max)))
+            ((nth 5 pps) (delete-char -1))) ;; after a quote
+      (let ((depth (nth 0 pps)))
+        (unless (zerop depth) (insert (make-string depth ?\)))))
+      (geiser-syntax--prepare-scheme-for-elisp-reader)
+      (read (current-buffer)))))
+
+(defsubst geiser-syntax--get-partial-sexp ()
+  (save-excursion
+    (let* ((begin (point))
+           (end (progn (beginning-of-defun) (point))))
+      (geiser-syntax--complete-partial-sexp (current-buffer) begin end))))
+
+(defun geiser-syntax--collect-local-symbols (sexp acc)
+  (cond ((or (null sexp) (not (listp sexp))) acc)
+        ((listp (car sexp))
+         (geiser-syntax--collect-local-symbols
+          (cdr sexp)
+          (geiser-syntax--collect-local-symbols (car sexp) acc)))
+        ((memq (car sexp) '(define define*))
+         (let* ((name (cadr sexp))
+                (name (if (symbolp name) name (car name)))
+                (acc (if (symbolp name) (cons name acc) acc)))
+           (geiser-syntax--collect-local-symbols (cddr sexp) acc)))
+        ((memq (car sexp) '(let let* letrec))
+         (let* ((n (if (listp (nth 1 sexp)) 1 2))
+                (syms (mapcar 'car (nth n sexp)))
+                (rest (if (= 1 n) (cddr sexp) (cdr (cddr sexp)))))
+           (geiser-syntax--collect-local-symbols rest (append syms acc))))
+        (t (geiser-syntax--collect-local-symbols (cdr sexp) acc))))
+
+(defsubst geiser-syntax--local-bindings ()
+  (ignore-errors
+    (mapcar 'symbol-name
+            (geiser-syntax--collect-local-symbols (geiser-syntax--get-partial-sexp) '()))))
+
 (defsubst geiser-syntax--end-of-thing ()
   (let ((sc (or (syntax-class (syntax-after (point))) 0)))
     (when (= sc 7) (forward-char))
@@ -69,7 +116,6 @@
     (let* ((p (geiser-syntax--end-of-thing))
            (current (cons (symbol-at-point) 0))
            (data))
-;;           (data (when (car current) (list current))))
       (ignore-errors
         (while (not (bobp))
           (backward-up-list)
