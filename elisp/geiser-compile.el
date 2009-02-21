@@ -69,14 +69,14 @@
       (message "")
       (geiser-compile--pop-to-buffer))))
 
-(defun geiser-compile--file-op (path op msg)
+(defun geiser-compile--file-op (path compile-p msg)
   (let* ((b/p (geiser-compile--buffer/path path))
          (buffer (car b/p))
          (path (cdr b/p))
          (msg (format "%s %s ..." msg path)))
     (message msg)
     (geiser-compile--display-result
-     msg (geiser-eval--send/wait `(:eval ((:ge ,op) ,path) (geiser emacs))))))
+     msg (geiser-eval--send/wait `(,(if compile-p :comp-file :load-file) ,path)))))
 
 
 ;;; User commands:
@@ -84,7 +84,7 @@
 (defun geiser-compile-file (path)
   "Compile and load Scheme file."
   (interactive "FScheme file: ")
-  (geiser-compile--file-op path 'compile-file "Compiling"))
+  (geiser-compile--file-op path t "Compiling"))
 
 (defun geiser-compile-current-buffer ()
   "Compile and load current Scheme file."
@@ -94,7 +94,7 @@
 (defun geiser-load-file (path)
   "Load Scheme file."
   (interactive "FScheme file: ")
-  (geiser-compile--file-op path 'load-file "Loading"))
+  (geiser-compile--file-op path nil "Loading"))
 
 (defun geiser-load-current-buffer ()
   "Load current Scheme file."

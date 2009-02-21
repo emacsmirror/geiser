@@ -40,6 +40,8 @@
         ((listp code)
          (cond ((eq (car code) :eval) (geiser-eval--eval (cdr code)))
                ((eq (car code) :comp) (geiser-eval--comp (cdr code)))
+               ((eq (car code) :load-file) (geiser-eval--load-file (cadr code)))
+               ((eq (car code) :comp-file) (geiser-eval--comp-file (cadr code)))
                ((eq (car code) :module) (geiser-eval--module (cadr code)))
                ((eq (car code) :ge) (geiser-eval--ge (cadr code)))
                ((eq (car code) :scm) (cadr code))
@@ -54,6 +56,12 @@
 (defsubst geiser-eval--comp (code)
   (geiser-eval--scheme-str
    `((@ (geiser emacs) ge:compile) (quote ,(nth 0 code)) (:module ,(nth 1 code)))))
+
+(defsubst geiser-eval--load-file (file)
+  (geiser-eval--scheme-str `((@ (geiser emacs) ge:load-file) ,file)))
+
+(defsubst geiser-eval--comp-file (file)
+  (geiser-eval--scheme-str `((@ (geiser emacs) ge:compile-file) ,file)))
 
 (defsubst geiser-eval--module (code)
   (geiser-eval--scheme-str
