@@ -32,15 +32,6 @@
 
 ;;; Debug buffer mode:
 
-(defvar geiser-debug-mode-map
-  (let ((map (make-keymap)))
-    (suppress-keymap map)
-    (define-key map "g" 'geiser-debug-goto-error)
-    (define-key map "\C-c\C-c" 'geiser-debug-goto-error)
-    (define-key map "n" 'next-line)
-    (define-key map "p" 'previous-line)
-    map))
-
 (defconst geiser-debug--error-alist
   '(("^In file \\([^ \n]+\\):\\([0-9]+\\):\\([0-9]+\\)" 1 2 3)
     ("^Error.+$" nil nil nil 0)))
