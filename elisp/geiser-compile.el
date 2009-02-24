@@ -24,18 +24,9 @@
 
 ;;; Code:
 
+(require 'geiser-debug)
 (require 'geiser-eval)
-(require 'geiser-popup)
 (require 'geiser-base)
-
-
-;;; Compilation buffer:
-
-(define-derived-mode geiser-compile-mode compilation-mode "Geiser Compilation"
-  "Major mode showing the results of compiling or loading scheme files.
-\{geiser-compile-mode-keymap}")
-
-(geiser-popup--define compile "*Geiser compilation*" geiser-compile-mode)
 
 
 ;;; Auxiliary functions:
@@ -49,25 +40,10 @@
       (cons buffer path))))
 
 (defun geiser-compile--display-result (title ret)
-  (let ((err (geiser-eval--retort-error ret))
-        (output (geiser-eval--retort-output ret)))
-    (geiser-compile--with-buffer
-      (erase-buffer)
-      (insert title)
-      (newline)
-      (when output
-        (insert output)
-        (newline))
-      (when err
-        (insert "\n" (geiser-eval--error-msg err) "\n"))
-      (goto-char (point-min)))
-    (if (not err)
-        (message "%s %s" title (if (> 0 (length output))
-                                   (geiser--chomp output)
-                                 (or (geiser-eval--retort-result ret)
-                                     "OK!")))
-      (message "")
-      (geiser-compile--pop-to-buffer))))
+  (if (not (geiser-eval--retort-error ret))
+      (message "%s %s" title (or (geiser-eval--retort-result ret) "OK!"))
+    (message "")
+    (geiser-debug--display-retort title ret)))
 
 (defun geiser-compile--file-op (path compile-p msg)
   (let* ((b/p (geiser-compile--buffer/path path))

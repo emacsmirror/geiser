@@ -30,8 +30,8 @@
 (require 'geiser-completion)
 (require 'geiser-edit)
 (require 'geiser-autodoc)
+(require 'geiser-debug)
 (require 'geiser-eval)
-(require 'geiser-popup)
 (require 'geiser-custom)
 (require 'geiser-base)
 
@@ -57,19 +57,6 @@
 
 ;;; Auxiliary functions:
 
-(geiser-popup--define mode "*Geiser evaluation results*" scheme-mode)
-
-(defun geiser-eval--display-error (err output)
-  (if (not output)
-      (message (geiser-eval--error-str err))
-    (geiser-mode--with-buffer
-      (erase-buffer)
-      (insert ";; " (geiser-eval--error-str err))
-      (newline 2)
-      (insert output)
-      (newline))
-    (geiser-mode--pop-to-buffer)))
-
 (defun geiser-eval--send-region (compile start end and-go)
   (let* ((str (buffer-substring-no-properties start end))
          (code `(,(if compile :comp :eval) (:scm ,str)))
@@ -81,7 +68,7 @@
       (goto-char (point-max)))
     (if (not err)
         (message (format "=> %s" (geiser-eval--retort-result ret)))
-      (geiser-eval--display-error err (geiser-eval--retort-output ret)))))
+      (geiser-debug--display-retort str ret))))
 
 
 ;;; Evaluation commands:

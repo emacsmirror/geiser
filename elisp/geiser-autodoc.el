@@ -75,8 +75,7 @@ when `geiser-autodoc-display-module-p' is on."
                                            (cdr pr))
         (setq geiser-autodoc--last-funs funs)
         (geiser-eval--send
-         `(:eval ((:ge arguments)
-                  ,@(mapcar (lambda (f) (list 'quote (car f))) funs)))
+         `(:eval ((:ge arguments) ,@(mapcar (lambda (f) (list 'quote (car f))) funs)))
          'geiser-autodoc--function-args-cont)
         ""))))
 
@@ -84,12 +83,9 @@ when `geiser-autodoc-display-module-p' is on."
   (let ((result (geiser-eval--retort-result ret)))
     (when (and result (listp result))
       (setq geiser-autodoc--last result)
-      (eldoc-message
-       (geiser-autodoc--fun-args-str (car result)
-                                     (cdr result)
-                                     (or (cdr (assoc (car result)
-                                                     geiser-autodoc--last-funs))
-                                         0))))))
+      (let* ((pos (or (cdr (assoc (car result) geiser-autodoc--last-funs)) 0))
+             (msg (geiser-autodoc--fun-args-str (car result) (cdr result) pos)))
+        (when msg (eldoc-message msg))))))
 
 (defun geiser-autodoc--insert (sym current pos)
   (let ((str (format "%s" sym)))
@@ -100,34 +96,35 @@ when `geiser-autodoc-display-module-p' is on."
     (insert str)))
 
 (defun geiser-autodoc--fun-args-str (fun args pos)
-  (save-current-buffer
-    (set-buffer (geiser-syntax--font-lock-buffer))
-    (erase-buffer)
-    (let* ((current 0)
-           (module (and geiser-autodoc-display-module-p
-                        (cdr (assoc 'module args))))
-           (fun (if module
-                    (format geiser-autodoc-procedure-name-format module fun)
-                  fun)))
-      (insert "(")
-      (geiser-autodoc--insert fun current pos)
-      (dolist (arg (cdr (assoc 'required args)))
+  (when fun
+    (save-current-buffer
+      (set-buffer (geiser-syntax--font-lock-buffer))
+      (erase-buffer)
+      (let* ((current 0)
+             (module (and geiser-autodoc-display-module-p
+                          (cdr (assoc 'module args))))
+             (fun (if module
+                      (format geiser-autodoc-procedure-name-format module fun)
+                    fun)))
+        (insert "(")
+        (geiser-autodoc--insert fun current pos)
+        (dolist (arg (cdr (assoc 'required args)))
+          (setq current (1+ current))
+          (insert " ")
+          (geiser-autodoc--insert arg current pos))
         (setq current (1+ current))
-        (insert " ")
-        (geiser-autodoc--insert arg current pos))
-      (setq current (1+ current))
-      (when (cdr (assoc 'optional args))
-        (when (> pos current) (setq current pos))
-        (insert " . ")
-        (geiser-autodoc--insert (cdr (assoc 'optional args)) current pos))
-      (insert ")")
-      (buffer-string))))
+        (when (cdr (assoc 'optional args))
+          (when (> pos current) (setq current pos))
+          (insert " . ")
+          (geiser-autodoc--insert (cdr (assoc 'optional args)) current pos))
+        (insert ")")
+        (buffer-string)))))
 
 
 ;;; Autodoc function:
 
 (defun geiser-autodoc--eldoc-function ()
-  (geiser-autodoc--function-args (geiser-syntax--enclosing-form-data)))
+  (or (geiser-autodoc--function-args (geiser-syntax--enclosing-form-data)) ""))
 
 
 ;;; Autodoc mode:
