@@ -41,9 +41,15 @@
     (define-key map "p" 'previous-line)
     map))
 
+(defconst geiser-debug--error-alist
+  '(("^In file \\([^ \n]+\\):\\([0-9]+\\):\\([0-9]+\\)" 1 2 3)
+    ("^Error.+$" nil nil nil 0)))
+
 (define-derived-mode geiser-debug-mode compilation-mode "Geiser Dbg"
   "A major mode for displaying Scheme compilation and evaluation results.
-\\{geiser-debug-mode-map}")
+\\{geiser-debug-mode-map}"
+  (set (make-local-variable 'compilation-error-regexp-alist)
+       geiser-debug--error-alist))
 
 
 ;;; Buffer for displaying evaluation results:
@@ -84,7 +90,7 @@
         (source (geiser-debug--frame-source frame))
         (description (geiser-debug--frame-desc frame)))
     (if source
-        (insert (format "%s:%s:%s\n"
+        (insert (format "In file %s:%s:%s\n"
                         (geiser-debug--frame-source-file source)
                         (geiser-debug--frame-source-line source)
                         (geiser-debug--frame-source-column source)))
