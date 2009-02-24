@@ -34,18 +34,11 @@
     | C-cC-dm | See module documentation                        |
     | C-cC-da | Toggle autodoc mode                             |
     |---------+-------------------------------------------------|
-
-       If `geiser-mode-smart-tab-p' is nil
-    |----------+-------------------------------|
-    | M-TAB    | Complete symbol at point      |
-    | C-uM-TAB | Complete module name at point |
-    |----------+-------------------------------|
-
-       If `geiser-mode-smart-tab-p' is t
-    |-------+-----------------------------------------|
-    | TAB   | Complete symbol at point or indent      |
-    | M-TAB | Complete module name at point or indent |
-    |-------+-----------------------------------------|
+    | M-TAB   | Complete symbol at point                        |
+    | C-.     | Complete module name at point                   |
+    | TAB     | Complete symbol at point or indent              |
+    |         | (If `geiser-mode-smart-tab-p' is t)             |
+    |---------+-------------------------------------------------|
 
 *** In the REPL
 
@@ -53,8 +46,8 @@
     | C-cC-z, C-cz | Start Scheme REPL (if it's not running) |
     |--------------+-----------------------------------------|
     | M-.          | Edit symbol at point                    |
-    | TAB          | Complete symbol at point                |
-    | M-TAB        | Complete module name at point           |
+    | TAB, M-TAB   | Complete symbol at point                |
+    | C-.          | Complete module name at point           |
     |--------------+-----------------------------------------|
     | M-p, M-n     | Prompt history, matching current prefix |
     |--------------+-----------------------------------------|
@@ -80,3 +73,7 @@
     | C-cz      | switch to REPL                               |
     | q         | bury buffer                                  |
     |-----------+----------------------------------------------|
+
+*** In backtrace (evaluation/compile result) buffers:
+
+    Default error navigation keys used by emacs' compilation mode.

@@ -53,9 +53,7 @@
 (defun geiser-debug--display-retort (what ret)
   (let* ((err (geiser-eval--retort-error ret))
          (output (geiser-eval--retort-output ret))
-         (stack (geiser-eval--retort-stack ret))
-         (step 2)
-         (indent step))
+         (stack (geiser-eval--retort-stack ret)))
     (when err
       (geiser-debug--with-buffer
         (erase-buffer)
@@ -63,9 +61,7 @@
         (newline 2)
         (insert (geiser-eval--error-str err) "\n\n")
         (when output (insert output "\n\n"))
-        (dolist (f (reverse (cdr stack)))
-          (geiser-debug--display-stack-frame f indent)
-          (setq indent (+ step indent)))
+        (geiser-debug--display-stack stack)
         (goto-char (point-min)))
       (geiser-debug--pop-to-buffer))))
 
@@ -76,6 +72,14 @@
 (defsubst geiser-debug--frame-source-line (src) (or (cadr src) 1))
 (defsubst geiser-debug--frame-source-column (src) (or (caddr src) 0))
 
+(defun geiser-debug--display-stack (stack)
+  (let* ((frames (cdr stack))
+         (step 2)
+         (indent (* (length frames) step)))
+    (dolist (f frames)
+      (geiser-debug--display-stack-frame f indent)
+      (setq indent (- indent step)))))
+
 (defun geiser-debug--display-stack-frame (frame offset)
   (let ((procedure (geiser-debug--frame-proc frame))
         (source (geiser-debug--frame-source frame))
@@ -84,7 +88,7 @@
         (insert (format "In file %s:%s:%s\n"
                         (geiser-debug--frame-source-file source)
                         (geiser-debug--frame-source-line source)
-                        (geiser-debug--frame-source-column source)))
+                        (1+ (geiser-debug--frame-source-column source))))
       (insert "In expression:\n"))
     (insert (format "%s%s\n" (make-string offset ?\ ) description))))
 

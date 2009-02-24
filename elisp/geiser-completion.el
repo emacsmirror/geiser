@@ -244,13 +244,11 @@ Null prefix argument turns off the mode.
 
 When this mode is enable, TAB will indent if at point is at
 beginning of line or after a white space or closing parenthesis,
-and will try completing symbol at point otherwise. In addition,
-M-TAB will try module name completion."
+and will try completing symbol at point otherwise."
   :init-value nil
   :lighter geiser-smart-tab-mode-string
   :group 'geiser-mode
-  :keymap `((,(kbd "TAB") . geiser-completion--maybe-complete)
-            (,(kbd "M-TAB") . geiser-completion--complete-module)))
+  :keymap `(,(kbd "TAB") geiser-completion--maybe-complete))
 
 
 

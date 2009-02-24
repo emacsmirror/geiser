@@ -48,7 +48,7 @@
   :group 'geiser-autodoc
   :type 'boolean)
 
-(defcustom geiser-mode-smart-tab-p t
+(defcustom geiser-mode-smart-tab-p nil
   "Whether `geiser-smart-tab-mode' gets enabled by default in Scheme buffers."
   :group 'geiser-mode
   :type 'boolean)
@@ -126,7 +126,7 @@ With prefix, goes to the REPL buffer afterwards (as
 ;;; Geiser mode:
 
 (make-variable-buffer-local
- (defvar geiser-mode-string " Geiser"
+ (defvar geiser-mode-string " G"
    "Modeline indicator for geiser-mode"))
 
 (defvar geiser-mode-map (make-sparse-keymap)
@@ -162,6 +162,7 @@ interacting with the Geiser REPL is at your disposal.
 (define-key geiser-mode-map "\C-c\C-k" 'geiser-compile-current-buffer)
 
 (define-key geiser-mode-map (kbd "M-TAB") 'geiser-completion--complete-symbol)
+(define-key geiser-mode-map (kbd "C-.") 'geiser-completion--complete-module)
 (define-key geiser-mode-map "\M-." 'geiser-edit-symbol-at-point)
 (define-key geiser-mode-map "\M-," 'geiser-edit-pop-edit-symbol-stack)
 
