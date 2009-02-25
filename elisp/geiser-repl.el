@@ -25,6 +25,7 @@
 
 ;;; Code:
 
+(require 'geiser-autodoc)
 (require 'geiser-compile)
 (require 'geiser-edit)
 (require 'geiser-eval)
@@ -63,6 +64,11 @@ switching to the Geiser REPL buffer."
 (defcustom geiser-repl-window-allow-split t
   "Whether to allow window splitting when switching to the Geiser
 REPL buffer."
+  :type 'boolean
+  :group 'geiser-repl)
+
+(defcustom geiser-repl-autodoc-p t
+  "Whether to enable `geiser-autodoc-mode' in the REPL by default."
   :type 'boolean
   :group 'geiser-repl)
 
@@ -150,7 +156,8 @@ REPL buffer."
   (set (make-local-variable 'mode-line-process) nil)
   (set (make-local-variable 'comint-prompt-regexp) geiser-repl--prompt-regex)
   (set (make-local-variable 'comint-use-prompt-regexp) t)
-  (set (make-local-variable 'comint-prompt-read-only) t))
+  (set (make-local-variable 'comint-prompt-read-only) t)
+  (when geiser-repl-autodoc-p (geiser-autodoc-mode 1)))
 
 (define-key geiser-repl-mode-map "\C-cz" 'run-guile)
 (define-key geiser-repl-mode-map "\C-c\C-z" 'run-guile)

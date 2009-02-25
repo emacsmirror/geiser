@@ -38,7 +38,7 @@
 ;;; Faces:
 
 (defgroup geiser-faces nil
-  "Faces used by GEISER."
+  "Faces used by Geiser."
   :group 'geiser
   :group 'faces)
 
