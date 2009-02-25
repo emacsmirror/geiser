@@ -54,6 +54,11 @@
 (autoload 'geiser-mode "geiser-mode.el"
   "Minor mode adding Geiser REPL interaction to Scheme buffers." t)
 
+(mapc (lambda (group)
+        (custom-add-load group (symbol-name group))
+        (custom-add-load 'geiser (symbol-name group)))
+      '(geiser geiser-repl geiser-autodoc geiser-doc geiser-faces geiser-mode))
+
 
 ;;; Scheme mode setup:
 

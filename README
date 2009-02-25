@@ -6,9 +6,12 @@
     (load-file "<path-to-geiser>/elisp/geiser.el")
     (geiser-setup)
 
-  - Check the geiser customization group for some options. In
-    particular, geiser-repl-guile-binary, which should point to a
-    guile-vm executable.
+  - Check the geiser customization group for some options with:
+
+      M-x customize-group RET geiser RET
+
+    In particular, customize `geiser-repl-guile-binary' (in
+    geiser-repl), which should point to a guile-vm executable.
 
 * Quick key reference
 
