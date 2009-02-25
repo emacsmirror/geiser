@@ -32,6 +32,7 @@
 (require 'geiser-autodoc)
 (require 'geiser-debug)
 (require 'geiser-eval)
+(require 'geiser-repl)
 (require 'geiser-custom)
 (require 'geiser-base)
 
