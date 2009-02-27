@@ -67,64 +67,65 @@ when `geiser-autodoc-display-module-p' is on."
 (make-variable-buffer-local
  (defvar geiser-autodoc--last-funs nil))
 
-(defun geiser-autodoc--function-args (funs)
-  (when funs
-    (let ((pr (and (eq (car geiser-autodoc--last) (caar funs)) (car funs))))
-      (if pr (geiser-autodoc--fun-args-str (car pr)
-                                           (cdr geiser-autodoc--last)
-                                           (cdr pr))
-        (setq geiser-autodoc--last-funs funs)
-        (geiser-eval--send
-         `(:eval ((:ge arguments) ,@(mapcar (lambda (f) (list 'quote (car f))) funs)))
-         'geiser-autodoc--function-args-cont)
-        ""))))
+(defun geiser-autodoc--function-args (form)
+  (if (equal (car geiser-autodoc--last) form) (cdr geiser-autodoc--last)
+    (when form
+      (let ((res (geiser-eval--send/result
+                  `(:eval ((:ge autodoc) (quote (:scm ,form)))))))
+        (when (and res (listp res))
+          (setq geiser-autodoc--last
+                (cons form
+                      (geiser-autodoc--str (cdr (assoc 'signature res))
+                                           (or (cdr (assoc 'position res)) 0)
+                                           (cdr (assoc 'module res)))))
+          (cdr geiser-autodoc--last))))))
 
-(defun geiser-autodoc--function-args-cont (ret)
-  (let ((result (geiser-eval--retort-result ret)))
-    (when (and result (listp result))
-      (setq geiser-autodoc--last result)
-      (let* ((pos (or (cdr (assoc (car result) geiser-autodoc--last-funs)) 0))
-             (msg (geiser-autodoc--fun-args-str (car result) (cdr result) pos)))
-        (when msg (eldoc-message msg))))))
-
-(defun geiser-autodoc--insert (sym current pos)
-  (let ((str (format "%s" sym)))
+(defun geiser-autodoc--insert-arg (arg current pos)
+  (let ((str (format "%s" arg)))
     (when (= current pos)
       (put-text-property 0 (length str)
                          'face 'geiser-font-lock-autodoc-current-arg
                          str))
     (insert str)))
 
-(defun geiser-autodoc--fun-args-str (fun args pos)
-  (when fun
+(defun geiser-autodoc--insert-args (arg args current pos)
+  (when arg
+    (geiser-autodoc--insert-arg arg current pos)
+    (cond ((null args) (insert ")"))
+          ((listp args)
+           (insert " ")
+           (geiser-autodoc--insert-args (car args) (cdr args) (1+ current) pos))
+          (t (insert " . ")
+             (geiser-autodoc--insert-args args nil (1+ current) pos)))))
+
+(defun geiser-autodoc--str (signature pos module)
+  (when signature
     (save-current-buffer
       (set-buffer (geiser-syntax--font-lock-buffer))
       (erase-buffer)
-      (let* ((current 0)
-             (module (and geiser-autodoc-display-module-p
-                          (cdr (assoc 'module args))))
-             (fun (if module
-                      (format geiser-autodoc-procedure-name-format module fun)
-                    fun)))
-        (insert "(")
-        (geiser-autodoc--insert fun current pos)
-        (dolist (arg (cdr (assoc 'required args)))
-          (setq current (1+ current))
-          (insert " ")
-          (geiser-autodoc--insert arg current pos))
-        (setq current (1+ current))
-        (when (cdr (assoc 'optional args))
-          (when (> pos current) (setq current pos))
-          (insert " . ")
-          (geiser-autodoc--insert (cdr (assoc 'optional args)) current pos))
-        (insert ")")
+      (let ((proc (car signature))
+            (args (cdr signature)))
+        (insert (format "(%s "
+                        (if module
+                            (format geiser-autodoc-procedure-name-format module proc)
+                          proc)))
+        (if args
+            (if (listp args)
+                (geiser-autodoc--insert-args (car args) (cdr args) 1 pos)
+              (insert ". ")
+              (geiser-autodoc--insert-arg args 1 1)
+              (insert ")"))
+          (delete-char -1)
+          (insert ")"))
         (buffer-string)))))
 
 
 ;;; Autodoc function:
 
 (defun geiser-autodoc--eldoc-function ()
-  (or (geiser-autodoc--function-args (geiser-syntax--enclosing-form-data)) ""))
+  (condition-case e
+      (or (geiser-autodoc--function-args (geiser-syntax--get-partial-sexp t)) "")
+    (error (format "Autodoc not available (%s)" (error-message-string e)))))
 
 
 ;;; Autodoc mode:

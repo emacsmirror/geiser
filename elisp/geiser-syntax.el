@@ -55,27 +55,47 @@
 
 (geiser-popup--define syntax " *geiser syntax analyst*" scheme-mode)
 
-(defun geiser-syntax--complete-partial-sexp (buffer begin end)
+(defun geiser-syntax--prepare-scheme-for-elisp-reader ()
+  (goto-char (point-min))
+  (while (re-search-forward "#\<\\([^>]*?\\)\>" nil t)
+    (let ((from (match-beginning 1))
+          (to (match-end 1)))
+      (goto-char from)
+      (while (re-search-forward "\\([() ;'`]\\)" to t)
+        (replace-match "\\\\\\1"))
+      (goto-char to)))
+  (goto-char (point-min))
+  (while (re-search-forward "#(" nil t) (replace-match "(vector "))
+  (goto-char (point-min))
+  (while (re-search-forward "#" nil t) (replace-match "\\\\#"))
+  (goto-char (point-min))
+  (skip-syntax-forward "^("))
+
+(defun geiser-syntax--complete-partial-sexp (buffer begin end &optional str)
   (set-buffer buffer)
   (let ((inhibit-read-only t))
     (copy-to-buffer (geiser-syntax--buffer) begin end))
   (geiser-syntax--with-buffer
     (goto-char (point-max))
-    (skip-syntax-backward "-")
+    (skip-syntax-backward "-<>")
+    (kill-region (point) (point-max))
     (let ((pps (parse-partial-sexp (point-min) (point))))
-      (cond ((nth 8 pps) ;; inside a comment or string
-             (delete-region (nth 8 pps) (point-max)))
-            ((nth 5 pps) (delete-char -1))) ;; after a quote
-      (let ((depth (nth 0 pps)))
-        (unless (zerop depth) (insert (make-string depth ?\)))))
+      (when (nth 8 pps) ;; inside a comment or string
+        (delete-region (nth 8 pps) (point-max))))
+    (cond ((eq (char-after (1- (point))) ?\)) (kill-sexp -1) (insert "XXpointXX"))
+          ((eq (char-after (point)) ?\() (kill-sexp 1) (insert "XXpointXX")))
+    (let ((depth (nth 0 (parse-partial-sexp (point-min) (point)))))
+      (unless (zerop depth) (insert (make-string depth ?\)))))
+    (if str
+        (buffer-string)
       (geiser-syntax--prepare-scheme-for-elisp-reader)
       (read (current-buffer)))))
 
-(defsubst geiser-syntax--get-partial-sexp ()
-  (save-excursion
-    (let* ((begin (point))
-           (end (progn (beginning-of-defun) (point))))
-      (geiser-syntax--complete-partial-sexp (current-buffer) begin end))))
+(defsubst geiser-syntax--get-partial-sexp (&optional str)
+  (unless (zerop (nth 0 (syntax-ppss)))
+    (let* ((end (save-excursion (skip-syntax-forward "^-()") (point)))
+         (begin (save-excursion (beginning-of-defun) (point))))
+    (geiser-syntax--complete-partial-sexp (current-buffer) begin end str))))
 
 (defun geiser-syntax--collect-local-symbols (sexp acc)
   (cond ((or (null sexp) (not (listp sexp))) acc)
@@ -99,52 +119,6 @@
   (ignore-errors
     (mapcar 'symbol-name
             (geiser-syntax--collect-local-symbols (geiser-syntax--get-partial-sexp) '()))))
-
-(defsubst geiser-syntax--end-of-thing ()
-  (let ((sc (or (syntax-class (syntax-after (point))) 0)))
-    (when (= sc 7) (forward-char))
-    (cond ((nth 3 (syntax-ppss))
-           (skip-syntax-forward "^\"")
-           (forward-char))
-          ((and (= sc 5) (eq ?\( (char-before))) (forward-char))
-          ((not (or (= sc 0) (= sc 12))) ;; comment, whitespace
-           (ignore-errors (forward-sexp))))
-    (point)))
-
-(defun geiser-syntax--enclosing-form-data ()
-  (save-excursion
-    (let* ((p (geiser-syntax--end-of-thing))
-           (current (cons (symbol-at-point) 0))
-           (data))
-      (ignore-errors
-        (while (not (bobp))
-          (backward-up-list)
-          (save-excursion
-            (forward-char)
-            (let ((proc (symbol-at-point))
-                  (arg-no 0))
-              (when proc
-                (while (< (point) p)
-                  (forward-sexp)
-                  (when (< (point) p) (setq arg-no (1+ arg-no))))
-                (push (cons proc arg-no) data))))))
-      (reverse (if (car current) (push current data) data)))))
-
-(defun geiser-syntax--prepare-scheme-for-elisp-reader ()
-  (goto-char (point-min))
-  (while (re-search-forward "#\<\\([^>]*?\\)\>" nil t)
-    (let ((from (match-beginning 1))
-          (to (match-end 1)))
-      (goto-char from)
-      (while (re-search-forward "\\([() ;'`]\\)" to t)
-        (replace-match "\\\\\\1"))
-      (goto-char to)))
-  (goto-char (point-min))
-  (while (re-search-forward "#(" nil t) (replace-match "(vector "))
-  (goto-char (point-min))
-  (while (re-search-forward "#" nil t) (replace-match "\\\\#"))
-  (goto-char (point-min))
-  (skip-syntax-forward "^("))
 
 
 ;;; Fontify strings as Scheme code:
