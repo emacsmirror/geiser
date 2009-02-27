@@ -42,6 +42,10 @@
 (geiser-custom--defface autodoc-current-arg
   'bold geiser-autodoc "highlighting current argument in autodoc messages")
 
+(geiser-custom--defface autodoc-procedure-name
+  'font-lock-function-name-face
+  geiser-autodoc "highlighting procedure name in autodoc messages")
+
 (defcustom geiser-autodoc-delay 0.2
   "Delay before autodoc messages are fetched and displayed, in seconds."
   :type 'number
@@ -98,6 +102,15 @@ when `geiser-autodoc-display-module-p' is on."
           (t (insert " . ")
              (geiser-autodoc--insert-args args nil (1+ current) pos)))))
 
+(defsubst geiser-autodoc--proc-name (proc module)
+  (let ((str (if module
+                 (format geiser-autodoc-procedure-name-format module proc)
+               proc)))
+    (put-text-property 0 (length str)
+                       'face 'geiser-font-lock-autodoc-procedure-name
+                       str)
+    str))
+
 (defun geiser-autodoc--str (signature pos module)
   (when signature
     (save-current-buffer
@@ -105,10 +118,7 @@ when `geiser-autodoc-display-module-p' is on."
       (erase-buffer)
       (let ((proc (car signature))
             (args (cdr signature)))
-        (insert (format "(%s "
-                        (if module
-                            (format geiser-autodoc-procedure-name-format module proc)
-                          proc)))
+        (insert (format "(%s " (geiser-autodoc--proc-name proc module)))
         (if args
             (if (listp args)
                 (geiser-autodoc--insert-args (car args) (cdr args) 1 pos)
