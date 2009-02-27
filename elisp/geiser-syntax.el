@@ -78,7 +78,7 @@
   (geiser-syntax--with-buffer
     (goto-char (point-max))
     (skip-syntax-backward "-<>")
-    (kill-region (point) (point-max))
+    (delete-region (point) (point-max))
     (let ((pps (parse-partial-sexp (point-min) (point))))
       (when (nth 8 pps) ;; inside a comment or string
         (delete-region (nth 8 pps) (point-max))))
