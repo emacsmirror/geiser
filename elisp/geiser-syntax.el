@@ -71,58 +71,37 @@
   (goto-char (point-min))
   (skip-syntax-forward "^("))
 
-(defun geiser-syntax--complete-partial-sexp (buffer begin end &optional str)
-  (set-buffer buffer)
-  (let ((inhibit-read-only t))
-    (copy-to-buffer (geiser-syntax--buffer) begin end))
+(defsubst geiser-syntax--del-sexp (arg)
+  (let ((p (point)))
+    (forward-sexp arg)
+    (delete-region p (point))))
+
+(defun geiser-syntax--complete-partial-sexp (buffer begin end)
   (geiser-syntax--with-buffer
-    (goto-char (point-max))
+    (erase-buffer)
+    (insert-buffer-substring-no-properties buffer begin end)
     (skip-syntax-backward "-<>")
     (delete-region (point) (point-max))
     (let ((pps (parse-partial-sexp (point-min) (point))))
       (when (nth 8 pps) ;; inside a comment or string
         (delete-region (nth 8 pps) (point-max))))
-    (cond ((eq (char-after (1- (point))) ?\)) (kill-sexp -1) (insert "XXpointXX"))
-          ((eq (char-after (point)) ?\() (kill-sexp 1) (insert "XXpointXX")))
+    (cond ((eq (char-after (1- (point))) ?\))
+           (geiser-syntax--del-sexp -1) (insert "XXpointXX"))
+          ((eq (char-after (point)) ?\()
+           (geiser-syntax--del-sexp 1) (insert "XXpointXX")))
     (when (memq (char-after (1- (point))) (list ?@ ?, ?\' ?\` ?\#))
       (skip-syntax-backward "^-(")
       (delete-region (point) (point-max))
       (insert "XXXpointXX"))
     (let ((depth (nth 0 (parse-partial-sexp (point-min) (point)))))
       (unless (zerop depth) (insert (make-string depth ?\)))))
-    (if str
-        (buffer-string)
-      (geiser-syntax--prepare-scheme-for-elisp-reader)
-      (read (current-buffer)))))
+    (buffer-substring-no-properties (point-min) (point))))
 
-(defsubst geiser-syntax--get-partial-sexp (&optional str)
+(defsubst geiser-syntax--get-partial-sexp ()
   (unless (zerop (nth 0 (syntax-ppss)))
     (let* ((end (save-excursion (skip-syntax-forward "^-()") (point)))
-         (begin (save-excursion (beginning-of-defun) (point))))
-    (geiser-syntax--complete-partial-sexp (current-buffer) begin end str))))
-
-(defun geiser-syntax--collect-local-symbols (sexp acc)
-  (cond ((or (null sexp) (not (listp sexp))) acc)
-        ((listp (car sexp))
-         (geiser-syntax--collect-local-symbols
-          (cdr sexp)
-          (geiser-syntax--collect-local-symbols (car sexp) acc)))
-        ((memq (car sexp) '(define define*))
-         (let* ((name (cadr sexp))
-                (name (if (symbolp name) name (car name)))
-                (acc (if (symbolp name) (cons name acc) acc)))
-           (geiser-syntax--collect-local-symbols (cddr sexp) acc)))
-        ((memq (car sexp) '(let let* letrec))
-         (let* ((n (if (listp (nth 1 sexp)) 1 2))
-                (syms (mapcar 'car (nth n sexp)))
-                (rest (if (= 1 n) (cddr sexp) (cdr (cddr sexp)))))
-           (geiser-syntax--collect-local-symbols rest (append syms acc))))
-        (t (geiser-syntax--collect-local-symbols (cdr sexp) acc))))
-
-(defsubst geiser-syntax--local-bindings ()
-  (ignore-errors
-    (mapcar 'symbol-name
-            (geiser-syntax--collect-local-symbols (geiser-syntax--get-partial-sexp) '()))))
+           (begin (save-excursion (beginning-of-defun) (point))))
+    (geiser-syntax--complete-partial-sexp (current-buffer) begin end))))
 
 
 ;;; Fontify strings as Scheme code:

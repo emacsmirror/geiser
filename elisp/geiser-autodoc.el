@@ -123,7 +123,7 @@ when `geiser-autodoc-display-module-p' is on."
 
 (defun geiser-autodoc--eldoc-function ()
   (condition-case e
-      (or (geiser-autodoc--function-args (geiser-syntax--get-partial-sexp t)) "")
+      (or (geiser-autodoc--function-args (geiser-syntax--get-partial-sexp)) "")
     (error (format "Autodoc not available (%s)" (error-message-string e)))))
 
 

@@ -29,6 +29,8 @@
 (require 'geiser-syntax)
 (require 'geiser-base)
 
+(eval-when-compile (require 'cl))
+
 
 ;;; Completions window handling, heavily inspired in slime's:
 
@@ -145,7 +147,11 @@ terminates a current completion."
 ;;; Completion functionality:
 
 (defsubst geiser-completion--symbol-list (prefix)
-  (geiser-eval--send/result `(:eval ((:ge completions) ,prefix))))
+  (delete-duplicates
+   (geiser-eval--send/result
+    `(:eval ((:ge completions) ,prefix
+             (quote (:scm ,(geiser-syntax--get-partial-sexp))))))
+   :test 'string=))
 
 (defsubst geiser-completion--module-list ()
   (geiser-eval--send/result '(:eval ((:ge all-modules)))))
