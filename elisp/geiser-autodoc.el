@@ -85,12 +85,12 @@ when `geiser-autodoc-display-module-p' is on."
           (cdr geiser-autodoc--last))))))
 
 (defun geiser-autodoc--insert-arg (arg current pos)
-  (let ((str (format "%s" (if (eq arg '\#:rest) "." arg))))
+  (let ((p (point))
+        (str (format "%s" (if (eq arg '\#:rest) "." arg))))
+    (insert str)
+    (when (listp arg) (replace-regexp "(quote \\(.*\\))" "'\\1" nil p (point)))
     (when (= current pos)
-      (put-text-property 0 (length str)
-                         'face 'geiser-font-lock-autodoc-current-arg
-                         str))
-    (insert str)))
+      (put-text-property p (point) 'face 'geiser-font-lock-autodoc-current-arg))))
 
 (defsubst geiser-autodoc--proc-name (proc module)
   (let ((str (if module
