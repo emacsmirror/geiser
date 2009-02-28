@@ -185,6 +185,12 @@ REPL buffer."
   (interactive)
   (when (= (point) (comint-bol)) (beginning-of-line)))
 
+(defun geiser-repl--beginning-of-defun ()
+  (let ((p (point)))
+    (comint-bol)
+    (when (not (eq (char-after (point)) ?\())
+      (skip-syntax-forward "^(" p))))
+
 (define-derived-mode geiser-repl-mode comint-mode "Geiser REPL"
   "Major mode for interacting with an inferior Guile repl process.
 \\{geiser-repl-mode-map}"
@@ -192,6 +198,8 @@ REPL buffer."
   (set (make-local-variable 'comint-prompt-regexp) geiser-repl--prompt-regex)
   (set (make-local-variable 'comint-use-prompt-regexp) t)
   (set (make-local-variable 'comint-prompt-read-only) t)
+  (set (make-local-variable 'beginning-of-defun-function)
+       'geiser-repl--beginning-of-defun)
   (set-syntax-table scheme-mode-syntax-table)
   (when geiser-repl-autodoc-p (geiser-autodoc-mode 1)))
 
