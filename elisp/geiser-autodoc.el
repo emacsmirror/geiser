@@ -88,7 +88,10 @@ when `geiser-autodoc-display-module-p' is on."
   (let ((p (point))
         (str (format "%s" (if (eq arg '\#:rest) "." arg))))
     (insert str)
-    (when (listp arg) (replace-regexp "(quote \\(.*\\))" "'\\1" nil p (point)))
+    (when (listp arg)
+      (save-excursion
+        (replace-regexp "(quote \\(.*\\))" "'\\1" nil p (point))
+        (replace-string "nil" "()" t p (point))))
     (when (= current pos)
       (put-text-property p (point) 'face 'geiser-font-lock-autodoc-current-arg))))
 

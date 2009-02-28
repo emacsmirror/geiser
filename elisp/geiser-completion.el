@@ -150,7 +150,7 @@ terminates a current completion."
   (delete-duplicates
    (geiser-eval--send/result
     `(:eval ((:ge completions) ,prefix
-             (quote (:scm ,(geiser-syntax--get-partial-sexp))))))
+             (quote (:scm ,(or (geiser-syntax--get-partial-sexp) "()"))))))
    :test 'string=))
 
 (defsubst geiser-completion--module-list ()
@@ -161,8 +161,7 @@ terminates a current completion."
 
 (defun geiser-completion--complete (prefix modules)
   (let* ((symbols (if modules (geiser-completion--module-list)
-                    (append (geiser-syntax--local-bindings)
-                            (geiser-completion--symbol-list prefix))))
+                    (geiser-completion--symbol-list prefix)))
          (completions (all-completions prefix symbols))
          (partial (try-completion prefix symbols))
          (partial (if (eq partial t) prefix partial)))
