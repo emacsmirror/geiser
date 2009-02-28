@@ -67,10 +67,44 @@ REPL buffer."
   :type 'boolean
   :group 'geiser-repl)
 
+(defcustom geiser-repl-history-filename (expand-file-name "~/.geiser_history")
+  "File where REPL input history is saved, so that it persists between sessions."
+  :type 'filename
+  :group 'geiser-repl)
+
+(defcustom geiser-repl-history-size comint-input-ring-size
+  "Maximum size of the saved REPL input history."
+  :type 'integer
+  :group 'geiser-repl)
+
 (defcustom geiser-repl-autodoc-p t
   "Whether to enable `geiser-autodoc-mode' in the REPL by default."
   :type 'boolean
   :group 'geiser-repl)
+
+
+;;; REPL History:
+
+(defun geiser-repl--sentinel (proc event)
+  (when (string= event "finished\n")
+    (with-current-buffer (process-buffer proc)
+      (let ((comint-input-ring-file-name geiser-repl-history-filename))
+        (comint-write-input-ring)
+        (when (buffer-name (current-buffer))
+          (insert "\nIt's been nice to interact with you!\n")
+          (insert "Press C-cz to bring me back.\n" ))))))
+
+(defun geiser-repl--input-filter (str)
+  (and (not (string-match "^\\s *$" str))
+       (not (string-match "^,quit *$" str))))
+
+(defun geiser-repl--history-setup ()
+  (set (make-local-variable 'comint-input-ring-file-name) geiser-repl-history-filename)
+  (set (make-local-variable 'comint-input-ring-size) geiser-repl-history-size)
+  (set (make-local-variable 'comint-input-filter) 'geiser-repl--input-filter)
+  (add-hook 'kill-buffer-hook 'comint-write-input-ring nil t)
+  (comint-read-input-ring t)
+  (set-process-sentinel (get-buffer-process (current-buffer)) 'geiser-repl--sentinel))
 
 
 ;;; Geiser REPL buffer/process:
@@ -98,6 +132,7 @@ REPL buffer."
     (pop-to-buffer (geiser-repl--buffer))
     (apply 'make-comint-in-buffer `("Geiser REPL" ,(current-buffer) ,guile nil ,@args))
     (geiser-repl--wait-for-prompt 10000)
+    (geiser-repl--history-setup)
     (geiser-con--setup-connection (current-buffer) geiser-repl--prompt-regex)))
 
 (defun geiser-repl--process (&optional start)
@@ -157,6 +192,7 @@ REPL buffer."
   (set (make-local-variable 'comint-prompt-regexp) geiser-repl--prompt-regex)
   (set (make-local-variable 'comint-use-prompt-regexp) t)
   (set (make-local-variable 'comint-prompt-read-only) t)
+  (set-syntax-table scheme-mode-syntax-table)
   (when geiser-repl-autodoc-p (geiser-autodoc-mode 1)))
 
 (define-key geiser-repl-mode-map "\C-cz" 'run-guile)
