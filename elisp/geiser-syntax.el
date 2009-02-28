@@ -84,6 +84,10 @@
         (delete-region (nth 8 pps) (point-max))))
     (cond ((eq (char-after (1- (point))) ?\)) (kill-sexp -1) (insert "XXpointXX"))
           ((eq (char-after (point)) ?\() (kill-sexp 1) (insert "XXpointXX")))
+    (when (memq (char-after (1- (point))) (list ?@ ?, ?\' ?\` ?\#))
+      (skip-syntax-backward "^-(")
+      (delete-region (point) (point-max))
+      (insert "XXXpointXX"))
     (let ((depth (nth 0 (parse-partial-sexp (point-min) (point)))))
       (unless (zerop depth) (insert (make-string depth ?\)))))
     (if str
