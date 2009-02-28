@@ -83,7 +83,7 @@ REPL buffer."
   :group 'geiser-repl)
 
 
-;;; REPL History:
+;;; REPL history:
 
 (defun geiser-repl--sentinel (proc event)
   (when (string= event "finished\n")
@@ -91,7 +91,7 @@ REPL buffer."
       (let ((comint-input-ring-file-name geiser-repl-history-filename))
         (comint-write-input-ring)
         (when (buffer-name (current-buffer))
-          (insert "\nIt's been nice to interact with you!\n")
+          (insert "\nIt's been nice interacting with you!\n")
           (insert "Press C-cz to bring me back.\n" ))))))
 
 (defun geiser-repl--input-filter (str)

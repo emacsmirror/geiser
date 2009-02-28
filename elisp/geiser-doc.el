@@ -125,9 +125,14 @@
 
 (defun geiser-doc--insert-title (title)
   (let ((p (point)))
-    (insert (format "%s" title))
-    (put-text-property p (point) 'face 'geiser-font-lock-doc-title))
-  (newline))
+    (if (not (listp title))
+        (insert (format "%s" title))
+      (insert "(" (format "%s" (car title)))
+      (dolist (a (cdr title))
+        (insert " " (if (eq a '\#:rest) "." (format "%s" a))))
+      (insert ")"))
+    (put-text-property p (point) 'face 'geiser-font-lock-doc-title)
+    (newline)))
 
 (defun geiser-doc--insert-list (title lst module)
   (when lst

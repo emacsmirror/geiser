@@ -85,22 +85,12 @@ when `geiser-autodoc-display-module-p' is on."
           (cdr geiser-autodoc--last))))))
 
 (defun geiser-autodoc--insert-arg (arg current pos)
-  (let ((str (format "%s" arg)))
+  (let ((str (format "%s" (if (eq arg '\#:rest) "." arg))))
     (when (= current pos)
       (put-text-property 0 (length str)
                          'face 'geiser-font-lock-autodoc-current-arg
                          str))
     (insert str)))
-
-(defun geiser-autodoc--insert-args (arg args current pos)
-  (when arg
-    (geiser-autodoc--insert-arg arg current pos)
-    (cond ((null args) (insert ")"))
-          ((listp args)
-           (insert " ")
-           (geiser-autodoc--insert-args (car args) (cdr args) (1+ current) pos))
-          (t (insert " . ")
-             (geiser-autodoc--insert-args args nil (1+ current) pos)))))
 
 (defsubst geiser-autodoc--proc-name (proc module)
   (let ((str (if module
@@ -116,17 +106,16 @@ when `geiser-autodoc-display-module-p' is on."
     (save-current-buffer
       (set-buffer (geiser-syntax--font-lock-buffer))
       (erase-buffer)
-      (let ((proc (car signature))
-            (args (cdr signature)))
-        (insert (format "(%s " (geiser-autodoc--proc-name proc module)))
-        (if args
-            (if (listp args)
-                (geiser-autodoc--insert-args (car args) (cdr args) 1 pos)
-              (insert ". ")
-              (geiser-autodoc--insert-arg args 1 1)
-              (insert ")"))
-          (delete-char -1)
-          (insert ")"))
+      (let* ((proc (car signature))
+             (args (cdr signature))
+             (current 1)
+             (pos (if (> pos (length args)) (length args) pos)))
+        (insert (format "(%s" (geiser-autodoc--proc-name proc module)))
+        (dolist (a args)
+          (insert " ")
+          (geiser-autodoc--insert-arg a current pos)
+          (setq current (1+ current)))
+        (insert ")")
         (buffer-string)))))
 
 
