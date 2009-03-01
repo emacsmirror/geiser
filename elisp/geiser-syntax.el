@@ -80,18 +80,18 @@
   (geiser-syntax--with-buffer
     (erase-buffer)
     (insert-buffer-substring-no-properties buffer begin end)
-    (skip-syntax-backward "-<>")
-    (delete-region (point) (point-max))
+    (when (not (eq (char-after (point)) ?\())
+      (skip-syntax-backward "-<>")
+      (delete-region (point) (point-max)))
     (let ((pps (parse-partial-sexp (point-min) (point))))
       (when (nth 8 pps) ;; inside a comment or string
         (delete-region (nth 8 pps) (point-max))))
-    (cond ((eq (char-after (1- (point))) ?\))
-           (geiser-syntax--del-sexp -1) (insert "XXpointXX"))
-          ((eq (char-after (point)) ?\()
-           (geiser-syntax--del-sexp 1) (insert "XXpointXX")))
-    (when (memq (char-after (1- (point))) (list ?. ?@ ?, ?\' ?\` ?\#))
-      (skip-syntax-backward "^-(")
-      (delete-region (point) (point-max))
+    (when (cond ((eq (char-after (1- (point))) ?\)) (geiser-syntax--del-sexp -1) t)
+                ((eq (char-after (point)) ?\() (delete-region (point) (point-max)) t)
+                ((memq (char-after (1- (point))) (list ?. ?@ ?, ?\' ?\` ?\#))
+                 (skip-syntax-backward "^-(")
+                 (delete-region (point) (point-max))
+                 t))
       (insert "XXXpointXX"))
     (let ((depth (nth 0 (parse-partial-sexp (point-min) (point)))))
       (unless (zerop depth) (insert (make-string depth ?\)))))
@@ -99,9 +99,10 @@
 
 (defsubst geiser-syntax--get-partial-sexp ()
   (unless (zerop (nth 0 (syntax-ppss)))
-    (let* ((end (save-excursion (skip-syntax-forward "^-()") (point)))
+    (let* ((end (if (eq (char-after (point)) ?\() (1+ (point))
+                  (save-excursion (skip-syntax-forward "^-()") (point))))
            (begin (save-excursion (beginning-of-defun) (point))))
-    (geiser-syntax--complete-partial-sexp (current-buffer) begin end))))
+      (geiser-syntax--complete-partial-sexp (current-buffer) begin end))))
 
 
 ;;; Fontify strings as Scheme code:
