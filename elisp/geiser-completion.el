@@ -197,8 +197,8 @@ terminates a current completion."
 (defsubst geiser-completion--beg-pos (module)
   (if module
       (max (save-excursion (beginning-of-line) (point))
-           (save-excursion (skip-syntax-backward "^(") (1- (point))))
-    (save-excursion (skip-syntax-backward "^-()") (point))))
+           (save-excursion (skip-syntax-backward "^(>") (1- (point))))
+    (save-excursion (skip-syntax-backward "^-()>") (point))))
 
 (defun geiser-completion--complete-symbol (&optional arg)
   "Complete the symbol at point.
