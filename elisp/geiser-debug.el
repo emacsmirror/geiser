@@ -25,6 +25,7 @@
 
 ;;; Code:
 
+(require 'geiser-repl)
 (require 'geiser-eval)
 (require 'geiser-popup)
 (require 'geiser-base)
@@ -93,8 +94,14 @@
     (insert (format "%s%s\n" (make-string offset ?\ ) description))))
 
 (defun geiser-debug--send-region (compile start end and-go)
-  (let* ((ret (geiser-eval--send-region compile start end and-go))
+  (let* ((str (buffer-substring-no-properties start end))
+         (code `(,(if compile :comp :eval) (:scm ,str)))
+         (ret (geiser-eval--send/wait code))
          (err (geiser-eval--retort-error ret)))
+    (when and-go
+      (switch-to-guile)
+      (push-mark)
+      (goto-char (point-max)))
     (if (not err)
         (message (format "=> %s" (geiser-eval--retort-result ret)))
       (geiser-debug--display-retort str ret))))

@@ -117,16 +117,6 @@
 (defsubst geiser-eval--send/result (code &optional timeout buffer)
   (geiser-eval--retort-result (geiser-eval--send/wait code timeout buffer)))
 
-(defun geiser-eval--send-region (compile start end and-go)
-  (let* ((str (buffer-substring-no-properties start end))
-         (code `(,(if compile :comp :eval) (:scm ,str)))
-         (ret (geiser-eval--send/wait code)))
-    (when and-go
-      (switch-to-guile)
-      (push-mark)
-      (goto-char (point-max)))
-    ret))
-
 
 ;;; Retort parsing:
 
