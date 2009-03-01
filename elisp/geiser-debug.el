@@ -92,6 +92,13 @@
       (insert "In expression:\n"))
     (insert (format "%s%s\n" (make-string offset ?\ ) description))))
 
+(defun geiser-debug--send-region (compile start end and-go)
+  (let* ((ret (geiser-eval--send-region compile start end and-go))
+         (err (geiser-eval--retort-error ret)))
+    (if (not err)
+        (message (format "=> %s" (geiser-eval--retort-result ret)))
+      (geiser-debug--display-retort str ret))))
+
 
 (provide 'geiser-debug)
 ;;; geiser-debug.el ends here

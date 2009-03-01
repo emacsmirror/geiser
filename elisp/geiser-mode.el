@@ -33,6 +33,7 @@
 (require 'geiser-debug)
 (require 'geiser-eval)
 (require 'geiser-repl)
+(require 'geiser-popup)
 (require 'geiser-custom)
 (require 'geiser-base)
 
@@ -56,22 +57,6 @@
 
 
 
-;;; Auxiliary functions:
-
-(defun geiser-eval--send-region (compile start end and-go)
-  (let* ((str (buffer-substring-no-properties start end))
-         (code `(,(if compile :comp :eval) (:scm ,str)))
-         (ret (geiser-eval--send/wait code))
-         (err (geiser-eval--retort-error ret)))
-    (when and-go
-      (switch-to-guile)
-      (push-mark)
-      (goto-char (point-max)))
-    (if (not err)
-        (message (format "=> %s" (geiser-eval--retort-result ret)))
-      (geiser-debug--display-retort str ret))))
-
-
 ;;; Evaluation commands:
 
 (defun geiser-eval-region (start end &optional and-go)
@@ -79,7 +64,7 @@
 With prefix, goes to the REPL buffer afterwards (as
 `geiser-eval-region-and-go')"
   (interactive "rP")
-  (geiser-eval--send-region nil start end and-go))
+  (geiser-debug--send-region nil start end and-go))
 
 (defun geiser-eval-region-and-go (start end)
   "Eval the current region in the Geiser REPL and visit it afterwads."
@@ -116,7 +101,7 @@ With prefix, goes to the REPL buffer afterwards (as
     (end-of-defun)
     (let ((end (point)))
       (beginning-of-defun)
-      (geiser-eval--send-region t (point) end and-go))))
+      (geiser-debug--send-region t (point) end and-go))))
 
 (defun geiser-compile-definition-and-go ()
   "Compile the current definition in the Geiser REPL and visit it afterwads."
