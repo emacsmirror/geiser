@@ -106,6 +106,19 @@
         (message (format "=> %s" (geiser-eval--retort-result ret)))
       (geiser-debug--display-retort str ret))))
 
+(defun geiser-debug--expand-region (start end all)
+  (let* ((str (buffer-substring-no-properties start end))
+         (code `(:eval ((:ge macroexpand) (quote (:scm ,str)) ,(if all :t :f))))
+         (ret (geiser-eval--send/wait code))
+         (err (geiser-eval--retort-error ret)))
+    (if err
+        (geiser-debug--display-retort str ret)
+      (geiser-debug--with-buffer
+        (erase-buffer)
+        (insert (format "%s" (geiser-eval--retort-result ret)))
+        (goto-char (point-min)))
+      (geiser-debug--pop-to-buffer))))
+
 
 (provide 'geiser-debug)
 ;;; geiser-debug.el ends here

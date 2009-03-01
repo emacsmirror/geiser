@@ -17,31 +17,36 @@
 
 *** In Scheme buffers:
 
-    |---------+-------------------------------------------------|
-    | C-cC-z  | Switch to REPL                                  |
-    |---------+-------------------------------------------------|
-    | M-.     | Edit symbol at point                            |
-    | M-,     | Go back to where M-. was last invoked           |
-    | C-cC-em | Ask for a module and open its file              |
-    |---------+-------------------------------------------------|
-    | C-M-x   | Eval definition around point                    |
-    | C-cM-e  | Eval definition around point and switch to REPL |
-    | C-xC-e  | Eval sexp before point                          |
-    | C-cC-r  | Eval region                                     |
-    | C-cM-r  | Eval region and switch to REPL                  |
-    |---------+-------------------------------------------------|
-    | C-cC-k  | Compile and load current file                   |
-    | C-cC-l  | Load current file                               |
-    |---------+-------------------------------------------------|
-    | C-cC-dd | See documentation for symbol at point           |
-    | C-cC-dm | See module documentation                        |
-    | C-cC-da | Toggle autodoc mode                             |
-    |---------+-------------------------------------------------|
-    | M-TAB   | Complete symbol at point                        |
-    | C-.     | Complete module name at point                   |
-    | TAB     | Complete symbol at point or indent              |
-    |         | (If `geiser-mode-smart-tab-p' is t)             |
-    |---------+-------------------------------------------------|
+    |------------------+-------------------------------------------------|
+    | C-cC-z           | Switch to REPL                                  |
+    |------------------+-------------------------------------------------|
+    | M-.              | Edit symbol at point                            |
+    | M-,              | Go back to where M-. was last invoked           |
+    | C-cC-em          | Ask for a module and open its file              |
+    |------------------+-------------------------------------------------|
+    | C-M-x            | Eval definition around point                    |
+    | C-cM-e           | Eval definition around point and switch to REPL |
+    | C-xC-e           | Eval sexp before point                          |
+    | C-cC-r           | Eval region                                     |
+    | C-cM-r           | Eval region and switch to REPL                  |
+    |------------------+-------------------------------------------------|
+    | C-cC-xx          | Macro-expand definition around point            |
+    | C-cC-xe          | Macro-expand sexp before point                  |
+    | C-cC-xr          | Marcro-expand region                            |
+    | C-uC-cC-x[x,e,r] | (With prefix, macro expansions are recursive)   |
+    |------------------+-------------------------------------------------|
+    | C-cC-k           | Compile and load current file                   |
+    | C-cC-l           | Load current file                               |
+    |------------------+-------------------------------------------------|
+    | C-cC-dd          | See documentation for symbol at point           |
+    | C-cC-dm          | See module documentation                        |
+    | C-cC-da          | Toggle autodoc mode                             |
+    |------------------+-------------------------------------------------|
+    | M-TAB            | Complete symbol at point                        |
+    | C-.              | Complete module name at point                   |
+    | TAB              | Complete symbol at point or indent              |
+    |                  | (If `geiser-mode-smart-tab-p' is t)             |
+    |------------------+-------------------------------------------------|
 
 *** In the REPL
 

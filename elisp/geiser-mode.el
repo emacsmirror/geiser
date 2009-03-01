@@ -108,6 +108,28 @@ With prefix, goes to the REPL buffer afterwards (as
   (interactive)
   (geiser-compile-definition t))
 
+(defun geiser-expand-region (start end &optional all)
+  "Macro-expand the current region and display it in a buffer.
+With prefix, recursively macro-expand the resulting expression."
+  (interactive "rP")
+  (geiser-debug--expand-region start end all))
+
+(defun geiser-expand-definition (&optional all)
+  "Macro-expand the current definition.
+With prefix, recursively macro-expand the resulting expression."
+  (interactive "P")
+  (save-excursion
+    (end-of-defun)
+    (let ((end (point)))
+      (beginning-of-defun)
+      (geiser-expand-region (point) end all))))
+
+(defun geiser-expand-last-sexp (&optional all)
+  "Macro-expand the previous sexp.
+With prefix, recursively macro-expand the resulting expression."
+  (interactive "P")
+  (geiser-expand-region (save-excursion (backward-sexp) (point)) (point) all))
+
 
 ;;; Geiser mode:
 
@@ -166,8 +188,9 @@ interacting with the Geiser REPL is at your disposal.
 
 (geiser-mode--triple-chord ?e ?m 'geiser-edit-module)
 
-(define-key geiser-mode-map "\C-c\C-t" 'geiser-trace-procedure)
-(define-key geiser-mode-map "\C-c\C-x" 'geiser-expand-current-form)
+(geiser-mode--triple-chord ?x ?e 'geiser-expand-last-sexp)
+(geiser-mode--triple-chord ?x ?r 'geiser-expand-region)
+(geiser-mode--triple-chord ?x ?x 'geiser-expand-definition)
 
 
 (provide 'geiser-mode)
