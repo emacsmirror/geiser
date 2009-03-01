@@ -89,7 +89,7 @@
            (geiser-syntax--del-sexp -1) (insert "XXpointXX"))
           ((eq (char-after (point)) ?\()
            (geiser-syntax--del-sexp 1) (insert "XXpointXX")))
-    (when (memq (char-after (1- (point))) (list ?@ ?, ?\' ?\` ?\#))
+    (when (memq (char-after (1- (point))) (list ?. ?@ ?, ?\' ?\` ?\#))
       (skip-syntax-backward "^-(")
       (delete-region (point) (point-max))
       (insert "XXXpointXX"))
