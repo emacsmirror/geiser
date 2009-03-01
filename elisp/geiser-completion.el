@@ -34,7 +34,7 @@
 
 ;;; Completions window handling, heavily inspired in slime's:
 
-(defvar geiser-completion--comp-buffer "*Completions*")
+(defvar geiser-completion--comp-buffer "*Geiser Completions*")
 
 (make-variable-buffer-local
  (defvar geiser-completion--window-cfg nil
