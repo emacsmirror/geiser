@@ -61,7 +61,13 @@
   (cdr (assoc 'line loc)))
 
 (defconst geiser-edit--def-re
-  (regexp-opt '("define" "defmacro" "define-macro" "define-syntax" "define*")))
+  (regexp-opt '("define"
+                "defmacro"
+                "define-macro"
+                "define-syntax"
+                "define*"
+                "define-method"
+                "define-class")))
 
 (defsubst geiser-edit--def-re (thing)
   (format "(%s +(?%s\\_>" geiser-edit--def-re (regexp-quote (format "%s" thing))))
