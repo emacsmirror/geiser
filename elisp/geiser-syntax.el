@@ -95,8 +95,8 @@
       (insert "XXXpointXX"))
     (let ((depth (nth 0 (parse-partial-sexp (point-min) (point)))))
       (unless (zerop depth) (insert (make-string depth ?\)))))
-    (let ((res (buffer-substring-no-properties (point-min) (point))))
-      (and (not (zerop (length res))) res))))
+    (when (< (point-min) (point))
+      (buffer-substring-no-properties (point-min) (point)))))
 
 (defsubst geiser-syntax--get-partial-sexp ()
   (unless (zerop (nth 0 (syntax-ppss)))
