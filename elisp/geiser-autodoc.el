@@ -46,6 +46,10 @@
   'font-lock-function-name-face
   geiser-autodoc "highlighting procedure name in autodoc messages")
 
+(geiser-custom--defface autodoc-optional-arg-marker
+  'font-lock-keyword-face
+  geiser-autodoc "highlighting #:opt marker in autodoc messages")
+
 (defcustom geiser-autodoc-delay 0.2
   "Delay before autodoc messages are fetched and displayed, in seconds."
   :type 'number
@@ -75,7 +79,8 @@ when `geiser-autodoc-display-module-p' is on."
   (if (equal (car geiser-autodoc--last) form) (cdr geiser-autodoc--last)
     (when form
       (let ((res (geiser-eval--send/result
-                  `(:eval ((:ge autodoc) (quote (:scm ,form)))))))
+                  `(:eval ((:ge autodoc) (quote (:scm ,form))))
+                  500)))
         (when (and res (listp res))
           (setq geiser-autodoc--last
                 (cons form
@@ -86,14 +91,17 @@ when `geiser-autodoc-display-module-p' is on."
 
 (defun geiser-autodoc--insert-arg (arg current pos)
   (let ((p (point))
-        (str (format "%s" (if (eq arg '\#:rest) "." arg))))
+        (str (format "%s" (if (eq arg '\#:rest) "." arg)))
+        (face (or (and (eq '\#:opt arg)
+                       'geiser-font-lock-autodoc-optional-arg-marker)
+                  (and (= current pos)
+                       'geiser-font-lock-autodoc-current-arg))))
     (insert str)
     (when (listp arg)
       (save-excursion
         (replace-regexp "(quote \\(.*\\))" "'\\1" nil p (point))
         (replace-string "nil" "()" t p (point))))
-    (when (= current pos)
-      (put-text-property p (point) 'face 'geiser-font-lock-autodoc-current-arg))))
+    (when face (put-text-property p (point) 'face face))))
 
 (defsubst geiser-autodoc--proc-name (proc module)
   (let ((str (if module

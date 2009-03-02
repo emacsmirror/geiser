@@ -132,7 +132,7 @@ REPL buffer."
     (apply 'make-comint-in-buffer `("Geiser REPL" ,(current-buffer) ,guile nil ,@args))
     (geiser-repl--wait-for-prompt 10000)
     (geiser-repl--history-setup)
-    (geiser-con--setup-connection (current-buffer) geiser-repl--prompt-regex)))
+    (geiser-con--setup-connection (current-buffer)  geiser-repl--prompt-regex)))
 
 (defun geiser-repl--process (&optional start)
   (or (and (buffer-live-p (geiser-repl--buffer))
@@ -175,7 +175,7 @@ REPL buffer."
   (goto-char (point-max))
   (comint-kill-region comint-last-input-start (point))
   (comint-redirect-cleanup)
-  (geiser-con--setup-connection geiser-repl--buffer))
+  (geiser-con--setup-connection geiser-repl--buffer geiser-repl--prompt-regex))
 
 
 ;;; geiser-repl mode:
