@@ -26,7 +26,6 @@
 ;;; Code:
 
 (require 'geiser-autodoc)
-(require 'geiser-compile)
 (require 'geiser-edit)
 (require 'geiser-eval)
 (require 'geiser-connection)
