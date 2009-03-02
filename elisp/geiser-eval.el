@@ -31,6 +31,19 @@
 (require 'geiser-base)
 
 
+;;; Plug-able functions:
+
+(make-variable-buffer-local
+ (defvar geiser-eval--current-module-function 'geiser-syntax--buffer-module))
+
+(defsubst geiser-eval--current-module-function (fun)
+  (setq geiser-eval--current-module-function fun))
+
+(defsubst geiser-eval--current-module ()
+  (and geiser-eval--current-module-function
+       (funcall geiser-eval--current-module-function)))
+
+
 ;;; Code formatting:
 
 (defun geiser-eval--scheme-str (code)
@@ -66,7 +79,7 @@
 (defsubst geiser-eval--module (code)
   (geiser-eval--scheme-str
    (cond ((or (eq code '(())) (null code))
-          `(quote ,(or (geiser-syntax--buffer-module) :f)))
+          `(quote ,(or (geiser-eval--current-module) :f)))
          ((listp code) `(quote ,code))
          ((stringp code) (:scm code))
          (t (error "Invalid module spec: %S" code)))))

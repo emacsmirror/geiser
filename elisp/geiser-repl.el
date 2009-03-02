@@ -200,6 +200,7 @@ REPL buffer."
   (set (make-local-variable 'beginning-of-defun-function)
        'geiser-repl--beginning-of-defun)
   (set-syntax-table scheme-mode-syntax-table)
+  (geiser-eval--current-module-function nil)
   (when geiser-repl-autodoc-p (geiser-autodoc-mode 1)))
 
 (define-key geiser-repl-mode-map "\C-cz" 'run-guile)
