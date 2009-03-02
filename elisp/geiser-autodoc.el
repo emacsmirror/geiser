@@ -73,7 +73,7 @@ when `geiser-autodoc-display-module-p' is on."
  (defvar geiser-autodoc--last nil))
 
 (make-variable-buffer-local
- (defvar geiser-autodoc--last-funs nil))
+ (defvar geiser-autodoc--last-result nil))
 
 (defun geiser-autodoc--function-args (form)
   (if (equal (car geiser-autodoc--last) form) (cdr geiser-autodoc--last)
@@ -82,11 +82,13 @@ when `geiser-autodoc-display-module-p' is on."
                   `(:eval ((:ge autodoc) (quote (:scm ,form))))
                   500)))
         (when (and res (listp res))
-          (setq geiser-autodoc--last
-                (cons form
-                      (geiser-autodoc--str (cdr (assoc 'signature res))
-                                           (or (cdr (assoc 'position res)) 0)
-                                           (cdr (assoc 'module res)))))
+          (unless (equalp res geiser-autodoc--last-result)
+            (setq geiser-autodoc--last-result res)
+            (setq geiser-autodoc--last
+                  (cons form
+                        (geiser-autodoc--str (cdr (assoc 'signature res))
+                                             (or (cdr (assoc 'position res)) 0)
+                                             (cdr (assoc 'module res))))))
           (cdr geiser-autodoc--last))))))
 
 (defun geiser-autodoc--insert-arg (arg current pos)
