@@ -76,6 +76,8 @@
     (forward-sexp arg)
     (delete-region p (point))))
 
+(defconst geiser-syntax--placeholder (format "___%s___" (random 100)))
+
 (defun geiser-syntax--complete-partial-sexp (buffer begin end)
   (geiser-syntax--with-buffer
     (erase-buffer)
@@ -87,14 +89,14 @@
       (when p ;; inside a comment or string
         (let ((str (nth 3 (syntax-ppss))))
           (delete-region p (point-max))
-          (when str (insert "XXXpointXXX")))))
+          (when str (insert geiser-syntax--placeholder)))))
     (when (cond ((eq (char-after (1- (point))) ?\)) (geiser-syntax--del-sexp -1) t)
                 ((eq (char-after (point)) ?\() (delete-region (point) (point-max)) t)
                 ((memq (char-after (1- (point))) (list ?. ?@ ?, ?\' ?\` ?\# ?\\))
                  (skip-syntax-backward "^-(")
                  (delete-region (point) (point-max))
                  t))
-      (insert "XXXpointXX"))
+      (insert geiser-syntax--placeholder))
     (let ((depth (nth 0 (parse-partial-sexp (point-min) (point)))))
       (unless (zerop depth) (insert (make-string depth ?\)))))
     (when (< (point-min) (point))

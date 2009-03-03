@@ -50,6 +50,10 @@
   'font-lock-keyword-face
   geiser-autodoc "highlighting #:opt marker in autodoc messages")
 
+(geiser-custom--defface autodoc-key-arg-marker
+  'font-lock-keyword-face
+  geiser-autodoc "highlighting #:key marker in autodoc messages")
+
 (defcustom geiser-autodoc-delay 0.2
   "Delay before autodoc messages are fetched and displayed, in seconds."
   :type 'number
@@ -94,10 +98,13 @@ when `geiser-autodoc-display-module-p' is on."
 (defun geiser-autodoc--insert-arg (arg current pos)
   (let ((p (point))
         (str (format "%s" (if (eq arg '\#:rest) "." arg)))
-        (face (or (and (eq '\#:opt arg)
-                       'geiser-font-lock-autodoc-optional-arg-marker)
-                  (and (= current pos)
-                       'geiser-font-lock-autodoc-current-arg))))
+        (face (cond ((eq '\#:opt arg)
+                     'geiser-font-lock-autodoc-optional-arg-marker)
+                    ((eq '\#:key arg)
+                     'geiser-font-lock-autodoc-key-arg-marker)
+                    ((= current pos)
+                     'geiser-font-lock-autodoc-current-arg)
+                    (t nil))))
     (insert str)
     (when (listp arg)
       (save-excursion
