@@ -1,4 +1,4 @@
-;;; geiser-repl.el --- Geiser's Guile REPL
+;;; geiser-repl.el --- Geiser's REPL
 
 ;; Copyright (C) 2009  Jose Antonio Ortega Ruiz
 
@@ -20,8 +20,7 @@
 
 ;;; Commentary:
 
-;; Major mode (comint-based) to interact with an inferior Guile
-;; process using Geiser's modules.
+;; Major mode (comint-based) to interact with a Scheme REPL.
 
 ;;; Code:
 
