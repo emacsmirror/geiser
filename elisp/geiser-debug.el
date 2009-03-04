@@ -25,7 +25,6 @@
 
 ;;; Code:
 
-(require 'geiser-repl)
 (require 'geiser-eval)
 (require 'geiser-popup)
 (require 'geiser-base)

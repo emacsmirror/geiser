@@ -13,6 +13,8 @@
     In particular, customize `geiser-repl-guile-binary' (in
     geiser-repl), which should point to a guile-vm executable.
 
+  - To start a REPL, M-x geiser.
+
 * Quick key reference
 
 *** In Scheme buffers:

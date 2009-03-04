@@ -158,9 +158,13 @@ REPL buffer."
 ;;; Interface: starting and interacting with geiser REPL:
 
 (defalias 'switch-to-guile 'run-guile)
-(defalias 'switch-to-geiser-repl 'run-guile)
 
-(defun run-guile (&optional arg)
+(defun run-guile ()
+  "Run Geiser using Guile."
+  (interactive)
+  (geiser 'guile))
+
+(defun geiser (&optional implementation)
   "Show the geiser-repl buffer, starting the process if needed."
   (interactive)
   (let ((buf (process-buffer (geiser-repl--process t)))
@@ -223,6 +227,16 @@ REPL buffer."
 (define-key geiser-repl-mode-map "\M-." 'geiser-edit-symbol-at-point)
 (define-key geiser-repl-mode-map "\M-," 'geiser-edit-pop-edit-symbol-stack)
 
+
+;;; Unload:
+
+(defun geiser-repl--live-p ()
+  (buffer-live-p geiser-repl--buffer))
+
+(defun geiser-repl-unload-function ()
+  (when (geiser-repl--live-p)
+    (kill-buffer geiser-repl--buffer))
+  t)
 
 
 (provide 'geiser-repl)

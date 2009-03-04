@@ -45,6 +45,9 @@
 
 ;;; Autoloads:
 
+(autoload 'geiser "geiser-repl.el"
+  "Start a Geiser REPL, or switch to a running one." t)
+
 (autoload 'run-guile "geiser-repl.el"
   "Start a Geiser Guile REPL, or switch to a running one." t)
 
@@ -68,6 +71,67 @@
 
 (defun geiser-setup ()
   (geiser-setup-scheme-mode))
+
+
+;;; Reload:
+
+(defmacro geiser--features-list ()
+  (quote '(
+           geiser-mode
+           geiser-repl
+           geiser-doc
+           geiser-edit
+           geiser-completion
+           geiser-autodoc
+           geiser-compile
+           geiser-debug
+           geiser-eval
+           geiser-connection
+           geiser-syntax
+           geiser-log
+           geiser-custom
+           geiser-base
+           geiser-popup
+           )))
+
+(defun geiser-unload-function ()
+  (dolist (feature (geiser--features-list))
+    (when (featurep feature) (unload-feature feature t)))
+  t)
+
+(defun geiser-unload ()
+  (interactive)
+  (when (featurep 'geiser) (unload-feature 'geiser)))
+
+(defun geiser-reload (&optional arg)
+  "Reload Geiser.
+With prefix arg, prompts for the DIRECTORY in which Geiser should be
+loaded."
+  (interactive "P")
+  (let* ((dir (or (and arg (read-directory-name "New Geiser root dir: "
+                                                geiser-root-dir
+                                                geiser-root-dir
+                                                t
+                                                geiser-root-dir))
+                  geiser-root-dir))
+         (geiser-main-file (expand-file-name "elisp/geiser.el" dir))
+         (repl (and (featurep 'geiser-repl) (geiser-repl--live-p)))
+         (buffers (and (featurep 'geiser-mode) (geiser-mode--buffers))))
+    (unless (file-exists-p geiser-main-file)
+      (error "%s does not contain Geiser!" dir))
+    (remove geiser-elisp-dir load-path)
+    (geiser-unload)
+    (load-file geiser-main-file)
+    (geiser-setup)
+    (when repl
+      (load-library "geiser-repl")
+      (geiser 'repl))
+    (when buffers
+      (load-library "geiser-mode")
+      (dolist (b buffers)
+        (set-buffer b)
+        (geiser-mode 1)))
+    (message "Geiser reloaded!")))
 
 
 (provide 'geiser)

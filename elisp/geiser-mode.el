@@ -193,5 +193,16 @@ interacting with the Geiser REPL is at your disposal.
 (geiser-mode--triple-chord ?x ?x 'geiser-expand-definition)
 
 
+;;; Reload support:
+
+(defun geiser-mode--buffers ()
+  (let ((buffers))
+    (dolist (buffer (buffer-list))
+      (when (buffer-live-p buffer)
+        (set-buffer buffer)
+        (when geiser-mode (push buffer buffers))))
+    buffers))
+
+
 (provide 'geiser-mode)
 ;;; geiser-mode.el ends here
