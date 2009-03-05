@@ -91,6 +91,12 @@
       (let* ((str (buffer-substring-no-properties begin end))
              (pieces (split-string str nil t)))
         (mapconcat 'identity pieces " ")))))
+
+(defun geiser--insert-with-face (str face)
+  (let ((p (point)))
+    (insert str)
+    (put-text-property p (point) 'face face)))
+
 
 (provide 'geiser-base)
 ;;; geiser-base.el ends here

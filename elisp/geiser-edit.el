@@ -44,7 +44,7 @@
 
 (geiser-edit--define-custom-visit
  geiser-edit-symbol-method geiser-mode
- "How the new buffer is opened when invoking \\[geiser-edit-symbol-at-point]")
+ "How the new buffer is opened when invoking \\[geiser-edit-symbol-at-point].")
 
 
 ;;; Auxiliar functions:
@@ -83,14 +83,16 @@
               (re-search-forward (geiser-edit--symbol-re symbol) nil t))
       (goto-char (match-beginning 0)))))
 
-(defun geiser-edit--try-edit (symbol ret)
-  (let* ((loc (geiser-eval--retort-result ret))
-         (file (geiser-edit--location-file loc))
-         (line (geiser-edit--location-line loc)))
+(defun geiser-edit--try-edit-location (symbol loc &optional method)
+  (let ((file (geiser-edit--location-file loc))
+        (line (geiser-edit--location-line loc)))
     (unless file (error "Couldn't find edit location for '%s'" symbol))
     (unless (file-readable-p file) (error "Couldn't open '%s' for read" file))
-    (geiser-edit--visit-file file geiser-edit-symbol-method)
+    (geiser-edit--visit-file file (or method geiser-edit-symbol-method))
     (geiser-edit--goto-line symbol line)))
+
+(defsubst geiser-edit--try-edit (symbol ret)
+  (geiser-edit--try-edit-location symbol (geiser-eval--retort-result ret)))
 
 
 ;;; Commands:

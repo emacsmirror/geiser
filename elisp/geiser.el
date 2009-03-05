@@ -86,6 +86,7 @@
            geiser-mode
            geiser-repl
            geiser-doc
+           geiser-xref
            geiser-edit
            geiser-completion
            geiser-autodoc
