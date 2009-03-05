@@ -63,18 +63,17 @@
       (geiser-edit--try-edit-location name location geiser-xref-follow-link-method))))
 
 (defun geiser-xref--insert-button (xref)
-  (let ((location (cdr (assoc 'location xref)))
-        (signature (cdr (assoc 'signature xref))))
+  (let* ((location (cdr (assoc 'location xref)))
+         (file (geiser-edit--location-file location))
+         (signature (cdr (assoc 'signature xref))))
     (when signature
       (insert "\t")
-      (if location
+      (if (stringp file)
           (insert-text-button (format "%s" signature)
                               :type 'geiser-xref--button
                               'location location
                               'name (car signature)
-                              'help-echo (format "%s in %s"
-                                                 (car signature)
-                                                 (geiser-edit--location-file location)))
+                              'help-echo (format "%s in %s" (car signature) file))
         (insert (format "%s" signature)))
       (newline))))
 

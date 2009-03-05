@@ -194,7 +194,7 @@ interacting with the Geiser REPL is at your disposal.
 
 (geiser-mode--triple-chord ?d ?a 'geiser-autodoc-mode)
 (geiser-mode--triple-chord ?d ?d 'geiser-doc-symbol-at-point)
-(geiser-mode--triple-chord ?d ?g 'geiser-xref-generic-methods)
+(geiser-mode--triple-chord ?d ?p 'geiser-xref-generic-methods)
 (geiser-mode--triple-chord ?d ?m 'geiser-doc-module)
 
 (geiser-mode--triple-chord ?e ?m 'geiser-edit-module)

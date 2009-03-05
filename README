@@ -42,7 +42,7 @@
     |------------------+-------------------------------------------------|
     | C-cC-dd          | See documentation for symbol at point           |
     | C-cC-dm          | See module symbols documentation                |
-    | C-cC-dg          | See generic methods                             |
+    | C-cC-dp          | See generic methods                             |
     | C-cC-da          | Toggle autodoc mode                             |
     |------------------+-------------------------------------------------|
     | M-TAB            | Complete symbol at point                        |
