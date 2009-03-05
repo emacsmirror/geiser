@@ -54,7 +54,7 @@
   'font-lock-keyword-face
   geiser-autodoc "highlighting #:key marker in autodoc messages")
 
-(defcustom geiser-autodoc-delay 0.2
+(defcustom geiser-autodoc-delay 0.3
   "Delay before autodoc messages are fetched and displayed, in seconds."
   :type 'number
   :group 'geiser-autodoc)

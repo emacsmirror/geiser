@@ -57,6 +57,12 @@
 (autoload 'geiser-mode "geiser-mode.el"
   "Minor mode adding Geiser REPL interaction to Scheme buffers." t)
 
+(autoload 'turn-on-geiser-mode "geiser-mode.el"
+  "Enable Geiser's mode (useful in Scheme buffers)." t)
+
+(autoload 'turn-off-geiser-mode "geiser-mode.el"
+  "Disable Geiser's mode (useful in Scheme buffers)." t)
+
 (mapc (lambda (group)
         (custom-add-load group (symbol-name group))
         (custom-add-load 'geiser (symbol-name group)))
@@ -67,7 +73,7 @@
 
 (defun geiser-setup-scheme-mode ()
   (eval-after-load "scheme"
-    '(add-hook 'scheme-mode-hook (lambda () (interactive) (geiser-mode 1)))))
+    '(add-hook 'scheme-mode-hook 'turn-on-geiser-mode)))
 
 (defun geiser-setup ()
   (geiser-setup-scheme-mode))

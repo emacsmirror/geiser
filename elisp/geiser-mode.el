@@ -158,6 +158,16 @@ interacting with the Geiser REPL is at your disposal.
   (when geiser-mode-autodoc-p (geiser-autodoc-mode geiser-mode))
   (when geiser-mode-smart-tab-p (geiser-smart-tab-mode geiser-mode)))
 
+(defun turn-on-geiser-mode ()
+  "Enable `geiser-mode' (in a Scheme buffer)."
+  (interactive)
+  (geiser-mode 1))
+
+(defun turn-off-geiser-mode ()
+  "Disable `geiser-mode' (in a Scheme buffer)."
+  (interactive)
+  (geiser-mode -1))
+
 
 ;;; Keys:
 
