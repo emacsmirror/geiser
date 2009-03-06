@@ -87,4 +87,5 @@
 
 *** In backtrace (evaluation/compile result) buffers:
 
-    Default error navigation keys used by emacs' compilation mode.
+    - Default error navigation keys used by emacs' compilation mode.
+    - q to bury buffer.
