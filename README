@@ -32,18 +32,19 @@
     | C-cC-r           | Eval region                                     |
     | C-cM-r           | Eval region and switch to REPL                  |
     |------------------+-------------------------------------------------|
-    | C-cC-xx          | Macro-expand definition around point            |
-    | C-cC-xe          | Macro-expand sexp before point                  |
-    | C-cC-xr          | Marcro-expand region                            |
-    | C-uC-cC-x[x,e,r] | (With prefix, macro expansions are recursive)   |
+    | C-cC-mx          | Macro-expand definition around point            |
+    | C-cC-me          | Macro-expand sexp before point                  |
+    | C-cC-mr          | Marcro-expand region                            |
+    | C-uC-cC-m[x,e,r] | (With prefix, macro expansions are recursive)   |
     |------------------+-------------------------------------------------|
     | C-cC-k           | Compile and load current file                   |
     | C-cC-l           | Load current file                               |
     |------------------+-------------------------------------------------|
     | C-cC-dd          | See documentation for symbol at point           |
-    | C-cC-dm          | See module symbols documentation                |
-    | C-cC-dp          | See generic methods                             |
+    | C-cC-dm          | See list of module symbols                      |
     | C-cC-da          | Toggle autodoc mode                             |
+    |------------------+-------------------------------------------------|
+    | C-cC-xf          | See a generic's methods signatures              |
     |------------------+-------------------------------------------------|
     | M-TAB            | Complete symbol at point                        |
     | C-.              | Complete module name at point                   |

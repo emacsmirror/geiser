@@ -194,14 +194,15 @@ interacting with the Geiser REPL is at your disposal.
 
 (geiser-mode--triple-chord ?d ?a 'geiser-autodoc-mode)
 (geiser-mode--triple-chord ?d ?d 'geiser-doc-symbol-at-point)
-(geiser-mode--triple-chord ?d ?p 'geiser-xref-generic-methods)
 (geiser-mode--triple-chord ?d ?m 'geiser-doc-module)
 
 (geiser-mode--triple-chord ?e ?m 'geiser-edit-module)
 
-(geiser-mode--triple-chord ?x ?e 'geiser-expand-last-sexp)
-(geiser-mode--triple-chord ?x ?r 'geiser-expand-region)
-(geiser-mode--triple-chord ?x ?x 'geiser-expand-definition)
+(geiser-mode--triple-chord ?m ?e 'geiser-expand-last-sexp)
+(geiser-mode--triple-chord ?m ?r 'geiser-expand-region)
+(geiser-mode--triple-chord ?m ?x 'geiser-expand-definition)
+
+(geiser-mode--triple-chord ?x ?m 'geiser-xref-generic-methods)
 
 
 ;;; Reload support:
