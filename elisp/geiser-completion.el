@@ -181,11 +181,13 @@ terminates a current completion."
 
 (defun geiser-completion--read-module (&optional prompt default history)
   (let ((minibuffer-local-completion-map geiser-completion--module-minibuffer-map))
-    (completing-read (or prompt "Module name: ")
-                     (geiser-completion--module-list)
-                     nil nil
-                     (or default (format "%s" (or (geiser-syntax--buffer-module) "(")))
-                     (or history geiser-completion--module-history))))
+    (geiser-eval--get-module
+     (completing-read (or prompt "Module name: ")
+                      (geiser-completion--module-list)
+                      nil nil
+                      (or default
+                          (format "%s" (or (geiser-syntax--buffer-module) "(")))
+                      (or history geiser-completion--module-history)))))
 
 (defun geiser--respecting-message (format &rest format-args)
   "Display TEXT as a message, without hiding any minibuffer contents."

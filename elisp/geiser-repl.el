@@ -26,6 +26,7 @@
 
 (require 'geiser-autodoc)
 (require 'geiser-edit)
+(require 'geiser-impl)
 (require 'geiser-eval)
 (require 'geiser-connection)
 (require 'geiser-custom)
@@ -193,6 +194,8 @@ REPL buffer."
     (when (not (eq (char-after (point)) ?\())
       (skip-syntax-forward "^(" p))))
 
+(defun geiser-repl--module-function (&optional ignore) :f)
+
 (define-derived-mode geiser-repl-mode comint-mode "Geiser REPL"
   "Major mode for interacting with an inferior Guile repl process.
 \\{geiser-repl-mode-map}"
@@ -203,7 +206,9 @@ REPL buffer."
   (set (make-local-variable 'beginning-of-defun-function)
        'geiser-repl--beginning-of-defun)
   (set-syntax-table scheme-mode-syntax-table)
-  (geiser-eval--current-module-function nil)
+  ;;; TODO: fix this call when we add support to multiple implementations
+  (geiser-impl--set-buffer-implementation)
+  (setq geiser-eval--get-module-function 'geiser-repl--module-function)
   (when geiser-repl-autodoc-p (geiser-autodoc-mode 1)))
 
 (define-key geiser-repl-mode-map "\C-cz" 'run-guile)

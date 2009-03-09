@@ -58,12 +58,18 @@
   '(("q" . geiser-popup--quit))
   (setq buffer-read-only t))
 
+
+;;; Support for defining popup buffers and accessors:
+
+(defvar geiser-popup--registry nil)
+
 (defmacro geiser-popup--define (base name mode)
   (let ((get-buff (intern (format "geiser-%s--buffer" base)))
         (pop-buff (intern (format "geiser-%s--pop-to-buffer" base)))
         (with-macro (intern (format "geiser-%s--with-buffer" base)))
         (method (make-symbol "method")))
   `(progn
+     (add-to-list 'geiser-popup--registry ,name)
      (defun ,get-buff ()
        (or (get-buffer ,name)
            (with-current-buffer (get-buffer-create ,name)
@@ -82,6 +88,14 @@
      (put ',with-macro 'lisp-indent-function 'defun))))
 
 (put 'geiser-popup--define 'lisp-indent-function 1)
+
+
+;;; Reload support:
+
+(defun geiser-popup-unload-function ()
+  (dolist (name geiser-popup--registry)
+    (when (buffer-live-p (get-buffer name))
+      (kill-buffer name))))
 
 
 (provide 'geiser-popup)

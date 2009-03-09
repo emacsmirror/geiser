@@ -92,6 +92,7 @@
            geiser-autodoc
            geiser-compile
            geiser-debug
+           geiser-impl
            geiser-eval
            geiser-connection
            geiser-syntax
@@ -122,6 +123,7 @@ loaded."
                                                 geiser-root-dir))
                   geiser-root-dir))
          (geiser-main-file (expand-file-name "elisp/geiser.el" dir))
+         (impls (and (featurep 'geiser-impl) geiser-impl--impls))
          (repl (and (featurep 'geiser-repl) (geiser-repl--live-p)))
          (buffers (and (featurep 'geiser-mode) (geiser-mode--buffers))))
     (unless (file-exists-p geiser-main-file)
@@ -130,14 +132,11 @@ loaded."
     (geiser-unload)
     (load-file geiser-main-file)
     (geiser-setup)
-    (when repl
-      (load-library "geiser-repl")
-      (geiser 'repl))
-    (when buffers
-      (load-library "geiser-mode")
-      (dolist (b buffers)
-        (set-buffer b)
-        (geiser-mode 1)))
+    (dolist (feature (geiser--features-list))
+      (load-library (format "%s" feature)))
+    (when impls (geiser-impl--reload-implementations impls))
+    (when repl (geiser 'repl))
+    (when buffers (geiser-mode--restore buffers))
     (message "Geiser reloaded!")))
 
 

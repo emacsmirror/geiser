@@ -60,7 +60,7 @@
   (car geiser-doc--history))
 
 (defun geiser-doc--history-push (link)
-  (unless (equal link (car geiser-doc--history))
+  (unless (or (null link) (equal link (car geiser-doc--history)))
     (let ((next (geiser-doc--history-next)))
       (unless (equal link next)
         (when next (geiser-doc--history-previous))
@@ -80,13 +80,14 @@
       (ring-insert (nth 2 geiser-doc--history) (car geiser-doc--history)))
     (setcar geiser-doc--history (ring-remove (nth 1 geiser-doc--history) 0))))
 
-(defvar geiser-doc--history (geiser-doc--make-history))
+(defvar geiser-doc--history nil)
+(setq geiser-doc--history (geiser-doc--make-history))
 
 
 ;;; Links
 
-(defsubst geiser-doc--make-link (target module)
-  (list target module))
+(defsubst geiser-doc--make-link (target module impl)
+  (list target module impl))
 
 (defsubst geiser-doc--link-target (link)
   (nth 0 link))
@@ -94,13 +95,19 @@
 (defsubst geiser-doc--link-module (link)
   (nth 1 link))
 
+(defsubst geiser-doc--link-impl (link)
+  (nth 2 link))
+
 (defun geiser-doc--follow-link (link)
   (let ((target (geiser-doc--link-target link))
-        (module (geiser-doc--link-module link)))
-    (when target
-      (if (symbolp target)
-          (geiser-doc-symbol target module)
-        (geiser-doc-module (format "%s" target))))))
+        (module (geiser-doc--link-module link))
+        (impl (or (geiser-doc--link-impl link)
+                  (geiser-impl--default-implementation))))
+    (when (and (or target module) impl)
+      (with--geiser-implementation impl
+        `(lambda () (if (null ',target)
+                   (geiser-doc-module ',module ',impl)
+                 (geiser-doc-symbol ',target ',module ',impl)))))))
 
 (defun geiser-doc--button-action (button)
   (let ((link (button-get button 'geiser-link)))
@@ -111,8 +118,8 @@
   'face 'geiser-font-lock-doc-link
   'follow-link t)
 
-(defun geiser-doc--insert-button (target module)
-  (let ((link (geiser-doc--make-link target module))
+(defun geiser-doc--insert-button (target module impl)
+  (let ((link (geiser-doc--make-link target module impl))
         (text (format "%s" target))
         (help (if module (format "%s in module %s" target module) "")))
     (insert-text-button text
@@ -134,13 +141,13 @@
     (put-text-property p (point) 'face 'geiser-font-lock-doc-title)
     (newline)))
 
-(defun geiser-doc--insert-list (title lst module)
+(defun geiser-doc--insert-list (title lst module impl)
   (when lst
     (geiser-doc--insert-title title)
     (newline)
     (dolist (w lst)
       (insert (format "\t- "))
-      (geiser-doc--insert-button w module)
+      (geiser-doc--insert-button w module impl)
       (newline))
     (newline)))
 
@@ -154,11 +161,11 @@
   (geiser-eval--send/result `(:eval ((:ge symbol-documentation) ',symbol) ,module)))
 
 (defun geiser-doc--get-module-children (module)
-  (geiser-eval--send/result `(:eval ((:ge module-children) (quote (:scm ,module))))))
+  (geiser-eval--send/result `(:eval ((:ge module-children) (:module ,module)))))
 
-(defun geiser-doc-symbol (symbol &optional module)
-  (let* ((module (or module
-                     (geiser-syntax--buffer-module)))
+(defun geiser-doc-symbol (symbol &optional module impl)
+  (let* ((module (or module (geiser-eval--get-module)))
+         (impl (or impl geiser-impl--implementation))
          (ds (geiser-doc--get-docstring symbol module)))
     (if (or (not ds) (not (listp ds)))
         (message "No documentation available for '%s'" symbol)
@@ -167,9 +174,10 @@
        (geiser-doc--insert-title (cdr (assoc 'signature ds)))
        (newline)
        (insert (or (cdr (assoc 'docstring ds)) ""))
-       (goto-line (point-min)))
-      (setq geiser-doc--buffer-link
-            (geiser-doc--history-push (geiser-doc--make-link symbol module)))
+       (goto-line (point-min))
+       (setq geiser-doc--buffer-link
+             (geiser-doc--history-push
+              (geiser-doc--make-link symbol module impl))))
       (geiser-doc--pop-to-buffer))))
 
 (defun geiser-doc-symbol-at-point (&optional arg)
@@ -181,11 +189,11 @@ With prefix argument, ask for symbol (with completion)."
     (when symbol (geiser-doc-symbol symbol))))
 
 
-(defun geiser-doc-module (module)
+(defun geiser-doc-module (module &optional impl)
   "Display information about a given module."
   (interactive (list (geiser-completion--read-module)))
   (let ((children (geiser-doc--get-module-children module))
-        (mod-sym (car (read-from-string module))))
+        (impl (or impl geiser-impl--implementation)))
     (if (not children)
         (message "No info available for %s" module)
       (geiser-doc--with-buffer
@@ -194,17 +202,19 @@ With prefix argument, ask for symbol (with completion)."
         (newline)
         (geiser-doc--insert-list "Procedures:"
                                  (cdr (assoc 'procs children))
-                                 mod-sym)
+                                 module
+                                 impl)
         (geiser-doc--insert-list "Variables:"
                                  (cdr (assoc 'vars children))
-                                 mod-sym)
+                                 module
+                                 impl)
         (geiser-doc--insert-list "Submodules:"
                                  (cdr (assoc 'modules children))
-                                 mod-sym)
-        (goto-char (point-min)))
-      (setq geiser-doc--buffer-link
-            (geiser-doc--history-push (geiser-doc--make-link (car (read-from-string module))
-                                                             nil)))
+                                 module
+                                 impl)
+        (goto-char (point-min))
+        (setq geiser-doc--buffer-link
+              (geiser-doc--history-push (geiser-doc--make-link nil module impl))))
       (geiser-doc--pop-to-buffer))))
 
 (defun geiser-doc-next (&optional forget-current)
@@ -278,6 +288,7 @@ With prefix, the current page is deleted from history."
   (setq buffer-read-only t))
 
 (geiser-popup--define doc "*Geiser documentation*" geiser-doc-mode)
+
 
 
 (provide 'geiser-doc)

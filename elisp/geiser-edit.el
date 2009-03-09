@@ -127,7 +127,7 @@ With prefix, asks for the symbol to edit."
 (defun geiser-edit-module (module)
   "Asks for a module and opens it in a new buffer."
   (interactive (list (geiser-completion--read-module)))
-  (let ((cmd `(:eval ((:ge module-location) (quote (:scm ,module))))))
+  (let ((cmd `(:eval ((:ge module-location) ,module))))
     (geiser-edit--try-edit module (geiser-eval--send/wait cmd))))
 
 

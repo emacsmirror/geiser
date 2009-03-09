@@ -31,6 +31,7 @@
 (require 'geiser-edit)
 (require 'geiser-autodoc)
 (require 'geiser-debug)
+(require 'geiser-impl)
 (require 'geiser-eval)
 (require 'geiser-repl)
 (require 'geiser-popup)
@@ -153,6 +154,7 @@ interacting with the Geiser REPL is at your disposal.
   :lighter geiser-mode-string
   :group 'geiser-mode
   :keymap geiser-mode-map
+  (when geiser-mode (geiser-impl--set-buffer-implementation))
   (setq geiser-autodoc-mode-string "/A")
   (setq geiser-smart-tab-mode-string "/T")
   (when geiser-mode-autodoc-p (geiser-autodoc-mode geiser-mode))
@@ -212,8 +214,16 @@ interacting with the Geiser REPL is at your disposal.
     (dolist (buffer (buffer-list))
       (when (buffer-live-p buffer)
         (set-buffer buffer)
-        (when geiser-mode (push buffer buffers))))
+        (when geiser-mode
+          (push (cons buffer geiser-impl--implementation) buffers))))
     buffers))
+
+(defun geiser-mode--restore (buffers)
+  (dolist (b buffers)
+    (when (buffer-live-p (car b))
+      (set-buffer (car b))
+      (geiser-mode 1)
+      (when (cdr b) (geiser-impl--set-buffer-implementation (cdr b))))))
 
 
 (provide 'geiser-mode)

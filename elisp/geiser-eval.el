@@ -34,14 +34,22 @@
 ;;; Plug-able functions:
 
 (make-variable-buffer-local
- (defvar geiser-eval--current-module-function 'geiser-syntax--buffer-module))
+ (defvar geiser-eval--get-module-function 'geiser-syntax--buffer-module
+   "Function used to obtain the module for current buffer. It
+takes an optional argument, for cases where we want to force its value."))
 
-(defsubst geiser-eval--current-module-function (fun)
-  (setq geiser-eval--current-module-function fun))
+(defsubst geiser-eval--get-module (&optional module)
+  (and geiser-eval--get-module-function
+       (funcall geiser-eval--get-module-function module)))
 
-(defsubst geiser-eval--current-module ()
-  (and geiser-eval--current-module-function
-       (funcall geiser-eval--current-module-function)))
+(make-variable-buffer-local
+ (defvar geiser-eval--geiser-procedure-function nil
+   "Translate a bare procedure symbol to one executable in Guile's
+context. Return NULL for unsupported ones; at the very least,
+EVAL, COMPILE, LOAD-FILE and COMPILE-FILE should be supported."))
+
+(defsubst geiser-eval--form (proc)
+  (funcall geiser-eval--geiser-procedure-function proc))
 
 
 ;;; Code formatting:
@@ -64,28 +72,27 @@
 
 (defsubst geiser-eval--eval (code)
   (geiser-eval--scheme-str
-   `((@ (geiser emacs) ge:eval) (quote ,(nth 0 code)) (:module ,(nth 1 code)))))
+   `(,(geiser-eval--form 'eval) (quote ,(nth 0 code)) (:module ,(nth 1 code)))))
 
 (defsubst geiser-eval--comp (code)
   (geiser-eval--scheme-str
-   `((@ (geiser emacs) ge:compile) (quote ,(nth 0 code)) (:module ,(nth 1 code)))))
+   `(,(geiser-eval--form 'compile (quote ,(nth 0 code)) (:module ,(nth 1 code))))))
 
 (defsubst geiser-eval--load-file (file)
-  (geiser-eval--scheme-str `((@ (geiser emacs) ge:load-file) ,file)))
+  (geiser-eval--scheme-str `(,(geiser-eval--form 'load-file) ,file)))
 
 (defsubst geiser-eval--comp-file (file)
-  (geiser-eval--scheme-str `((@ (geiser emacs) ge:compile-file) ,file)))
+  (geiser-eval--scheme-str `(,(geiser-eval--form 'compile-file) ,file)))
 
 (defsubst geiser-eval--module (code)
   (geiser-eval--scheme-str
-   (cond ((or (eq code '(())) (null code))
-          `(quote ,(or (geiser-eval--current-module) :f)))
-         ((listp code) `(quote ,code))
-         ((stringp code) (:scm code))
-         (t (error "Invalid module spec: %S" code)))))
+   (cond ((or (null code) (eq code :t) (eq code :buffer))
+          (list 'quote (funcall geiser-eval--get-module-function)))
+         ((or (eq code :repl) (eq code :f)) :f)
+         (t (list 'quote (funcall geiser-eval--get-module-function code))))))
 
 (defsubst geiser-eval--ge (proc)
-  (format "(@ (geiser emacs) ge:%s)" proc))
+  (geiser-eval--scheme-str (geiser-eval--form proc)))
 
 
 ;;; Code sending:
