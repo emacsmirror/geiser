@@ -132,7 +132,7 @@ loaded."
     (geiser-unload)
     (load-file geiser-main-file)
     (geiser-setup)
-    (dolist (feature (geiser--features-list))
+    (dolist (feature (reverse (geiser--features-list)))
       (load-library (format "%s" feature)))
     (when impls (geiser-impl--reload-implementations impls))
     (when repl (geiser 'repl))

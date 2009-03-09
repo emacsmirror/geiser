@@ -289,7 +289,6 @@ With prefix, the current page is deleted from history."
 
 (geiser-popup--define doc "*Geiser documentation*" geiser-doc-mode)
 
-
 
 (provide 'geiser-doc)
 ;;; geiser-doc.el ends here
