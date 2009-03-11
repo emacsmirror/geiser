@@ -48,10 +48,16 @@
 (autoload 'geiser "geiser-repl.el"
   "Start a Geiser REPL, or switch to a running one." t)
 
-(autoload 'run-guile "geiser-repl.el"
+(autoload 'run-geiser "geiser-repl.el"
+  "Start a Geiser REPL." t)
+
+(autoload 'switch-to-geiser "geiser-guile.el"
+  "Switch to a running one Geiser REPL." t)
+
+(autoload 'run-guile "geiser-guile.el"
   "Start a Geiser Guile REPL, or switch to a running one." t)
 
-(autoload 'switch-to-guile "geiser-repl.el"
+(autoload 'switch-to-guile "geiser-guile.el"
   "Start a Geiser Guile REPL, or switch to a running one." t)
 
 (autoload 'geiser-mode "geiser-mode.el"
@@ -75,7 +81,11 @@
   (eval-after-load "scheme"
     '(add-hook 'scheme-mode-hook 'turn-on-geiser-mode)))
 
-(defun geiser-setup ()
+(defun geiser-setup-implementations (impls)
+  (setq geiser-impl--impls (append '(guile) impls)))
+
+(defun geiser-setup (&rest impls)
+  (geiser-setup-implementations impls)
   (geiser-setup-scheme-mode))
 
 
@@ -124,7 +134,7 @@ loaded."
                   geiser-root-dir))
          (geiser-main-file (expand-file-name "elisp/geiser.el" dir))
          (impls (and (featurep 'geiser-impl) geiser-impl--impls))
-         (repl (and (featurep 'geiser-repl) (geiser-repl--live-p)))
+         (repls (and (featurep 'geiser-repl) (geiser-repl--repl-list)))
          (buffers (and (featurep 'geiser-mode) (geiser-mode--buffers))))
     (unless (file-exists-p geiser-main-file)
       (error "%s does not contain Geiser!" dir))
@@ -134,9 +144,9 @@ loaded."
     (geiser-setup)
     (dolist (feature (reverse (geiser--features-list)))
       (load-library (format "%s" feature)))
-    (when impls (geiser-impl--reload-implementations impls))
-    (when repl (geiser 'repl))
-    (when buffers (geiser-mode--restore buffers))
+    (geiser-impl--reload-implementations impls)
+    (geiser-repl--restore repls)
+    (geiser-mode--restore buffers)
     (message "Geiser reloaded!")))
 
 

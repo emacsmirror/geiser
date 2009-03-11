@@ -139,15 +139,15 @@
 
 (defsubst geiser-impl--binary (impl)
   (or (geiser-impl--call-if-bound impl "binary")
-      (geiser-impl--value imp "binary")))
+      (geiser-impl--value impl "binary")))
 
 (defsubst geiser-impl--parameters (impl)
   (or (geiser-impl--call-if-bound impl "parameters")
-      (ignore-errors (geiser-impl--value imp "parameters"))))
+      (ignore-errors (geiser-impl--value impl "parameters"))))
 
 (defsubst geiser-impl--prompt-regexp (impl)
   (or (geiser-impl--call-if-bound impl "prompt-regexp")
-      (geiser-impl--value imp "prompt-regexp")))
+      (geiser-impl--value impl "prompt-regexp")))
 
 
 ;;; Access to implementation guessing function:

@@ -177,7 +177,7 @@ interacting with the Geiser REPL is at your disposal.
   (define-key geiser-mode-map (vector '(control ?c) `(control ,p) k) c)
   (define-key geiser-mode-map (vector '(control ?c) `(control ,p) `(control ,k)) c))
 
-(define-key geiser-mode-map "\C-c\C-z" 'switch-to-guile)
+(define-key geiser-mode-map "\C-c\C-z" 'switch-to-geiser)
 (define-key geiser-mode-map "\C-c\C-l" 'geiser-load-current-buffer)
 (define-key geiser-mode-map "\C-c\C-k" 'geiser-compile-current-buffer)
 
