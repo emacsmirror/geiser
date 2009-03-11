@@ -269,6 +269,7 @@ If no REPL is running, execute `run-geiser' to start a fresh one."
 
 (define-key geiser-repl-mode-map (kbd "TAB") 'geiser-completion--complete-symbol)
 (define-key geiser-repl-mode-map (kbd "M-TAB") 'geiser-completion--complete-symbol)
+(define-key geiser-repl-mode-map (kbd "M-`") 'geiser-completion--complete-module)
 (define-key geiser-repl-mode-map (kbd "C-.") 'geiser-completion--complete-module)
 (define-key geiser-repl-mode-map "\M-." 'geiser-edit-symbol-at-point)
 (define-key geiser-repl-mode-map "\M-," 'geiser-edit-pop-edit-symbol-stack)

@@ -182,6 +182,7 @@ interacting with the Geiser REPL is at your disposal.
 (define-key geiser-mode-map "\C-c\C-k" 'geiser-compile-current-buffer)
 
 (define-key geiser-mode-map (kbd "M-TAB") 'geiser-completion--complete-symbol)
+(define-key geiser-mode-map (kbd "M-`") 'geiser-completion--complete-module)
 (define-key geiser-mode-map (kbd "C-.") 'geiser-completion--complete-module)
 (define-key geiser-mode-map "\M-." 'geiser-edit-symbol-at-point)
 (define-key geiser-mode-map "\M-," 'geiser-edit-pop-edit-symbol-stack)

@@ -47,7 +47,7 @@
     | C-cC-xf          | See a generic's methods signatures              |
     |------------------+-------------------------------------------------|
     | M-TAB            | Complete symbol at point                        |
-    | C-.              | Complete module name at point                   |
+    | M-`, C-.         | Complete module name at point                   |
     | TAB              | Complete symbol at point or indent              |
     |                  | (If `geiser-mode-smart-tab-p' is t)             |
     |------------------+-------------------------------------------------|
@@ -59,7 +59,7 @@
     |--------------+-----------------------------------------|
     | M-.          | Edit symbol at point                    |
     | TAB, M-TAB   | Complete symbol at point                |
-    | C-.          | Complete module name at point           |
+    | M-`, C-.     | Complete module name at point           |
     |--------------+-----------------------------------------|
     | M-p, M-n     | Prompt history, matching current prefix |
     |--------------+-----------------------------------------|
