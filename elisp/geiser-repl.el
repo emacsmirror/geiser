@@ -41,19 +41,6 @@
   "Interacting with the Geiser REPL."
   :group 'geiser)
 
-(defcustom geiser-repl-guile-binary
-  (cond ((eq system-type 'windows-nt) "guile.exe")
-        ((eq system-type 'darwin) "guile")
-        (t "guile"))
-  "Name to use to call the Guile executable when starting a REPL."
-  :type 'string
-  :group 'geiser-repl)
-
-(defcustom geiser-repl-guile-init-file "~/.guile-geiser"
-  "Initialization file with user code for the Guile REPL."
-  :type 'string
-  :group 'geiser-repl)
-
 (defcustom geiser-repl-use-other-window t
   "Whether to Use a window other than the current buffer's when
 switching to the Geiser REPL buffer."
@@ -255,7 +242,7 @@ If no REPL is running, execute `run-geiser' to start a fresh one."
 (defun geiser-repl--module-function (&optional ignore) :f)
 
 (define-derived-mode geiser-repl-mode comint-mode "Geiser REPL"
-  "Major mode for interacting with an inferior Guile repl process.
+  "Major mode for interacting with an inferior scheme repl process.
 \\{geiser-repl-mode-map}"
   (set (make-local-variable 'mode-line-process) nil)
   (set (make-local-variable 'comint-use-prompt-regexp) t)
@@ -266,8 +253,8 @@ If no REPL is running, execute `run-geiser' to start a fresh one."
   (setq geiser-eval--get-module-function 'geiser-repl--module-function)
   (when geiser-repl-autodoc-p (geiser-autodoc-mode 1)))
 
-(define-key geiser-repl-mode-map "\C-cz" 'run-guile)
-(define-key geiser-repl-mode-map "\C-c\C-z" 'run-guile)
+(define-key geiser-repl-mode-map "\C-cz" 'run-geiser)
+(define-key geiser-repl-mode-map "\C-c\C-z" 'run-geiser)
 (define-key geiser-repl-mode-map "\C-a" 'geiser-repl--bol)
 (define-key geiser-repl-mode-map "\C-ca" 'geiser-autodoc-mode)
 (define-key geiser-repl-mode-map "\C-cd" 'geiser-doc-symbol-at-point)
