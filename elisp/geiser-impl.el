@@ -100,21 +100,25 @@
   (when (geiser-impl--fboundp imp name)
     (apply (geiser-impl--value imp name t) args)))
 
-(defun geiser-impl--install-eval (imp)
-  (setq geiser-eval--get-module-function
-        (geiser-impl--sym imp "get-module")
-        geiser-eval--geiser-procedure-function
-        (geiser-impl--sym imp "geiser-procedure")))
+(defsubst geiser-impl--module-function (impl)
+  (geiser-impl--sym impl "get-module"))
+
+(defsubst geiser-impl--geiser-procedure-function (impl)
+  (geiser-impl--sym imp "geiser-procedure"))
+
+(defun geiser-impl--install-eval (impl)
+  (setq geiser-eval--get-module-function (geiser-impl--module-function impl))
+  (setq geiser-eval--geiser-procedure-function
+        (geiser-impl--geiser-procedure-function impl)))
 
 
 ;;; Evaluating Elisp in a given implementation context:
 
 (defun with--geiser-implementation (imp thunk)
   (let ((geiser-impl--implementation imp)
-        (geiser-eval--get-module-function
-         (geiser-impl--sym imp "get-module"))
+        (geiser-eval--get-module-function (geiser-impl--module-function imp))
         (geiser-eval--geiser-procedure-function
-         (geiser-impl--sym imp "geiser-procedure")))
+         (geiser-impl--geiser-procedure-function imp)))
     (funcall thunk)))
 
 (put 'with--geiser-implementation 'lisp-indent-function 1)

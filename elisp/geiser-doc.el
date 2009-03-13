@@ -189,13 +189,14 @@ With prefix argument, ask for symbol (with completion)."
     (when symbol (geiser-doc-symbol symbol))))
 
 
-(defun geiser-doc-module (module &optional impl)
+(defun geiser-doc-module (&optional module impl)
   "Display information about a given module."
-  (interactive (list (geiser-completion--read-module)))
-  (let ((children (geiser-doc--get-module-children module))
-        (impl (or impl geiser-impl--implementation)))
+  (interactive)
+  (let* ((module (geiser-completion--read-module))
+         (children (geiser-doc--get-module-children module))
+         (impl (or impl geiser-impl--implementation)))
     (if (not children)
-        (message "No info available for %s" module)
+        (message "No information available for %s" module)
       (geiser-doc--with-buffer
         (erase-buffer)
         (geiser-doc--insert-title (format "%s" module))
