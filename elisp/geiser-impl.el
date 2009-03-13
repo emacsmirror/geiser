@@ -49,7 +49,7 @@
   (add-to-list 'geiser-impl--impls impl))
 
 (defun geiser-impl--unregister (impl)
-  (remove impl geiser-impl--impls))
+  (setq geiser-impl--impls (remove impl geiser-impl--impls)))
 
 (defvar geiser-impl--default-implementation
   geiser-impl-default-implementation)

@@ -161,10 +161,15 @@ REPL buffer."
                          (and (car geiser-impl--impls)
                               (symbol-name (car geiser-impl--impls)))))))
 
+(defsubst geiser-repl--only-impl-p ()
+  (and (null (cdr geiser-impl--impls))
+       (car geiser-impl--impls)))
+
 (defun run-geiser (impl)
   "Start a new Geiser REPL."
   (interactive
-   (list (geiser-repl--read-impl "Start Geiser for scheme implementation: ")))
+   (list (or (geiser-repl--only-impl-p)
+             (geiser-repl--read-impl "Start Geiser for scheme implementation: "))))
    (geiser-repl--start-repl impl))
 
 (defun switch-to-geiser (&optional ask impl)
@@ -178,7 +183,9 @@ If no REPL is running, execute `run-geiser' to start a fresh one."
                      ((and (not ask) impl (geiser-repl--repl/impl impl)))
                      ((= 1 (length geiser-repl--repls)) (car geiser-repl--repls))))
          (impl (or impl (and (not repl)
-                             (geiser-repl--read-impl "Switch to scheme REPL: "))))
+                             (or (and (not ask)
+                                      (geiser-repl--only-impl-p))
+                                 (geiser-repl--read-impl "Switch to scheme REPL: ")))))
          (pop-up-windows geiser-repl-window-allow-split))
     (if repl (pop-to-buffer repl) (run-geiser impl))))
 
