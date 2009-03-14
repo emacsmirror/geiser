@@ -135,8 +135,12 @@ With prefix, recursively macro-expand the resulting expression."
 ;;; Geiser mode:
 
 (make-variable-buffer-local
- (defvar geiser-mode-string " G"
+ (defvar geiser-mode-string nil
    "Modeline indicator for geiser-mode"))
+
+(defun geiser-mode--lighter ()
+  (or geiser-mode-string
+      (format " %s" (or (geiser-impl--impl-str) "G"))))
 
 (defvar geiser-mode-map (make-sparse-keymap)
   "Key map for geiser-mode")
@@ -151,7 +155,7 @@ When Geiser mode is enabled, a host of nice utilities for
 interacting with the Geiser REPL is at your disposal.
 \\{geiser-mode-map}"
   :init-value nil
-  :lighter geiser-mode-string
+  :lighter (:eval (geiser-mode--lighter))
   :group 'geiser-mode
   :keymap geiser-mode-map
   (when geiser-mode (geiser-impl--set-buffer-implementation))

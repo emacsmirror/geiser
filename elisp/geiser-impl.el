@@ -60,6 +60,10 @@
       geiser-impl-default-implementation
       (car geiser-impl--impls)))
 
+(defsubst geiser-impl--impl-str (&optional impl)
+  (let ((impl (or impl geiser-impl--implementation)))
+    (and impl (capitalize (format "%s" impl)))))
+
 
 ;;; Installing Scheme implementations:
 
@@ -77,7 +81,6 @@
     (setq geiser-impl--implementation impl)
     (geiser-impl--install-eval impl)
     (geiser-impl--register impl)))
-
 
 (defsubst geiser-impl--sym (imp name)
   (intern (format "geiser-%s-%s" imp name)))
@@ -104,7 +107,7 @@
   (geiser-impl--sym impl "get-module"))
 
 (defsubst geiser-impl--geiser-procedure-function (impl)
-  (geiser-impl--sym imp "geiser-procedure"))
+  (geiser-impl--sym impl "geiser-procedure"))
 
 (defun geiser-impl--install-eval (impl)
   (setq geiser-eval--get-module-function (geiser-impl--module-function impl))

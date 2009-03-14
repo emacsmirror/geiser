@@ -103,10 +103,14 @@ REPL buffer."
       (with-current-buffer repl
         (add-to-list 'act geiser-impl--implementation)))))
 
+(defsubst geiser-repl--repl-name (impl)
+  (format "%s REPL" (geiser-impl--impl-str impl)))
+
 (defun geiser-repl--to-repl-buffer (impl)
   (unless (and (eq major-mode 'geiser-repl-mode)
                (not (get-buffer-process (current-buffer))))
-    (pop-to-buffer (generate-new-buffer (format "*Geiser REPL (%s)*" impl))))
+    (pop-to-buffer
+     (generate-new-buffer (format "* %s *" (geiser-repl--repl-name impl)))))
   (geiser-impl--set-buffer-implementation impl)
   (geiser-repl-mode))
 
@@ -116,7 +120,7 @@ REPL buffer."
   (let ((binary (geiser-impl--binary impl))
         (args (geiser-impl--parameters impl))
         (prompt-rx (geiser-impl--prompt-regexp impl))
-        (cname (format "Geiser REPL (%s)" impl)))
+        (cname (geiser-repl--repl-name impl)))
     (unless (and binary prompt-rx)
       (error "Sorry, I don't know how to start a REPL for %s" impl))
     (set (make-local-variable 'comint-prompt-regexp) prompt-rx)
