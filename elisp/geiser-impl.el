@@ -35,7 +35,7 @@
   "Generic support for multiple Scheme implementations."
   :group 'geiser)
 
-(defcustom geiser-impl-default-implementation 'guile
+(defcustom geiser-impl-default-implementation nil
   "Symbol naming the default Scheme implementation."
   :type 'symbol
   :group 'geiser-impl)
@@ -64,19 +64,30 @@
   (let ((impl (or impl geiser-impl--implementation)))
     (and impl (capitalize (format "%s" impl)))))
 
+(defsubst geiser-impl--impl-feature (impl)
+  (intern (format "geiser-%s" impl)))
+
 
 ;;; Installing Scheme implementations:
 
 (make-variable-buffer-local
  (defvar geiser-impl--implementation nil))
 
-(defsubst geiser-impl--impl-feature (impl)
-  (intern (format "geiser-%s" impl)))
+(defvar geiser-impl--impl-prompt-history nil)
+
+(defun geiser-impl--read-impl (&optional prompt impls non-req)
+  (let* ((impls (or impls geiser-impl--impls))
+         (impls (mapcar (lambda (s) (format "%s" s)) impls))
+         (prompt (or prompt "Scheme implementation: ")))
+    (intern (completing-read prompt impls nil (not non-req) nil
+                             geiser-impl--impl-prompt-history
+                             (and (car geiser-impl--impls)
+                                  (symbol-name (car geiser-impl--impls)))))))
 
 (defun geiser-impl--set-buffer-implementation (&optional impl)
   (let ((impl (or impl
                   (geiser-impl--guess)
-                  (intern (read-string "Scheme implementation: ")))))
+                  (geiser-impl--read-impl nil nil t))))
     (require (geiser-impl--impl-feature impl))
     (setq geiser-impl--implementation impl)
     (geiser-impl--install-eval impl)
@@ -172,19 +183,6 @@ implementation to be used by Geiser."))
           (when (geiser-impl--call-if-bound impl "guess")
             (throw 'impl impl))))
       (geiser-impl--default-implementation)))
-
-
-;;; User commands:
-(defvar geiser-impl--impl-prompt-history nil)
-
-(defun geiser-impl--read-impl (&optional prompt impls)
-  (let* ((impls (or impls geiser-impl--impls))
-         (impls (mapcar (lambda (s) (format "%s" s)) impls))
-         (prompt (or prompt "Scheme implementation: ")))
-    (intern (completing-read prompt impls nil t nil
-                             geiser-impl--impl-prompt-history
-                             (and (car geiser-impl--impls)
-                                  (symbol-name (car geiser-impl--impls)))))))
 
 
 ;;; Unload support

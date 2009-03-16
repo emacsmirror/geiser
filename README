@@ -21,6 +21,7 @@
 
     |------------------+-------------------------------------------------|
     | C-cC-z           | Switch to REPL                                  |
+    | C-cC-s           | Specify Scheme implementation for buffer        |
     |------------------+-------------------------------------------------|
     | M-.              | Edit symbol at point                            |
     | M-,              | Go back to where M-. was last invoked           |
