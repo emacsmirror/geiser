@@ -67,7 +67,7 @@
 
 ;;; Installing Scheme implementations:
 
-(make-local-variable
+(make-variable-buffer-local
  (defvar geiser-impl--implementation nil))
 
 (defsubst geiser-impl--impl-feature (impl)
@@ -159,12 +159,32 @@
 
 ;;; Access to implementation guessing function:
 
+(make-variable-buffer-local
+ (defvar geiser-scheme-implementation nil
+   "Set this buffer local variable to specify the Scheme
+implementation to be used by Geiser."))
+
 (defun geiser-impl--guess ()
-  (catch 'impl
-    (dolist (impl geiser-impl--impls)
-      (when (geiser-impl--call-if-bound impl "guess")
-        (throw 'impl impl)))
-    (geiser-impl--default-implementation)))
+  (or geiser-impl--implementation
+      geiser-scheme-implementation
+      (catch 'impl
+        (dolist (impl geiser-impl--impls)
+          (when (geiser-impl--call-if-bound impl "guess")
+            (throw 'impl impl))))
+      (geiser-impl--default-implementation)))
+
+
+;;; User commands:
+(defvar geiser-impl--impl-prompt-history nil)
+
+(defun geiser-impl--read-impl (&optional prompt impls)
+  (let* ((impls (or impls geiser-impl--impls))
+         (impls (mapcar (lambda (s) (format "%s" s)) impls))
+         (prompt (or prompt "Scheme implementation: ")))
+    (intern (completing-read prompt impls nil t nil
+                             geiser-impl--impl-prompt-history
+                             (and (car geiser-impl--impls)
+                                  (symbol-name (car geiser-impl--impls)))))))
 
 
 ;;; Unload support

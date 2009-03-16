@@ -99,14 +99,9 @@ EVAL, COMPILE, LOAD-FILE and COMPILE-FILE should be supported."))
 
 (defvar geiser-eval--default-proc-function nil)
 
-(defsubst geiser-eval--default-proc ()
+(defsubst geiser-eval--proc ()
   (and geiser-eval--default-proc-function
        (funcall geiser-eval--default-proc-function)))
-
-(defvar geiser-eval--proc nil)
-
-(defsubst geiser-eval--proc ()
-  (or geiser-eval--proc (geiser-eval--default-proc)))
 
 (defsubst geiser-eval--log (s)
   (geiser-log--info "RETORT: %S" s)

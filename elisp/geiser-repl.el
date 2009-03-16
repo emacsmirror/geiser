@@ -90,7 +90,7 @@ REPL buffer."
           (throw 'repl repl))))))
 
 (defun geiser-repl--get-repl (&optional impl)
-  (or geiser-repl--repl
+  (or (and (not impl) geiser-repl--repl)
       (setq geiser-repl--repl
             (let ((impl (or impl
                             geiser-impl--implementation
@@ -111,8 +111,8 @@ REPL buffer."
                (not (get-buffer-process (current-buffer))))
     (pop-to-buffer
      (generate-new-buffer (format "* %s *" (geiser-repl--repl-name impl)))))
-  (geiser-impl--set-buffer-implementation impl)
-  (geiser-repl-mode))
+  (geiser-repl-mode)
+  (geiser-impl--set-buffer-implementation impl))
 
 (defun geiser-repl--start-repl (impl)
   (message "Starting Geiser REPL for %s ..." impl)
@@ -132,7 +132,7 @@ REPL buffer."
     (geiser-repl--set-this-buffer-repl (current-buffer))))
 
 (defun geiser-repl--process ()
-  (let ((buffer (geiser-repl--get-repl)))
+  (let ((buffer (geiser-repl--get-repl geiser-impl--implementation)))
     (or (and (buffer-live-p buffer) (get-buffer-process buffer))
         (error "No Geiser REPL for this buffer (try M-x run-geiser)"))))
 
@@ -151,19 +151,8 @@ REPL buffer."
 
 ;;; Interface: starting and interacting with geiser REPL:
 
-(defvar geiser-repl--impl-prompt-history nil)
-
 (defun geiser-repl--read-impl (prompt &optional active)
-  (car (read-from-string
-        (completing-read prompt
-                         (mapcar 'symbol-name
-                                 (if active
-                                     (geiser-repl--active-impls)
-                                   geiser-impl--impls))
-                         nil nil nil
-                         geiser-repl--impl-prompt-history
-                         (and (car geiser-impl--impls)
-                              (symbol-name (car geiser-impl--impls)))))))
+  (geiser-impl--read-impl prompt (and active (geiser-repl--active-impls))))
 
 (defsubst geiser-repl--only-impl-p ()
   (and (null (cdr geiser-impl--impls))
@@ -201,25 +190,28 @@ If no REPL is running, execute `run-geiser' to start a fresh one."
   (goto-char (point-max))
   (comint-kill-region comint-last-input-start (point))
   (comint-redirect-cleanup)
-  (geiser-con--setup-connection geiser-repl--buffer geiser-repl--prompt-regex))
+  (geiser-con--setup-connection (current-buffer)
+                                comint-prompt-regexp))
 
 
 ;;; REPL history and clean-up:
 
 (defun geiser-repl--on-quit ()
   (comint-write-input-ring)
-  (let ((cb (current-buffer)))
+  (let ((cb (current-buffer))
+        (impl geiser-impl--implementation))
     (setq geiser-repl--repls (remove cb geiser-repl--repls))
     (dolist (buffer (buffer-list))
       (with-current-buffer buffer
-        (when (equal cb (geiser-repl--this-buffer-repl))
-          (geiser-repl--set-this-buffer-repl nil)
-          (geiser-repl--get-repl))))))
+        (when (and (eq geiser-impl--implementation impl)
+                   (equal cb (geiser-repl--this-buffer-repl)))
+          (geiser-repl--get-repl geiser-impl--implementation))))))
 
 (defun geiser-repl--sentinel (proc event)
   (when (string= event "finished\n")
     (with-current-buffer (process-buffer proc)
-      (let ((comint-input-ring-file-name geiser-repl-history-filename))
+      (let ((comint-prompt-read-only nil)
+            (comint-input-ring-file-name geiser-repl-history-filename))
         (geiser-repl--on-quit)
         (when (buffer-name (current-buffer))
           (insert "\nIt's been nice interacting with you!\n")

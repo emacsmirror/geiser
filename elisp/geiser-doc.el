@@ -151,7 +151,7 @@
       (newline))
     (newline)))
 
-(make-local-variable
+(make-variable-buffer-local
  (defvar geiser-doc--buffer-link nil))
 
 

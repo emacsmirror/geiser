@@ -131,6 +131,13 @@ With prefix, recursively macro-expand the resulting expression."
   (interactive "P")
   (geiser-expand-region (save-excursion (backward-sexp) (point)) (point) all))
 
+(defun geiser-set-scheme ()
+  "Associates current buffer with a given Scheme implementation."
+  (interactive)
+  (let ((impl (geiser-impl--read-impl)))
+    (geiser-impl--set-buffer-implementation impl)
+    (geiser-repl--get-repl impl)))
+
 
 ;;; Geiser mode:
 
