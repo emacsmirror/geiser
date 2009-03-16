@@ -54,7 +54,9 @@ REPL buffer."
   :group 'geiser-repl)
 
 (defcustom geiser-repl-history-filename (expand-file-name "~/.geiser_history")
-  "File where REPL input history is saved, so that it persists between sessions."
+  "File where REPL input history is saved, so that it persists between sessions.
+This is actually the base name: the concrete Scheme
+implementation name gets appended to it."
   :type 'filename
   :group 'geiser-repl)
 
@@ -196,6 +198,9 @@ If no REPL is running, execute `run-geiser' to start a fresh one."
 
 ;;; REPL history and clean-up:
 
+(defsubst geiser-repl--history-file ()
+  (format "%s.%s" geiser-repl-history-filename geiser-impl--implementation))
+
 (defun geiser-repl--on-quit ()
   (comint-write-input-ring)
   (let ((cb (current-buffer))
@@ -211,7 +216,7 @@ If no REPL is running, execute `run-geiser' to start a fresh one."
   (when (string= event "finished\n")
     (with-current-buffer (process-buffer proc)
       (let ((comint-prompt-read-only nil)
-            (comint-input-ring-file-name geiser-repl-history-filename))
+            (comint-input-ring-file-name (geiser-repl--history-file)))
         (geiser-repl--on-quit)
         (when (buffer-name (current-buffer))
           (insert "\nIt's been nice interacting with you!\n")
@@ -222,7 +227,8 @@ If no REPL is running, execute `run-geiser' to start a fresh one."
        (not (string-match "^,quit *$" str))))
 
 (defun geiser-repl--history-setup ()
-  (set (make-local-variable 'comint-input-ring-file-name) geiser-repl-history-filename)
+  (set (make-local-variable 'comint-input-ring-file-name)
+       (geiser-repl--history-file))
   (set (make-local-variable 'comint-input-ring-size) geiser-repl-history-size)
   (set (make-local-variable 'comint-input-filter) 'geiser-repl--input-filter)
   (add-hook 'kill-buffer-hook 'geiser-repl--on-quit nil t)
