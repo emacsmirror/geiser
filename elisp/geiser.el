@@ -72,7 +72,14 @@
 (mapc (lambda (group)
         (custom-add-load group (symbol-name group))
         (custom-add-load 'geiser (symbol-name group)))
-      '(geiser geiser-repl geiser-autodoc geiser-doc geiser-faces geiser-mode))
+      '(geiser
+        geiser-repl
+        geiser-autodoc
+        geiser-doc
+        geiser-faces
+        geiser-mode
+        geiser-guile
+        geiser-larceny))
 
 
 ;;; Scheme mode setup:

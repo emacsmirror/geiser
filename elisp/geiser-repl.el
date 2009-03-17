@@ -131,6 +131,7 @@ implementation name gets appended to it."
     (geiser-repl--history-setup)
     (geiser-con--setup-connection (current-buffer) prompt-rx)
     (add-to-list 'geiser-repl--repls (current-buffer))
+    (geiser-impl--startup impl)
     (geiser-repl--set-this-buffer-repl (current-buffer))))
 
 (defun geiser-repl--process ()

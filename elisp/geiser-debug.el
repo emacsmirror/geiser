@@ -98,7 +98,7 @@
          (ret (geiser-eval--send/wait code))
          (err (geiser-eval--retort-error ret)))
     (when and-go
-      (switch-to-guile)
+      (switch-to-geiser)
       (push-mark)
       (goto-char (point-max)))
     (if (not err)

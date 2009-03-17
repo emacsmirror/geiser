@@ -24,6 +24,7 @@
 
 ;;; Code:
 
+(require 'geiser-eval)
 (require 'geiser-impl)
 (require 'geiser-syntax)
 (require 'geiser-custom)
@@ -44,14 +45,26 @@
   :type 'string
   :group 'geiser-larceny)
 
+(defcustom geiser-larceny-mode 'err5rs
+  "Mode to use when starting the Larceny REPL."
+  :type '(choice (const :tag "ERR5RS" err5rs)
+                 (const :tag "R5RS" 'r5rs))
+  :group 'geiser-larceny)
+
 
 ;;; REPL support:
 
 (defun geiser-larceny-parameters ()
   "Return a list with all parameters needed to start Larceny."
-  `("-err5rs" "-path" ,(expand-file-name "larceny/" geiser-scheme-dir)))
+  `(,(if (eq 'r5rs geiser-larceny-mode) "-r5rs" "-err5rs")
+    "-path" ,(expand-file-name "larceny/" geiser-scheme-dir)))
 
 (defconst geiser-larceny-prompt-regexp "^\\(debug\\)?> ")
+
+(defun geiser-larceny--startup ()
+  (when (eq 'err5rs geiser-larceny-mode)
+    (geiser-eval--send/wait '(import (rnrs))))
+  (geiser-eval--send/wait '(require (geiser))))
 
 (defun switch-to-larceny (&optional ask)
   (interactive "P")
@@ -92,7 +105,7 @@ If MODULE is provided, transform it to such a datum."
 
 (defun geiser-larceny-guess ()
   "Return `t' if the current buffer looks like a Larceny file."
-  (and (geiser-larceny-get-module) t))
+  (listp (geiser-larceny-get-module)) t)
 
 
 ;;; Register this implementation:

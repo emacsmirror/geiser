@@ -167,6 +167,9 @@
   (or (geiser-impl--call-if-bound impl "prompt-regexp")
       (geiser-impl--value impl "prompt-regexp")))
 
+(defsubst geiser-impl--startup (impl)
+  (geiser-impl--call-if-bound impl "startup"))
+
 
 ;;; Access to implementation guessing function:
 
