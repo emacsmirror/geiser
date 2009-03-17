@@ -298,7 +298,7 @@ If no REPL is running, execute `run-geiser' to start a fresh one."
     (dolist (repl geiser-repl--repls lst)
       (when (buffer-live-p repl)
         (with-current-buffer repl
-          (push geiser-impl--implementation) lst)))))
+          (push geiser-impl--implementation lst))))))
 
 (defun geiser-repl--restore (impls)
   (dolist (impl impls)
