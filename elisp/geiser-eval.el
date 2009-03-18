@@ -76,7 +76,7 @@ EVAL, COMPILE, LOAD-FILE and COMPILE-FILE should be supported."))
 
 (defsubst geiser-eval--comp (code)
   (geiser-eval--scheme-str
-   `(,(geiser-eval--form 'compile (quote ,(nth 0 code)) (:module ,(nth 1 code))))))
+   `(,(geiser-eval--form 'compile) (quote ,(nth 0 code)) (:module ,(nth 1 code)))))
 
 (defsubst geiser-eval--load-file (file)
   (geiser-eval--scheme-str `(,(geiser-eval--form 'load-file) ,file)))

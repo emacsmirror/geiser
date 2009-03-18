@@ -199,6 +199,8 @@ interacting with the Geiser REPL is at your disposal.
 (define-key geiser-mode-map (kbd "C-.") 'geiser-completion--complete-module)
 (define-key geiser-mode-map "\M-." 'geiser-edit-symbol-at-point)
 (define-key geiser-mode-map "\M-," 'geiser-edit-pop-edit-symbol-stack)
+(define-key geiser-mode-map (kbd "C-c <") 'geiser-xref-callers)
+(define-key geiser-mode-map (kbd "C-c >") 'geiser-xref-callees)
 
 (define-key geiser-mode-map "\M-\C-x" 'geiser-eval-definition)
 (define-key geiser-mode-map "\C-x\C-e" 'geiser-eval-last-sexp)

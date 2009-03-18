@@ -45,6 +45,8 @@
     | C-cC-dm          | See list of module symbols                      |
     | C-cC-da          | Toggle autodoc mode                             |
     |------------------+-------------------------------------------------|
+    | C-c<             | Show callers of procedure at point              |
+    | C-c>             | Show callees of procedure at point              |
     | C-cC-xf          | See a generic's methods signatures              |
     |------------------+-------------------------------------------------|
     | M-TAB            | Complete symbol at point                        |

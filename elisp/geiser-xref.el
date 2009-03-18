@@ -65,7 +65,8 @@
 (defun geiser-xref--insert-button (xref)
   (let* ((location (cdr (assoc 'location xref)))
          (file (geiser-edit--location-file location))
-         (signature (cdr (assoc 'signature xref))))
+         (signature (cdr (assoc 'signature xref)))
+         (module (cdr (assoc 'module xref))))
     (when signature
       (insert "\t")
       (if (stringp file)
@@ -75,7 +76,30 @@
                               'name (car signature)
                               'help-echo (format "%s in %s" (car signature) file))
         (insert (format "%s" signature)))
+      (when (and (not (null module)) (not (eq '\#f module)))
+        (insert (format " in module %s" module)))
       (newline))))
+
+(defun geiser-xref--display-xrefs (header xrefs)
+  (geiser-xref--with-buffer
+   (erase-buffer)
+   (geiser--insert-with-face header 'geiser-font-lock-xref-header)
+   (newline 2)
+   (mapc 'geiser-xref--insert-button xrefs))
+  (geiser-xref--pop-to-buffer))
+
+(defun geiser-xref--read-name (ask prompt)
+  (let ((name (or (and (not prompt) (symbol-at-point))
+                  (read-string prompt nil nil (symbol-at-point)))))
+    (and name (format "%s" name))))
+
+(defun geiser-xref--fetch-xrefs (ask kind rkind proc)
+  (let* ((name (geiser-xref--read-name (format "%s: " (capitalize kind)) ask))
+         (res (and name (geiser-eval--send/result
+                         `(:eval ((:ge ,proc) (quote (:scm ,name))))))))
+    (if (or (not res) (not (listp res)))
+        (message "No %ss found for '%s'" rkind name)
+      (geiser-xref--display-xrefs (format "%ss for %s" rkind name) res))))
 
 
 ;;; Buffer and mode:
@@ -101,30 +125,25 @@
   (setq buffer-read-only t))
 
 
-;;; Generic's methods:
-
-(defun geiser-xref--display-generic-methods (generic res)
-  (geiser-xref--with-buffer
-   (erase-buffer)
-   (geiser--insert-with-face (format "Methods for generic '%s'" generic)
-                             'geiser-font-lock-xref-header)
-   (newline 2)
-   (mapc 'geiser-xref--insert-button res))
-  (geiser-xref--pop-to-buffer))
+;;; Commands:
 
 (defun geiser-xref-generic-methods (&optional arg)
   "Display information about known methods of a given generic.
 With prefix, ask for the name of the generic."
   (interactive "P")
-  (let* ((name (or (and (not arg) (symbol-at-point))
-                   (read-string "Generic: " nil nil (symbol-at-point))))
-         (name (and name (format "%s" name)))
-         (res (geiser-eval--send/result
-               `(:eval ((:ge generic-methods) (quote (:scm ,name)))))))
-    (if (or (not res) (not (listp res)))
-        (message "No methods found for '%s'" name)
-      (geiser-xref--display-generic-methods name res))))
+  (geiser-xref--fetch-xrefs arg "generic" "method" 'generic-methods))
 
+(defun geiser-xref-callers (&optional arg)
+  "Display list of callers for procedure at point.
+With prefix, ask for the procedure."
+  (interactive "P")
+  (geiser-xref--fetch-xrefs arg "procedure" "caller" 'callers))
+
+(defun geiser-xref-callees (&optional arg)
+  "Display list of callees for procedure at point.
+With prefix, ask for the procedure."
+  (interactive "P")
+  (geiser-xref--fetch-xrefs arg "procedure" "callee" 'callees))
 
 
 (provide 'geiser-xref)
