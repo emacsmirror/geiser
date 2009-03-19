@@ -97,10 +97,13 @@
                  (delete-region (point) (point-max))
                  t))
       (insert geiser-syntax--placeholder))
+    (save-excursion
+      (goto-char (point-min))
+      (while (re-search-forward "[.@,'`#\\\\]" nil t)
+        (replace-match "" nil nil)))
     (let ((depth (nth 0 (parse-partial-sexp (point-min) (point)))))
       (unless (zerop depth) (insert (make-string depth ?\)))))
-    (when (< (point-min) (point))
-      (buffer-substring-no-properties (point-min) (point)))))
+    (when (< (point-min) (point)) (buffer-substring (point-min) (point)))))
 
 (defsubst geiser-syntax--get-partial-sexp ()
   (unless (zerop (nth 0 (syntax-ppss)))
