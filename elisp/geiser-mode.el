@@ -28,6 +28,7 @@
 (require 'geiser-doc)
 (require 'geiser-compile)
 (require 'geiser-completion)
+(require 'geiser-xref)
 (require 'geiser-edit)
 (require 'geiser-autodoc)
 (require 'geiser-debug)
