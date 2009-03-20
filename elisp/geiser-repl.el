@@ -74,6 +74,7 @@ implementation name gets appended to it."
 ;;; Geiser REPL buffers and processes:
 
 (defvar geiser-repl--repls nil)
+(defvar geiser-repl--closed-repls nil)
 
 (make-variable-buffer-local
  (defvar geiser-repl--repl nil))
@@ -84,9 +85,9 @@ implementation name gets appended to it."
 (defsubst geiser-repl--set-this-buffer-repl (r)
   (setq geiser-repl--repl r))
 
-(defun geiser-repl--repl/impl (impl)
+(defun geiser-repl--repl/impl (impl &optional repls)
   (catch 'repl
-    (dolist (repl geiser-repl--repls)
+    (dolist (repl (or repls geiser-repl--repls))
       (with-current-buffer repl
         (when (eq geiser-impl--implementation impl)
           (throw 'repl repl))))))
@@ -111,8 +112,12 @@ implementation name gets appended to it."
 (defun geiser-repl--to-repl-buffer (impl)
   (unless (and (eq major-mode 'geiser-repl-mode)
                (not (get-buffer-process (current-buffer))))
-    (pop-to-buffer
-     (generate-new-buffer (format "* %s *" (geiser-repl--repl-name impl)))))
+    (let* ((old (geiser-repl--repl/impl impl geiser-repl--closed-repls))
+           (old (and (buffer-live-p old) old)))
+      (pop-to-buffer
+       (or old
+           (generate-new-buffer (format "* %s *"
+                                        (geiser-repl--repl-name impl)))))))
   (geiser-repl-mode)
   (geiser-impl--set-buffer-implementation impl))
 
@@ -219,9 +224,14 @@ If no REPL is running, execute `run-geiser' to start a fresh one."
       (let ((comint-prompt-read-only nil)
             (comint-input-ring-file-name (geiser-repl--history-file)))
         (geiser-repl--on-quit)
+        (push (current-buffer) geiser-repl--closed-repls)
         (when (buffer-name (current-buffer))
           (insert "\nIt's been nice interacting with you!\n")
           (insert "Press C-cz to bring me back.\n" ))))))
+
+(defun geiser-repl--on-kill ()
+  (geiser-repl--on-quit)
+  (remove (current-buffer) geiser-repl--closed-repls))
 
 (defun geiser-repl--input-filter (str)
   (and (not (string-match "^\\s *$" str))
@@ -232,7 +242,7 @@ If no REPL is running, execute `run-geiser' to start a fresh one."
        (geiser-repl--history-file))
   (set (make-local-variable 'comint-input-ring-size) geiser-repl-history-size)
   (set (make-local-variable 'comint-input-filter) 'geiser-repl--input-filter)
-  (add-hook 'kill-buffer-hook 'geiser-repl--on-quit nil t)
+  (add-hook 'kill-buffer-hook 'geiser-repl--on-kill nil t)
   (comint-read-input-ring t)
   (set-process-sentinel (get-buffer-process (current-buffer)) 'geiser-repl--sentinel))
 
