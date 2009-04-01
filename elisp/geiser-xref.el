@@ -31,6 +31,7 @@
 (require 'geiser-base)
 
 (require 'button)
+(require 'lisp-mode)
 
 
 ;;; Customization:
@@ -66,7 +67,8 @@
   (let* ((location (cdr (assoc 'location xref)))
          (file (geiser-edit--location-file location))
          (signature (cdr (assoc 'signature xref)))
-         (module (cdr (assoc 'module xref))))
+         (module (cdr (assoc 'module xref)))
+         (p (point)))
     (when signature
       (insert "\t")
       (if (stringp file)
@@ -76,17 +78,28 @@
                               'name (car signature)
                               'help-echo (format "%s in %s" (car signature) file))
         (insert (format "%s" signature)))
-      (when (and (not (null module)) (not (eq '\#f module)))
-        (insert (format " in module %s" module)))
+      (fill-region p (point))
+      (save-excursion (goto-char p) (indent-sexp))
       (newline))))
+
+(defun geiser-xref--module< (xr1 xr2)
+  (let ((m1 (cdr (assoc 'module xr1)))
+        (m2 (cdr (assoc 'module xr2))))
+    (cond ((equal m1 m2)
+           (string< (format "%s" (cdr (assoc 'signature xr1)))
+                    (format "%s" (cdr (assoc 'signature xr2)))))
+          ((null m1) (not m2))
+          ((null m2))
+          (t (string< (format "%s" m1) (format "%s" m2))))))
 
 (defun geiser-xref--display-xrefs (header xrefs)
   (geiser-xref--with-buffer
    (erase-buffer)
    (geiser--insert-with-face header 'geiser-font-lock-xref-header)
    (newline 2)
-   (mapc 'geiser-xref--insert-button xrefs))
-  (geiser-xref--pop-to-buffer))
+   (mapc 'geiser-xref--insert-button (sort xrefs 'geiser-xref--module<)))
+  (geiser-xref--pop-to-buffer)
+  (goto-char (point-min)))
 
 (defun geiser-xref--read-name (ask prompt)
   (let ((name (or (and (not prompt) (symbol-at-point))
@@ -101,7 +114,7 @@
     (if (or (not res) (not (listp res)))
         (message "No %ss found for '%s'" rkind name)
       (message "")
-      (geiser-xref--display-xrefs (format "%ss for %s" (capitalize rkind) name) res))))
+      (geiser-xref--display-xrefs (format "%ss for '%s'" (capitalize rkind) name) res))))
 
 
 ;;; Buffer and mode:
