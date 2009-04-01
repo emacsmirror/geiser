@@ -231,7 +231,8 @@ If no REPL is running, execute `run-geiser' to start a fresh one."
 
 (defun geiser-repl--on-kill ()
   (geiser-repl--on-quit)
-  (remove (current-buffer) geiser-repl--closed-repls))
+  (setq geiser-repl--closed-repls
+        (remove (current-buffer) geiser-repl--closed-repls)))
 
 (defun geiser-repl--input-filter (str)
   (and (not (string-match "^\\s *$" str))
