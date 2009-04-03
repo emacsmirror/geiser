@@ -210,7 +210,8 @@ If no REPL is running, execute `run-geiser' to start a fresh one."
 (defun geiser-repl--on-quit ()
   (comint-write-input-ring)
   (let ((cb (current-buffer))
-        (impl geiser-impl--implementation))
+        (impl geiser-impl--implementation)
+        (comint-prompt-read-only nil))
     (setq geiser-repl--repls (remove cb geiser-repl--repls))
     (dolist (buffer (buffer-list))
       (with-current-buffer buffer
@@ -226,6 +227,7 @@ If no REPL is running, execute `run-geiser' to start a fresh one."
         (geiser-repl--on-quit)
         (push (current-buffer) geiser-repl--closed-repls)
         (when (buffer-name (current-buffer))
+          (comint-kill-region comint-last-input-start (point))
           (insert "\nIt's been nice interacting with you!\n")
           (insert "Press C-cz to bring me back.\n" ))))))
 
