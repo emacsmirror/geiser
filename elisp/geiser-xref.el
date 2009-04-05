@@ -70,7 +70,7 @@
          (module (cdr (assoc 'module xref)))
          (p (point)))
     (when signature
-      (insert "\t")
+      (insert "   - ")
       (if (stringp file)
           (insert-text-button (format "%s" signature)
                               :type 'geiser-xref--button
@@ -97,7 +97,7 @@
   (geiser-xref--with-buffer
    (erase-buffer)
    (geiser--insert-with-face header 'geiser-font-lock-xref-header)
-   (newline 2)
+   (newline)
    (let ((last-module))
      (dolist (xref (sort xrefs 'geiser-xref--module<))
        (let ((module (cdr (assoc 'module xref))))
