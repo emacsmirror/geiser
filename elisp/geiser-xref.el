@@ -61,7 +61,9 @@
   (let ((location (button-get button 'location))
         (name (button-get button 'name)))
     (when location
-      (geiser-edit--try-edit-location name location geiser-xref-follow-link-method))))
+      (geiser-edit--try-edit-location name
+                                      location
+                                      geiser-xref-follow-link-method))))
 
 (defun geiser-xref--insert-button (xref)
   (let* ((location (cdr (assoc 'location xref)))
