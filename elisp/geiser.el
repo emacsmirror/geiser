@@ -79,7 +79,7 @@
         geiser-faces
         geiser-mode
         geiser-guile
-        geiser-larceny))
+        geiser-plt))
 
 
 ;;; Scheme mode setup:

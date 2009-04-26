@@ -61,22 +61,27 @@ EVAL, COMPILE, LOAD-FILE and COMPILE-FILE should be supported."))
         ((listp code)
          (cond ((eq (car code) :eval) (geiser-eval--eval (cdr code)))
                ((eq (car code) :comp) (geiser-eval--comp (cdr code)))
-               ((eq (car code) :load-file) (geiser-eval--load-file (cadr code)))
-               ((eq (car code) :comp-file) (geiser-eval--comp-file (cadr code)))
+               ((eq (car code) :load-file)
+                (geiser-eval--load-file (cadr code)))
+               ((eq (car code) :comp-file)
+                (geiser-eval--comp-file (cadr code)))
                ((eq (car code) :module) (geiser-eval--module (cadr code)))
                ((eq (car code) :ge) (geiser-eval--ge (cadr code)))
                ((eq (car code) :scm) (cadr code))
-               (t (concat "(" (mapconcat 'geiser-eval--scheme-str code " ") ")"))))
+               (t (concat "("
+                          (mapconcat 'geiser-eval--scheme-str code " ") ")"))))
         ((symbolp code) (format "%s" code))
         (t (format "%S" code))))
 
 (defsubst geiser-eval--eval (code)
   (geiser-eval--scheme-str
-   `(,(geiser-eval--form 'eval) (quote ,(nth 0 code)) (:module ,(nth 1 code)))))
+   `(,(geiser-eval--form 'eval) (quote ,(nth 0 code))
+     (:module ,(nth 1 code)))))
 
 (defsubst geiser-eval--comp (code)
   (geiser-eval--scheme-str
-   `(,(geiser-eval--form 'compile) (quote ,(nth 0 code)) (:module ,(nth 1 code)))))
+   `(,(geiser-eval--form 'compile)
+     (quote ,(nth 0 code)) (:module ,(nth 1 code)))))
 
 (defsubst geiser-eval--load-file (file)
   (geiser-eval--scheme-str `(,(geiser-eval--form 'load-file) ,file)))
@@ -153,13 +158,14 @@ EVAL, COMPILE, LOAD-FILE and COMPILE-FILE should be supported."))
 
 (defun geiser-eval--error-str (err)
   (let* ((key (geiser-eval--error-key err))
+         (key-str (if key (format ": %s" key) ":"))
          (subr (geiser-eval--error-subr err))
-         (subr-str (if subr (format " (%s)" subr) ""))
+         (subr-str (if subr (format " (%s):" subr) ":"))
          (msg (geiser-eval--error-msg err))
-         (msg-str (if msg (format ": %s" msg) ""))
+         (msg-str (if msg (format "\n  %s" msg) ""))
          (rest (geiser-eval--error-rest err))
-         (rest-str (if rest (format " %s" rest) "")))
-    (format "Error%s: %s%s%s" subr-str key msg-str rest-str)))
+         (rest-str (if rest (format "\n  %s" rest) "")))
+    (format "Error%s%s%s%s" subr-str key-str msg-str rest-str)))
 
 
 
