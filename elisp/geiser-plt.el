@@ -25,6 +25,7 @@
 ;;; Code:
 
 (require 'geiser-impl)
+(require 'geiser-eval)
 (require 'geiser-syntax)
 (require 'geiser-custom)
 (require 'geiser-base)
@@ -99,6 +100,12 @@ This function uses `geiser-plt-init-file' if it exists."
   (cond ((and (null module) (geiser-plt--explicit-module)))
         ((null module) (buffer-file-name))
         (t module)))
+
+
+;;; External help
+(defun geiser-plt-external-help (symbol module)
+  (message "Requesting help for '%s'..." symbol)
+  (geiser-eval--send/wait `(:eval (help ,symbol) 'geiser)))
 
 
 ;;; Trying to ascertain whether a buffer is mzscheme scheme:

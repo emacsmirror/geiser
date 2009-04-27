@@ -157,6 +157,13 @@
 
 ;;; Commands:
 
+(make-variable-buffer-local
+ (defvar geiser-doc--external-help-function nil))
+
+(defun geiser-doc--external-help (symbol module)
+  (and geiser-doc--external-help-function
+       (funcall geiser-doc--external-help-function symbol module)))
+
 (defun geiser-doc--get-docstring (symbol module)
   (geiser-eval--send/result `(:eval ((:ge symbol-documentation) ',symbol) ,module)))
 
@@ -164,21 +171,22 @@
   (geiser-eval--send/result `(:eval ((:ge module-children) (:module ,module)))))
 
 (defun geiser-doc-symbol (symbol &optional module impl)
-  (let* ((module (or module (geiser-eval--get-module)))
-         (impl (or impl geiser-impl--implementation))
-         (ds (geiser-doc--get-docstring symbol module)))
-    (if (or (not ds) (not (listp ds)))
-        (message "No documentation available for '%s'" symbol)
-      (geiser-doc--with-buffer
-       (erase-buffer)
-       (geiser-doc--insert-title (cdr (assoc 'signature ds)))
-       (newline)
-       (insert (or (cdr (assoc 'docstring ds)) ""))
-       (goto-line (point-min))
-       (setq geiser-doc--buffer-link
-             (geiser-doc--history-push
-              (geiser-doc--make-link symbol module impl))))
-      (geiser-doc--pop-to-buffer))))
+  (let ((module (or module (geiser-eval--get-module))))
+    (unless (geiser-doc--external-help symbol module)
+      (let ((impl (or impl geiser-impl--implementation))
+            (ds (geiser-doc--get-docstring symbol module)))
+        (if (or (not ds) (not (listp ds)))
+            (message "No documentation available for '%s'" symbol)
+          (geiser-doc--with-buffer
+            (erase-buffer)
+            (geiser-doc--insert-title (cdr (assoc 'signature ds)))
+            (newline)
+            (insert (or (cdr (assoc 'docstring ds)) ""))
+            (goto-line (point-min))
+            (setq geiser-doc--buffer-link
+                  (geiser-doc--history-push
+                   (geiser-doc--make-link symbol module impl))))
+          (geiser-doc--pop-to-buffer))))))
 
 (defun geiser-doc-symbol-at-point (&optional arg)
   "Get docstring for symbol at point.

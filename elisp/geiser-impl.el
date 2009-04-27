@@ -27,6 +27,7 @@
 
 (require 'geiser-eval)
 (require 'geiser-base)
+(require 'geiser-doc)
 
 
 ;;; Customization:
@@ -120,10 +121,16 @@
 (defsubst geiser-impl--geiser-procedure-function (impl)
   (geiser-impl--sym impl "geiser-procedure"))
 
+(defsubst geiser-impl--external-help-function (impl)
+  (let ((f (geiser-impl--sym impl "external-help")))
+    (and (fboundp f) f)))
+
 (defun geiser-impl--install-eval (impl)
   (setq geiser-eval--get-module-function (geiser-impl--module-function impl))
   (setq geiser-eval--geiser-procedure-function
-        (geiser-impl--geiser-procedure-function impl)))
+        (geiser-impl--geiser-procedure-function impl))
+  (setq geiser-doc--external-help-function
+        (geiser-impl--external-help-function impl)))
 
 
 ;;; Evaluating Elisp in a given implementation context:
@@ -132,7 +139,9 @@
   (let ((geiser-impl--implementation imp)
         (geiser-eval--get-module-function (geiser-impl--module-function imp))
         (geiser-eval--geiser-procedure-function
-         (geiser-impl--geiser-procedure-function imp)))
+         (geiser-impl--geiser-procedure-function imp))
+        (geiser-doc--external-help-function
+         (geiser-impl--external-help-function imp)))
     (funcall thunk)))
 
 (put 'with--geiser-implementation 'lisp-indent-function 1)

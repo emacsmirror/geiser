@@ -60,6 +60,12 @@
 (autoload 'switch-to-guile "geiser-guile.el"
   "Start a Geiser Guile REPL, or switch to a running one." t)
 
+(autoload 'run-plt "geiser-plt.el"
+  "Start a Geiser MzScheme REPL, or switch to a running one." t)
+
+(autoload 'switch-to-plt "geiser-guile.el"
+  "Start a Geiser MzScheme REPL, or switch to a running one." t)
+
 (autoload 'geiser-mode "geiser-mode.el"
   "Minor mode adding Geiser REPL interaction to Scheme buffers." t)
 
@@ -102,6 +108,7 @@
   (quote '(
            geiser-mode
            geiser-repl
+           geiser-impl
            geiser-doc
            geiser-xref
            geiser-edit
@@ -109,7 +116,6 @@
            geiser-autodoc
            geiser-compile
            geiser-debug
-           geiser-impl
            geiser-eval
            geiser-connection
            geiser-syntax
