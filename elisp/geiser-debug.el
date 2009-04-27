@@ -33,7 +33,7 @@
 ;;; Debug buffer mode:
 
 (defconst geiser-debug--error-alist
-  '(("^In file \\([^ \n]+\\):\\([0-9]+\\):\\([0-9]+\\)" 1 2 3)
+  '(("^\\(In file +\\| +\\)\\([^ \n]+\\):\\([0-9]+\\):\\([0-9]+\\)" 2 3 4)
     ("^Error.+$" nil nil nil 0)))
 
 (define-derived-mode geiser-debug-mode compilation-mode "Geiser Dbg"
@@ -54,16 +54,15 @@
   (let* ((err (geiser-eval--retort-error ret))
          (output (geiser-eval--retort-output ret))
          (stack (geiser-eval--retort-stack ret)))
-    (when err
-      (geiser-debug--with-buffer
-        (erase-buffer)
-        (insert what)
-        (newline 2)
-        (insert (geiser-eval--error-str err) "\n\n")
-        (when output (insert output "\n\n"))
-        (geiser-debug--display-stack stack)
-        (goto-char (point-min)))
-      (geiser-debug--pop-to-buffer))))
+    (geiser-debug--with-buffer
+      (erase-buffer)
+      (insert what)
+      (newline 2)
+      (when err (insert (geiser-eval--error-str err) "\n\n"))
+      (when output (insert output "\n\n"))
+      (when stack (geiser-debug--display-stack stack))
+      (goto-char (point-min)))
+    (when (or err output) (geiser-debug--pop-to-buffer))))
 
 (defsubst geiser-debug--frame-proc (frame) (cdr (assoc 'procedure frame)))
 (defsubst geiser-debug--frame-desc (frame) (cdr (assoc 'description frame)))
@@ -101,9 +100,8 @@
       (switch-to-geiser)
       (push-mark)
       (goto-char (point-max)))
-    (if (not err)
-        (message (format "=> %s" (geiser-eval--retort-result ret)))
-      (geiser-debug--display-retort str ret))))
+    (when (not err) (message (format "=> %s" (geiser-eval--retort-result ret))))
+    (geiser-debug--display-retort str ret)))
 
 (defun geiser-debug--expand-region (start end all)
   (let* ((str (buffer-substring-no-properties start end))

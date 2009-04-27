@@ -41,9 +41,9 @@
 
 (defun geiser-compile--display-result (title ret)
   (if (not (geiser-eval--retort-error ret))
-      (message "%s %s" title (or (geiser-eval--retort-result ret) "OK!"))
-    (message "")
-    (geiser-debug--display-retort title ret)))
+      (message "%s %s" title (or (geiser-eval--retort-result ret) "done."))
+    (message ""))
+  (geiser-debug--display-retort title ret))
 
 (defun geiser-compile--file-op (path compile-p msg)
   (let* ((b/p (geiser-compile--buffer/path path))

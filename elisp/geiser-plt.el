@@ -150,6 +150,7 @@ This function uses `geiser-plt-init-file' if it exists."
 (put 'sigaction          'scheme-indent-function 1)
 (put 'syntax-case        'scheme-indent-function 2)
 (put 'syntax/loc         'scheme-indent-function 1)
+(put 'type-case          'scheme-indent-function 'defun)
 (put 'unit               'scheme-indent-function 'defun)
 (put 'unit/sig           'scheme-indent-function 2)
 (put 'unless             'scheme-indent-function 1)
