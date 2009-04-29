@@ -97,6 +97,11 @@
     (insert str)
     (put-text-property p (point) 'face face)))
 
+(defmacro geiser--scheme-indent (&rest pairs)
+  `(progn ,@(mapcar (lambda (p)
+                      `(put ',(car p) 'scheme-indent-function ',(cadr p)))
+                    pairs)))
+
 
 (provide 'geiser-base)
 ;;; geiser-base.el ends here
