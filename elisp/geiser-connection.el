@@ -91,6 +91,9 @@
 (defsubst geiser-con--connection-buffer (c)
   (cdr (assoc :buffer c)))
 
+(defsubst geiser-con--connection-process (c)
+  (get-buffer-process (geiser-con--connection-buffer c)))
+
 (defsubst geiser-con--connection-requests (c)
   (cdr (assoc :requests c)))
 
@@ -226,8 +229,9 @@
 
 (defun geiser-con--send-string/wait (buffer/proc str cont &optional timeout sbuf)
   (save-current-buffer
-    (let ((con (geiser-con--get-connection buffer/proc)))
-      (unless con (error geiser-con--error-message))
+    (let* ((con (geiser-con--get-connection buffer/proc))
+           (proc (geiser-con--connection-process con)))
+      (unless proc (error geiser-con--error-message))
       (let* ((req (geiser-con--send-string buffer/proc str cont sbuf))
              (id (and req (geiser-con--request-id req)))
              (time (or timeout geiser-connection-timeout))
@@ -236,6 +240,7 @@
         (when id
           (condition-case nil
               (while (and (> time 0)
+                          (geiser-con--connection-process con)
                           (not (geiser-con--connection-completed-p con id)))
                 (accept-process-output nil waitsecs)
                 (setq time (- time step)))
