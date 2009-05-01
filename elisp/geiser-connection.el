@@ -229,9 +229,9 @@
 
 (defun geiser-con--send-string/wait (buffer/proc str cont &optional timeout sbuf)
   (save-current-buffer
-    (let* ((con (geiser-con--get-connection buffer/proc))
-           (proc (geiser-con--connection-process con)))
-      (unless proc (error geiser-con--error-message))
+    (let ((con (geiser-con--get-connection buffer/proc)))
+      (unless (geiser-con--connection-process con)
+        (error geiser-con--error-message))
       (let* ((req (geiser-con--send-string buffer/proc str cont sbuf))
              (id (and req (geiser-con--request-id req)))
              (time (or timeout geiser-connection-timeout))
