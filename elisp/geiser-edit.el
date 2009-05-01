@@ -65,9 +65,13 @@
                 "defmacro"
                 "define-macro"
                 "define-syntax"
+                "define-syntaxes"
+                "-define-syntax"
+                "-define"
                 "define*"
                 "define-method"
-                "define-class")))
+                "define-class"
+                "define-struct")))
 
 (defsubst geiser-edit--def-re (thing)
   (format "(%s +(?%s\\_>" geiser-edit--def-re (regexp-quote (format "%s" thing))))
