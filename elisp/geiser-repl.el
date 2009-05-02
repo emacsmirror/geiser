@@ -283,6 +283,8 @@ If no REPL is running, execute `run-geiser' to start a fresh one."
   (setq geiser-eval--get-module-function 'geiser-repl--module-function)
   (when geiser-repl-autodoc-p (geiser-autodoc-mode 1)))
 
+(define-key geiser-repl-mode-map "\C-d" 'delete-char)
+
 (define-key geiser-repl-mode-map "\C-cz" 'run-geiser)
 (define-key geiser-repl-mode-map "\C-c\C-z" 'run-geiser)
 (define-key geiser-repl-mode-map "\C-a" 'geiser-repl--bol)
