@@ -61,12 +61,21 @@
 
 ;;; Evaluation commands:
 
-(defun geiser-eval-region (start end &optional and-go)
+(defun geiser--go-to-repl ()
+  (switch-to-geiser)
+  (push-mark)
+  (goto-char (point-max)))
+
+(defun geiser-eval-region (start end &optional and-go raw)
   "Eval the current region in the Geiser REPL.
 With prefix, goes to the REPL buffer afterwards (as
 `geiser-eval-region-and-go')"
   (interactive "rP")
-  (geiser-debug--send-region nil start end and-go))
+  (geiser-debug--send-region nil
+                             start
+                             end
+                             (and and-go 'geiser-go-to-repl)
+                             (not raw)))
 
 (defun geiser-eval-region-and-go (start end)
   "Eval the current region in the Geiser REPL and visit it afterwads."
@@ -82,7 +91,7 @@ With prefix, goes to the REPL buffer afterwards (as
     (end-of-defun)
     (let ((end (point)))
       (beginning-of-defun)
-      (geiser-eval-region (point) end and-go))))
+      (geiser-eval-region (point) end and-go t))))
 
 (defun geiser-eval-definition-and-go ()
   "Eval the current definition in the Geiser REPL and visit it afterwads."
@@ -92,7 +101,10 @@ With prefix, goes to the REPL buffer afterwards (as
 (defun geiser-eval-last-sexp ()
   "Eval the previous sexp in the Geiser REPL."
   (interactive)
-  (geiser-eval-region (save-excursion (backward-sexp) (point)) (point)))
+  (geiser-eval-region (save-excursion (backward-sexp) (point))
+                      (point)
+                      nil
+                      t))
 
 (defun geiser-compile-definition (&optional and-go)
   "Compile the current definition in the Geiser REPL.
@@ -103,18 +115,18 @@ With prefix, goes to the REPL buffer afterwards (as
     (end-of-defun)
     (let ((end (point)))
       (beginning-of-defun)
-      (geiser-debug--send-region t (point) end and-go))))
+      (geiser-debug--send-region t (point) end and-go t))))
 
 (defun geiser-compile-definition-and-go ()
   "Compile the current definition in the Geiser REPL and visit it afterwads."
   (interactive)
   (geiser-compile-definition t))
 
-(defun geiser-expand-region (start end &optional all)
+(defun geiser-expand-region (start end &optional all raw)
   "Macro-expand the current region and display it in a buffer.
 With prefix, recursively macro-expand the resulting expression."
   (interactive "rP")
-  (geiser-debug--expand-region start end all))
+  (geiser-debug--expand-region start end all (not raw)))
 
 (defun geiser-expand-definition (&optional all)
   "Macro-expand the current definition.
@@ -124,13 +136,16 @@ With prefix, recursively macro-expand the resulting expression."
     (end-of-defun)
     (let ((end (point)))
       (beginning-of-defun)
-      (geiser-expand-region (point) end all))))
+      (geiser-expand-region (point) end all t))))
 
 (defun geiser-expand-last-sexp (&optional all)
   "Macro-expand the previous sexp.
 With prefix, recursively macro-expand the resulting expression."
   (interactive "P")
-  (geiser-expand-region (save-excursion (backward-sexp) (point)) (point) all))
+  (geiser-expand-region (save-excursion (backward-sexp) (point))
+                        (point)
+                        all
+                        t))
 
 (defun geiser-set-scheme ()
   "Associates current buffer with a given Scheme implementation."

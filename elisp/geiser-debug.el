@@ -91,28 +91,36 @@
       (insert "In expression:\n"))
     (insert (format "%s%s\n" (make-string offset ?\ ) description))))
 
-(defun geiser-debug--send-region (compile start end and-go)
+(defsubst geiser-debug--wrap-region (str)
+  (format "(begin %s)" str))
+
+(defun geiser-debug--unwrap (str)
+  (if (string-match "(begin[ \t\n\v\r]+\\(.+\\)*)" str)
+      (match-string 1 str)
+    str))
+
+(defun geiser-debug--send-region (compile start end and-go wrap)
   (let* ((str (buffer-substring-no-properties start end))
-         (code `(,(if compile :comp :eval) (:scm ,str)))
+         (wrapped (if wrap (geiser-debug--wrap-region str) str))
+         (code `(,(if compile :comp :eval) (:scm ,wrapped)))
          (ret (geiser-eval--send/wait code))
          (err (geiser-eval--retort-error ret)))
-    (when and-go
-      (switch-to-geiser)
-      (push-mark)
-      (goto-char (point-max)))
+    (when and-go (funcall and-go))
     (when (not err) (message (format "=> %s" (geiser-eval--retort-result ret))))
     (geiser-debug--display-retort str ret)))
 
-(defun geiser-debug--expand-region (start end all)
+(defun geiser-debug--expand-region (start end all wrap)
   (let* ((str (buffer-substring-no-properties start end))
-         (code `(:eval ((:ge macroexpand) (quote (:scm ,str)) ,(if all :t :f))))
+         (wrapped (if wrap (geiser-debug--wrap-region str) str))
+         (code `(:eval ((:ge macroexpand) (quote (:scm ,wrapped)) ,(if all :t :f))))
          (ret (geiser-eval--send/wait code))
-         (err (geiser-eval--retort-error ret)))
+         (err (geiser-eval--retort-error ret))
+         (result (geiser-eval--retort-result ret)))
     (if err
         (geiser-debug--display-retort str ret)
       (geiser-debug--with-buffer
         (erase-buffer)
-        (insert (format "%s" (geiser-eval--retort-result ret)))
+        (insert (format "%s" (if wrap (geiser-debug--unwrap result) result)))
         (goto-char (point-min)))
       (geiser-debug--pop-to-buffer))))
 
