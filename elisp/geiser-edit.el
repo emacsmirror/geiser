@@ -54,6 +54,9 @@
         ((eq method 'frame) (find-file-other-frame file))
         (t (find-file file))))
 
+(defsubst geiser-edit--location-name (loc)
+  (cdr (assoc 'name loc)))
+
 (defsubst geiser-edit--location-file (loc)
   (cdr (assoc 'file loc)))
 
@@ -65,7 +68,6 @@
                 "defmacro"
                 "define-macro"
                 "define-syntax"
-                "define-syntaxes"
                 "-define-syntax"
                 "-define"
                 "define*"
@@ -73,8 +75,18 @@
                 "define-class"
                 "define-struct")))
 
+(defconst geiser-edit--def-re*
+  (regexp-opt '("define-syntaxes" "define-values")))
+
 (defsubst geiser-edit--def-re (thing)
-  (format "(%s +(?%s\\_>" geiser-edit--def-re (regexp-quote (format "%s" thing))))
+  (format "(%s +(?%s\\_>"
+          geiser-edit--def-re
+          (regexp-quote (format "%s" thing))))
+
+(defsubst geiser-edit--def-re* (thing)
+  (format "(%s +([^)]*?\\_<%s\\_>"
+          geiser-edit--def-re*
+          (regexp-quote (format "%s" thing))))
 
 (defsubst geiser-edit--symbol-re (thing)
   (format "\\_<%s\\_>" (regexp-quote (format "%s" thing))))
@@ -84,11 +96,13 @@
       (goto-line line)
     (goto-char (point-min))
     (when (or (re-search-forward (geiser-edit--def-re symbol) nil t)
+              (re-search-forward (geiser-edit--def-re* symbol) nil t)
               (re-search-forward (geiser-edit--symbol-re symbol) nil t))
       (goto-char (match-beginning 0)))))
 
 (defun geiser-edit--try-edit-location (symbol loc &optional method)
-  (let ((file (geiser-edit--location-file loc))
+  (let ((symbol (or (geiser-edit--location-name loc) symbol))
+        (file (geiser-edit--location-file loc))
         (line (geiser-edit--location-line loc)))
     (unless file (error "Couldn't find edit location for '%s'" symbol))
     (unless (file-readable-p file) (error "Couldn't open '%s' for read" file))
