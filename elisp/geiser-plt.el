@@ -138,6 +138,7 @@ This function uses `geiser-plt-init-file' if it exists."
  (let+ 1)
  (let-values 1)
  (let/ec 1)
+ (match defun)
  (mixin 2)
  (module defun)
  (opt-lambda 1)
