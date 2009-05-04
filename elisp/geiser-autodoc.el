@@ -122,21 +122,24 @@ when `geiser-autodoc-display-module-p' is on."
     str))
 
 (defun geiser-autodoc--str (signature pos module)
-  (when signature
-    (save-current-buffer
-      (set-buffer (geiser-syntax--font-lock-buffer))
-      (erase-buffer)
-      (let* ((proc (car signature))
-             (args (cdr signature))
-             (current 1)
-             (pos (if (> pos (length args)) (length args) pos)))
-        (insert (format "(%s" (geiser-autodoc--proc-name proc module)))
-        (dolist (a args)
-          (insert " ")
-          (geiser-autodoc--insert-arg a current pos)
-          (setq current (1+ current)))
-        (insert ")")
-        (buffer-string)))))
+  (when (consp signature)
+    (let* ((proc (car signature))
+           (args (cdr signature))
+           (len (if (listp args) (length args) 0))
+           (current 1)
+           (pos (if (> pos len) len pos)))
+      (if (eq args 'variable)
+          (geiser-autodoc--proc-name proc module)
+        (save-current-buffer
+          (set-buffer (geiser-syntax--font-lock-buffer))
+          (erase-buffer)
+          (insert (format "(%s" (geiser-autodoc--proc-name proc module)))
+          (dolist (a args)
+            (insert " ")
+            (geiser-autodoc--insert-arg a current pos)
+            (setq current (1+ current)))
+          (insert ")")
+          (buffer-string))))))
 
 
 ;;; Autodoc function:
