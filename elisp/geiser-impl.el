@@ -41,6 +41,11 @@
   :type 'symbol
   :group 'geiser-impl)
 
+(defcustom geiser-impl-installed-implementations nil
+  "Initial list of installed Scheme implementations."
+  :type '(repeat symbol)
+  :group 'geiser-impl)
+
 
 ;;; Registering implementations:
 
@@ -207,6 +212,11 @@ implementation to be used by Geiser."))
 (defun geiser-impl--reload-implementations (impls)
   (dolist (impl impls)
     (load-library (format "geiser-%s" impl))))
+
+
+;;; Initialization:
+
+(mapc 'geiser-impl--register geiser-impl-installed-implementations)
 
 
 (provide 'geiser-impl)

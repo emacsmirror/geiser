@@ -95,7 +95,7 @@
     '(add-hook 'scheme-mode-hook 'turn-on-geiser-mode)))
 
 (defun geiser-setup-implementations (impls)
-  (setq geiser-impl--impls (or impls '(guile plt))))
+  (setq geiser-impl-installed-implementations (or impls '(guile plt))))
 
 (defun geiser-setup (&rest impls)
   (geiser-setup-implementations impls)
