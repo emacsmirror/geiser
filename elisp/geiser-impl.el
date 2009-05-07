@@ -28,6 +28,7 @@
 (require 'geiser-eval)
 (require 'geiser-base)
 (require 'geiser-doc)
+(require 'geiser-completion)
 
 
 ;;; Customization:
@@ -130,23 +131,32 @@
   (let ((f (geiser-impl--sym impl "external-help")))
     (and (fboundp f) f)))
 
+(defsubst geiser-impl--symbol-begin (impl)
+  (geiser-impl--sym impl "symbol-begin"))
+
 (defun geiser-impl--install-eval (impl)
-  (setq geiser-eval--get-module-function (geiser-impl--module-function impl))
+  (setq geiser-eval--get-module-function
+        (geiser-impl--module-function impl))
   (setq geiser-eval--geiser-procedure-function
         (geiser-impl--geiser-procedure-function impl))
   (setq geiser-doc--external-help-function
-        (geiser-impl--external-help-function impl)))
+        (geiser-impl--external-help-function impl))
+  (setq geiser-completion--symbol-begin-function
+        (geiser-impl--symbol-begin impl)))
 
 
 ;;; Evaluating Elisp in a given implementation context:
 
 (defun with--geiser-implementation (imp thunk)
   (let ((geiser-impl--implementation imp)
-        (geiser-eval--get-module-function (geiser-impl--module-function imp))
+        (geiser-eval--get-module-function
+         (geiser-impl--module-function imp))
         (geiser-eval--geiser-procedure-function
          (geiser-impl--geiser-procedure-function imp))
         (geiser-doc--external-help-function
-         (geiser-impl--external-help-function imp)))
+         (geiser-impl--external-help-function imp))
+        (geiser-completion--symbol-begin-function
+         (geiser-impl--symbol-begin imp)))
     (funcall thunk)))
 
 (put 'with--geiser-implementation 'lisp-indent-function 1)

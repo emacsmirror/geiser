@@ -101,6 +101,9 @@ This function uses `geiser-plt-init-file' if it exists."
         ((null module) (buffer-file-name))
         (t module)))
 
+(defun geiser-plt-symbol-begin (module)
+  (save-excursion (skip-syntax-backward "^-()>") (point)))
+
 
 ;;; External help
 (defun geiser-plt-external-help (symbol module)

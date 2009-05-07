@@ -196,11 +196,13 @@ terminates a current completion."
         (minibuffer-message text)
       (message "%s" text))))
 
-(defsubst geiser-completion--beg-pos (module)
-  (if module
-      (max (save-excursion (beginning-of-line) (point))
-           (save-excursion (skip-syntax-backward "^(>") (1- (point))))
-    (save-excursion (skip-syntax-backward "^-()>") (point))))
+(make-variable-buffer-local
+ (defvar geiser-completion--symbol-begin-function nil))
+
+(defsubst geiser-completion--symbol-begin (module)
+  (or (and geiser-completion--symbol-begin-function
+           (funcall geiser-completion--symbol-begin-function module))
+      (save-excursion (skip-syntax-backward "^-()>") (point))))
 
 (defun geiser-completion--complete-symbol (&optional arg)
   "Complete the symbol at point.
@@ -208,7 +210,7 @@ Perform completion similar to Emacs' complete-symbol.
 With prefix, complete module name."
   (interactive "P")
   (let* ((end (point))
-         (beg (geiser-completion--beg-pos arg))
+         (beg (geiser-completion--symbol-begin arg))
          (prefix (buffer-substring-no-properties beg end))
          (result (geiser-completion--complete prefix arg))
          (completions (car result))
