@@ -153,14 +153,17 @@ terminates a current completion."
              (quote (:scm ,(or (geiser-syntax--get-partial-sexp) "()"))))))
    :test 'string=))
 
-(defsubst geiser-completion--module-list ()
-  (geiser-eval--send/result '(:eval ((:ge all-modules)))))
+(defsubst geiser-completion--module-list (prefix)
+  (geiser-eval--send/result `(:eval ((:ge module-completions) ,prefix))))
 
 (defvar geiser-completion--symbol-list-func
   (completion-table-dynamic 'geiser-completion--symbol-list))
 
+(defvar geiser-completion--module-list-func
+  (completion-table-dynamic 'geiser-completion--module-list))
+
 (defun geiser-completion--complete (prefix modules)
-  (let* ((symbols (if modules (geiser-completion--module-list)
+  (let* ((symbols (if modules (geiser-completion--module-list prefix)
                     (geiser-completion--symbol-list prefix)))
          (completions (all-completions prefix symbols))
          (partial (try-completion prefix symbols))
@@ -183,11 +186,11 @@ terminates a current completion."
   (let ((minibuffer-local-completion-map geiser-completion--module-minibuffer-map))
     (geiser-eval--get-module
      (completing-read (or prompt "Module name: ")
-                      (geiser-completion--module-list)
-                      nil nil
+                      geiser-completion--module-list-func
+                      nil nil nil
+                      (or history geiser-completion--module-history)
                       (or default
-                          (format "%s" (or (geiser-syntax--buffer-module) "(")))
-                      (or history geiser-completion--module-history)))))
+                          (format "%s" (or (geiser-syntax--buffer-module) "")))))))
 
 (defun geiser--respecting-message (format &rest format-args)
   "Display TEXT as a message, without hiding any minibuffer contents."
