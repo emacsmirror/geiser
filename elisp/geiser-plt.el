@@ -64,9 +64,9 @@ This function uses `geiser-plt-init-file' if it exists."
                         (expand-file-name geiser-plt-init-file))))
     `("-i" "-q"
       "-S" ,(expand-file-name "plt/" geiser-scheme-dir)
-      "-f" ,(expand-file-name "plt/geiser.ss" geiser-scheme-dir)
       ,@(and (listp geiser-plt-binary) (cdr geiser-plt-binary))
-      ,@(and init-file (file-readable-p init-file) (list "-f" init-file)))))
+      ,@(and init-file (file-readable-p init-file) (list "-f" init-file))
+      "-f" ,(expand-file-name "plt/geiser.ss" geiser-scheme-dir))))
 
 (defconst geiser-plt-prompt-regexp "^mzscheme@([^)]*?)> ")
 
@@ -99,7 +99,10 @@ This function uses `geiser-plt-init-file' if it exists."
 (defun geiser-plt-get-module (&optional module)
   (cond ((and (null module) (geiser-plt--explicit-module)))
         ((null module) (buffer-file-name))
-        (t module)))
+        ((symbolp module) (list 'quote module))
+        ((and (stringp module) (file-name-absolute-p module)) module)
+        ((stringp module) (list 'quote (intern module)))
+        (t nil)))
 
 (defun geiser-plt-symbol-begin (module)
   (save-excursion (skip-syntax-backward "^-()>") (point)))
