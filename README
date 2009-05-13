@@ -1,19 +1,57 @@
+* Overview
+
+  Geiser is a generic Emacs/Scheme interaction mode, featuring an
+  enhanced REPL and a set of minor modes improving Emacs' basic scheme
+  major mode. The main functionalities provided are:
+
+    - Evaluation of forms in the namespace of the current module.
+    - Macro expansion.
+    - File/module loading.
+    - Namespace-aware symbol completion (including local bindings,
+      names visible in the current module, and module names).
+    - Autodoc: the echo area shows information about the signature of
+      the procedure/macro around point automatically.
+    - Jump to definition of symbol at point.
+    - Access to documentation (including docstrings when the
+      implementation provides it).
+    - Listings of callers/callees of procedures.
+    - Rudimentary support for debugging (list of
+      evaluation/compilation error in an Emacs' compilation-mode
+      buffer).
+
+   Currently supported implementations are Guile and PLT.
 
 * Installation
 
   - In your .emacs:
 
-    (load-file "<path-to-geiser>/elisp/geiser.el")
-    (geiser-setup)
+     (load-file "<path-to-geiser>/elisp/geiser.el")
+     (geiser-setup)
+
+    This installs all supported Scheme implementations. You can list
+    explicitly the ones that you want, e.g.:
+
+      (geiser-setup 'plt 'guile)
+
+    On opening a scheme file, Geiser will try to guess its Scheme,
+    defaulting to the first in the list.
 
   - Check the geiser customization group for some options with:
 
       M-x customize-group RET geiser RET
 
-    In particular, customize `geiser-repl-guile-binary' (in
-    geiser-repl), which should point to a guile-vm executable.
+    In particular, customize `geiser-repl-<impl>-binary' (in
+    geiser-repl), which should point to an executable in your path.
 
   - To start a REPL, M-x geiser.
+
+*** Implementation caveats
+
+    - Guile works only with the development, vm-based binary. Be sure
+      to customize `geiser-repl-guile-binary' to point to a correct vm
+      binary.
+    - PLT Scheme 4.1.5.5 and up is recommended. Listing of
+      callers/callees is not available.
 
 * Quick key reference
 
@@ -91,5 +129,6 @@
 
 *** In backtrace (evaluation/compile result) buffers:
 
-    - Default error navigation keys used by emacs' compilation mode.
+    - Default error navigation keys used by Emacs' compilation mode
+      (e.g. M-gn, M-gp for next/previous error).
     - q to bury buffer.
