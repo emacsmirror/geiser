@@ -179,17 +179,18 @@ implementation name gets appended to it."
 With prefix argument, ask for which one if more than one is running.
 If no REPL is running, execute `run-geiser' to start a fresh one."
   (interactive "P")
-  (let* ((repl (cond ((and (not ask) (not impl)
+  (let* ((impl (or impl geiser-impl--implementation))
+         (repl (cond ((and (not ask) (not impl)
                            (or (geiser-repl--this-buffer-repl)
                                (car geiser-repl--repls))))
-                     ((and (not ask) impl (geiser-repl--repl/impl impl)))
-                     ((= 1 (length geiser-repl--repls)) (car geiser-repl--repls))))
-         (impl (or impl (and (not repl)
-                             (or (and (not ask)
-                                      (geiser-repl--only-impl-p))
-                                 (geiser-repl--read-impl "Switch to scheme REPL: ")))))
+                     ((and (not ask) impl (geiser-repl--repl/impl impl)))))
          (pop-up-windows geiser-repl-window-allow-split))
-    (if repl (pop-to-buffer repl) (run-geiser impl))))
+    (if repl
+        (pop-to-buffer repl)
+      (run-geiser (or impl
+                      (and (not ask)
+                           (geiser-repl--only-impl-p))
+                      (geiser-repl--read-impl "Switch to scheme REPL: "))))))
 
 (defalias 'geiser 'switch-to-geiser)
 
