@@ -97,7 +97,7 @@
                   (geiser-impl--read-impl nil nil t))))
     (require (geiser-impl--impl-feature impl))
     (setq geiser-impl--implementation impl)
-    (geiser-impl--install-eval impl)
+    (geiser-impl--install-vars impl)
     (geiser-impl--register impl)))
 
 (defsubst geiser-impl--sym (imp name)
@@ -134,7 +134,7 @@
 (defsubst geiser-impl--symbol-begin (impl)
   (geiser-impl--sym impl "symbol-begin"))
 
-(defun geiser-impl--install-eval (impl)
+(defun geiser-impl--install-vars (impl)
   (setq geiser-eval--get-module-function
         (geiser-impl--module-function impl))
   (setq geiser-eval--geiser-procedure-function
@@ -226,7 +226,9 @@ implementation to be used by Geiser."))
 
 ;;; Initialization:
 
-(mapc 'geiser-impl--register geiser-impl-installed-implementations)
+(mapc (lambda (impl)
+        (require (geiser-impl--impl-feature impl) nil t))
+      geiser-impl-installed-implementations)
 
 
 (provide 'geiser-impl)
