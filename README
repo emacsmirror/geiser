@@ -50,7 +50,7 @@
     - Guile works only with the development, vm-based binary. Be sure
       to customize `geiser-repl-guile-binary' to point to a correct vm
       binary.
-    - PLT Scheme 4.1.5.5 and up is recommended. Listing of
+    - PLT Scheme 4.1.5.5 or better required. Listing of
       callers/callees is not available.
 
 * Quick key reference

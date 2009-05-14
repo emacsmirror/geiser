@@ -82,7 +82,7 @@ This function uses `geiser-plt-init-file' if it exists."
 ;;; Evaluation support:
 
 (defun geiser-plt-geiser-procedure (proc)
-  (let ((proc (intern (format "geiser/%s" proc))))
+  (let ((proc (intern (format "geiser:%s" proc))))
     `(dynamic-require ''geiser ',proc)))
 
 (defconst geiser-plt--module-re
