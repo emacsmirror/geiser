@@ -71,9 +71,6 @@
   (let ((impl (or impl geiser-impl--implementation)))
     (and impl (capitalize (format "%s" impl)))))
 
-(defsubst geiser-impl--impl-feature (impl)
-  (intern (format "geiser-%s" impl)))
-
 
 ;;; Installing Scheme implementations:
 
@@ -226,9 +223,7 @@ implementation to be used by Geiser."))
 
 ;;; Initialization:
 
-(mapc (lambda (impl)
-        (require (geiser-impl--impl-feature impl) nil t))
-      geiser-impl-installed-implementations)
+(mapc 'geiser-impl--register geiser-impl-installed-implementations)
 
 
 (provide 'geiser-impl)

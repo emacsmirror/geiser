@@ -24,6 +24,7 @@
 
 ;;; Code:
 
+(require 'geiser-popup)
 (require 'geiser-base)
 
 (require 'scheme)

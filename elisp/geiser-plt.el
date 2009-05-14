@@ -24,7 +24,6 @@
 
 ;;; Code:
 
-(require 'geiser-impl)
 (require 'geiser-eval)
 (require 'geiser-syntax)
 (require 'geiser-custom)
@@ -166,11 +165,6 @@ This function uses `geiser-plt-init-file' if it exists."
  (with-handlers 1)
  (with-method 1)
  (with-syntax 1))
-
-
-;;; Register this implementation:
-
-(geiser-impl--register 'plt)
 
 
 (provide 'geiser-plt)

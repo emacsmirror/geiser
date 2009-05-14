@@ -97,9 +97,15 @@
 (defun geiser-setup-implementations (impls)
   (setq geiser-impl-installed-implementations (or impls '(guile plt))))
 
+(defsubst geiser-impl--impl-feature (impl)
+  (intern (format "geiser-%s" impl)))
+
 (defun geiser-setup (&rest impls)
   (geiser-setup-implementations impls)
-  (geiser-setup-scheme-mode))
+  (geiser-setup-scheme-mode)
+  (mapc (lambda (impl)
+          (require (geiser-impl--impl-feature impl) nil t))
+        geiser-impl-installed-implementations))
 
 
 ;;; Reload:
