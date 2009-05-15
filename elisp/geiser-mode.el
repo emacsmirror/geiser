@@ -115,7 +115,11 @@ With prefix, goes to the REPL buffer afterwards (as
     (end-of-defun)
     (let ((end (point)))
       (beginning-of-defun)
-      (geiser-debug--send-region t (point) end and-go t))))
+      (geiser-debug--send-region t
+                                 (point)
+                                 end
+                                 (and and-go 'geiser--go-to-repl)
+                                 t))))
 
 (defun geiser-compile-definition-and-go ()
   "Compile the current definition in the Geiser REPL and visit it afterwads."
