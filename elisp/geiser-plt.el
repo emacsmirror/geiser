@@ -86,7 +86,7 @@ This function uses `geiser-plt-init-file' if it exists."
     `(dynamic-require ''geiser ',proc)))
 
 (defconst geiser-plt--module-re
-  "^(module +\\(([^)]+)\\)")
+  "^(module +\\([^ ]+\\)")
 
 (defun geiser-plt--explicit-module ()
   (save-excursion
