@@ -260,7 +260,7 @@ and will try completing symbol at point otherwise."
   :init-value nil
   :lighter geiser-smart-tab-mode-string
   :group 'geiser-mode
-  :keymap `((,(kbd "TAB") geiser-completion--maybe-complete)))
+  :keymap `((,(kbd "TAB") . geiser-completion--maybe-complete)))
 
 
 
