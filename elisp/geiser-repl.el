@@ -289,6 +289,7 @@ If no REPL is running, execute `run-geiser' to start a fresh one."
 (define-key geiser-repl-mode-map "\C-cz" 'run-geiser)
 (define-key geiser-repl-mode-map "\C-c\C-z" 'run-geiser)
 (define-key geiser-repl-mode-map "\C-a" 'geiser-repl--bol)
+(define-key geiser-repl-mode-map (kbd "<home>") 'geiser-repl--bol)
 (define-key geiser-repl-mode-map "\C-ca" 'geiser-autodoc-mode)
 (define-key geiser-repl-mode-map "\C-cd" 'geiser-doc-symbol-at-point)
 (define-key geiser-repl-mode-map "\C-cm" 'geiser-repl--doc-module)
