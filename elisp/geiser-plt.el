@@ -95,9 +95,16 @@ This function uses `geiser-plt-init-file' if it exists."
          (ignore-errors
            (car (read-from-string (match-string-no-properties 1)))))))
 
+(defsubst geiser-plt--implicit-module ()
+  (save-excursion
+    (goto-char (point-min))
+    (if (re-search-forward "^#lang " nil t)
+        (buffer-name)
+      :f)))
+
 (defun geiser-plt-get-module (&optional module)
   (cond ((and (null module) (geiser-plt--explicit-module)))
-        ((null module) (buffer-file-name))
+        ((null module) (geiser-plt--implicit-module))
         ((symbolp module) (list 'quote module))
         ((and (stringp module) (file-name-absolute-p module)) module)
         ((stringp module) (list 'quote (intern module)))
