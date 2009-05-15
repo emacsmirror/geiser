@@ -169,5 +169,10 @@ loaded."
     (message "Geiser reloaded!")))
 
 
+;; Initialization:
+
+(geiser-setup)
+
+
 (provide 'geiser)
 ;;; geiser.el ends here

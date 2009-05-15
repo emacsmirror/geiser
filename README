@@ -21,17 +21,23 @@
 
    Currently supported implementations are Guile and PLT.
 
+    - Guile works only with the development, vm-based binary. Be sure
+      to customize `geiser-repl-guile-binary' to point to a correct vm
+      binary.
+    - PLT Scheme 4.1.5.5 or better required.
+
 * Installation
 
   - In your .emacs:
 
      (load-file "<path-to-geiser>/elisp/geiser.el")
-     (geiser-setup)
 
     This installs all supported Scheme implementations. You can list
-    explicitly the ones that you want, e.g.:
+    explicitly the ones that you want by setting the variable
+    `geiser-impl-installed-implementations' *before* loading geiser.el.
+    For instance:
 
-      (geiser-setup 'plt 'guile)
+     (setq geiser-impl-installed-implementations '(plt guile))
 
     On opening a scheme file, Geiser will try to guess its Scheme,
     defaulting to the first in the list.
@@ -45,72 +51,64 @@
 
   - To start a REPL, M-x geiser.
 
-*** Implementation caveats
-
-    - Guile works only with the development, vm-based binary. Be sure
-      to customize `geiser-repl-guile-binary' to point to a correct vm
-      binary.
-    - PLT Scheme 4.1.5.5 or better required. Listing of
-      callers/callees is not available.
-
 * Quick key reference
 
 *** In Scheme buffers:
 
-    |------------------+-------------------------------------------------|
-    | C-cC-z           | Switch to REPL                                  |
-    | C-cC-s           | Specify Scheme implementation for buffer        |
-    |------------------+-------------------------------------------------|
-    | M-.              | Edit symbol at point                            |
-    | M-,              | Go back to where M-. was last invoked           |
-    | C-cC-em          | Ask for a module and open its file              |
-    |------------------+-------------------------------------------------|
-    | C-M-x            | Eval definition around point                    |
-    | C-cM-e           | Eval definition around point and switch to REPL |
-    | C-xC-e           | Eval sexp before point                          |
-    | C-cC-r           | Eval region                                     |
-    | C-cM-r           | Eval region and switch to REPL                  |
-    |------------------+-------------------------------------------------|
-    | C-cC-mx          | Macro-expand definition around point            |
-    | C-cC-me          | Macro-expand sexp before point                  |
-    | C-cC-mr          | Marcro-expand region                            |
-    | C-uC-cC-m[x,e,r] | (With prefix, macro expansions are recursive)   |
-    |------------------+-------------------------------------------------|
-    | C-cC-k           | Compile and load current file                   |
-    | C-cC-l           | Load current file                               |
-    |------------------+-------------------------------------------------|
-    | C-cC-dd          | See documentation for symbol at point           |
-    | C-cC-dm          | See list of module symbols                      |
-    | C-cC-da          | Toggle autodoc mode                             |
-    |------------------+-------------------------------------------------|
-    | C-c<             | Show callers of procedure at point              |
-    | C-c>             | Show callees of procedure at point              |
-    | C-cC-xf          | See a generic's methods signatures              |
-    |------------------+-------------------------------------------------|
-    | M-TAB            | Complete symbol at point                        |
-    | M-`, C-.         | Complete module name at point                   |
-    | TAB              | Complete symbol at point or indent              |
-    |                  | (If `geiser-mode-smart-tab-p' is t)             |
-    |------------------+-------------------------------------------------|
+    |---------------------+-------------------------------------------------|
+    | C-c C-z             | Switch to REPL                                  |
+    | C-c C-s             | Specify Scheme implementation for buffer        |
+    |---------------------+-------------------------------------------------|
+    | M-.                 | Edit symbol at point                            |
+    | M-,                 | Go back to where M-. was last invoked           |
+    | C-c C-e m           | Ask for a module and open its file              |
+    |---------------------+-------------------------------------------------|
+    | C-M-x               | Eval definition around point                    |
+    | C-c M-e             | Eval definition around point and switch to REPL |
+    | C-x C-e             | Eval sexp before point                          |
+    | C-c C-r             | Eval region                                     |
+    | C-c M-r             | Eval region and switch to REPL                  |
+    |---------------------+-------------------------------------------------|
+    | C-c C-m x           | Macro-expand definition around point            |
+    | C-c C-m e           | Macro-expand sexp before point                  |
+    | C-c C-m r           | Marcro-expand region                            |
+    | C-u C-c C-m [x,e,r] | (With prefix, macro expansions are recursive)   |
+    |---------------------+-------------------------------------------------|
+    | C-c C-k             | Compile and load current file                   |
+    | C-c C-l             | Load current file                               |
+    |---------------------+-------------------------------------------------|
+    | C-c C-d d           | See documentation for symbol at point           |
+    | C-c C-d m           | See list of module symbols                      |
+    | C-c C-d a           | Toggle autodoc mode                             |
+    |---------------------+-------------------------------------------------|
+    | C-c<                | Show callers of procedure at point              |
+    | C-c>                | Show callees of procedure at point              |
+    | C-c C-x f           | See a generic's methods signatures              |
+    |---------------------+-------------------------------------------------|
+    | M-TAB               | Complete symbol at point                        |
+    | M-`, C-.            | Complete module name at point                   |
+    | TAB                 | Complete symbol at point or indent              |
+    |                     | (If `geiser-mode-smart-tab-p' is t)             |
+    |---------------------+-------------------------------------------------|
 
 *** In the REPL
 
-    |--------------+-----------------------------------------|
-    | C-cC-z, C-cz | Start Scheme REPL (if it's not running) |
-    |--------------+-----------------------------------------|
-    | M-.          | Edit symbol at point                    |
-    | TAB, M-TAB   | Complete symbol at point                |
-    | M-`, C-.     | Complete module name at point           |
-    |--------------+-----------------------------------------|
-    | M-p, M-n     | Prompt history, matching current prefix |
-    |--------------+-----------------------------------------|
-    | C-ck         | Compile and load scheme file            |
-    | C-cl         | Load scheme file                        |
-    |--------------+-----------------------------------------|
-    | C-cd         | See documentation for symbol at point   |
-    | C-cm         | See module documentation                |
-    | C-ca         | Toggle autodoc mode                     |
-    |--------------+-----------------------------------------|
+    |----------------+-----------------------------------------|
+    | C-c C-z, C-c z | Start Scheme REPL (if it's not running) |
+    |----------------+-----------------------------------------|
+    | M-.            | Edit symbol at point                    |
+    | TAB, M-TAB     | Complete symbol at point                |
+    | M-`, C-.       | Complete module name at point           |
+    |----------------+-----------------------------------------|
+    | M-p, M-n       | Prompt history, matching current prefix |
+    |----------------+-----------------------------------------|
+    | C-c k          | Compile and load scheme file            |
+    | C-c l          | Load scheme file                        |
+    |----------------+-----------------------------------------|
+    | C-c d          | See documentation for symbol at point   |
+    | C-c m          | See module documentation                |
+    | C-c a          | Toggle autodoc mode                     |
+    |----------------+-----------------------------------------|
 
 *** In the documentation browser:
 
@@ -130,5 +128,5 @@
 *** In backtrace (evaluation/compile result) buffers:
 
     - Default error navigation keys used by Emacs' compilation mode
-      (e.g. M-gn, M-gp for next/previous error).
+      (e.g. M-g n, M-g p for next/previous error).
     - q to bury buffer.
