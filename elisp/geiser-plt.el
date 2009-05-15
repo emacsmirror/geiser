@@ -67,7 +67,7 @@ This function uses `geiser-plt-init-file' if it exists."
       ,@(and init-file (file-readable-p init-file) (list "-f" init-file))
       "-f" ,(expand-file-name "plt/geiser.ss" geiser-scheme-dir))))
 
-(defconst geiser-plt-prompt-regexp "^mzscheme@([^)]*?)> ")
+(defconst geiser-plt-prompt-regexp "^mzscheme@[^ ]*?> ")
 
 (defun switch-to-plt (&optional ask)
   (interactive "P")
