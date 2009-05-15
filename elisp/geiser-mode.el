@@ -74,7 +74,7 @@ With prefix, goes to the REPL buffer afterwards (as
   (geiser-debug--send-region nil
                              start
                              end
-                             (and and-go 'geiser-go-to-repl)
+                             (and and-go 'geiser--go-to-repl)
                              (not raw)))
 
 (defun geiser-eval-region-and-go (start end)
