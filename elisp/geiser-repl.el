@@ -70,6 +70,11 @@ implementation name gets appended to it."
   :type 'boolean
   :group 'geiser-repl)
 
+(defcustom geiser-repl-read-only-prompt-p t
+  "Whether the REPL's prompt should be read-only."
+  :type 'boolean
+  :group 'geiser-repl)
+
 
 ;;; Geiser REPL buffers and processes:
 
@@ -277,7 +282,8 @@ If no REPL is running, execute `run-geiser' to start a fresh one."
 \\{geiser-repl-mode-map}"
   (set (make-local-variable 'mode-line-process) nil)
   (set (make-local-variable 'comint-use-prompt-regexp) t)
-  (set (make-local-variable 'comint-prompt-read-only) t)
+  (set (make-local-variable 'comint-prompt-read-only)
+       geiser-repl-read-only-prompt-p)
   (set (make-local-variable 'beginning-of-defun-function)
        'geiser-repl--beginning-of-defun)
   (set-syntax-table scheme-mode-syntax-table)
