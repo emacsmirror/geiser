@@ -79,20 +79,23 @@
 
 (defconst geiser-syntax--placeholder (format "___%s___" (random 100)))
 
+(defsubst geiser-syntax--beginning-of-form ()
+  (memq (char-after (point)) '(?\" ?\()))
+
 (defun geiser-syntax--complete-partial-sexp (buffer begin end)
   (geiser-syntax--with-buffer
     (erase-buffer)
     (insert-buffer-substring-no-properties buffer begin end)
-    (when (not (eq (char-after (point)) ?\())
+    (when (not (geiser-syntax--beginning-of-form))
       (skip-syntax-backward "-<>")
       (delete-region (point) (point-max)))
     (let ((p (nth 8 (syntax-ppss))))
       (when p ;; inside a comment or string
-        (let ((str (nth 3 (syntax-ppss))))
-          (delete-region p (point-max))
-          (when str (insert geiser-syntax--placeholder)))))
+        (delete-region p (point-max))
+        (insert geiser-syntax--placeholder)))
     (when (cond ((eq (char-after (1- (point))) ?\)) (geiser-syntax--del-sexp -1) t)
-                ((eq (char-after (point)) ?\() (delete-region (point) (point-max)) t)
+                ((geiser-syntax--beginning-of-form)
+                 (delete-region (point) (point-max)) t)
                 ((memq (char-after (1- (point))) (list ?. ?@ ?, ?\' ?\` ?\# ?\\))
                  (skip-syntax-backward "^-(")
                  (delete-region (point) (point-max))
@@ -114,7 +117,7 @@
 
 (defsubst geiser-syntax--get-partial-sexp ()
   (unless (zerop (nth 0 (syntax-ppss)))
-    (let* ((end (if (eq (char-after (point)) ?\() (1+ (point))
+    (let* ((end (if (geiser-syntax--beginning-of-form) (1+ (point))
                   (save-excursion (skip-syntax-forward "^-\"<>()") (point))))
            (begin (save-excursion (beginning-of-defun) (point))))
       (geiser-syntax--complete-partial-sexp (current-buffer) begin end))))
