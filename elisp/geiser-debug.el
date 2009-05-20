@@ -62,7 +62,7 @@
       (when output (insert output "\n\n"))
       (when stack (geiser-debug--display-stack stack))
       (goto-char (point-min)))
-    (when (or err output) (geiser-debug--pop-to-buffer))))
+    (when err (geiser-debug--pop-to-buffer))))
 
 (defsubst geiser-debug--frame-proc (frame) (cdr (assoc 'procedure frame)))
 (defsubst geiser-debug--frame-desc (frame) (cdr (assoc 'description frame)))
