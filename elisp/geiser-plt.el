@@ -44,6 +44,11 @@
   :type '(choice string (repeat string))
   :group 'geiser-plt)
 
+(defcustom geiser-plt-collects nil
+  "A list of paths to be added to mzscheme's collection directories."
+  :type '(repeat file)
+  :group 'geiser-plt)
+
 (defcustom geiser-plt-init-file "~/.plt-geiser"
   "Initialization file with user code for the mzscheme REPL."
   :type 'string
@@ -63,6 +68,7 @@ This function uses `geiser-plt-init-file' if it exists."
                         (expand-file-name geiser-plt-init-file))))
     `("-i" "-q"
       "-S" ,(expand-file-name "plt/" geiser-scheme-dir)
+      ,@(apply 'append (mapcar (lambda (p) (list "-S" p)) geiser-plt-collects))
       ,@(and (listp geiser-plt-binary) (cdr geiser-plt-binary))
       ,@(and init-file (file-readable-p init-file) (list "-f" init-file))
       "-f" ,(expand-file-name "plt/geiser.ss" geiser-scheme-dir))))
