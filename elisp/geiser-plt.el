@@ -105,15 +105,15 @@ This function uses `geiser-plt-init-file' if it exists."
   (save-excursion
     (goto-char (point-min))
     (if (re-search-forward "^#lang " nil t)
-        (buffer-name)
+        (buffer-file-name)
       :f)))
 
 (defun geiser-plt-get-module (&optional module)
   (cond ((and (null module) (geiser-plt--explicit-module)))
         ((null module) (geiser-plt--implicit-module))
-        ((symbolp module) (list 'quote module))
+        ((symbolp module) module)
         ((and (stringp module) (file-name-absolute-p module)) module)
-        ((stringp module) (list 'quote (intern module)))
+        ((stringp module) (intern module))
         (t nil)))
 
 (defun geiser-plt-symbol-begin (module)
@@ -123,7 +123,9 @@ This function uses `geiser-plt-init-file' if it exists."
 ;;; External help
 (defun geiser-plt-external-help (symbol module)
   (message "Requesting help for '%s'..." symbol)
-  (geiser-eval--send/wait `(:eval (help ,symbol) scheme/help)))
+  (geiser-eval--send/wait `(:eval (help ,symbol) scheme))
+  (message "%s done" (current-message))
+  t)
 
 
 ;;; Trying to ascertain whether a buffer is mzscheme scheme:
