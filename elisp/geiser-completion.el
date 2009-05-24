@@ -188,8 +188,7 @@ terminates a current completion."
                      geiser-completion--module-list-func
                      nil nil nil
                      (or history geiser-completion--module-history)
-                     (or default
-                         (format "%s" (or (geiser-syntax--buffer-module) ""))))))
+                     default)))
 
 (defun geiser--respecting-message (format &rest format-args)
   "Display TEXT as a message, without hiding any minibuffer contents."

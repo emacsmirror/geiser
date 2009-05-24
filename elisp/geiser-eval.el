@@ -34,7 +34,7 @@
 ;;; Plug-able functions:
 
 (make-variable-buffer-local
- (defvar geiser-eval--get-module-function 'geiser-syntax--buffer-module
+ (defvar geiser-eval--get-module-function nil
    "Function used to obtain the module for current buffer. It
 takes an optional argument, for cases where we want to force its value."))
 

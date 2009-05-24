@@ -30,19 +30,6 @@
 (require 'scheme)
 
 
-;;; Modules:
-
-(defconst geiser-syntax--module-definition-re
-  "(define-module +\\(([^)]+)\\)")
-
-(defun geiser-syntax--buffer-module (&optional buffer)
-  (let ((buffer (or buffer (current-buffer))))
-    (with-current-buffer buffer
-      (save-excursion
-        (goto-char (point-min))
-        (when (re-search-forward geiser-syntax--module-definition-re nil t)
-          (car (read-from-string (match-string-no-properties 1))))))))
-
 ;;; Indentation:
 
 (defun geiser-syntax--setup-scheme-indent ()
