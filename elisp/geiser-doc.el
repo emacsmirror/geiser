@@ -276,8 +276,8 @@ With prefix, the current page is deleted from history."
     (define-key map (kbd "SPC")  'scroll-up)
     (define-key map (kbd "S-SPC") 'scroll-down)
     (define-key map "\M-." 'geiser-edit-symbol-at-point)
-    (define-key map "\C-cz" 'run-guile)
-    (define-key map "\C-c\C-z" 'run-guile)
+    (define-key map "\C-cz" 'run-geiser)
+    (define-key map "\C-c\C-z" 'run-geiser)
     map))
 
 (defun geiser-doc-mode ()
