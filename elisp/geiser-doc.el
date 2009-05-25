@@ -167,8 +167,8 @@
 (defun geiser-doc--get-docstring (symbol module)
   (geiser-eval--send/result `(:eval ((:ge symbol-documentation) ',symbol) ,module)))
 
-(defun geiser-doc--get-module-children (module)
-  (geiser-eval--send/result `(:eval ((:ge module-children) (:module ,module)))))
+(defun geiser-doc--get-module-exports (module)
+  (geiser-eval--send/result `(:eval ((:ge module-exports) (:module ,module)))))
 
 (defun geiser-doc-symbol (symbol &optional module impl)
   (let ((module (or module (geiser-eval--get-module))))
@@ -201,9 +201,9 @@ With prefix argument, ask for symbol (with completion)."
   "Display information about a given module."
   (interactive)
   (let* ((module (or module (geiser-completion--read-module)))
-         (children (geiser-doc--get-module-children module))
+         (exports (geiser-doc--get-module-exports module))
          (impl (or impl geiser-impl--implementation)))
-    (if (not children)
+    (if (not exports)
         (message "No information available for %s" module)
       (geiser-doc--with-buffer
         (erase-buffer)
@@ -214,7 +214,7 @@ With prefix argument, ask for symbol (with completion)."
                      ("Syntax:" . syntax)
                      ("Submodules:" . modules)))
           (geiser-doc--insert-list (car g)
-                                   (cdr (assoc (cdr g) children))
+                                   (cdr (assoc (cdr g) exports))
                                    module
                                    impl))
         (goto-char (point-min))
