@@ -123,8 +123,8 @@ This function uses `geiser-plt-init-file' if it exists."
 ;;; External help
 (defun geiser-plt-external-help (symbol module)
   (message "Requesting help for '%s'..." symbol)
-  (geiser-eval--send/wait `(:eval (help ,symbol) scheme/help))
-  (message "%s done" (current-message))
+  (geiser-eval--send/wait `(:eval (get-help ',symbol (:module ,module)) geiser/autodoc))
+  (minibuffer-message "%s done" (current-message))
   t)
 
 
