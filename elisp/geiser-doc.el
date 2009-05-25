@@ -200,7 +200,7 @@ With prefix argument, ask for symbol (with completion)."
 (defun geiser-doc-module (&optional module impl)
   "Display information about a given module."
   (interactive)
-  (let* ((module (geiser-completion--read-module))
+  (let* ((module (or module (geiser-completion--read-module)))
          (children (geiser-doc--get-module-children module))
          (impl (or impl geiser-impl--implementation)))
     (if (not children)
@@ -209,18 +209,14 @@ With prefix argument, ask for symbol (with completion)."
         (erase-buffer)
         (geiser-doc--insert-title (format "%s" module))
         (newline)
-        (geiser-doc--insert-list "Procedures:"
-                                 (cdr (assoc 'procs children))
-                                 module
-                                 impl)
-        (geiser-doc--insert-list "Variables:"
-                                 (cdr (assoc 'vars children))
-                                 module
-                                 impl)
-        (geiser-doc--insert-list "Submodules:"
-                                 (cdr (assoc 'modules children))
-                                 module
-                                 impl)
+        (dolist (g '(("Procedures:" . procs)
+                     ("Variables:" . vars)
+                     ("Syntax:" . syntax)
+                     ("Submodules:" . modules)))
+          (geiser-doc--insert-list (car g)
+                                   (cdr (assoc (cdr g) children))
+                                   module
+                                   impl))
         (goto-char (point-min))
         (setq geiser-doc--buffer-link
               (geiser-doc--history-push (geiser-doc--make-link nil module impl))))
