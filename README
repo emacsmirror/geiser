@@ -7,13 +7,14 @@
     - Evaluation of forms in the namespace of the current module.
     - Macro expansion.
     - File/module loading.
-    - Namespace-aware symbol completion (including local bindings,
+    - Namespace-aware identifier completion (including local bindings,
       names visible in the current module, and module names).
     - Autodoc: the echo area shows information about the signature of
       the procedure/macro around point automatically.
-    - Jump to definition of symbol at point.
+    - Jump to definition of identifier at point.
     - Access to documentation (including docstrings when the
       implementation provides it).
+    - Listings of identifiers exported by a given module.
     - Listings of callers/callees of procedures.
     - Rudimentary support for debugging (list of
       evaluation/compilation error in an Emacs' compilation-mode
@@ -59,7 +60,7 @@
     | C-c C-z             | Switch to REPL                                  |
     | C-c C-s             | Specify Scheme implementation for buffer        |
     |---------------------+-------------------------------------------------|
-    | M-.                 | Edit symbol at point                            |
+    | M-.                 | Go to definition of identifier at point         |
     | M-,                 | Go back to where M-. was last invoked           |
     | C-c C-e m           | Ask for a module and open its file              |
     |---------------------+-------------------------------------------------|
@@ -77,38 +78,38 @@
     | C-c C-k             | Compile and load current file                   |
     | C-c C-l             | Load current file                               |
     |---------------------+-------------------------------------------------|
-    | C-c C-d d           | See documentation for symbol at point           |
-    | C-c C-d m           | See list of module symbols                      |
+    | C-c C-d d           | See documentation for identifier at point       |
+    | C-c C-d m           | See a list of a module's exported identifiers   |
     | C-c C-d a           | Toggle autodoc mode                             |
     |---------------------+-------------------------------------------------|
     | C-c<                | Show callers of procedure at point              |
     | C-c>                | Show callees of procedure at point              |
     | C-c C-x f           | See a generic's methods signatures              |
     |---------------------+-------------------------------------------------|
-    | M-TAB               | Complete symbol at point                        |
+    | M-TAB               | Complete identifier at point                    |
     | M-`, C-.            | Complete module name at point                   |
-    | TAB                 | Complete symbol at point or indent              |
+    | TAB                 | Complete identifier at point or indent          |
     |                     | (If `geiser-mode-smart-tab-p' is t)             |
     |---------------------+-------------------------------------------------|
 
 *** In the REPL
 
-    |----------------+-----------------------------------------|
-    | C-c C-z, C-c z | Start Scheme REPL (if it's not running) |
-    |----------------+-----------------------------------------|
-    | M-.            | Edit symbol at point                    |
-    | TAB, M-TAB     | Complete symbol at point                |
-    | M-`, C-.       | Complete module name at point           |
-    |----------------+-----------------------------------------|
-    | M-p, M-n       | Prompt history, matching current prefix |
-    |----------------+-----------------------------------------|
-    | C-c k          | Compile and load scheme file            |
-    | C-c l          | Load scheme file                        |
-    |----------------+-----------------------------------------|
-    | C-c d          | See documentation for symbol at point   |
-    | C-c m          | See module documentation                |
-    | C-c a          | Toggle autodoc mode                     |
-    |----------------+-----------------------------------------|
+    |----------------+-------------------------------------------|
+    | C-c C-z, C-c z | Start Scheme REPL (if it's not running)   |
+    |----------------+-------------------------------------------|
+    | M-.            | Edit identifier at point                  |
+    | TAB, M-TAB     | Complete identifier at point              |
+    | M-`, C-.       | Complete module name at point             |
+    |----------------+-------------------------------------------|
+    | M-p, M-n       | Prompt history, matching current prefix   |
+    |----------------+-------------------------------------------|
+    | C-c k          | Compile and load scheme file              |
+    | C-c l          | Load scheme file                          |
+    |----------------+-------------------------------------------|
+    | C-c d          | See documentation for identifier at point |
+    | C-c m          | See module documentation                  |
+    | C-c a          | Toggle autodoc mode                       |
+    |----------------+-------------------------------------------|
 
 *** In the documentation browser:
 
@@ -120,7 +121,7 @@
     | k         | kill current page and go to previous or next |
     | r         | refresh page                                 |
     | c         | clean browsing history                       |
-    | M-.       | edit symbol at point                         |
+    | M-.       | edit identifier at point                     |
     | C-cz      | switch to REPL                               |
     | q         | bury buffer                                  |
     |-----------+----------------------------------------------|
