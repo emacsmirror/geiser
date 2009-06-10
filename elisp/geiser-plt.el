@@ -138,49 +138,5 @@ This function uses `geiser-plt-init-file' if it exists."
       (string-equal (file-name-extension (buffer-file-name)) "ss")))
 
 
-;;; Emacs tweaks for PLT scheme code:
-
-(geiser--scheme-indent
- (begin0 1)
- (c-declare 0)
- (c-lambda 2)
- (case-lambda 0)
- (catch 1)
- (class defun)
- (class* defun)
- (compound-unit/sig 0)
- (dynamic-wind 0)
- (for/fold 2)
- (instantiate 2)
- (interface 1)
- (lambda/kw 1)
- (let*-values 1)
- (let+ 1)
- (let-values 1)
- (let/ec 1)
- (match defun)
- (mixin 2)
- (module defun)
- (opt-lambda 1)
- (parameterize 1)
- (parameterize-break 1)
- (parameterize* 1)
- (quasisyntax/loc 1)
- (receive 2)
- (send* 1)
- (sigaction 1)
- (syntax-case 2)
- (syntax/loc 1)
- (type-case defun)
- (unit defun)
- (unit/sig 2)
- (unless 1)
- (when 1)
- (while 1)
- (with-handlers 1)
- (with-method 1)
- (with-syntax 1))
-
-
 (provide 'geiser-plt)
 ;;; geiser-plt.el ends here
