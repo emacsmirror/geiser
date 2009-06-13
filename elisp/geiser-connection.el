@@ -204,7 +204,8 @@
         (geiser-con--connection-clean-current-request geiser-con--connection)))))
 
 (defadvice comint-redirect-setup
-  (after geiser-con--advice (output-buffer comint-buffer finished-regexp &optional echo))
+  (after geiser-con--advice
+         (output-buffer comint-buffer finished-regexp &optional echo))
   (with-current-buffer comint-buffer
     (when geiser-con--connection (setq mode-line-process nil))))
 (ad-activate 'comint-redirect-setup)
