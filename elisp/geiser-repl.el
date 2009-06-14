@@ -326,7 +326,7 @@ If no REPL is running, execute `run-geiser' to start a fresh one."
 
 (defun geiser-repl--restore (impls)
   (dolist (impl impls)
-    (when impl (geiser impl))))
+    (when impl (geiser nil impl))))
 
 (defun geiser-repl-unload-function ()
   (dolist (repl geiser-repl--repls)

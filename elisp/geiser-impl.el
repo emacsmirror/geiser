@@ -213,7 +213,7 @@ implementation to be used by Geiser."))
 
 (defun geiser-impl-unload-function ()
   (dolist (imp (mapcar 'geiser-impl--impl-feature geiser-impl--impls))
-    (when (featurep imp) (unload-feature imp)))
+    (when (featurep imp) (unload-feature imp t)))
   t)
 
 (defun geiser-impl--reload-implementations (impls)
