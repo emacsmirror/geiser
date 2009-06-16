@@ -171,7 +171,8 @@
   (geiser-impl--call-if-bound (geiser-impl--default-implementation)
                               "geiser-procedure"
                               proc))
-(set-default 'geiser-eval--geiser-procedure-function 'geiser-impl-geiser-procedure)
+(set-default 'geiser-eval--geiser-procedure-function
+             'geiser-impl-geiser-procedure)
 
 
 ;;; Access to implementation specific execution parameters:
