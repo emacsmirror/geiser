@@ -160,10 +160,14 @@
 
 (defun geiser-con--comint-buffer-form ()
   (with-current-buffer (geiser-con--comint-buffer)
-    (geiser-syntax--prepare-scheme-for-elisp-reader)
     (condition-case nil
-        (let ((form (read (current-buffer))))
-          (if (listp form) form (error)))
+        (progn
+          (goto-char (point-min))
+          (re-search-forward "((\\(result\\|error\\) ")
+          (goto-char (match-beginning 0))
+          (geiser-syntax--prepare-scheme-for-elisp-reader)
+          (let ((form (read (current-buffer))))
+            (if (listp form) form (error))))
       (error `((error (key . geiser-con-error) (msg . ,(buffer-string))))))))
 
 (defun geiser-con--process-next (con)
