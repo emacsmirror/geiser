@@ -165,7 +165,8 @@
        (funcall geiser-doc--external-help-function symbol module)))
 
 (defun geiser-doc--get-docstring (symbol module)
-  (geiser-eval--send/result `(:eval ((:ge symbol-documentation) ',symbol) ,module)))
+  (geiser-eval--send/result
+   `(:eval ((:ge symbol-documentation) ',symbol) ,module)))
 
 (defun geiser-doc--get-module-exports (module)
   (geiser-eval--send/result `(:eval ((:ge module-exports) (:module ,module)))))
@@ -193,7 +194,8 @@
 With prefix argument, ask for symbol (with completion)."
   (interactive "P")
   (let ((symbol (or (and (not arg) (symbol-at-point))
-                    (geiser-completion--read-symbol "Symbol: " (symbol-at-point)))))
+                    (geiser-completion--read-symbol "Symbol: "
+                                                    (symbol-at-point)))))
     (when symbol (geiser-doc-symbol symbol))))
 
 
@@ -219,7 +221,8 @@ With prefix argument, ask for symbol (with completion)."
                                    impl))
         (goto-char (point-min))
         (setq geiser-doc--buffer-link
-              (geiser-doc--history-push (geiser-doc--make-link nil module impl))))
+              (geiser-doc--history-push
+               (geiser-doc--make-link nil module impl))))
       (geiser-doc--pop-to-buffer))))
 
 (defun geiser-doc-next (&optional forget-current)
