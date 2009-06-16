@@ -32,15 +32,23 @@
 
 ;;; Debug buffer mode:
 
-(defconst geiser-debug--error-alist
-  '(("^\\(In file +\\| +\\)\\([^ \n]+\\):\\([0-9]+\\):\\([0-9]+\\)" 2 3 4)
-    ("^Error.+$" nil nil nil 0)))
+(defvar geiser-debug-mode-map
+  (let ((map (make-sparse-keymap)))
+    (suppress-keymap map)
+    (set-keymap-parent map button-buffer-map)
+    map))
 
-(define-derived-mode geiser-debug-mode compilation-mode "Geiser Dbg"
+(defun geiser-debug-mode ()
   "A major mode for displaying Scheme compilation and evaluation results.
 \\{geiser-debug-mode-map}"
-  (set (make-local-variable 'compilation-error-regexp-alist)
-       geiser-debug--error-alist))
+  (interactive)
+  (kill-all-local-variables)
+  (buffer-disable-undo)
+  (use-local-map geiser-debug-mode-map)
+  (set-syntax-table scheme-mode-syntax-table)
+  (setq mode-name "Geiser DBG")
+  (setq major-mode 'geiser-debug-mode)
+  (setq buffer-read-only t))
 
 
 ;;; Buffer for displaying evaluation results:
@@ -52,39 +60,15 @@
 
 (defun geiser-debug--display-retort (what ret)
   (let* ((err (geiser-eval--retort-error ret))
-         (output (geiser-eval--retort-output ret))
-         (stack (geiser-eval--retort-stack ret)))
+         (output (geiser-eval--retort-output ret)))
     (geiser-debug--with-buffer
       (erase-buffer)
       (insert what)
       (newline 2)
       (when err (insert (geiser-eval--error-str err) "\n\n"))
       (when output (insert output "\n\n"))
-      (when stack (geiser-debug--display-stack stack))
       (goto-char (point-min)))
     (when err (geiser-debug--pop-to-buffer))))
-
-(defsubst geiser-debug--frame-proc (frame) (cdr (assoc 'procedure frame)))
-(defsubst geiser-debug--frame-desc (frame) (cdr (assoc 'description frame)))
-(defsubst geiser-debug--frame-source (frame) (cdr (assoc 'source frame)))
-(defsubst geiser-debug--frame-source-file (src) (car src))
-(defsubst geiser-debug--frame-source-line (src) (or (cadr src) 1))
-(defsubst geiser-debug--frame-source-column (src) (or (caddr src) 0))
-
-(defun geiser-debug--display-stack (stack)
-  (mapc 'geiser-debug--display-stack-frame (reverse (cdr stack))))
-
-(defun geiser-debug--display-stack-frame (frame)
-  (let ((procedure (geiser-debug--frame-proc frame))
-        (source (geiser-debug--frame-source frame))
-        (description (geiser-debug--frame-desc frame)))
-    (if source
-        (insert (format "In file %s:%s:%s\n"
-                        (geiser-debug--frame-source-file source)
-                        (geiser-debug--frame-source-line source)
-                        (1+ (geiser-debug--frame-source-column source))))
-      (insert "In expression:\n"))
-    (insert (format "%s\n" description))))
 
 (defsubst geiser-debug--wrap-region (str)
   (format "(begin %s)" str))
