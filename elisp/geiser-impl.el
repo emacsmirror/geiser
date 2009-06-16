@@ -27,7 +27,6 @@
 
 (require 'geiser-eval)
 (require 'geiser-base)
-(require 'geiser-doc)
 (require 'geiser-completion)
 
 
@@ -124,10 +123,6 @@
 (defsubst geiser-impl--geiser-procedure-function (impl)
   (geiser-impl--sym impl "geiser-procedure"))
 
-(defsubst geiser-impl--external-help-function (impl)
-  (let ((f (geiser-impl--sym impl "external-help")))
-    (and (fboundp f) f)))
-
 (defsubst geiser-impl--symbol-begin (impl)
   (geiser-impl--sym impl "symbol-begin"))
 
@@ -136,8 +131,6 @@
         (geiser-impl--module-function impl))
   (setq geiser-eval--geiser-procedure-function
         (geiser-impl--geiser-procedure-function impl))
-  (setq geiser-doc--external-help-function
-        (geiser-impl--external-help-function impl))
   (setq geiser-completion--symbol-begin-function
         (geiser-impl--symbol-begin impl)))
 
@@ -150,8 +143,6 @@
          (geiser-impl--module-function imp))
         (geiser-eval--geiser-procedure-function
          (geiser-impl--geiser-procedure-function imp))
-        (geiser-doc--external-help-function
-         (geiser-impl--external-help-function imp))
         (geiser-completion--symbol-begin-function
          (geiser-impl--symbol-begin imp)))
     (funcall thunk)))
@@ -191,6 +182,9 @@
 
 (defsubst geiser-impl--startup (impl)
   (geiser-impl--call-if-bound impl "startup"))
+
+(defsubst geiser-impl--external-help (impl symbol module)
+  (geiser-impl--call-if-bound impl "external-help" symbol module))
 
 
 ;;; Access to implementation guessing function:

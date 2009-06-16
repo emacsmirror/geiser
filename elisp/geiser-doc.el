@@ -24,6 +24,7 @@
 
 ;;; Code:
 
+(require 'geiser-impl)
 (require 'geiser-completion)
 (require 'geiser-eval)
 (require 'geiser-syntax)
@@ -157,13 +158,6 @@
 
 ;;; Commands:
 
-(make-variable-buffer-local
- (defvar geiser-doc--external-help-function nil))
-
-(defun geiser-doc--external-help (symbol module)
-  (and geiser-doc--external-help-function
-       (funcall geiser-doc--external-help-function symbol module)))
-
 (defun geiser-doc--get-docstring (symbol module)
   (geiser-eval--send/result
    `(:eval ((:ge symbol-documentation) ',symbol) ,module)))
@@ -172,10 +166,10 @@
   (geiser-eval--send/result `(:eval ((:ge module-exports) (:module ,module)))))
 
 (defun geiser-doc-symbol (symbol &optional module impl)
-  (let ((module (or module (geiser-eval--get-module))))
-    (unless (geiser-doc--external-help symbol module)
-      (let ((impl (or impl geiser-impl--implementation))
-            (ds (geiser-doc--get-docstring symbol module)))
+  (let ((module (or module (geiser-eval--get-module)))
+        (impl (or impl geiser-impl--implementation)))
+    (unless (geiser-impl--external-help impl symbol module)
+      (let ((ds (geiser-doc--get-docstring symbol module)))
         (if (or (not ds) (not (listp ds)))
             (message "No documentation available for '%s'" symbol)
           (geiser-doc--with-buffer

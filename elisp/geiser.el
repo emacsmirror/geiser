@@ -114,10 +114,10 @@
   (quote '(
            geiser-mode
            geiser-repl
-           geiser-impl
-           geiser-doc
            geiser-xref
            geiser-edit
+           geiser-doc
+           geiser-impl
            geiser-completion
            geiser-autodoc
            geiser-compile
