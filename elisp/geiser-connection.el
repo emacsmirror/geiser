@@ -168,7 +168,8 @@
           (geiser-syntax--prepare-scheme-for-elisp-reader)
           (let ((form (read (current-buffer))))
             (if (listp form) form (error))))
-      (error `((error (key . geiser-con-error)) (output . ,(buffer-string)))))))
+      (error `((error (key . geiser-con-error))
+               (output . ,(buffer-string)))))))
 
 (defun geiser-con--process-next (con)
   (when (not (geiser-con--connection-current-request con))
