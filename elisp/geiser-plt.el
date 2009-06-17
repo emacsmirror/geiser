@@ -134,9 +134,9 @@ This function uses `geiser-plt-init-file' if it exists."
 
 ;;; Error display
 
-(defconst geiser-plt--file-rx-0 "^\\([^:\n\"]+\\):\\([0-9]+\\):\\([0-9]+\\)")
-(defconst geiser-plt--file-rx-1 "path:\"?\\([^>\"\n]+\\)\"?>")
-(defconst geiser-plt--file-rx-2 "module: \"\\([^>\"\n]+\\)\"")
+(defconst geiser-plt--file-rxs '("^\\([^:\n\"]+\\):\\([0-9]+\\):\\([0-9]+\\)"
+                                 "path:\"?\\([^>\"\n]+\\)\"?>"
+                                 "module: \"\\([^>\"\n]+\\)\""))
 
 (defun geiser-plt--find-files (rx)
   (save-excursion
@@ -148,17 +148,16 @@ This function uses `geiser-plt-init-file' if it exists."
                               (match-string 3)))))
 
 (defun geiser-plt-display-error (module key msg)
-  (insert "Error: ")
-  (when key (geiser-doc--insert-button key nil 'plt))
-  (newline 2)
+  (when key
+    (insert "Error: ")
+    (geiser-doc--insert-button key nil 'plt)
+    (newline 2))
   (when msg
     (let ((p (point)))
       (insert msg)
       (let ((end (point)))
         (goto-char p)
-        (geiser-plt--find-files geiser-plt--file-rx-0)
-        (geiser-plt--find-files geiser-plt--file-rx-1)
-        (geiser-plt--find-files geiser-plt--file-rx-2)
+        (mapc 'geiser-plt--find-files geiser-plt--file-rxs)
         (goto-char end)
         (fill-region p end)
         (newline))))
