@@ -117,11 +117,11 @@
            geiser-xref
            geiser-edit
            geiser-doc
+           geiser-debug
            geiser-impl
            geiser-completion
            geiser-autodoc
            geiser-compile
-           geiser-debug
            geiser-eval
            geiser-connection
            geiser-syntax

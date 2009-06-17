@@ -25,6 +25,7 @@
 
 ;;; Code:
 
+(require 'geiser-impl)
 (require 'geiser-eval)
 (require 'geiser-popup)
 (require 'geiser-base)
@@ -60,13 +61,17 @@
 
 (defun geiser-debug--display-retort (what ret)
   (let* ((err (geiser-eval--retort-error ret))
-         (output (geiser-eval--retort-output ret)))
+         (key (geiser-eval--error-key err))
+         (output (geiser-eval--retort-output ret))
+         (impl geiser-impl--implementation)
+         (module (geiser-eval--get-module)))
     (geiser-debug--with-buffer
       (erase-buffer)
       (insert what)
       (newline 2)
-      (when err (insert (geiser-eval--error-str err) "\n\n"))
-      (when output (insert output "\n\n"))
+      (unless (geiser-impl--display-error impl module key output)
+        (when err (insert (geiser-eval--error-str err) "\n\n"))
+        (when output (insert output "\n\n")))
       (goto-char (point-min)))
     (when err (geiser-debug--pop-to-buffer))))
 

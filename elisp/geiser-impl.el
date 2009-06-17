@@ -186,6 +186,9 @@
 (defsubst geiser-impl--external-help (impl symbol module)
   (geiser-impl--call-if-bound impl "external-help" symbol module))
 
+(defsubst geiser-impl--display-error (impl module key msg)
+  (geiser-impl--call-if-bound impl "display-error" module key msg))
+
 
 ;;; Access to implementation guessing function:
 
