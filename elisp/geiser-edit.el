@@ -44,7 +44,11 @@
 
 (geiser-edit--define-custom-visit
  geiser-edit-symbol-method geiser-mode
- "How the new buffer is opened when invoking \\[geiser-edit-symbol-at-point].")
+ "How the new buffer is opened when invoking \\[geiser-edit-symbol-at-point]
+or following links in error buffers.")
+
+(geiser-custom--defface error-link
+  'link geiser-debug "links in error buffers")
 
 
 ;;; Auxiliar functions:
@@ -62,6 +66,12 @@
 
 (defsubst geiser-edit--location-line (loc)
   (cdr (assoc 'line loc)))
+
+(defsubst geiser-edit--location-column (loc)
+  (cdr (assoc 'column loc)))
+
+(defsubst geiser-edit--make-location (name file line column)
+  `((name . ,name) (file . ,file) (line . ,line) (column . ,column)))
 
 (defconst geiser-edit--def-re
   (regexp-opt '("define"
@@ -103,14 +113,37 @@
 (defun geiser-edit--try-edit-location (symbol loc &optional method)
   (let ((symbol (or (geiser-edit--location-name loc) symbol))
         (file (geiser-edit--location-file loc))
-        (line (geiser-edit--location-line loc)))
+        (line (geiser-edit--location-line loc))
+        (col (geiser-edit--location-column loc)))
     (unless file (error "Couldn't find edit location for '%s'" symbol))
     (unless (file-readable-p file) (error "Couldn't open '%s' for read" file))
     (geiser-edit--visit-file file (or method geiser-edit-symbol-method))
-    (geiser-edit--goto-line symbol line)))
+    (geiser-edit--goto-line symbol line)
+    (when col
+      (beginning-of-line)
+      (forward-char col))))
 
 (defsubst geiser-edit--try-edit (symbol ret)
   (geiser-edit--try-edit-location symbol (geiser-eval--retort-result ret)))
+
+
+;;; Links
+
+(define-button-type 'geiser-edit--button
+  'action 'geiser-edit--button-action
+  'face 'geiser-font-lock-error-link
+  'follow-link t)
+
+(defun geiser-edit--button-action (button)
+  (let ((loc (button-get button 'geiser-location)))
+    (when loc (geiser-edit--try-edit-location nil loc))))
+
+(defun geiser-edit--make-link (beg end file line col)
+  (make-button beg end
+               :type 'geiser-edit--button
+               'geiser-location
+               (geiser-edit--make-location 'error file line col)
+               'help-echo "Go to error location"))
 
 
 ;;; Commands:
