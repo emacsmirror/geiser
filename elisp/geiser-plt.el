@@ -24,6 +24,8 @@
 
 ;;; Code:
 
+(require 'geiser-edit)
+(require 'geiser-doc)
 (require 'geiser-eval)
 (require 'geiser-syntax)
 (require 'geiser-custom)
@@ -121,10 +123,45 @@ This function uses `geiser-plt-init-file' if it exists."
 
 
 ;;; External help
+
 (defun geiser-plt-external-help (symbol module)
   (message "Requesting help for '%s'..." symbol)
-  (geiser-eval--send/wait `(:eval (get-help ',symbol (:module ,module)) geiser/autodoc))
+  (geiser-eval--send/wait
+   `(:eval (get-help ',symbol (:module ,module)) geiser/autodoc))
   (minibuffer-message "%s done" (current-message))
+  t)
+
+
+;;; Error display
+
+(defconst geiser-plt--file-rx-0 "^\\([^:\n\"]+\\):\\([0-9]+\\):\\([0-9]+\\)")
+(defconst geiser-plt--file-rx-1 "path:\"?\\([^>\"\n]+\\)\"?>")
+(defconst geiser-plt--file-rx-2 "module: \"\\([^>\"\n]+\\)\"")
+
+(defun geiser-plt--find-files (rx)
+  (save-excursion
+    (while (re-search-forward rx nil t)
+      (geiser-edit--make-link (match-beginning 1)
+                              (match-end 1)
+                              (match-string 1)
+                              (match-string 2)
+                              (match-string 3)))))
+
+(defun geiser-plt-display-error (module key msg)
+  (insert "Error: ")
+  (when key (geiser-doc--insert-button key nil 'plt))
+  (newline 2)
+  (when msg
+    (let ((p (point)))
+      (insert msg)
+      (let ((end (point)))
+        (goto-char p)
+        (geiser-plt--find-files geiser-plt--file-rx-0)
+        (geiser-plt--find-files geiser-plt--file-rx-1)
+        (geiser-plt--find-files geiser-plt--file-rx-2)
+        (goto-char end)
+        (fill-region p end)
+        (newline))))
   t)
 
 
