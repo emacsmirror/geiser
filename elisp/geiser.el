@@ -85,27 +85,23 @@
         geiser-faces
         geiser-mode
         geiser-guile
-        geiser-plt))
+        geiser-plt
+        geiser-impl
+        geiser-xref))
 
 
 ;;; Scheme mode setup:
 
-(defun geiser-setup-scheme-mode ()
-  (eval-after-load "scheme"
-    '(add-hook 'scheme-mode-hook 'turn-on-geiser-mode)))
-
-(defun geiser-setup-implementations (impls)
-  (setq geiser-impl-installed-implementations (or impls '(guile plt))))
-
 (defsubst geiser-impl--impl-feature (impl)
   (intern (format "geiser-%s" impl)))
 
-(defun geiser-setup (&rest impls)
-  (geiser-setup-implementations impls)
-  (geiser-setup-scheme-mode)
+(defun geiser-setup ()
+  (eval-after-load "scheme"
+    '(add-hook 'scheme-mode-hook 'turn-on-geiser-mode))
   (mapc (lambda (impl)
           (require (geiser-impl--impl-feature impl) nil t))
-        geiser-impl-installed-implementations))
+        (or geiser-impl-installed-implementations
+            '(guile plt))))
 
 
 ;;; Reload:
@@ -152,6 +148,7 @@ loaded."
                                                 geiser-root-dir))
                   geiser-root-dir))
          (geiser-main-file (expand-file-name "elisp/geiser.el" dir))
+         (installed-impls geiser-impl-installed-implementations)
          (impls (and (featurep 'geiser-impl) geiser-impl--impls))
          (repls (and (featurep 'geiser-repl) (geiser-repl--repl-list)))
          (buffers (and (featurep 'geiser-mode) (geiser-mode--buffers))))
@@ -159,9 +156,9 @@ loaded."
       (error "%s does not contain Geiser!" dir))
     (geiser-unload)
     (setq load-path (remove geiser-elisp-dir load-path))
+    (setq geiser-impl-installed-implementations installed-impls)
     (load-file geiser-main-file)
-    (geiser-setup)
-    (dolist (feature (reverse (geiser--features-list)))
+    (dolist (feature (geiser--features-list))
       (load-library (format "%s" feature)))
     (geiser-impl--reload-implementations impls)
     (geiser-repl--restore repls)
