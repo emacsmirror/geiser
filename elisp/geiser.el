@@ -90,18 +90,10 @@
         geiser-xref))
 
 
-;;; Scheme mode setup:
+;;; Setup:
 
-(defsubst geiser-impl--impl-feature (impl)
-  (intern (format "geiser-%s" impl)))
-
-(defun geiser-setup ()
-  (eval-after-load "scheme"
-    '(add-hook 'scheme-mode-hook 'turn-on-geiser-mode))
-  (mapc (lambda (impl)
-          (require (geiser-impl--impl-feature impl) nil t))
-        (or geiser-impl-installed-implementations
-            '(guile plt))))
+(eval-after-load "scheme"
+  '(add-hook 'scheme-mode-hook 'turn-on-geiser-mode))
 
 
 ;;; Reload:
@@ -164,11 +156,6 @@ loaded."
     (geiser-repl--restore repls)
     (geiser-mode--restore buffers)
     (message "Geiser reloaded!")))
-
-
-;; Initialization:
-
-(geiser-setup)
 
 
 (provide 'geiser)

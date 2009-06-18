@@ -105,6 +105,9 @@
 (defsubst geiser-impl--fboundp (imp name)
   (fboundp (geiser-impl--sym imp name)))
 
+(defsubst geiser-impl--impl-feature (impl)
+  (intern (format "geiser-%s" impl)))
+
 (defun geiser-impl--value (imp name &optional fun)
   (let ((sym (geiser-impl--sym imp name)))
     (unless (or (and (not fun) (boundp sym))
@@ -221,7 +224,8 @@ implementation to be used by Geiser."))
 
 ;;; Initialization:
 
-(mapc 'geiser-impl--register geiser-impl-installed-implementations)
+(mapc 'geiser-impl--register
+      (or geiser-impl-installed-implementations '(guile plt)))
 
 
 (provide 'geiser-impl)
