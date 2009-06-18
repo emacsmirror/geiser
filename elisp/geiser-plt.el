@@ -171,7 +171,7 @@ This function uses `geiser-plt-init-file' if it exists."
         (goto-char (point-min))
         (re-search-forward "#lang " nil t))
       (geiser-plt--explicit-module)
-      (string-equal (file-name-extension (buffer-file-name)) "ss")))
+      (string-equal (file-name-extension (or (buffer-file-name) "")) "ss")))
 
 
 (provide 'geiser-plt)
