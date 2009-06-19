@@ -46,6 +46,18 @@
   :type '(repeat symbol)
   :group 'geiser-impl)
 
+(defcustom geiser-impl-implementations-alist nil
+  "A map from regular expressions or directories to implementations.
+When opening a new file, its full path will be matched against
+each one of the regular expressions or directories in this map in order to
+determine its scheme flavour."
+  :type '(repeat (list (choice (group :tag "Regular expression"
+                                      (const regexp) regexp)
+                               (group :tag "Directory"
+                                      (const dir) directory))
+                       symbol))
+  :group 'geiser-impl)
+
 
 ;;; Registering implementations:
 
@@ -200,10 +212,21 @@
    "Set this buffer local variable to specify the Scheme
 implementation to be used by Geiser."))
 
+(defun geiser-impl--match-impl (desc bn)
+  (let ((rx (if (eq (car desc) 'regexp)
+                (cadr desc)
+              (format "^%s" (regexp-quote (cadr desc))))))
+    (and rx (string-match-p rx bn))))
+
 (defun geiser-impl--guess ()
   (or geiser-impl--implementation
       geiser-scheme-implementation
       (catch 'impl
+        (let ((bn (buffer-file-name)))
+          (when bn
+            (dolist (x geiser-impl-implementations-alist)
+              (when (geiser-impl--match-impl (car x) bn)
+                (throw 'impl (cadr x))))))
         (dolist (impl geiser-impl--impls)
           (when (geiser-impl--call-if-bound impl "guess")
             (throw 'impl impl))))
