@@ -64,7 +64,8 @@ determine its scheme flavour."
 (defvar geiser-impl--impls nil)
 
 (defun geiser-impl--register (impl)
-  (add-to-list 'geiser-impl--impls impl))
+  (when (require (geiser-impl--impl-feature impl) nil t)
+    (add-to-list 'geiser-impl--impls impl)))
 
 (defun geiser-impl--unregister (impl)
   (setq geiser-impl--impls (remove impl geiser-impl--impls)))
