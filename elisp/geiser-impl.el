@@ -234,6 +234,21 @@ implementation to be used by Geiser."))
       (geiser-impl--default-implementation)))
 
 
+;;; User commands
+
+(defun geiser-register-implementation ()
+  "Register a new Scheme implementation."
+  (interactive)
+  (let ((current geiser-impl-installed-implementations)
+        (impl (geiser-impl--read-impl "New implementation: " nil t)))
+    (unless (geiser-impl--register impl)
+      (error "geiser-%s.el not found in load-path"))
+    (when (and (not (memq impl current))
+               (y-or-n-p "Remember this implementation using customize? "))
+      (customize-save-variable
+       'geiser-impl-installed-implementations (cons impl current)))))
+
+
 ;;; Unload support
 
 (defun geiser-impl-unload-function ()
