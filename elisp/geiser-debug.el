@@ -90,7 +90,7 @@
          (ret (geiser-eval--send/wait code))
          (err (geiser-eval--retort-error ret)))
     (when and-go (funcall and-go))
-    (when (not err) (message (format "=> %s" (geiser-eval--retort-result ret))))
+    (when (not err) (message (format "=> %S" (geiser-eval--retort-result ret))))
     (geiser-debug--display-retort str ret)))
 
 (defun geiser-debug--expand-region (start end all wrap)
