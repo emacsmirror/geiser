@@ -242,7 +242,7 @@ implementation to be used by Geiser."))
   (let ((current geiser-impl-installed-implementations)
         (impl (geiser-impl--read-impl "New implementation: " nil t)))
     (unless (geiser-impl--register impl)
-      (error "geiser-%s.el not found in load-path"))
+      (error "geiser-%s.el not found in load-path" impl))
     (when (and (not (memq impl current))
                (y-or-n-p "Remember this implementation using customize? "))
       (customize-save-variable
