@@ -68,7 +68,8 @@ determine its scheme flavour."
     (add-to-list 'geiser-impl--impls impl)))
 
 (defun geiser-impl--unregister (impl)
-  (setq geiser-impl--impls (remove impl geiser-impl--impls)))
+  (setq geiser-impl--impls (remove impl geiser-impl--impls))
+  (ignore-errors (unload-feature (geiser-impl--impl-feature impl))))
 
 (defvar geiser-impl--default-implementation
   geiser-impl-default-implementation)
@@ -240,13 +241,24 @@ implementation to be used by Geiser."))
   "Register a new Scheme implementation."
   (interactive)
   (let ((current geiser-impl-installed-implementations)
-        (impl (geiser-impl--read-impl "New implementation: " nil t)))
+        (impl (geiser-impl--read-impl "New Scheme implementation: " nil t)))
     (unless (geiser-impl--register impl)
       (error "geiser-%s.el not found in load-path" impl))
     (when (and (not (memq impl current))
                (y-or-n-p "Remember this implementation using customize? "))
       (customize-save-variable
        'geiser-impl-installed-implementations (cons impl current)))))
+
+(defun geiser-unregister-implementation ()
+  "Unregister an installed Scheme implementation."
+  (interactive)
+  (let* ((current geiser-impl-installed-implementations)
+         (impl (geiser-impl--read-impl "Forget implementation: " current)))
+    (geiser-impl--unregister impl)
+    (when (and (impl current)
+               (y-or-n-p "Forget permanently using customize? "))
+      (customize-save-variable
+       'geiser-impl-installed-implementations (remove impl current)))))
 
 
 ;;; Unload support
