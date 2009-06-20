@@ -71,6 +71,9 @@ determine its scheme flavour."
   (setq geiser-impl--impls (remove impl geiser-impl--impls))
   (ignore-errors (unload-feature (geiser-impl--impl-feature impl))))
 
+(defun geiser-impl--add-to-alist (kind what impl)
+  (add-to-list 'geiser-impl-implementations-alist (list (list kind what) impl)))
+
 (defvar geiser-impl--default-implementation
   geiser-impl-default-implementation)
 
