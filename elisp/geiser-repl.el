@@ -152,8 +152,10 @@ implementation name gets appended to it."
 (setq geiser-eval--default-proc-function 'geiser-repl--process)
 
 (defun geiser-repl--wait-for-prompt (timeout)
-  (let ((p (point)) (seen))
-    (while (and (not seen) (> timeout 0))
+  (let ((p (point)) (seen) (buffer (current-buffer)))
+    (while (and (not seen)
+                (> timeout 0)
+                (get-buffer-process buffer))
       (sleep-for 0.1)
       (setq timeout (- timeout 100))
       (goto-char p)
@@ -176,7 +178,8 @@ implementation name gets appended to it."
   (interactive
    (list (or (geiser-repl--only-impl-p)
              (and (eq major-mode 'geiser-repl-mode) geiser-impl--implementation)
-             (geiser-repl--read-impl "Start Geiser for scheme implementation: "))))
+             (geiser-repl--read-impl
+              "Start Geiser for scheme implementation: "))))
    (geiser-repl--start-repl impl))
 
 (defun switch-to-geiser (&optional ask impl)
@@ -292,8 +295,8 @@ If no REPL is running, execute `run-geiser' to start a fresh one."
 
 (define-key geiser-repl-mode-map "\C-d" 'delete-char)
 
-(define-key geiser-repl-mode-map "\C-cz" 'run-geiser)
-(define-key geiser-repl-mode-map "\C-c\C-z" 'run-geiser)
+(define-key geiser-repl-mode-map "\C-cz" 'switch-to-geiser)
+(define-key geiser-repl-mode-map "\C-c\C-z" 'switch-to-geiser)
 (define-key geiser-repl-mode-map "\C-a" 'geiser-repl--bol)
 (define-key geiser-repl-mode-map (kbd "<home>") 'geiser-repl--bol)
 (define-key geiser-repl-mode-map "\C-ca" 'geiser-autodoc-mode)
