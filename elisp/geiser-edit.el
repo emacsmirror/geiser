@@ -64,11 +64,15 @@ or following links in error buffers.")
 (defsubst geiser-edit--location-file (loc)
   (cdr (assoc 'file loc)))
 
+(defsubst geiser-edit--to-number (x)
+  (cond ((numberp x) x)
+        ((stringp x) (string-to-number x))))
+
 (defsubst geiser-edit--location-line (loc)
-  (cdr (assoc 'line loc)))
+  (geiser-edit--to-number (cdr (assoc 'line loc))))
 
 (defsubst geiser-edit--location-column (loc)
-  (cdr (assoc 'column loc)))
+  (geiser-edit--to-number (cdr (assoc 'column loc))))
 
 (defsubst geiser-edit--make-location (name file line column)
   `((name . ,name) (file . ,file) (line . ,line) (column . ,column)))
