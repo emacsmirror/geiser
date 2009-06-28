@@ -141,8 +141,8 @@ implementation name gets appended to it."
     (geiser-repl--history-setup)
     (geiser-con--setup-connection (current-buffer) prompt-rx)
     (add-to-list 'geiser-repl--repls (current-buffer))
-    (geiser-impl--startup impl)
-    (geiser-repl--set-this-buffer-repl (current-buffer))))
+    (geiser-repl--set-this-buffer-repl (current-buffer))
+    (geiser-impl--startup impl)))
 
 (defun geiser-repl--process ()
   (let ((buffer (geiser-repl--get-repl geiser-impl--implementation)))
@@ -257,7 +257,8 @@ If no REPL is running, execute `run-geiser' to start a fresh one."
   (set (make-local-variable 'comint-input-filter) 'geiser-repl--input-filter)
   (add-hook 'kill-buffer-hook 'geiser-repl--on-kill nil t)
   (comint-read-input-ring t)
-  (set-process-sentinel (get-buffer-process (current-buffer)) 'geiser-repl--sentinel))
+  (set-process-sentinel (get-buffer-process (current-buffer))
+                        'geiser-repl--sentinel))
 
 
 ;;; geiser-repl mode:

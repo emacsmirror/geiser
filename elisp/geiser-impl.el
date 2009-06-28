@@ -64,7 +64,8 @@ determine its scheme flavour."
 (defvar geiser-impl--impls nil)
 
 (defun geiser-impl--register (impl)
-  (when (require (geiser-impl--impl-feature impl) nil t)
+  (when (and (not (memq impl geiser-impl--impls))
+             (require (geiser-impl--impl-feature impl) nil t))
     (add-to-list 'geiser-impl--impls impl)))
 
 (defun geiser-impl--unregister (impl)
@@ -276,11 +277,13 @@ implementation to be used by Geiser."))
     (load-library (format "geiser-%s" impl))))
 
 
-;;; Initialization:
-
-(mapc 'geiser-impl--register
-      (or geiser-impl-installed-implementations '(guile plt)))
+(provide 'geiser-impl)
 
 
-(provide 'geiser-impl)
+;;; Initialization:
+
+(eval-after-load 'geiser-impl
+  '(mapc 'geiser-impl--register
+         (or geiser-impl-installed-implementations '(guile plt))))
+
 ;;; geiser-impl.el ends here
