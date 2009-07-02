@@ -59,7 +59,7 @@
 
 ;;; Displaying retorts
 
-(defun geiser-debug--display-retort (what ret)
+(defun geiser-debug--display-retort (what ret &optional res)
   (let* ((err (geiser-eval--retort-error ret))
          (key (geiser-eval--error-key err))
          (output (geiser-eval--retort-output ret))
@@ -69,6 +69,9 @@
       (erase-buffer)
       (insert what)
       (newline 2)
+      (when res
+        (insert res)
+        (newline 2))
       (unless (geiser-impl--display-error impl module key output)
         (when err (insert (geiser-eval--error-str err) "\n\n"))
         (when output (insert output "\n\n")))
@@ -88,10 +91,11 @@
          (wrapped (if wrap (geiser-debug--wrap-region str) str))
          (code `(,(if compile :comp :eval) (:scm ,wrapped)))
          (ret (geiser-eval--send/wait code))
+         (res (geiser-eval--retort-result-str ret))
          (err (geiser-eval--retort-error ret)))
     (when and-go (funcall and-go))
-    (when (not err) (message (format "=> %S" (geiser-eval--retort-result ret))))
-    (geiser-debug--display-retort str ret)))
+    (when (not err) (message "%s" res))
+    (geiser-debug--display-retort str ret res)))
 
 (defun geiser-debug--expand-region (start end all wrap)
   (let* ((str (buffer-substring-no-properties start end))

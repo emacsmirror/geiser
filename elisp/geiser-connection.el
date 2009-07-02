@@ -165,7 +165,6 @@
           (goto-char (point-min))
           (re-search-forward "((\\(result\\|error\\)\\>")
           (goto-char (match-beginning 0))
-          (geiser-syntax--prepare-scheme-for-elisp-reader)
           (let ((form (read (current-buffer))))
             (if (listp form) form (error))))
       (error `((error (key . geiser-con-error))

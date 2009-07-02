@@ -84,16 +84,6 @@
 
 (geiser-popup--define syntax " *geiser syntax analyst*" scheme-mode)
 
-(defun geiser-syntax--prepare-scheme-for-elisp-reader ()
-  (let ((end (save-excursion
-               (goto-char (point-max))
-               (and (re-search-backward "(output \\. \"" nil t)
-                    (point)))))
-    (save-excursion
-      (while (re-search-forward "#(" end t) (replace-match "(vector "))
-      (goto-char (point-min))
-      (while (re-search-forward "#" end t) (replace-match "\\\\#")))))
-
 (defsubst geiser-syntax--del-sexp (arg)
   (let ((p (point)))
     (forward-sexp arg)

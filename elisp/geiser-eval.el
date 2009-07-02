@@ -145,7 +145,14 @@ EVAL, COMPILE, LOAD-FILE and COMPILE-FILE should be supported."))
 
 (defun geiser-eval--retort-result (ret)
   (let ((values (cdr (assoc 'result ret))))
-    (if (> (length values) 1) (cons :values values) (car values))))
+    (and (stringp (car values))
+         (ignore-errors (car (read-from-string (car values)))))))
+
+(defun geiser-eval--retort-result-str (ret)
+  (let ((values (cdr (assoc 'result ret))))
+    (if values
+        (concat "=> " (mapconcat 'identity values "\n=> "))
+      "(No value)"))))
 
 (defsubst geiser-eval--retort-output (ret) (cdr (assoc 'output ret)))
 (defsubst geiser-eval--retort-error (ret) (cdr (assoc 'error ret)))
