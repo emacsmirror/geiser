@@ -152,7 +152,7 @@ EVAL, COMPILE, LOAD-FILE and COMPILE-FILE should be supported."))
   (let ((values (cdr (assoc 'result ret))))
     (if values
         (concat "=> " (mapconcat 'identity values "\n=> "))
-      "(No value)"))))
+      "(No value)")))
 
 (defsubst geiser-eval--retort-output (ret) (cdr (assoc 'output ret)))
 (defsubst geiser-eval--retort-error (ret) (cdr (assoc 'error ret)))
