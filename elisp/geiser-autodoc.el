@@ -97,7 +97,10 @@ when `geiser-autodoc-display-module-p' is on."
 
 (defun geiser-autodoc--insert-arg (arg current pos)
   (let ((p (point))
-        (str (format "%s" (if (eq arg 'geiser-rest_marker) "." arg)))
+        (str (format "%s" (cond ((eq arg 'geiser-rest_marker) ".")
+                                ((eq arg 'geiser-opt_marker) "#:opt")
+                                ((eq arg 'geiser-key_marker) "#:key")
+                                (t arg))))
         (face (cond ((eq 'geiser-opt_marker arg)
                      'geiser-font-lock-autodoc-optional-arg-marker)
                     ((eq 'geiser-key_marker arg)
