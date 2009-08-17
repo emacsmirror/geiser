@@ -26,6 +26,7 @@
 
 (require 'geiser-impl)
 (require 'geiser-completion)
+(require 'geiser-autodoc)
 (require 'geiser-eval)
 (require 'geiser-syntax)
 (require 'geiser-popup)
@@ -174,7 +175,9 @@
             (message "No documentation available for '%s'" symbol)
           (geiser-doc--with-buffer
             (erase-buffer)
-            (geiser-doc--insert-title (cdr (assoc 'signature ds)))
+            (geiser-doc--insert-title (geiser-autodoc--str (format "%s" symbol)
+                                                           nil
+                                                           (cdr (assoc 'signature ds))))
             (newline)
             (insert (or (cdr (assoc 'docstring ds)) ""))
             (goto-line (point-min))

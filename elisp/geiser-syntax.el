@@ -97,29 +97,31 @@
 (defun geiser-syntax--scan-sexp ()
   (let ((p (point))
         (n -1)
-        prev
-        head)
+        prev head)
     (ignore-errors
       (backward-up-list)
       (save-excursion
         (forward-char)
-        (skip-syntax-forward "^_w" p)
+        (skip-syntax-forward "^_w(" p)
         (when (setq head (symbol-at-point))
           (while (< (point) p)
             (setq n (1+ n))
             (setq prev (symbol-at-point))
             (forward-sexp))))
-      (if head (list head n prev) 'skip))))
+      (if head (list head n (and (> n 1) prev)) 'skip))))
 
 (defun geiser-syntax--scan-sexps ()
   (save-excursion
     (goto-char (or (nth 8 (syntax-ppss)) (point)))
     (let* ((sap (symbol-at-point))
-           (path (and sap `((,sap 0))))
-           s)
-      (while (setq s (geiser-syntax--scan-sexp))
-        (when (listp s) (push s path)))
-      path)))
+           (fst (and sap (geiser-syntax--scan-sexp)))
+           (path (and fst
+                      (cond ((not (listp fst)) `((,sap 0)))
+                             ((eq sap (car fst)) (list fst))
+                             (t (list fst (list sap 0)))))))
+      (while (setq fst (geiser-syntax--scan-sexp))
+        (when (listp fst) (push fst path)))
+      (nreverse path))))
 
 (defun geiser-syntax--complete-partial-sexp (buffer begin end)
   (geiser-syntax--with-buffer
