@@ -292,7 +292,8 @@ If no REPL is running, execute `run-geiser' to start a fresh one."
        'geiser-repl--beginning-of-defun)
   (set-syntax-table scheme-mode-syntax-table)
   (setq geiser-eval--get-module-function 'geiser-repl--module-function)
-  (when geiser-repl-autodoc-p (geiser-autodoc-mode 1)))
+  (when geiser-repl-autodoc-p (geiser-autodoc-mode 1))
+  (compilation-shell-minor-mode 1))
 
 (define-key geiser-repl-mode-map "\C-d" 'delete-char)
 
