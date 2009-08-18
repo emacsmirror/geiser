@@ -111,7 +111,7 @@ This function uses `geiser-plt-init-file' if it exists."
       :f)))
 
 (defun geiser-plt-get-module (&optional module)
-  (cond ((and (null module) (geiser-plt--explicit-module)))
+  (cond ((and (null module) (buffer-file-name))) ;; (geiser-plt--explicit-module)
         ((null module) (geiser-plt--implicit-module))
         ((symbolp module) module)
         ((and (stringp module) (file-name-absolute-p module)) module)
