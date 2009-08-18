@@ -148,9 +148,8 @@ terminates a current completion."
 
 (defsubst geiser-completion--symbol-list (prefix)
   (delete-duplicates
-   (geiser-eval--send/result
-    `(:eval ((:ge completions) ,prefix
-             (quote (:scm ,(or (geiser-syntax--get-partial-sexp) "()"))))))
+   (append (mapcar (lambda (s) (format "%s" s)) (geiser-syntax--locals-around-point))
+           (geiser-eval--send/result `(:eval ((:ge completions) ,prefix))))
    :test 'string=))
 
 (defsubst geiser-completion--module-list (prefix)
