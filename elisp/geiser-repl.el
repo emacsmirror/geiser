@@ -297,6 +297,9 @@ If no REPL is running, execute `run-geiser' to start a fresh one."
 
 (define-key geiser-repl-mode-map "\C-d" 'delete-char)
 
+(define-key geiser-repl-mode-map "\C-ck" 'geiser-repl-nuke)
+(define-key geiser-repl-mode-map "\C-c\C-k" 'geiser-repl-nuke)
+
 (define-key geiser-repl-mode-map "\C-cz" 'switch-to-geiser)
 (define-key geiser-repl-mode-map "\C-c\C-z" 'switch-to-geiser)
 (define-key geiser-repl-mode-map "\C-a" 'geiser-repl--bol)
@@ -304,7 +307,6 @@ If no REPL is running, execute `run-geiser' to start a fresh one."
 (define-key geiser-repl-mode-map "\C-ca" 'geiser-autodoc-mode)
 (define-key geiser-repl-mode-map "\C-cd" 'geiser-doc-symbol-at-point)
 (define-key geiser-repl-mode-map "\C-cm" 'geiser-repl--doc-module)
-(define-key geiser-repl-mode-map "\C-ck" 'geiser-compile-file)
 (define-key geiser-repl-mode-map "\C-cl" 'geiser-load-file)
 
 (define-key geiser-repl-mode-map "\M-p" 'comint-previous-matching-input-from-input)
