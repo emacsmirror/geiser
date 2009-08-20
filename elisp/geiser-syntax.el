@@ -126,7 +126,7 @@
       (goto-char p)
       nil)))
 
-(defconst geiser-syntax--delim-regexp "\\(?:[\s-\s<\s>$\n]+\\)")
+(defconst geiser-syntax--delim-regexp "\\(?:[\\s-\\s<\\s>$\n]+\\)")
 
 (defconst geiser-syntax--ident-regexp
   (format "\\(?:%s\\([^ (]+?\\)\\)" geiser-syntax--delim-regexp))
