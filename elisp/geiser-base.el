@@ -27,7 +27,7 @@
 
 ;;; Emacs compatibility:
 
-(eval-when-compile (require 'cl))
+(require 'cl)
 
 (eval-after-load "ring"
   '(when (not (fboundp 'ring-member))
@@ -39,7 +39,6 @@
 
 (when (not (fboundp 'completion-table-dynamic))
   (defun completion-table-dynamic (fun)
-    (require 'cl)
     (lexical-let ((fun fun))
       (lambda (string pred action)
         (with-current-buffer (let ((win (minibuffer-selected-window)))

@@ -23,6 +23,8 @@
 (require 'geiser-impl)
 (require 'geiser-repl)
 (require 'geiser-mode)
+(require 'geiser-base)
+(require 'geiser)
 
 
 ;;; Reload:
@@ -46,46 +48,42 @@
            geiser-custom
            geiser-base
            geiser-popup
+           geiser-install
            geiser
            geiser-version
            )))
 
-(defun geiser-reload-unload-function ()
-  (dolist (feature (geiser--features-list))
-    (when (featurep feature) (unload-feature feature t)))
-  t)
-
 (defun geiser-unload ()
+  "Unload all Geiser modules."
   (interactive)
-  (unload-feature 'geiser-reload))
+  (let ((fs (geiser--features-list)))
+    (unload-feature 'geiser-reload t)
+    (dolist (f fs)
+      (when (featurep f) (unload-feature f t)))))
 
 (defun geiser-reload (&optional arg)
   "Reload Geiser.
 With prefix arg, prompts for the DIRECTORY from which Geiser should be
-loaded."
+loaded again."
   (interactive "P")
   (let* ((old-dir geiser-elisp-dir)
          (dir (or (and arg (read-directory-name "New Geiser elisp dir: "
                                                 old-dir old-dir t old-dir))
-                  old-dir))
-         (gf (expand-file-name "geiser.el" dir))
-         (gfi (expand-file-name "geiser-install.el" dir)))
-    (unless (or (file-exists-p gfi)
-                (file-exists-p gf))
+                  old-dir)))
+    (unless (or (file-exists-p (expand-file-name "geiser-reload.el" dir))
+                (file-exists-p (expand-file-name "geiser-reload.elc" dir)))
       (error "%s does not contain Geiser!" dir))
-    (let ((installed-impls geiser-impl-installed-implementations)
+    (let ((installed (featurep 'geiser-install))
+          (installed-impls geiser-impl-installed-implementations)
           (impls geiser-impl--impls)
           (repls (geiser-repl--repl-list))
           (buffers (geiser-mode--buffers)))
-      (setq load-path (remove geiser-elisp-dir load-path))
       (geiser-unload)
+      (setq load-path (remove old-dir load-path))
       (add-to-list 'load-path dir)
       (setq geiser-impl-installed-implementations installed-impls)
-      (if (file-exists-p gfi)
-          (require 'geiser-install)
-        (load-file gf))
-      (dolist (feature (geiser--features-list))
-        (load-library (format "%s" feature)))
+      (require 'geiser-reload)
+      (when installed (require 'geiser-install nil t))
       (geiser-impl--reload-implementations impls)
       (geiser-repl--restore repls)
       (geiser-mode--restore buffers)
