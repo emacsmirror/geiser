@@ -271,15 +271,11 @@ implementation to be used by Geiser."))
 
 (defun geiser-impl-unload-function ()
   (dolist (imp (mapcar 'geiser-impl--impl-feature geiser-impl--impls))
-    (when (featurep imp) (unload-feature imp t)))
-  t)
+    (when (featurep imp) (unload-feature imp t))))
 
 (defun geiser-impl--reload-implementations (impls)
   (dolist (impl impls)
     (load-library (format "geiser-%s" impl))))
-
-
-(provide 'geiser-impl)
 
 
 ;;; Initialization:
@@ -287,5 +283,8 @@ implementation to be used by Geiser."))
 (eval-after-load 'geiser-impl
   '(mapc 'geiser-impl--register
          (or geiser-impl-installed-implementations '(guile plt))))
+
+
+(provide 'geiser-impl)
 
 ;;; geiser-impl.el ends here

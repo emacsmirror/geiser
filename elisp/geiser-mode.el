@@ -261,6 +261,10 @@ interacting with the Geiser REPL is at your disposal.
       (geiser-mode 1)
       (when (cdr b) (geiser-impl--set-buffer-implementation (cdr b))))))
 
+(defun geiser-mode-unload-function ()
+  (dolist (b (geiser-mode--buffers))
+    (with-current-buffer (car b) (geiser-mode nil))))
+
 
 (provide 'geiser-mode)
 ;;; geiser-mode.el ends here
