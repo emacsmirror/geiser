@@ -1,0 +1,12 @@
+
+;;; Versioning:
+
+(defvar geiser-version-string "@PACKAGE_STRING@"
+  "Geiser's version as a string.")
+
+(defun geiser-version ()
+  "Echoes Geiser's version."
+  (interactive)
+  (message "%s" geiser-version-string))
+
+(provide 'geiser-version)
