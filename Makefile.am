@@ -3,4 +3,4 @@ SUBDIRS = . elisp scheme
 EXTRA_DIST = THANKS
 
 dist-hook:
-	git log --summary --stat > $(top_distdir)/ChangeLog
+	$(SHELL) $(top_srcdir)/ChangeLog > $(top_distdir)/ChangeLog
