@@ -26,6 +26,8 @@ dist_lisp_LISP = \
 
 lisp_LISP = geiser-install.el
 
+CLEANFILES = geiser-install.el
+
 geiser-install.el: $(srcdir)/geiser.el $(srcdir)/geiser-install.el.in
 	@sed -e "s|@SCHEME_DIR[@]|$(datarootdir)/geiser|"  $(srcdir)/geiser-install.el.in >$@
 
