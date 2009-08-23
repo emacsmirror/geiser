@@ -1,0 +1,21 @@
+
+Andy Wingo, Geiser's first user, has been a continuous source of
+encouragement and suggestions, and keeps improving Guile and heeding
+my feature requests.
+
+Eduardo Cavazos' contagious enthusiasm has helped in many ways to keep
+Geiser alive, and he's become its best evangelist in R6RS circles.
+
+Eli Barzilay took the time to play with an early beta and make many
+valuable suggestions, besides answering all my 'how do you in PLT'
+questions.
+
+Matthew Flatt, Robby Findler and the rest of the PLT team did not only
+answer my inquiries, but provided almost instant fixes to the few
+issues i found.
+
+Thanks also to the PLT and Guile communities, for showing me that
+Geiser was not only possible, but a pleasure to hack on.
+
+Karl Berry happily jeopardized GNU's prestige by reviewing and
+accepting Geiser as a GNU official package.

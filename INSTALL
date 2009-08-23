@@ -21,7 +21,9 @@ As explained in the README file, Geiser is also directly usable from
 its source tree, with no configuration whatsoever. Read that README to
 see how.
 
-As promised, here you have the gory details of the autotools jazz:
+As promised, here you have the gory details of the autotools jazz,
+which you can freely and safely skip on a first, second and third
+reading.
 
 Installation Instructions
 *************************
