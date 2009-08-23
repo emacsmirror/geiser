@@ -122,9 +122,13 @@ when `geiser-autodoc-display-module-p' is on."
         (save-current-buffer
           (set-buffer (geiser-syntax--font-lock-buffer))
           (erase-buffer)
-          (insert (format "(%s " (geiser-autodoc--proc-name proc module)))
-          (setq cpos
-                (geiser-autodoc--insert-args reqs cpos (and (not (zerop pos)) pos)))
+          (insert (format "(%s" (geiser-autodoc--proc-name proc module)))
+          (when reqs
+            (insert " ")
+            (setq cpos
+                  (geiser-autodoc--insert-args reqs
+                                               cpos
+                                               (and (not (zerop pos)) pos))))
           (when opts
             (insert " [")
             (setq cpos (geiser-autodoc--insert-args opts cpos pos))
