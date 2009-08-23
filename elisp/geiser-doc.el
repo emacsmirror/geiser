@@ -180,7 +180,7 @@
                                                            (cdr (assoc 'signature ds))))
             (newline)
             (insert (or (cdr (assoc 'docstring ds)) ""))
-            (goto-line (point-min))
+            (goto-char (point-min))
             (setq geiser-doc--buffer-link
                   (geiser-doc--history-push
                    (geiser-doc--make-link symbol module impl))))

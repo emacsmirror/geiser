@@ -54,25 +54,6 @@ EVAL, COMPILE, LOAD-FILE and COMPILE-FILE should be supported."))
 
 ;;; Code formatting:
 
-(defun geiser-eval--scheme-str (code)
-  (cond ((null code) "'()")
-        ((eq code :f) "#f")
-        ((eq code :t) "#t")
-        ((listp code)
-         (cond ((eq (car code) :eval) (geiser-eval--eval (cdr code)))
-               ((eq (car code) :comp) (geiser-eval--comp (cdr code)))
-               ((eq (car code) :load-file)
-                (geiser-eval--load-file (cadr code)))
-               ((eq (car code) :comp-file)
-                (geiser-eval--comp-file (cadr code)))
-               ((eq (car code) :module) (geiser-eval--module (cadr code)))
-               ((eq (car code) :ge) (geiser-eval--ge (cadr code)))
-               ((eq (car code) :scm) (cadr code))
-               (t (concat "("
-                          (mapconcat 'geiser-eval--scheme-str code " ") ")"))))
-        ((symbolp code) (format "%s" code))
-        (t (format "%S" code))))
-
 (defsubst geiser-eval--eval (code)
   (geiser-eval--scheme-str
    `(,(geiser-eval--form 'eval) (quote ,(nth 0 code))
@@ -98,6 +79,25 @@ EVAL, COMPILE, LOAD-FILE and COMPILE-FILE should be supported."))
 
 (defsubst geiser-eval--ge (proc)
   (geiser-eval--scheme-str (geiser-eval--form proc)))
+
+(defun geiser-eval--scheme-str (code)
+  (cond ((null code) "'()")
+        ((eq code :f) "#f")
+        ((eq code :t) "#t")
+        ((listp code)
+         (cond ((eq (car code) :eval) (geiser-eval--eval (cdr code)))
+               ((eq (car code) :comp) (geiser-eval--comp (cdr code)))
+               ((eq (car code) :load-file)
+                (geiser-eval--load-file (cadr code)))
+               ((eq (car code) :comp-file)
+                (geiser-eval--comp-file (cadr code)))
+               ((eq (car code) :module) (geiser-eval--module (cadr code)))
+               ((eq (car code) :ge) (geiser-eval--ge (cadr code)))
+               ((eq (car code) :scm) (cadr code))
+               (t (concat "("
+                          (mapconcat 'geiser-eval--scheme-str code " ") ")"))))
+        ((symbolp code) (format "%s" code))
+        (t (format "%S" code))))
 
 
 ;;; Code sending:

@@ -106,8 +106,9 @@ or following links in error buffers.")
   (format "\\_<%s\\_>" (regexp-quote (format "%s" thing))))
 
 (defun geiser-edit--goto-line (symbol line)
+  (goto-char (point-min))
   (if (numberp line)
-      (goto-line line)
+      (forward-line (max 0 (1- line)))
     (goto-char (point-min))
     (when (or (re-search-forward (geiser-edit--def-re symbol) nil t)
               (re-search-forward (geiser-edit--def-re* symbol) nil t)
@@ -151,6 +152,8 @@ or following links in error buffers.")
 
 
 ;;; Commands:
+
+(defvar geiser-edit--symbol-history nil)
 
 (defun geiser-edit-symbol ()
   "Asks for a symbol to edit, with completion."

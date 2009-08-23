@@ -29,7 +29,7 @@
 (require 'geiser-syntax)
 (require 'geiser-base)
 
-(eval-when-compile (require 'cl))
+(require 'cl)
 
 
 ;;; Completions window handling, heavily inspired in slime's:
@@ -84,7 +84,7 @@ terminates a current completion."
   (remove-hook 'pre-command-hook
                'geiser-completion--maybe-restore-window-cfg)
   (condition-case err
-      (cond ((find last-command-char "()\"'`,# \r\n:")
+      (cond ((find last-command-event "()\"'`,# \r\n:")
              (geiser-completion--restore-window-cfg))
             ((not (geiser-completion--window-active-p))
              (geiser-completion--forget-window-cfg))
@@ -146,7 +146,7 @@ terminates a current completion."
 
 ;;; Completion functionality:
 
-(defsubst geiser-completion--symbol-list (prefix)
+(defun geiser-completion--symbol-list (prefix)
   (delete-duplicates
    (append (mapcar (lambda (s) (format "%s" s)) (geiser-syntax--locals-around-point))
            (geiser-eval--send/result `(:eval ((:ge completions) ,prefix))))

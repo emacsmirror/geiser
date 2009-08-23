@@ -59,9 +59,38 @@ determine its scheme flavour."
   :group 'geiser-impl)
 
 
+;;; Auxiliary functions:
+(defsubst geiser-impl--sym (imp name)
+  (intern (format "geiser-%s-%s" imp name)))
+
+(defsubst geiser-impl--boundp (imp name)
+  (boundp (geiser-impl--sym imp name)))
+
+(defsubst geiser-impl--fboundp (imp name)
+  (fboundp (geiser-impl--sym imp name)))
+
+(defsubst geiser-impl--impl-feature (impl)
+  (intern (format "geiser-%s" impl)))
+
+(defun geiser-impl--value (imp name &optional fun)
+  (let ((sym (geiser-impl--sym imp name)))
+    (unless (or (and (not fun) (boundp sym))
+                (and fun (fboundp sym)))
+      (error "Unbound %s '%s' in Geiser Scheme implementation %s"
+             (if fun "function" "variable") sym imp))
+    (if fun (symbol-function sym) (symbol-value sym))))
+
+(defsubst geiser-impl--call-if-bound (imp name &rest args)
+  (when (geiser-impl--fboundp imp name)
+    (apply (geiser-impl--value imp name t) args)))
+
+
 ;;; Registering implementations:
 
 (defvar geiser-impl--impls nil)
+
+(make-variable-buffer-local
+ (defvar geiser-impl--implementation nil))
 
 (defun geiser-impl--register (impl)
   (when (and (not (memq impl geiser-impl--impls))
@@ -91,9 +120,6 @@ determine its scheme flavour."
 
 ;;; Installing Scheme implementations:
 
-(make-variable-buffer-local
- (defvar geiser-impl--implementation nil))
-
 (defvar geiser-impl--impl-prompt-history nil)
 
 (defun geiser-impl--read-impl (&optional prompt impls non-req)
@@ -113,30 +139,6 @@ determine its scheme flavour."
     (setq geiser-impl--implementation impl)
     (geiser-impl--install-vars impl)
     (geiser-impl--register impl)))
-
-(defsubst geiser-impl--sym (imp name)
-  (intern (format "geiser-%s-%s" imp name)))
-
-(defsubst geiser-impl--boundp (imp name)
-  (boundp (geiser-impl--sym imp name)))
-
-(defsubst geiser-impl--fboundp (imp name)
-  (fboundp (geiser-impl--sym imp name)))
-
-(defsubst geiser-impl--impl-feature (impl)
-  (intern (format "geiser-%s" impl)))
-
-(defun geiser-impl--value (imp name &optional fun)
-  (let ((sym (geiser-impl--sym imp name)))
-    (unless (or (and (not fun) (boundp sym))
-                (and fun (fboundp sym)))
-      (error "Unbound %s '%s' in Geiser Scheme implementation %s"
-             (if fun "function" "variable") sym imp))
-    (if fun (symbol-function sym) (symbol-value sym))))
-
-(defsubst geiser-impl--call-if-bound (imp name &rest args)
-  (when (geiser-impl--fboundp imp name)
-    (apply (geiser-impl--value imp name t) args)))
 
 (defsubst geiser-impl--module-function (impl)
   (geiser-impl--sym impl "get-module"))
@@ -259,7 +261,7 @@ implementation to be used by Geiser."))
   (let* ((current geiser-impl-installed-implementations)
          (impl (geiser-impl--read-impl "Forget implementation: " current)))
     (geiser-impl--unregister impl)
-    (when (and (impl current)
+    (when (and impl
                (y-or-n-p "Forget permanently using customize? "))
       (customize-save-variable
        'geiser-impl-installed-implementations (remove impl current)))))

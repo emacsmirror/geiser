@@ -28,6 +28,8 @@
 (require 'geiser-popup)
 (require 'geiser-base)
 
+(require 'comint)
+
 
 ;;; Customization:
 
