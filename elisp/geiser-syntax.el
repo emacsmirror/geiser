@@ -119,29 +119,35 @@
         (when (listp fst) (push fst path)))
       (nreverse path))))
 
+(defsubst geiser-syntax--listify (l &optional strict)
+  (cond ((vectorp l) (append l nil))
+        ((listp l) l)
+        (strict nil)
+        (t l)))
+
 (defun geiser-syntax--read-list (p)
-  (let ((list (ignore-errors (read (current-buffer)))))
+  (let ((list (geiser-syntax--listify (ignore-errors (read (current-buffer))) t)))
     (if (and list (< (point) p))
-        list
+        (mapcar 'geiser-syntax--listify list)
       (goto-char p)
       nil)))
 
-(defconst geiser-syntax--delim-regexp "\\(?:[\\s-\\s<\\s>$\n]+\\)")
+(defconst geiser-syntax--delim-regexp "\\(?:\\s-\\|\\s<\\|\\s>\\|$\\|\n\\)+")
 
 (defconst geiser-syntax--ident-regexp
-  (format "\\(?:%s\\([^ (]+?\\)\\)" geiser-syntax--delim-regexp))
+  (format "\\(?:%s\\([^[ (]+?\\)\\)" geiser-syntax--delim-regexp))
 
 (defconst geiser-syntax--let-regexp
-  (format "\\=(let\\(?:\\*\\|rec\\|%s\\|%s\\)%s*("
+  (format "\\=[[(]let\\(?:\\*\\|rec\\|%s\\|%s\\)%s*[[(]"
           geiser-syntax--ident-regexp
           geiser-syntax--delim-regexp
           geiser-syntax--delim-regexp))
 
 (defconst geiser-syntax--ldefine-regexp
-  (format "\\=(define%s%s" geiser-syntax--ident-regexp geiser-syntax--delim-regexp))
+  (format "\\=[[(]define%s%s" geiser-syntax--ident-regexp geiser-syntax--delim-regexp))
 
 (defconst geiser-syntax--define-regexp
-  (format "\\=(\\(?:define\\|lambda\\)%s(" geiser-syntax--delim-regexp))
+  (format "\\=[[(]\\(?:define\\|lambda\\)%s[[(]" geiser-syntax--delim-regexp))
 
 (defun geiser-syntax--locals-around-point ()
   (when (eq major-mode 'scheme-mode)
