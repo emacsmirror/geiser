@@ -24,6 +24,7 @@
 
 ;;; Code:
 
+(require 'geiser-company)
 (require 'geiser-autodoc)
 (require 'geiser-edit)
 (require 'geiser-impl)
@@ -69,6 +70,11 @@ implementation name gets appended to it."
   "Whether to enable `geiser-autodoc-mode' in the REPL by default."
   :type 'boolean
   :group 'geiser-repl)
+
+(defcustom geiser-repl-company-p t
+  "Whether to use company-mode for completion, if available."
+  :group 'geiser-mode
+  :type 'boolean)
 
 (defcustom geiser-repl-read-only-prompt-p t
   "Whether the REPL's prompt should be read-only."
@@ -293,6 +299,7 @@ If no REPL is running, execute `run-geiser' to start a fresh one."
   (set-syntax-table scheme-mode-syntax-table)
   (setq geiser-eval--get-module-function 'geiser-repl--module-function)
   (when geiser-repl-autodoc-p (geiser-autodoc-mode 1))
+  (geiser-company--setup geiser-repl-company-p)
   (compilation-shell-minor-mode 1))
 
 (define-key geiser-repl-mode-map "\C-d" 'delete-char)

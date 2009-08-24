@@ -81,6 +81,17 @@
 
   To start a REPL, M-x geiser.
 
+*** Completion with company-mode
+    Geiser offers identifier and module name completion, bound to
+    M-TAB and M-` respectively. Only names visible in the current
+    module are offered.
+
+    While that is cool and all, things are even better: if you have
+    [[http://nschum.de/src/emacs/company-mode/][company-mode]] installed, Geiser's completion will use it. Just
+    require company-mode and, from then on, any new scheme buffer or
+    REPL will use it. If you didn't know about Nikolaj Schumacher's
+    awesome mode, check [[http://www.screentoaster.com/watch/stU0lSRERIR1pYRFVdXVlRVFFV/company_mode_for_gnu_emacs][this screencast]].
+
 * Quick key reference
 
 *** In Scheme buffers:

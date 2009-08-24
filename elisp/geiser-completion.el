@@ -204,14 +204,16 @@ terminates a current completion."
            (funcall geiser-completion--symbol-begin-function module))
       (save-excursion (skip-syntax-backward "^-()>") (point))))
 
+(defsubst geiser-completion--prefix (module)
+  (buffer-substring-no-properties (point)
+                                  (geiser-completion--symbol-begin module)))
+
 (defun geiser-completion--complete-symbol (&optional arg)
   "Complete the symbol at point.
 Perform completion similar to Emacs' complete-symbol.
 With prefix, complete module name."
   (interactive "P")
-  (let* ((end (point))
-         (beg (geiser-completion--symbol-begin arg))
-         (prefix (buffer-substring-no-properties beg end))
+  (let* ((prefix (geiser-completion--prefix arg))
          (result (geiser-completion--complete prefix arg))
          (completions (car result))
          (partial (cdr result)))

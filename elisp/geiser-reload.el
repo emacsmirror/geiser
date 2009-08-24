@@ -38,6 +38,7 @@
            geiser-doc
            geiser-debug
            geiser-impl
+           geiser-company
            geiser-completion
            geiser-autodoc
            geiser-compile

@@ -28,6 +28,7 @@
 (require 'geiser-doc)
 (require 'geiser-compile)
 (require 'geiser-completion)
+(require 'geiser-company)
 (require 'geiser-xref)
 (require 'geiser-edit)
 (require 'geiser-autodoc)
@@ -50,6 +51,11 @@
   "Whether `geiser-autodoc-mode' gets enabled by default in Scheme buffers."
   :group 'geiser-mode
   :group 'geiser-autodoc
+  :type 'boolean)
+
+(defcustom geiser-mode-company-p t
+  "Whether to use company-mode for completion, if available."
+  :group 'geiser-mode
   :type 'boolean)
 
 (defcustom geiser-mode-smart-tab-p nil
@@ -188,6 +194,7 @@ interacting with the Geiser REPL is at your disposal.
   (when geiser-mode (geiser-impl--set-buffer-implementation))
   (setq geiser-autodoc-mode-string "/A")
   (setq geiser-smart-tab-mode-string "/T")
+  (geiser-company--setup (and geiser-mode geiser-mode-company-p))
   (when geiser-mode-autodoc-p (geiser-autodoc-mode geiser-mode))
   (when geiser-mode-smart-tab-p (geiser-smart-tab-mode geiser-mode)))
 

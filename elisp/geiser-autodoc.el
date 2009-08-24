@@ -153,9 +153,13 @@ when `geiser-autodoc-display-module-p' is on."
 
 ;;; Autodoc function:
 
+(make-variable-buffer-local
+ (defvar geiser-autodoc--inhibit-flag nil))
+
 (defun geiser-autodoc--eldoc-function ()
   (condition-case e
-      (geiser-autodoc--autodoc (geiser-syntax--scan-sexps))
+      (and (not geiser-autodoc--inhibit-flag)
+           (geiser-autodoc--autodoc (geiser-syntax--scan-sexps)))
     (error (format "Autodoc not available (%s)" (error-message-string e)))))
 
 

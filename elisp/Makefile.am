@@ -3,6 +3,7 @@ EXTRA_DIST = geiser-install.el.in
 dist_lisp_LISP = \
    geiser-autodoc.el \
    geiser-base.el \
+   geiser-company.el \
    geiser-compile.el \
    geiser-completion.el	\
    geiser-connection.el	\
