@@ -175,8 +175,7 @@
             (message "No documentation available for '%s'" symbol)
           (geiser-doc--with-buffer
             (erase-buffer)
-            (geiser-doc--insert-title (geiser-autodoc--str (format "%s" symbol)
-                                                           nil
+            (geiser-doc--insert-title (geiser-autodoc--str (list (format "%s" symbol) 0)
                                                            (cdr (assoc 'signature ds))))
             (newline)
             (insert (or (cdr (assoc 'docstring ds)) ""))

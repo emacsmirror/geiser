@@ -38,7 +38,7 @@
   (ignore-errors
     (if module
 	(format "%s [module]" id)
-      (geiser-autodoc--autodoc (list (list (intern id) 0))))))
+      (geiser-autodoc--autodoc (list (list (intern id) 0)) t))))
 
 (defsubst geiser-company--doc-buffer (id module)
   nil)
@@ -61,11 +61,11 @@
 
 (defun geiser-company--setup (enable)
   (setq geiser-company--enabled-flag enable)
+  (when (boundp 'company-lighter)
+    (setq company-lighter "/C"))
   (when (fboundp 'company-mode)
     (company-mode nil)
-    (when enable (company-mode enable)))
-  (when (boundp 'company-lighter)
-    (setq company-lighter "/C")))
+    (when enable (company-mode enable))))
 
 (defun geiser-company--inhibit-autodoc (ignored)
   (setq geiser-autodoc--inhibit-flag t))

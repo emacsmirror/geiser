@@ -68,7 +68,7 @@ when `geiser-autodoc-display-module-p' is on."
 (make-variable-buffer-local
  (defvar geiser-autodoc--cached-signatures nil))
 
-(defun geiser-autodoc--get-signatures (funs)
+(defun geiser-autodoc--get-signatures (funs &optional keep-cached)
   (when funs
     (let ((missing) (cached))
       (if (not geiser-autodoc--cached-signatures)
@@ -77,14 +77,16 @@ when `geiser-autodoc-display-module-p' is on."
           (let ((cf (assq f geiser-autodoc--cached-signatures)))
             (if cf (push cf cached)
               (push f missing)))))
-      (unless cached
+      (unless (or cached keep-cached)
         (setq geiser-autodoc--cached-signatures nil))
-      (if (not missing) geiser-autodoc--cached-signatures
+      (when missing
         (let ((res (geiser-eval--send/result `(:eval ((:ge autodoc)
                                                       (quote ,missing)))
                                              500)))
           (when res
-            (setq geiser-autodoc--cached-signatures (append cached res))))))))
+            (setq geiser-autodoc--cached-signatures
+                  (append res (if keep-cached geiser-autodoc--cached-signatures cached))))))
+      geiser-autodoc--cached-signatures)))
 
 (defun geiser-autodoc--insert-args (args current &optional pos)
   (dolist (a args)
@@ -109,8 +111,9 @@ when `geiser-autodoc-display-module-p' is on."
                proc)))
     (propertize str 'face 'geiser-font-lock-autodoc-procedure-name)))
 
-(defun geiser-autodoc--str (proc desc signature)
-  (let ((args (cdr (assoc 'args signature)))
+(defun geiser-autodoc--str (desc signature)
+  (let ((proc (car desc))
+        (args (cdr (assoc 'args signature)))
         (module (cdr (assoc 'module signature))))
     (if (not args) (geiser-autodoc--proc-name proc module)
       (let ((cpos 1)
@@ -140,15 +143,15 @@ when `geiser-autodoc-display-module-p' is on."
           (insert ")")
           (buffer-string))))))
 
-(defun geiser-autodoc--autodoc (path)
-  (let* ((funs (mapcar 'car path))
-         (signs (geiser-autodoc--get-signatures funs)))
-    (when signs
-      (catch 'signature
-        (dolist (f funs)
-          (let ((signature (cdr (assq f signs))))
-            (when signature
-              (throw 'signature (geiser-autodoc--str f (assq f path) signature)))))))))
+(defun geiser-autodoc--autodoc (path &optional keep-cached)
+  (let ((signs (geiser-autodoc--get-signatures (mapcar 'car path) keep-cached))
+        (p (car path))
+        (s))
+    (while (and path (not s))
+      (unless (setq s (cdr (assq (car p) signs)))
+        (setq p (car path))
+        (setq path (cdr path))))
+    (when s (geiser-autodoc--str p s))))
 
 
 ;;; Autodoc function:
