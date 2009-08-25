@@ -31,6 +31,9 @@
 (make-variable-buffer-local
  (defvar geiser-company--enabled-flag nil))
 
+(make-variable-buffer-local
+ (defvar geiser-company--autodoc-flag nil))
+
 (defsubst geiser-company--candidates (prefix module)
   (car (geiser-completion--complete prefix module)))
 
@@ -50,28 +53,31 @@
 	(if module (geiser-edit-module id) (geiser-edit-symbol id))
 	(cons (current-buffer) (point))))))
 
-(defsubst geiser-company--prefix-at-point (module)
-  (and geiser-company--enabled-flag
-       (looking-at-p "\\_>")
-       (not (nth 8 (syntax-ppss)))
-       (geiser-completion--prefix module)))
+(defun geiser-company--prefix-at-point (module)
+  (when geiser-company--enabled-flag
+    (cond ((nth 8 (syntax-ppss)) 'stop)
+          ((looking-at-p "\\_>") (geiser-completion--prefix module))
+          (module 'stop)
+          (t nil))))
 
 
 ;;; Activation
 
 (defun geiser-company--setup (enable)
   (setq geiser-company--enabled-flag enable)
-  (when (boundp 'company-lighter)
-    (setq company-lighter "/C"))
+  (when (boundp 'company-default-lighter)
+    (set (make-local-variable 'company-default-lighter) "/C"))
   (when (fboundp 'company-mode)
     (company-mode nil)
     (when enable (company-mode enable))))
 
 (defun geiser-company--inhibit-autodoc (ignored)
-  (setq geiser-autodoc--inhibit-flag t))
+  (when (setq geiser-company--autodoc-flag geiser-autodoc-mode)
+    (geiser-autodoc-mode -1)))
 
 (defun geiser-company--restore-autodoc (&optional ignored)
-  (setq geiser-autodoc--inhibit-flag nil))
+  (when geiser-company--autodoc-flag
+    (geiser-autodoc-mode 1)))
 
 
 ;;; Backends:
