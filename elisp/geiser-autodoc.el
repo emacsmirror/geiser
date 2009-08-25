@@ -70,23 +70,26 @@ when `geiser-autodoc-display-module-p' is on."
 
 (defun geiser-autodoc--get-signatures (funs &optional keep-cached)
   (when funs
-    (let ((missing) (cached))
-      (if (not geiser-autodoc--cached-signatures)
-          (setq missing funs)
-        (dolist (f funs)
-          (let ((cf (assq f geiser-autodoc--cached-signatures)))
-            (if cf (push cf cached)
-              (push f missing)))))
-      (unless (or cached keep-cached)
-        (setq geiser-autodoc--cached-signatures nil))
-      (when missing
-        (let ((res (geiser-eval--send/result `(:eval ((:ge autodoc)
-                                                      (quote ,missing)))
-                                             500)))
-          (when res
-            (setq geiser-autodoc--cached-signatures
-                  (append res (if keep-cached geiser-autodoc--cached-signatures cached))))))
-      geiser-autodoc--cached-signatures)))
+    (let ((fs (assq (car funs) geiser-autodoc--cached-signatures)))
+      (if fs
+          (list fs)
+        (let ((missing) (cached))
+          (if (not geiser-autodoc--cached-signatures)
+              (setq missing funs)
+            (dolist (f funs)
+              (let ((cf (assq f geiser-autodoc--cached-signatures)))
+                (if cf (push cf cached)
+                  (push f missing)))))
+          (unless (or cached keep-cached)
+            (setq geiser-autodoc--cached-signatures nil))
+          (when missing
+            (let ((res (geiser-eval--send/result `(:eval ((:ge autodoc)
+                                                          (quote ,missing)))
+                                                 500)))
+              (when res
+                (setq geiser-autodoc--cached-signatures
+                      (append res (if keep-cached geiser-autodoc--cached-signatures cached))))))
+          geiser-autodoc--cached-signatures)))))
 
 (defun geiser-autodoc--insert-args (args current &optional pos)
   (dolist (a args)
