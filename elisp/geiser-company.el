@@ -67,11 +67,8 @@
 
 (defun geiser-company--setup (enable)
   (setq geiser-company--enabled-flag enable)
-  (when (boundp 'company-default-lighter)
-    (set (make-local-variable 'company-default-lighter) "/C"))
-  (when (fboundp 'company-mode)
-    (company-mode nil)
-    (when enable (company-mode enable))))
+  (when (fboundp 'geiser-company--setup-company)
+    (geiser-company--setup-company enable)))
 
 (defun geiser-company--inhibit-autodoc (ignored)
   (when (setq geiser-company--autodoc-flag geiser-autodoc-mode)
@@ -100,6 +97,11 @@
 
 (eval-after-load "company"
   '(progn
+     (defun geiser-company--setup-company (enable)
+       (set (make-local-variable 'company-default-lighter) "/C")
+       (set (make-local-variable 'company-echo-delay) 0.01)
+       (company-mode nil)
+       (when enable (company-mode enable)))
      (geiser-company--make-backend company-geiser-ids nil)
      (geiser-company--make-backend company-geiser-modules t)
      (add-to-list 'company-backends geiser-company--backend)
