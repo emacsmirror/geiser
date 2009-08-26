@@ -56,6 +56,7 @@ or following links in error buffers.")
 (defun geiser-edit--visit-file (file method)
   (cond ((eq method 'window) (find-file-other-window file))
         ((eq method 'frame) (find-file-other-frame file))
+        ((eq method 'noselect) (find-file-noselect file t))
         (t (find-file file))))
 
 (defsubst geiser-edit--location-name (loc)
@@ -126,10 +127,11 @@ or following links in error buffers.")
     (geiser-edit--goto-line symbol line)
     (when col
       (beginning-of-line)
-      (forward-char col))))
+      (forward-char col))
+    (cons (current-buffer) (point))))
 
-(defsubst geiser-edit--try-edit (symbol ret)
-  (geiser-edit--try-edit-location symbol (geiser-eval--retort-result ret)))
+(defsubst geiser-edit--try-edit (symbol ret &optional method)
+  (geiser-edit--try-edit-location symbol (geiser-eval--retort-result ret) method))
 
 
 ;;; Links
@@ -155,13 +157,13 @@ or following links in error buffers.")
 
 (defvar geiser-edit--symbol-history nil)
 
-(defun geiser-edit-symbol (symbol)
+(defun geiser-edit-symbol (symbol &optional method)
   "Asks for a symbol to edit, with completion."
   (interactive (list (geiser-completion--read-symbol "Edit symbol: "
                                                      nil
                                                      geiser-edit--symbol-history)))
   (let ((cmd `(:eval ((:ge symbol-location) ',symbol))))
-    (geiser-edit--try-edit symbol (geiser-eval--send/wait cmd))))
+    (geiser-edit--try-edit symbol (geiser-eval--send/wait cmd) method)))
 
 (defun geiser-edit-symbol-at-point (&optional arg)
   "Opens a new window visiting the definition of the symbol at point.
@@ -181,11 +183,11 @@ With prefix, asks for the symbol to edit."
       (pop-tag-mark)
     (error "No previous location for find symbol invocation")))
 
-(defun geiser-edit-module (module)
+(defun geiser-edit-module (module &optional method)
   "Asks for a module and opens it in a new buffer."
   (interactive (list (geiser-completion--read-module)))
   (let ((cmd `(:eval ((:ge module-location) (:module ,module)))))
-    (geiser-edit--try-edit module (geiser-eval--send/wait cmd))))
+    (geiser-edit--try-edit module (geiser-eval--send/wait cmd) method)))
 
 
 (provide 'geiser-edit)

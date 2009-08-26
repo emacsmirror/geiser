@@ -41,7 +41,8 @@
   (ignore-errors
     (if module
 	(format "%s [module]" id)
-      (geiser-autodoc--autodoc (list (list (intern id) 0)) t))))
+      (or (geiser-autodoc--autodoc (list (list (intern id) 0)) t)
+          (format "%s [local id]" id)))))
 
 (defsubst geiser-company--doc-buffer (id module)
   nil)
@@ -49,9 +50,10 @@
 (defun geiser-company--location (id module)
   (ignore-errors
     (let ((id (intern id)))
-      (save-current-buffer
-	(if module (geiser-edit-module id) (geiser-edit-symbol id))
-	(cons (current-buffer) (point))))))
+      (save-excursion
+        (if module
+            (geiser-edit-module id 'noselect)
+          (geiser-edit-symbol id 'noselect))))))
 
 (defun geiser-company--prefix-at-point (module)
   (when geiser-company--enabled-flag
