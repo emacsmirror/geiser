@@ -144,10 +144,13 @@
           geiser-syntax--delim-regexp))
 
 (defconst geiser-syntax--ldefine-regexp
-  (format "\\=[[(]define%s%s" geiser-syntax--ident-regexp geiser-syntax--delim-regexp))
+  (format "[[(]define%s%s" geiser-syntax--ident-regexp geiser-syntax--delim-regexp))
 
 (defconst geiser-syntax--define-regexp
-  (format "\\=[[(]\\(?:define\\|lambda\\)%s[[(]" geiser-syntax--delim-regexp))
+  (format "[[(]\\(?:define\\)%s[[(]" geiser-syntax--delim-regexp))
+
+(defconst geiser-syntax--lambda-regexp
+  (format "[[(]\\(?:lambda\\)%s[[(]" geiser-syntax--delim-regexp))
 
 (defun geiser-syntax--locals-around-point ()
   (when (eq major-mode 'scheme-mode)
@@ -165,13 +168,21 @@
                        (dolist (l (nreverse (geiser-syntax--read-list p)))
                          (when (and (listp l) (symbolp (car l)))
                            (push (car l) ids))))
+                      ((looking-at geiser-syntax--ldefine-regexp)
+                       (when (match-string 1) (push (intern (match-string 1)) ids))
+                       (goto-char (min p (match-end 0))))
+                      ((or (looking-at geiser-syntax--define-regexp)
+                           (looking-at geiser-syntax--lambda-regexp))
+                       (goto-char (min p (1- (match-end 0))))
+                       (dolist (s (nreverse (geiser-syntax--read-list p)))
+                         (let ((sn (if (listp s) (car s) s)))
+                           (when (symbolp sn) (push sn ids)))))
                       ((re-search-forward geiser-syntax--ldefine-regexp p t)
                        (when (match-string 1) (push (intern (match-string 1)) ids)))
                       ((re-search-forward geiser-syntax--define-regexp p t)
                        (backward-char 1)
-                       (dolist (s (nreverse (geiser-syntax--read-list p)))
-                         (let ((sn (if (listp s) (car s) s)))
-                           (when (symbolp sn) (push sn ids)))))
+                       (let ((s (car (geiser-syntax--read-list p))))
+                         (when (symbolp s) (push s ids))))
                       (t (goto-char (1+ p))))))))
         (nreverse ids)))))
 
