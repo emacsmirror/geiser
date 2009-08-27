@@ -20,9 +20,6 @@ AC_CHECK_PROG(TEXI2PDF, texi2pdf, texi2pdf, false)
 
 AM_PATH_LISPDIR
 
-dnl scheme/plt/Makefile
-dnl scheme/plt/geiser/Makefile
-
 AC_CONFIG_FILES([
 Makefile
 elisp/Makefile

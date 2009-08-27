@@ -2,4 +2,4 @@
 
 [ -f elisp/geiser.el ] || exit 1
 
-autoreconf -Wall
+autoreconf -Wall -i
