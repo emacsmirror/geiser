@@ -71,8 +71,7 @@ when `geiser-autodoc-display-module-p' is on."
 (defun geiser-autodoc--get-signatures (funs &optional keep-cached)
   (when funs
     (let ((fs (assq (car funs) geiser-autodoc--cached-signatures)))
-      (if fs
-          (list fs)
+      (unless fs
         (let ((missing) (cached))
           (if (not geiser-autodoc--cached-signatures)
               (setq missing funs)
@@ -88,8 +87,10 @@ when `geiser-autodoc-display-module-p' is on."
                                                  500)))
               (when res
                 (setq geiser-autodoc--cached-signatures
-                      (append res (if keep-cached geiser-autodoc--cached-signatures cached))))))
-          geiser-autodoc--cached-signatures)))))
+                      (append res (if keep-cached
+                                      geiser-autodoc--cached-signatures
+                                    cached))))))))
+      geiser-autodoc--cached-signatures)))
 
 (defun geiser-autodoc--insert-args (args current &optional pos)
   (dolist (a args)

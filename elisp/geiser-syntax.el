@@ -80,9 +80,89 @@
  (with-syntax 1))
 
 
-;;; Code parsing:
+;;; A simple scheme reader
 
-(geiser-popup--define syntax " *geiser syntax analyst*" scheme-mode)
+(defvar geiser-syntax--read/buffer-limit nil)
+
+(defsubst geiser-syntax--read/eos ()
+  (or (eobp)
+      (and (numberp geiser-syntax--read/buffer-limit)
+           (<= geiser-syntax--read/buffer-limit (point)))))
+
+(defsubst geiser-syntax--read/next-char ()
+  (unless (geiser-syntax--read/eos)
+    (forward-char)
+    (char-after)))
+
+(defsubst geiser-syntax--read/token (token)
+  (geiser-syntax--read/next-char)
+  (if (listp token) token (list token)))
+
+(defsubst geiser-syntax--read/elisp ()
+  (ignore-errors (read (current-buffer))))
+
+(defun geiser-syntax--read/next-token ()
+  (skip-syntax-forward "->")
+  (if (geiser-syntax--read/eos) '(eob)
+    (let ((c (char-after)))
+      (cond ((not c) '(eob))
+            ((eq c '\;)
+             (skip-syntax-forward "^>")
+             (geiser-syntax--read/next-token))
+            ((memq c '(?\( ?\[)) (geiser-syntax--read/token 'lparen))
+            ((memq c '(?\) ?\])) (geiser-syntax--read/token 'rparen))
+            ((eq c ?.)
+             (if (memq (syntax-after (1+ (point))) '(0 11 12))
+                 (geiser-syntax--read/token 'dot)
+               (cons 'atom (geiser-syntax--read/elisp))))
+            ((eq c ?\#)
+             (let ((c (geiser-syntax--read/next-char)))
+               (cond ((not c) '(eob))
+                     ((eq c ?\\) (cons 'char (geiser-syntax--read/elisp)))
+                     ((eq c ?\() (geiser-syntax--read/token 'vectorb))
+                     (t (geiser-syntax--read/next-token)))))
+            ((eq c ?\') (geiser-syntax--read/token '(quote . quote)))
+            ((eq c ?\`) (geiser-syntax--read/token
+                         `(backquote . ,backquote-backquote-symbol)))
+            ((eq c ?,) (if (eq (geiser-syntax--read/next-char) ?@)
+                           (geiser-syntax--read/token
+                            `(splice . ,backquote-splice-symbol))
+                         `(unquote . ,backquote-unquote-symbol)))
+            ((eq c ?\") (cons 'string (geiser-syntax--read/elisp)))
+            (t (cons 'atom (geiser-syntax--read/elisp)))))))
+
+(defsubst geiser-syntax--read/match (&rest tks)
+  (let ((token (geiser-syntax--read/next-token)))
+    (if (memq (car token) tks) token
+      (error "Unexpected token: %s" token))))
+
+(defsubst geiser-syntax--read/try (&rest tks)
+  (let ((p (point))
+        (tk (ignore-errors (apply 'geiser-syntax--read/match tks))))
+    (unless tk (goto-char p))
+    tk))
+
+(defun geiser-syntax--read/list ()
+  (cond ((geiser-syntax--read/try 'dot)
+         (let ((tail (geiser-syntax--read)))
+           (geiser-syntax--read/match 'eob 'rparen)
+           tail))
+        ((geiser-syntax--read/try 'rparen 'eob) nil)
+        (t (cons (geiser-syntax--read)
+                 (geiser-syntax--read/list)))))
+
+(defun geiser-syntax--read ()
+  (let ((token (geiser-syntax--read/next-token)))
+    (case (car token)
+      (eob nil)
+      (lparen (geiser-syntax--read/list))
+      (vectorb (apply 'vector (geiser-syntax--read/list)))
+      ((quote backquote unquote splice) (list (cdr token) (geiser-syntax--read)))
+      ((char string atom) (cdr token))
+      (t (error "Reading scheme syntax: unexpected token: %s" token)))))
+
+
+;;; Code parsing:
 
 (defsubst geiser-syntax--skip-comment/string ()
   (goto-char (or (nth 8 (syntax-ppss)) (point))))
@@ -90,104 +170,61 @@
 (defsubst geiser-syntax--nesting-level ()
   (or (nth 0 (syntax-ppss)) 0))
 
-(defun geiser-syntax--scan-sexp ()
-  (let ((p (point))
-        (n -1)
-        prev head)
-    (ignore-errors
-      (backward-up-list)
-      (save-excursion
-        (forward-char)
-        (skip-syntax-forward "^_w(" p)
-        (when (setq head (symbol-at-point))
-          (while (< (point) p)
-            (setq n (1+ n))
-            (setq prev (symbol-at-point))
-            (forward-sexp))))
-      (if head (list head n (and (> n 1) prev)) 'skip))))
-
 (defun geiser-syntax--scan-sexps ()
   (save-excursion
-    (geiser-syntax--skip-comment/string)
-    (let* ((sap (symbol-at-point))
-           (fst (and sap (geiser-syntax--scan-sexp)))
-           (path (and fst
-                      (cond ((not (listp fst)) `((,sap 0)))
-                             ((eq sap (car fst)) (list fst))
-                             (t (list fst (list sap 0)))))))
-      (while (setq fst (geiser-syntax--scan-sexp))
-        (when (listp fst) (push fst path)))
+    (let* ((fst (symbol-at-point))
+           (path (and fst (list (list fst 0)))))
+      (while (not (zerop (geiser-syntax--nesting-level)))
+        (let ((geiser-syntax--read/buffer-limit (1+ (point))))
+          (backward-up-list)
+          (let ((form (save-excursion (geiser-syntax--read))))
+            (when (and (listp form) (car form) (symbolp (car form)))
+              (let* ((len-1 (1- (length form)))
+                     (prev (and (> len-1 1) (nth (1- len-1) form))))
+                (push `(,(car form) ,len-1 ,@(and prev (symbolp prev) (list prev)))
+                      path))))))
       (nreverse path))))
-
-(defsubst geiser-syntax--listify (l &optional strict)
-  (cond ((vectorp l) (append l nil))
-        ((listp l) l)
-        (strict nil)
-        (t l)))
-
-(defun geiser-syntax--read-list (p)
-  (let ((list (geiser-syntax--listify (ignore-errors (read (current-buffer))) t)))
-    (if (and list (< (point) p))
-        (mapcar 'geiser-syntax--listify list)
-      (goto-char p)
-      nil)))
-
-(defconst geiser-syntax--delim-regexp "\\(?:\\s-\\|\\s<\\|\\s>\\|$\\|\n\\)+")
-
-(defconst geiser-syntax--ident-regexp
-  (format "\\(?:%s\\([^[ (]+?\\)\\)" geiser-syntax--delim-regexp))
-
-(defconst geiser-syntax--let-regexp
-  (format "\\=[[(]let\\(?:\\*\\|rec\\|%s\\|%s\\)%s*[[(]"
-          geiser-syntax--ident-regexp
-          geiser-syntax--delim-regexp
-          geiser-syntax--delim-regexp))
-
-(defconst geiser-syntax--ldefine-regexp
-  (format "[[(]define%s%s" geiser-syntax--ident-regexp geiser-syntax--delim-regexp))
-
-(defconst geiser-syntax--define-regexp
-  (format "[[(]\\(?:define\\)%s[[(]" geiser-syntax--delim-regexp))
-
-(defconst geiser-syntax--lambda-regexp
-  (format "[[(]\\(?:lambda\\)%s[[(]" geiser-syntax--delim-regexp))
 
 (defun geiser-syntax--locals-around-point ()
   (when (eq major-mode 'scheme-mode)
     (save-excursion
       (geiser-syntax--skip-comment/string)
-      (let ((ids))
+      (let* ((ids)
+             (push-id (lambda (n) (when (symbolp n) (push n ids))))
+             (get-arg (lambda (n) (if (listp n) (car n) n)))
+             (push-ids (lambda (is) (mapc push-id (nreverse (mapcar get-arg is))))))
         (while (not (zerop (geiser-syntax--nesting-level)))
-          (let ((p (point)))
+          (let ((geiser-syntax--read/buffer-limit (point)))
             (backward-up-list)
-            (save-excursion
-              (while (< (point) p)
-                (cond ((re-search-forward geiser-syntax--let-regexp p t)
-                       (when (match-string 1) (push (intern (match-string 1)) ids))
-                       (backward-char 1)
-                       (dolist (l (nreverse (geiser-syntax--read-list p)))
-                         (when (and (listp l) (symbolp (car l)))
-                           (push (car l) ids))))
-                      ((looking-at geiser-syntax--ldefine-regexp)
-                       (when (match-string 1) (push (intern (match-string 1)) ids))
-                       (goto-char (min p (match-end 0))))
-                      ((or (looking-at geiser-syntax--define-regexp)
-                           (looking-at geiser-syntax--lambda-regexp))
-                       (goto-char (min p (1- (match-end 0))))
-                       (dolist (s (nreverse (geiser-syntax--read-list p)))
-                         (let ((sn (if (listp s) (car s) s)))
-                           (when (symbolp sn) (push sn ids)))))
-                      ((re-search-forward geiser-syntax--ldefine-regexp p t)
-                       (when (match-string 1) (push (intern (match-string 1)) ids)))
-                      ((re-search-forward geiser-syntax--define-regexp p t)
-                       (backward-char 1)
-                       (let ((s (car (geiser-syntax--read-list p))))
-                         (when (symbolp s) (push s ids))))
-                      (t (goto-char (1+ p))))))))
+            (let* ((form (save-excursion (geiser-syntax--read)))
+                   (head (and (listp form) (car form)))
+                   (snd (and head (cadr form)))
+                   (third (and head (caddr form)))
+                   (is (case head
+                         ((define define*) (if (listp snd) snd (list snd)))
+                         ((let* letrec lambda let)
+                          (if (listp snd) snd
+                            (cons snd (and (eq head 'let)
+                                           (listp third)
+                                           third))))))
+                   (body (and is (case head
+                                   ((define define*) (and (listp snd) (cddr form)))
+                                   ((let let* letrec lambda)
+                                    (if (listp snd) (cddr form)
+                                      (cdddr form)))))))
+              (when is
+                (funcall push-ids
+                         (mapcar 'cdr
+                                 (remove-if (lambda (f) (or (not (listp f))
+                                                       (not (eq (car f) 'define))))
+                                            body)))
+                (funcall push-ids is)))))
         (nreverse ids)))))
 
 
 ;;; Fontify strings as Scheme code:
+
+(geiser-popup--define syntax " *geiser syntax analyst*" scheme-mode)
 
 (defun geiser-syntax--font-lock-buffer ()
   (let ((name " *geiser font lock*"))
