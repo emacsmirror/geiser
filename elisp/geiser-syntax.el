@@ -86,7 +86,7 @@
 
 (defsubst geiser-syntax--read/eos ()
   (or (eobp)
-      (and (numberp geiser-syntax--read/buffer-limit)
+      (and geiser-syntax--read/buffer-limit
            (<= geiser-syntax--read/buffer-limit (point)))))
 
 (defsubst geiser-syntax--read/next-char ()
@@ -165,6 +165,10 @@
 (defsubst geiser-syntax--read/keyword-value (s)
   (and (consp s) (eq (car s) :keyword) (cdr s)))
 
+(defsubst geiser-syntax--form-after-point (&optional boundary)
+  (let ((geiser-syntax--read/buffer-limit (and (numberp boundary) boundary)))
+    (save-excursion (values (geiser-syntax--read) (point)))))
+
 
 ;;; Code parsing:
 
@@ -179,9 +183,9 @@
     (let* ((fst (symbol-at-point))
            (path (and fst (list (list fst 0)))))
       (while (not (zerop (geiser-syntax--nesting-level)))
-        (let ((geiser-syntax--read/buffer-limit (1+ (point))))
+        (let ((boundary (1+ (point))))
           (backward-up-list)
-          (let ((form (save-excursion (geiser-syntax--read))))
+          (let ((form (nth-value 0 (geiser-syntax--form-after-point boundary))))
             (when (and (listp form) (car form) (symbolp (car form)))
               (let* ((len-1 (1- (length form)))
                      (prev (and (> len-1 1) (nth (1- len-1) form)))
@@ -190,41 +194,37 @@
                       path))))))
       (nreverse path))))
 
+(defun geiser-syntax--scan-locals (form partial locals)
+  (flet ((if-symbol (x) (and (symbolp x) x))
+         (if-list (x) (and (listp x) x))
+         (normalize (vars) (mapcar (lambda (i) (if (listp i) (car i) i)) vars)))
+    (cond ((or (null form) (not (listp form))) (normalize locals))
+          ((not (memq (car form) '(define let let* letrec lambda)))
+           (geiser-syntax--scan-locals (car (last form)) partial locals))
+          (t
+           (let* ((head (car form))
+                  (name (if-symbol (cadr form)))
+                  (names (if name (if-list (caddr form)) (if-list (cadr form))))
+                  (rest (if name (cdddr form) (cddr form)))
+                  (use-names (or (eq head 'let*) (not partial) rest)))
+             (when name (push name locals))
+             (when use-names (dolist (n names) (push n locals)))
+             (dolist (f (butlast rest))
+               (when (eq (car f) 'define) (push (cadr f) locals)))
+             (geiser-syntax--scan-locals (car (last (or rest names)))
+                                         partial
+                                         locals))))))
+
 (defun geiser-syntax--locals-around-point ()
   (when (eq major-mode 'scheme-mode)
     (save-excursion
       (geiser-syntax--skip-comment/string)
-      (let* ((ids)
-             (push-id (lambda (n) (when (symbolp n) (push n ids))))
-             (get-arg (lambda (n) (if (listp n) (car n) n)))
-             (push-ids (lambda (is) (mapc push-id (nreverse (mapcar get-arg is))))))
+      (let ((boundary (point)))
         (while (not (zerop (geiser-syntax--nesting-level)))
-          (let ((geiser-syntax--read/buffer-limit (point)))
-            (backward-up-list)
-            (let* ((form (save-excursion (geiser-syntax--read)))
-                   (head (and (listp form) (car form)))
-                   (snd (and head (cadr form)))
-                   (third (and head (caddr form)))
-                   (is (case head
-                         ((define define*) (if (listp snd) snd (list snd)))
-                         ((let* letrec lambda let)
-                          (if (listp snd) snd
-                            (cons snd (and (eq head 'let)
-                                           (listp third)
-                                           third))))))
-                   (body (and is (case head
-                                   ((define define*) (and (listp snd) (cddr form)))
-                                   ((let let* letrec lambda)
-                                    (if (listp snd) (cddr form)
-                                      (cdddr form)))))))
-              (when is
-                (funcall push-ids
-                         (mapcar 'cdr
-                                 (remove-if (lambda (f) (or (not (listp f))
-                                                       (not (eq (car f) 'define))))
-                                            body)))
-                (funcall push-ids is)))))
-        (nreverse ids)))))
+          (backward-up-list))
+        (multiple-value-bind (form end)
+            (geiser-syntax--form-after-point boundary)
+          (geiser-syntax--scan-locals form (> end boundary) '()))))))
 
 
 ;;; Fontify strings as Scheme code:
