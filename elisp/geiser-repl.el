@@ -124,7 +124,9 @@ implementation name gets appended to it."
   (unless (and (eq major-mode 'geiser-repl-mode)
                (not (get-buffer-process (current-buffer))))
     (let* ((old (geiser-repl--repl/impl impl geiser-repl--closed-repls))
-           (old (and (buffer-live-p old) old)))
+           (old (and (buffer-live-p old)
+                     (not (get-buffer-process old))
+                     old)))
       (pop-to-buffer
        (or old
            (generate-new-buffer (format "* %s *"
