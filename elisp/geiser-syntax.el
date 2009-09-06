@@ -202,6 +202,7 @@
 
 (defun geiser-syntax--scan-sexps ()
   (save-excursion
+    (geiser-syntax--skip-comment/string)
     (let* ((fst (symbol-at-point))
            (path (and fst (list (list fst 0)))))
       (while (not (zerop (geiser-syntax--nesting-level)))
