@@ -27,7 +27,6 @@
 
 (require 'geiser-eval)
 (require 'geiser-base)
-(require 'geiser-doc)
 (require 'geiser-completion)
 
 
@@ -47,16 +46,63 @@
   :type '(repeat symbol)
   :group 'geiser-impl)
 
+(defcustom geiser-impl-implementations-alist nil
+  "A map from regular expressions or directories to implementations.
+When opening a new file, its full path will be matched against
+each one of the regular expressions or directories in this map in order to
+determine its scheme flavour."
+  :type '(repeat (list (choice (group :tag "Regular expression"
+                                      (const regexp) regexp)
+                               (group :tag "Directory"
+                                      (const dir) directory))
+                       symbol))
+  :group 'geiser-impl)
+
+
+;;; Auxiliary functions:
+(defsubst geiser-impl--sym (imp name)
+  (intern (format "geiser-%s-%s" imp name)))
+
+(defsubst geiser-impl--boundp (imp name)
+  (boundp (geiser-impl--sym imp name)))
+
+(defsubst geiser-impl--fboundp (imp name)
+  (fboundp (geiser-impl--sym imp name)))
+
+(defsubst geiser-impl--impl-feature (impl)
+  (intern (format "geiser-%s" impl)))
+
+(defun geiser-impl--value (imp name &optional fun)
+  (let ((sym (geiser-impl--sym imp name)))
+    (unless (or (and (not fun) (boundp sym))
+                (and fun (fboundp sym)))
+      (error "Unbound %s '%s' in Geiser Scheme implementation %s"
+             (if fun "function" "variable") sym imp))
+    (if fun (symbol-function sym) (symbol-value sym))))
+
+(defsubst geiser-impl--call-if-bound (imp name &rest args)
+  (when (geiser-impl--fboundp imp name)
+    (apply (geiser-impl--value imp name t) args)))
+
 
 ;;; Registering implementations:
 
 (defvar geiser-impl--impls nil)
 
+(make-variable-buffer-local
+ (defvar geiser-impl--implementation nil))
+
 (defun geiser-impl--register (impl)
-  (add-to-list 'geiser-impl--impls impl))
+  (when (and (not (memq impl geiser-impl--impls))
+             (require (geiser-impl--impl-feature impl) nil t))
+    (add-to-list 'geiser-impl--impls impl)))
 
 (defun geiser-impl--unregister (impl)
-  (setq geiser-impl--impls (remove impl geiser-impl--impls)))
+  (setq geiser-impl--impls (remove impl geiser-impl--impls))
+  (ignore-errors (unload-feature (geiser-impl--impl-feature impl))))
+
+(defun geiser-impl--add-to-alist (kind what impl)
+  (add-to-list 'geiser-impl-implementations-alist (list (list kind what) impl)))
 
 (defvar geiser-impl--default-implementation
   geiser-impl-default-implementation)
@@ -73,9 +119,6 @@
 
 
 ;;; Installing Scheme implementations:
-
-(make-variable-buffer-local
- (defvar geiser-impl--implementation nil))
 
 (defvar geiser-impl--impl-prompt-history nil)
 
@@ -97,36 +140,11 @@
     (geiser-impl--install-vars impl)
     (geiser-impl--register impl)))
 
-(defsubst geiser-impl--sym (imp name)
-  (intern (format "geiser-%s-%s" imp name)))
-
-(defsubst geiser-impl--boundp (imp name)
-  (boundp (geiser-impl--sym imp name)))
-
-(defsubst geiser-impl--fboundp (imp name)
-  (fboundp (geiser-impl--sym imp name)))
-
-(defun geiser-impl--value (imp name &optional fun)
-  (let ((sym (geiser-impl--sym imp name)))
-    (unless (or (and (not fun) (boundp sym))
-                (and fun (fboundp sym)))
-      (error "Unbound %s '%s' in Geiser Scheme implementation %s"
-             (if fun "function" "variable") sym imp))
-    (if fun (symbol-function sym) (symbol-value sym))))
-
-(defsubst geiser-impl--call-if-bound (imp name &rest args)
-  (when (geiser-impl--fboundp imp name)
-    (apply (geiser-impl--value imp name t) args)))
-
 (defsubst geiser-impl--module-function (impl)
   (geiser-impl--sym impl "get-module"))
 
 (defsubst geiser-impl--geiser-procedure-function (impl)
   (geiser-impl--sym impl "geiser-procedure"))
-
-(defsubst geiser-impl--external-help-function (impl)
-  (let ((f (geiser-impl--sym impl "external-help")))
-    (and (fboundp f) f)))
 
 (defsubst geiser-impl--symbol-begin (impl)
   (geiser-impl--sym impl "symbol-begin"))
@@ -136,8 +154,6 @@
         (geiser-impl--module-function impl))
   (setq geiser-eval--geiser-procedure-function
         (geiser-impl--geiser-procedure-function impl))
-  (setq geiser-doc--external-help-function
-        (geiser-impl--external-help-function impl))
   (setq geiser-completion--symbol-begin-function
         (geiser-impl--symbol-begin impl)))
 
@@ -150,8 +166,6 @@
          (geiser-impl--module-function imp))
         (geiser-eval--geiser-procedure-function
          (geiser-impl--geiser-procedure-function imp))
-        (geiser-doc--external-help-function
-         (geiser-impl--external-help-function imp))
         (geiser-completion--symbol-begin-function
          (geiser-impl--symbol-begin imp)))
     (funcall thunk)))
@@ -171,7 +185,8 @@
   (geiser-impl--call-if-bound (geiser-impl--default-implementation)
                               "geiser-procedure"
                               proc))
-(set-default 'geiser-eval--geiser-procedure-function 'geiser-impl-geiser-procedure)
+(set-default 'geiser-eval--geiser-procedure-function
+             'geiser-impl-geiser-procedure)
 
 
 ;;; Access to implementation specific execution parameters:
@@ -191,6 +206,12 @@
 (defsubst geiser-impl--startup (impl)
   (geiser-impl--call-if-bound impl "startup"))
 
+(defsubst geiser-impl--external-help (impl symbol module)
+  (geiser-impl--call-if-bound impl "external-help" symbol module))
+
+(defsubst geiser-impl--display-error (impl module key msg)
+  (geiser-impl--call-if-bound impl "display-error" module key msg))
+
 
 ;;; Access to implementation guessing function:
 
@@ -199,22 +220,58 @@
    "Set this buffer local variable to specify the Scheme
 implementation to be used by Geiser."))
 
+(defun geiser-impl--match-impl (desc bn)
+  (let ((rx (if (eq (car desc) 'regexp)
+                (cadr desc)
+              (format "^%s" (regexp-quote (cadr desc))))))
+    (and rx (string-match-p rx bn))))
+
 (defun geiser-impl--guess ()
   (or geiser-impl--implementation
       geiser-scheme-implementation
       (catch 'impl
+        (let ((bn (buffer-file-name)))
+          (when bn
+            (dolist (x geiser-impl-implementations-alist)
+              (when (geiser-impl--match-impl (car x) bn)
+                (throw 'impl (cadr x))))))
         (dolist (impl geiser-impl--impls)
           (when (geiser-impl--call-if-bound impl "guess")
             (throw 'impl impl))))
       (geiser-impl--default-implementation)))
 
 
+;;; User commands
+
+(defun geiser-register-implementation ()
+  "Register a new Scheme implementation."
+  (interactive)
+  (let ((current geiser-impl-installed-implementations)
+        (impl (geiser-impl--read-impl "New Scheme implementation: " nil t)))
+    (unless (geiser-impl--register impl)
+      (error "geiser-%s.el not found in load-path" impl))
+    (when (and (not (memq impl current))
+               (y-or-n-p "Remember this implementation using customize? "))
+      (customize-save-variable
+       'geiser-impl-installed-implementations (cons impl current)))))
+
+(defun geiser-unregister-implementation ()
+  "Unregister an installed Scheme implementation."
+  (interactive)
+  (let* ((current geiser-impl-installed-implementations)
+         (impl (geiser-impl--read-impl "Forget implementation: " current)))
+    (geiser-impl--unregister impl)
+    (when (and impl
+               (y-or-n-p "Forget permanently using customize? "))
+      (customize-save-variable
+       'geiser-impl-installed-implementations (remove impl current)))))
+
+
 ;;; Unload support
 
 (defun geiser-impl-unload-function ()
   (dolist (imp (mapcar 'geiser-impl--impl-feature geiser-impl--impls))
-    (when (featurep imp) (unload-feature imp)))
-  t)
+    (when (featurep imp) (unload-feature imp t))))
 
 (defun geiser-impl--reload-implementations (impls)
   (dolist (impl impls)
@@ -223,8 +280,11 @@ implementation to be used by Geiser."))
 
 ;;; Initialization:
 
-(mapc 'geiser-impl--register geiser-impl-installed-implementations)
+(eval-after-load 'geiser-impl
+  '(mapc 'geiser-impl--register
+         (or geiser-impl-installed-implementations '(guile plt))))
 
 
 (provide 'geiser-impl)
+
 ;;; geiser-impl.el ends here

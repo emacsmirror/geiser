@@ -27,9 +27,6 @@
 
 ;;; Locations:
 
-(defvar geiser-root-dir nil
-  "Geiser's root directory.")
-
 (defvar geiser-elisp-dir nil
   "Directory containing Geiser's Elisp files.")
 
@@ -37,13 +34,18 @@
   "Directory containing Geiser's Scheme files.")
 
 (setq geiser-elisp-dir (file-name-directory load-file-name))
-(setq geiser-scheme-dir (expand-file-name "../scheme/" geiser-elisp-dir))
-(setq geiser-root-dir (expand-file-name "../" geiser-elisp-dir))
-
 (add-to-list 'load-path geiser-elisp-dir)
+
+(setq geiser-scheme-dir (expand-file-name "../scheme/" geiser-elisp-dir))
 
 
 ;;; Autoloads:
+
+(autoload 'geiser-version "geiser-version.el" "Echo Geiser's version." t)
+
+(autoload 'geiser-unload "geiser-reload.el" "Unload all Geiser code." t)
+
+(autoload 'geiser-reload "geiser-reload.el" "Reload Geiser code." t)
 
 (autoload 'geiser "geiser-repl.el"
   "Start a Geiser REPL, or switch to a running one." t)
@@ -85,94 +87,15 @@
         geiser-faces
         geiser-mode
         geiser-guile
-        geiser-plt))
+        geiser-plt
+        geiser-impl
+        geiser-xref))
 
 
-;;; Scheme mode setup:
+;;; Setup:
 
-(defun geiser-setup-scheme-mode ()
-  (eval-after-load "scheme"
-    '(add-hook 'scheme-mode-hook 'turn-on-geiser-mode)))
-
-(defun geiser-setup-implementations (impls)
-  (setq geiser-impl-installed-implementations (or impls '(guile plt))))
-
-(defsubst geiser-impl--impl-feature (impl)
-  (intern (format "geiser-%s" impl)))
-
-(defun geiser-setup (&rest impls)
-  (geiser-setup-implementations impls)
-  (geiser-setup-scheme-mode)
-  (mapc (lambda (impl)
-          (require (geiser-impl--impl-feature impl) nil t))
-        geiser-impl-installed-implementations))
-
-
-;;; Reload:
-
-(defmacro geiser--features-list ()
-  (quote '(
-           geiser-mode
-           geiser-repl
-           geiser-impl
-           geiser-doc
-           geiser-xref
-           geiser-edit
-           geiser-completion
-           geiser-autodoc
-           geiser-compile
-           geiser-debug
-           geiser-eval
-           geiser-connection
-           geiser-syntax
-           geiser-log
-           geiser-custom
-           geiser-base
-           geiser-popup
-           )))
-
-(defun geiser-unload-function ()
-  (dolist (feature (geiser--features-list))
-    (when (featurep feature) (unload-feature feature t)))
-  t)
-
-(defun geiser-unload ()
-  (interactive)
-  (when (featurep 'geiser) (unload-feature 'geiser)))
-
-(defun geiser-reload (&optional arg)
-  "Reload Geiser.
-With prefix arg, prompts for the DIRECTORY in which Geiser should be
-loaded."
-  (interactive "P")
-  (let* ((dir (or (and arg (read-directory-name "New Geiser root dir: "
-                                                geiser-root-dir
-                                                geiser-root-dir
-                                                t
-                                                geiser-root-dir))
-                  geiser-root-dir))
-         (geiser-main-file (expand-file-name "elisp/geiser.el" dir))
-         (impls (and (featurep 'geiser-impl) geiser-impl--impls))
-         (repls (and (featurep 'geiser-repl) (geiser-repl--repl-list)))
-         (buffers (and (featurep 'geiser-mode) (geiser-mode--buffers))))
-    (unless (file-exists-p geiser-main-file)
-      (error "%s does not contain Geiser!" dir))
-    (geiser-unload)
-    (setq load-path (remove geiser-elisp-dir load-path))
-    (load-file geiser-main-file)
-    (geiser-setup)
-    (dolist (feature (reverse (geiser--features-list)))
-      (load-library (format "%s" feature)))
-    (geiser-impl--reload-implementations impls)
-    (geiser-repl--restore repls)
-    (geiser-mode--restore buffers)
-    (message "Geiser reloaded!")))
-
-
-;; Initialization:
-
-(geiser-setup)
+(eval-after-load "scheme"
+  '(add-hook 'scheme-mode-hook 'turn-on-geiser-mode))
 
 
 (provide 'geiser)
-;;; geiser.el ends here

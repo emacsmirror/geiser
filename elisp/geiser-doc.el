@@ -24,7 +24,9 @@
 
 ;;; Code:
 
+(require 'geiser-impl)
 (require 'geiser-completion)
+(require 'geiser-autodoc)
 (require 'geiser-eval)
 (require 'geiser-syntax)
 (require 'geiser-popup)
@@ -157,32 +159,27 @@
 
 ;;; Commands:
 
-(make-variable-buffer-local
- (defvar geiser-doc--external-help-function nil))
-
-(defun geiser-doc--external-help (symbol module)
-  (and geiser-doc--external-help-function
-       (funcall geiser-doc--external-help-function symbol module)))
-
 (defun geiser-doc--get-docstring (symbol module)
-  (geiser-eval--send/result `(:eval ((:ge symbol-documentation) ',symbol) ,module)))
+  (geiser-eval--send/result
+   `(:eval ((:ge symbol-documentation) ',symbol) ,module)))
 
 (defun geiser-doc--get-module-exports (module)
   (geiser-eval--send/result `(:eval ((:ge module-exports) (:module ,module)))))
 
 (defun geiser-doc-symbol (symbol &optional module impl)
-  (let ((module (or module (geiser-eval--get-module))))
-    (unless (geiser-doc--external-help symbol module)
-      (let ((impl (or impl geiser-impl--implementation))
-            (ds (geiser-doc--get-docstring symbol module)))
+  (let ((module (or module (geiser-eval--get-module)))
+        (impl (or impl geiser-impl--implementation)))
+    (unless (geiser-impl--external-help impl symbol module)
+      (let ((ds (geiser-doc--get-docstring symbol module)))
         (if (or (not ds) (not (listp ds)))
             (message "No documentation available for '%s'" symbol)
           (geiser-doc--with-buffer
             (erase-buffer)
-            (geiser-doc--insert-title (cdr (assoc 'signature ds)))
+            (geiser-doc--insert-title (geiser-autodoc--str (list (format "%s" symbol) 0)
+                                                           (cdr (assoc 'signature ds))))
             (newline)
             (insert (or (cdr (assoc 'docstring ds)) ""))
-            (goto-line (point-min))
+            (goto-char (point-min))
             (setq geiser-doc--buffer-link
                   (geiser-doc--history-push
                    (geiser-doc--make-link symbol module impl))))
@@ -193,7 +190,8 @@
 With prefix argument, ask for symbol (with completion)."
   (interactive "P")
   (let ((symbol (or (and (not arg) (symbol-at-point))
-                    (geiser-completion--read-symbol "Symbol: " (symbol-at-point)))))
+                    (geiser-completion--read-symbol "Symbol: "
+                                                    (symbol-at-point)))))
     (when symbol (geiser-doc-symbol symbol))))
 
 
@@ -219,7 +217,8 @@ With prefix argument, ask for symbol (with completion)."
                                    impl))
         (goto-char (point-min))
         (setq geiser-doc--buffer-link
-              (geiser-doc--history-push (geiser-doc--make-link nil module impl))))
+              (geiser-doc--history-push
+               (geiser-doc--make-link nil module impl))))
       (geiser-doc--pop-to-buffer))))
 
 (defun geiser-doc-next (&optional forget-current)

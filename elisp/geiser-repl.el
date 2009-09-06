@@ -24,6 +24,7 @@
 
 ;;; Code:
 
+(require 'geiser-company)
 (require 'geiser-autodoc)
 (require 'geiser-edit)
 (require 'geiser-impl)
@@ -69,6 +70,11 @@ implementation name gets appended to it."
   "Whether to enable `geiser-autodoc-mode' in the REPL by default."
   :type 'boolean
   :group 'geiser-repl)
+
+(defcustom geiser-repl-company-p t
+  "Whether to use company-mode for completion, if available."
+  :group 'geiser-mode
+  :type 'boolean)
 
 (defcustom geiser-repl-read-only-prompt-p t
   "Whether the REPL's prompt should be read-only."
@@ -141,8 +147,8 @@ implementation name gets appended to it."
     (geiser-repl--history-setup)
     (geiser-con--setup-connection (current-buffer) prompt-rx)
     (add-to-list 'geiser-repl--repls (current-buffer))
-    (geiser-impl--startup impl)
-    (geiser-repl--set-this-buffer-repl (current-buffer))))
+    (geiser-repl--set-this-buffer-repl (current-buffer))
+    (geiser-impl--startup impl)))
 
 (defun geiser-repl--process ()
   (let ((buffer (geiser-repl--get-repl geiser-impl--implementation)))
@@ -152,8 +158,10 @@ implementation name gets appended to it."
 (setq geiser-eval--default-proc-function 'geiser-repl--process)
 
 (defun geiser-repl--wait-for-prompt (timeout)
-  (let ((p (point)) (seen))
-    (while (and (not seen) (> timeout 0))
+  (let ((p (point)) (seen) (buffer (current-buffer)))
+    (while (and (not seen)
+                (> timeout 0)
+                (get-buffer-process buffer))
       (sleep-for 0.1)
       (setq timeout (- timeout 100))
       (goto-char p)
@@ -176,7 +184,8 @@ implementation name gets appended to it."
   (interactive
    (list (or (geiser-repl--only-impl-p)
              (and (eq major-mode 'geiser-repl-mode) geiser-impl--implementation)
-             (geiser-repl--read-impl "Start Geiser for scheme implementation: "))))
+             (geiser-repl--read-impl
+              "Start Geiser for scheme implementation: "))))
    (geiser-repl--start-repl impl))
 
 (defun switch-to-geiser (&optional ask impl)
@@ -254,7 +263,8 @@ If no REPL is running, execute `run-geiser' to start a fresh one."
   (set (make-local-variable 'comint-input-filter) 'geiser-repl--input-filter)
   (add-hook 'kill-buffer-hook 'geiser-repl--on-kill nil t)
   (comint-read-input-ring t)
-  (set-process-sentinel (get-buffer-process (current-buffer)) 'geiser-repl--sentinel))
+  (set-process-sentinel (get-buffer-process (current-buffer))
+                        'geiser-repl--sentinel))
 
 
 ;;; geiser-repl mode:
@@ -288,18 +298,22 @@ If no REPL is running, execute `run-geiser' to start a fresh one."
        'geiser-repl--beginning-of-defun)
   (set-syntax-table scheme-mode-syntax-table)
   (setq geiser-eval--get-module-function 'geiser-repl--module-function)
-  (when geiser-repl-autodoc-p (geiser-autodoc-mode 1)))
+  (when geiser-repl-autodoc-p (geiser-autodoc-mode 1))
+  (geiser-company--setup geiser-repl-company-p)
+  (compilation-shell-minor-mode 1))
 
 (define-key geiser-repl-mode-map "\C-d" 'delete-char)
 
-(define-key geiser-repl-mode-map "\C-cz" 'run-geiser)
-(define-key geiser-repl-mode-map "\C-c\C-z" 'run-geiser)
+(define-key geiser-repl-mode-map "\C-ck" 'geiser-repl-nuke)
+(define-key geiser-repl-mode-map "\C-c\C-k" 'geiser-repl-nuke)
+
+(define-key geiser-repl-mode-map "\C-cz" 'switch-to-geiser)
+(define-key geiser-repl-mode-map "\C-c\C-z" 'switch-to-geiser)
 (define-key geiser-repl-mode-map "\C-a" 'geiser-repl--bol)
 (define-key geiser-repl-mode-map (kbd "<home>") 'geiser-repl--bol)
 (define-key geiser-repl-mode-map "\C-ca" 'geiser-autodoc-mode)
 (define-key geiser-repl-mode-map "\C-cd" 'geiser-doc-symbol-at-point)
 (define-key geiser-repl-mode-map "\C-cm" 'geiser-repl--doc-module)
-(define-key geiser-repl-mode-map "\C-ck" 'geiser-compile-file)
 (define-key geiser-repl-mode-map "\C-cl" 'geiser-load-file)
 
 (define-key geiser-repl-mode-map "\M-p" 'comint-previous-matching-input-from-input)
@@ -326,7 +340,7 @@ If no REPL is running, execute `run-geiser' to start a fresh one."
 
 (defun geiser-repl--restore (impls)
   (dolist (impl impls)
-    (when impl (geiser impl))))
+    (when impl (geiser nil impl))))
 
 (defun geiser-repl-unload-function ()
   (dolist (repl geiser-repl--repls)

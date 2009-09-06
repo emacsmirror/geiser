@@ -25,6 +25,7 @@
 
 ;;; Code:
 
+(require 'geiser-impl)
 (require 'geiser-eval)
 (require 'geiser-popup)
 (require 'geiser-base)
@@ -32,15 +33,23 @@
 
 ;;; Debug buffer mode:
 
-(defconst geiser-debug--error-alist
-  '(("^\\(In file +\\| +\\)\\([^ \n]+\\):\\([0-9]+\\):\\([0-9]+\\)" 2 3 4)
-    ("^Error.+$" nil nil nil 0)))
+(defvar geiser-debug-mode-map
+  (let ((map (make-sparse-keymap)))
+    (suppress-keymap map)
+    (set-keymap-parent map button-buffer-map)
+    map))
 
-(define-derived-mode geiser-debug-mode compilation-mode "Geiser Dbg"
+(defun geiser-debug-mode ()
   "A major mode for displaying Scheme compilation and evaluation results.
 \\{geiser-debug-mode-map}"
-  (set (make-local-variable 'compilation-error-regexp-alist)
-       geiser-debug--error-alist))
+  (interactive)
+  (kill-all-local-variables)
+  (buffer-disable-undo)
+  (use-local-map geiser-debug-mode-map)
+  (set-syntax-table scheme-mode-syntax-table)
+  (setq mode-name "Geiser DBG")
+  (setq major-mode 'geiser-debug-mode)
+  (setq buffer-read-only t))
 
 
 ;;; Buffer for displaying evaluation results:
@@ -50,41 +59,24 @@
 
 ;;; Displaying retorts
 
-(defun geiser-debug--display-retort (what ret)
+(defun geiser-debug--display-retort (what ret &optional res)
   (let* ((err (geiser-eval--retort-error ret))
+         (key (geiser-eval--error-key err))
          (output (geiser-eval--retort-output ret))
-         (stack (geiser-eval--retort-stack ret)))
+         (impl geiser-impl--implementation)
+         (module (geiser-eval--get-module)))
     (geiser-debug--with-buffer
       (erase-buffer)
       (insert what)
       (newline 2)
-      (when err (insert (geiser-eval--error-str err) "\n\n"))
-      (when output (insert output "\n\n"))
-      (when stack (geiser-debug--display-stack stack))
+      (when res
+        (insert res)
+        (newline 2))
+      (unless (geiser-impl--display-error impl module key output)
+        (when err (insert (geiser-eval--error-str err) "\n\n"))
+        (when output (insert output "\n\n")))
       (goto-char (point-min)))
     (when err (geiser-debug--pop-to-buffer))))
-
-(defsubst geiser-debug--frame-proc (frame) (cdr (assoc 'procedure frame)))
-(defsubst geiser-debug--frame-desc (frame) (cdr (assoc 'description frame)))
-(defsubst geiser-debug--frame-source (frame) (cdr (assoc 'source frame)))
-(defsubst geiser-debug--frame-source-file (src) (car src))
-(defsubst geiser-debug--frame-source-line (src) (or (cadr src) 1))
-(defsubst geiser-debug--frame-source-column (src) (or (caddr src) 0))
-
-(defun geiser-debug--display-stack (stack)
-  (mapc 'geiser-debug--display-stack-frame (reverse (cdr stack))))
-
-(defun geiser-debug--display-stack-frame (frame)
-  (let ((procedure (geiser-debug--frame-proc frame))
-        (source (geiser-debug--frame-source frame))
-        (description (geiser-debug--frame-desc frame)))
-    (if source
-        (insert (format "In file %s:%s:%s\n"
-                        (geiser-debug--frame-source-file source)
-                        (geiser-debug--frame-source-line source)
-                        (1+ (geiser-debug--frame-source-column source))))
-      (insert "In expression:\n"))
-    (insert (format "%s\n" description))))
 
 (defsubst geiser-debug--wrap-region (str)
   (format "(begin %s)" str))
@@ -99,10 +91,11 @@
          (wrapped (if wrap (geiser-debug--wrap-region str) str))
          (code `(,(if compile :comp :eval) (:scm ,wrapped)))
          (ret (geiser-eval--send/wait code))
+         (res (geiser-eval--retort-result-str ret))
          (err (geiser-eval--retort-error ret)))
     (when and-go (funcall and-go))
-    (when (not err) (message (format "=> %s" (geiser-eval--retort-result ret))))
-    (geiser-debug--display-retort str ret)))
+    (when (not err) (message "%s" res))
+    (geiser-debug--display-retort str ret res)))
 
 (defun geiser-debug--expand-region (start end all wrap)
   (let* ((str (buffer-substring-no-properties start end))

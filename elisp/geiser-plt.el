@@ -24,6 +24,8 @@
 
 ;;; Code:
 
+(require 'geiser-edit)
+(require 'geiser-doc)
 (require 'geiser-eval)
 (require 'geiser-syntax)
 (require 'geiser-custom)
@@ -109,7 +111,7 @@ This function uses `geiser-plt-init-file' if it exists."
       :f)))
 
 (defun geiser-plt-get-module (&optional module)
-  (cond ((and (null module) (geiser-plt--explicit-module)))
+  (cond ((and (null module) (buffer-file-name))) ;; (geiser-plt--explicit-module)
         ((null module) (geiser-plt--implicit-module))
         ((symbolp module) module)
         ((and (stringp module) (file-name-absolute-p module)) module)
@@ -121,10 +123,44 @@ This function uses `geiser-plt-init-file' if it exists."
 
 
 ;;; External help
+
 (defun geiser-plt-external-help (symbol module)
   (message "Requesting help for '%s'..." symbol)
-  (geiser-eval--send/wait `(:eval (get-help ',symbol (:module ,module)) geiser/autodoc))
+  (geiser-eval--send/wait
+   `(:eval (get-help ',symbol (:module ,module)) geiser/autodoc))
   (minibuffer-message "%s done" (current-message))
+  t)
+
+
+;;; Error display
+
+(defconst geiser-plt--file-rxs '("^\\([^:\n\"]+\\):\\([0-9]+\\):\\([0-9]+\\)"
+                                 "path:\"?\\([^>\"\n]+\\)\"?>"
+                                 "module: \"\\([^>\"\n]+\\)\""))
+
+(defun geiser-plt--find-files (rx)
+  (save-excursion
+    (while (re-search-forward rx nil t)
+      (geiser-edit--make-link (match-beginning 1)
+                              (match-end 1)
+                              (match-string 1)
+                              (match-string 2)
+                              (match-string 3)))))
+
+(defun geiser-plt-display-error (module key msg)
+  (when key
+    (insert "Error: ")
+    (geiser-doc--insert-button key nil 'plt)
+    (newline 2))
+  (when msg
+    (let ((p (point)))
+      (insert msg)
+      (let ((end (point)))
+        (goto-char p)
+        (mapc 'geiser-plt--find-files geiser-plt--file-rxs)
+        (goto-char end)
+        (fill-region p end)
+        (newline))))
   t)
 
 
@@ -135,7 +171,7 @@ This function uses `geiser-plt-init-file' if it exists."
         (goto-char (point-min))
         (re-search-forward "#lang " nil t))
       (geiser-plt--explicit-module)
-      (string-equal (file-name-extension (buffer-file-name)) "ss")))
+      (string-equal (file-name-extension (or (buffer-file-name) "")) "ss")))
 
 
 (provide 'geiser-plt)

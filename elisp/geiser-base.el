@@ -25,25 +25,9 @@
 
 ;;; Code:
 
-
-;;; Versioning:
-
-(defconst geiser-version-major 0
-  "Geiser's major version number.")
-(defconst geiser-version-minor 1
-  "Geiser's minor version number.")
-
-(defun geiser-version-string ()
-  "Geiser's version as a string."
-  (format "%s.%s" geiser-version-major geiser-version-minor))
-
-(defun geiser-version ()
-  "Echoes Geiser's version."
-  (interactive)
-  (message "Geiser %s" (geiser-version-string)))
-
-
 ;;; Emacs compatibility:
+
+(require 'cl)
 
 (eval-after-load "ring"
   '(when (not (fboundp 'ring-member))
@@ -55,7 +39,6 @@
 
 (when (not (fboundp 'completion-table-dynamic))
   (defun completion-table-dynamic (fun)
-    (require 'cl)
     (lexical-let ((fun fun))
       (lambda (string pred action)
         (with-current-buffer (let ((win (minibuffer-selected-window)))

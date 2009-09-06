@@ -54,25 +54,6 @@ EVAL, COMPILE, LOAD-FILE and COMPILE-FILE should be supported."))
 
 ;;; Code formatting:
 
-(defun geiser-eval--scheme-str (code)
-  (cond ((null code) "'()")
-        ((eq code :f) "#f")
-        ((eq code :t) "#t")
-        ((listp code)
-         (cond ((eq (car code) :eval) (geiser-eval--eval (cdr code)))
-               ((eq (car code) :comp) (geiser-eval--comp (cdr code)))
-               ((eq (car code) :load-file)
-                (geiser-eval--load-file (cadr code)))
-               ((eq (car code) :comp-file)
-                (geiser-eval--comp-file (cadr code)))
-               ((eq (car code) :module) (geiser-eval--module (cadr code)))
-               ((eq (car code) :ge) (geiser-eval--ge (cadr code)))
-               ((eq (car code) :scm) (cadr code))
-               (t (concat "("
-                          (mapconcat 'geiser-eval--scheme-str code " ") ")"))))
-        ((symbolp code) (format "%s" code))
-        (t (format "%S" code))))
-
 (defsubst geiser-eval--eval (code)
   (geiser-eval--scheme-str
    `(,(geiser-eval--form 'eval) (quote ,(nth 0 code))
@@ -98,6 +79,25 @@ EVAL, COMPILE, LOAD-FILE and COMPILE-FILE should be supported."))
 
 (defsubst geiser-eval--ge (proc)
   (geiser-eval--scheme-str (geiser-eval--form proc)))
+
+(defun geiser-eval--scheme-str (code)
+  (cond ((null code) "'()")
+        ((eq code :f) "#f")
+        ((eq code :t) "#t")
+        ((listp code)
+         (cond ((eq (car code) :eval) (geiser-eval--eval (cdr code)))
+               ((eq (car code) :comp) (geiser-eval--comp (cdr code)))
+               ((eq (car code) :load-file)
+                (geiser-eval--load-file (cadr code)))
+               ((eq (car code) :comp-file)
+                (geiser-eval--comp-file (cadr code)))
+               ((eq (car code) :module) (geiser-eval--module (cadr code)))
+               ((eq (car code) :ge) (geiser-eval--ge (cadr code)))
+               ((eq (car code) :scm) (cadr code))
+               (t (concat "("
+                          (mapconcat 'geiser-eval--scheme-str code " ") ")"))))
+        ((symbolp code) (format "%s" code))
+        (t (format "%S" code))))
 
 
 ;;; Code sending:
@@ -145,11 +145,17 @@ EVAL, COMPILE, LOAD-FILE and COMPILE-FILE should be supported."))
 
 (defun geiser-eval--retort-result (ret)
   (let ((values (cdr (assoc 'result ret))))
-    (if (> (length values) 1) (cons :values values) (car values))))
+    (and (stringp (car values))
+         (ignore-errors (car (read-from-string (car values)))))))
+
+(defun geiser-eval--retort-result-str (ret)
+  (let ((values (cdr (assoc 'result ret))))
+    (if values
+        (concat "=> " (mapconcat 'identity values "\n=> "))
+      "(No value)")))
 
 (defsubst geiser-eval--retort-output (ret) (cdr (assoc 'output ret)))
 (defsubst geiser-eval--retort-error (ret) (cdr (assoc 'error ret)))
-(defsubst geiser-eval--retort-stack (ret) (cdr (assoc 'stack ret)))
 
 (defsubst geiser-eval--error-key (err) (cdr (assoc 'key err)))
 (defsubst geiser-eval--error-subr (err) (cdr (assoc 'subr err)))
@@ -160,7 +166,7 @@ EVAL, COMPILE, LOAD-FILE and COMPILE-FILE should be supported."))
   (let* ((key (geiser-eval--error-key err))
          (key-str (if key (format ": %s" key) ":"))
          (subr (geiser-eval--error-subr err))
-         (subr-str (if subr (format " (%s):" subr) ":"))
+         (subr-str (if subr (format " (%s):" subr) ""))
          (msg (geiser-eval--error-msg err))
          (msg-str (if msg (format "\n  %s" msg) ""))
          (rest (geiser-eval--error-rest err))

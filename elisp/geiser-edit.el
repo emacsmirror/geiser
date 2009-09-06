@@ -44,7 +44,11 @@
 
 (geiser-edit--define-custom-visit
  geiser-edit-symbol-method geiser-mode
- "How the new buffer is opened when invoking \\[geiser-edit-symbol-at-point].")
+ "How the new buffer is opened when invoking \\[geiser-edit-symbol-at-point]
+or following links in error buffers.")
+
+(geiser-custom--defface error-link
+  'link geiser-debug "links in error buffers")
 
 
 ;;; Auxiliar functions:
@@ -52,6 +56,7 @@
 (defun geiser-edit--visit-file (file method)
   (cond ((eq method 'window) (find-file-other-window file))
         ((eq method 'frame) (find-file-other-frame file))
+        ((eq method 'noselect) (find-file-noselect file t))
         (t (find-file file))))
 
 (defsubst geiser-edit--location-name (loc)
@@ -60,8 +65,18 @@
 (defsubst geiser-edit--location-file (loc)
   (cdr (assoc 'file loc)))
 
+(defsubst geiser-edit--to-number (x)
+  (cond ((numberp x) x)
+        ((stringp x) (string-to-number x))))
+
 (defsubst geiser-edit--location-line (loc)
-  (cdr (assoc 'line loc)))
+  (geiser-edit--to-number (cdr (assoc 'line loc))))
+
+(defsubst geiser-edit--location-column (loc)
+  (geiser-edit--to-number (cdr (assoc 'column loc))))
+
+(defsubst geiser-edit--make-location (name file line column)
+  `((name . ,name) (file . ,file) (line . ,line) (column . ,column)))
 
 (defconst geiser-edit--def-re
   (regexp-opt '("define"
@@ -92,8 +107,9 @@
   (format "\\_<%s\\_>" (regexp-quote (format "%s" thing))))
 
 (defun geiser-edit--goto-line (symbol line)
+  (goto-char (point-min))
   (if (numberp line)
-      (goto-line line)
+      (forward-line (max 0 (1- line)))
     (goto-char (point-min))
     (when (or (re-search-forward (geiser-edit--def-re symbol) nil t)
               (re-search-forward (geiser-edit--def-re* symbol) nil t)
@@ -103,26 +119,51 @@
 (defun geiser-edit--try-edit-location (symbol loc &optional method)
   (let ((symbol (or (geiser-edit--location-name loc) symbol))
         (file (geiser-edit--location-file loc))
-        (line (geiser-edit--location-line loc)))
+        (line (geiser-edit--location-line loc))
+        (col (geiser-edit--location-column loc)))
     (unless file (error "Couldn't find edit location for '%s'" symbol))
     (unless (file-readable-p file) (error "Couldn't open '%s' for read" file))
     (geiser-edit--visit-file file (or method geiser-edit-symbol-method))
-    (geiser-edit--goto-line symbol line)))
+    (geiser-edit--goto-line symbol line)
+    (when col
+      (beginning-of-line)
+      (forward-char col))
+    (cons (current-buffer) (point))))
 
-(defsubst geiser-edit--try-edit (symbol ret)
-  (geiser-edit--try-edit-location symbol (geiser-eval--retort-result ret)))
+(defsubst geiser-edit--try-edit (symbol ret &optional method)
+  (geiser-edit--try-edit-location symbol (geiser-eval--retort-result ret) method))
+
+
+;;; Links
+
+(define-button-type 'geiser-edit--button
+  'action 'geiser-edit--button-action
+  'face 'geiser-font-lock-error-link
+  'follow-link t)
+
+(defun geiser-edit--button-action (button)
+  (let ((loc (button-get button 'geiser-location)))
+    (when loc (geiser-edit--try-edit-location nil loc))))
+
+(defun geiser-edit--make-link (beg end file line col)
+  (make-button beg end
+               :type 'geiser-edit--button
+               'geiser-location
+               (geiser-edit--make-location 'error file line col)
+               'help-echo "Go to error location"))
 
 
 ;;; Commands:
 
-(defun geiser-edit-symbol ()
+(defvar geiser-edit--symbol-history nil)
+
+(defun geiser-edit-symbol (symbol &optional method)
   "Asks for a symbol to edit, with completion."
-  (interactive)
-  (let* ((symbol (geiser-completion--read-symbol "Edit symbol: "
-                                                nil
-                                                geiser-edit--symbol-history))
-         (cmd `(:eval ((:ge symbol-location) ',symbol))))
-    (geiser-edit--try-edit symbol (geiser-eval--send/wait cmd))))
+  (interactive (list (geiser-completion--read-symbol "Edit symbol: "
+                                                     nil
+                                                     geiser-edit--symbol-history)))
+  (let ((cmd `(:eval ((:ge symbol-location) ',symbol))))
+    (geiser-edit--try-edit symbol (geiser-eval--send/wait cmd) method)))
 
 (defun geiser-edit-symbol-at-point (&optional arg)
   "Opens a new window visiting the definition of the symbol at point.
@@ -142,11 +183,11 @@ With prefix, asks for the symbol to edit."
       (pop-tag-mark)
     (error "No previous location for find symbol invocation")))
 
-(defun geiser-edit-module (module)
+(defun geiser-edit-module (module &optional method)
   "Asks for a module and opens it in a new buffer."
   (interactive (list (geiser-completion--read-module)))
   (let ((cmd `(:eval ((:ge module-location) (:module ,module)))))
-    (geiser-edit--try-edit module (geiser-eval--send/wait cmd))))
+    (geiser-edit--try-edit module (geiser-eval--send/wait cmd) method)))
 
 
 (provide 'geiser-edit)

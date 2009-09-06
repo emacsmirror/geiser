@@ -2,3 +2,14 @@
 /scheme/guile/geiser/eval.go
 /scheme/guile/geiser/introspection.go
 /scheme/guile/geiser/file.go
+/Makefile
+/Makefile.in
+/aclocal.m4
+/configure
+/elisp-comp
+/elisp/Makefile.in
+/install-sh
+/missing
+/scheme/Makefile.in
+/scheme/guile/Makefile.in
+/scheme/guile/geiser/Makefile.in

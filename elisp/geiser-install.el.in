@@ -1,0 +1,5 @@
+(require 'geiser)
+
+(setq geiser-scheme-dir "@SCHEME_DIR@")
+
+(provide 'geiser-install)

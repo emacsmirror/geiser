@@ -29,7 +29,7 @@
 (require 'geiser-syntax)
 (require 'geiser-base)
 
-(eval-when-compile (require 'cl))
+(require 'cl)
 
 
 ;;; Completions window handling, heavily inspired in slime's:
@@ -84,7 +84,7 @@ terminates a current completion."
   (remove-hook 'pre-command-hook
                'geiser-completion--maybe-restore-window-cfg)
   (condition-case err
-      (cond ((find last-command-char "()\"'`,# \r\n:")
+      (cond ((find last-command-event "()\"'`,# \r\n:")
              (geiser-completion--restore-window-cfg))
             ((not (geiser-completion--window-active-p))
              (geiser-completion--forget-window-cfg))
@@ -146,11 +146,10 @@ terminates a current completion."
 
 ;;; Completion functionality:
 
-(defsubst geiser-completion--symbol-list (prefix)
+(defun geiser-completion--symbol-list (prefix)
   (delete-duplicates
-   (geiser-eval--send/result
-    `(:eval ((:ge completions) ,prefix
-             (quote (:scm ,(or (geiser-syntax--get-partial-sexp) "()"))))))
+   (append (mapcar (lambda (s) (format "%s" s)) (geiser-syntax--locals-around-point))
+           (geiser-eval--send/result `(:eval ((:ge completions) ,prefix))))
    :test 'string=))
 
 (defsubst geiser-completion--module-list (prefix)
@@ -205,14 +204,16 @@ terminates a current completion."
            (funcall geiser-completion--symbol-begin-function module))
       (save-excursion (skip-syntax-backward "^-()>") (point))))
 
+(defsubst geiser-completion--prefix (module)
+  (buffer-substring-no-properties (point)
+                                  (geiser-completion--symbol-begin module)))
+
 (defun geiser-completion--complete-symbol (&optional arg)
   "Complete the symbol at point.
 Perform completion similar to Emacs' complete-symbol.
 With prefix, complete module name."
   (interactive "P")
-  (let* ((end (point))
-         (beg (geiser-completion--symbol-begin arg))
-         (prefix (buffer-substring-no-properties beg end))
+  (let* ((prefix (geiser-completion--prefix arg))
          (result (geiser-completion--complete prefix arg))
          (completions (car result))
          (partial (cdr result)))

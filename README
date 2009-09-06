@@ -22,35 +22,75 @@
 
    Currently supported implementations are Guile and PLT.
 
-    - Guile works only with the development, vm-based binary. Be sure
-      to customize `geiser-repl-guile-binary' to point to a correct vm
-      binary.
+    - Guile 1.9.x virtual machine required.
     - PLT Scheme 4.1.5.5 or better required.
 
 * Installation
+  Geiser can be used either directly from its uninstalled source tree
+  or byte-compiled and installed after perfoming the standard
+  configure/make/make install dance.
 
-  - In your .emacs:
+*** In place
+    - Extract the tarball or clone the git repository anywhere in your
+      file system. Let's call that place <path-to-geiser>.
+    - In your .emacs:
 
-     (load-file "<path-to-geiser>/elisp/geiser.el")
+      (load-file "<path-to-geiser>/elisp/geiser.el")
 
-    This installs all supported Scheme implementations. You can list
-    explicitly the ones that you want by setting the variable
-    `geiser-impl-installed-implementations' *before* loading geiser.el.
-    For instance:
+*** Byte-compiled
+    - Create a build directory, `build', say:
+      $ cd <path-to-geiser>
+      $ mkdir build; cd build
+    - Configure and make:
+      $ ../configure && make
+    You'll have a directory called "elisp" which contains Geiser's
+    elisp bytecode. Now, you can either use it in place, with the
+    .emacs incantation:
 
-     (setq geiser-impl-installed-implementations '(plt guile))
+      (load-file "<path-to-geiser>/build/elisp/geiser.elc")
 
-    On opening a scheme file, Geiser will try to guess its Scheme,
-    defaulting to the first in the list.
+    or install it with:
 
-  - Check the geiser customization group for some options with:
+      $ make install
+
+    and require 'geiser-install (not 'geiser, mind you) in your emacs
+    initialization file:
+
+      (require 'geiser-install)
+
+    You're ready to go!
+
+* Basic configuration
+  The loading invocations above install all supported Scheme
+  implementations. You can list explicitly the ones that you want by
+  setting the variable `geiser-impl-installed-implementations' *before*
+  loading geiser.el. For instance:
+
+      (setq geiser-impl-installed-implementations '(plt guile))
+
+   On opening a scheme file, Geiser will try to guess its Scheme,
+   defaulting to the first in the list. Use `C-c C-s' to select the
+   implementation by hand (on a per file basis).
+
+  Check the geiser customization group for some options with:
 
       M-x customize-group RET geiser RET
 
-    In particular, customize `geiser-repl-<impl>-binary' (in
-    geiser-repl), which should point to an executable in your path.
+  In particular, customize `geiser-repl-<impl>-binary' (in
+  geiser-repl), which should point to an executable in your path.
 
-  - To start a REPL, M-x geiser.
+  To start a REPL, M-x geiser.
+
+*** Completion with company-mode
+    Geiser offers identifier and module name completion, bound to
+    M-TAB and M-` respectively. Only names visible in the current
+    module are offered.
+
+    While that is cool and all, things are even better: if you have
+    [[http://nschum.de/src/emacs/company-mode/][company-mode]] installed, Geiser's completion will use it. Just
+    require company-mode and, from then on, any new scheme buffer or
+    REPL will use it. If you didn't know about Nikolaj Schumacher's
+    awesome mode, check [[http://www.screentoaster.com/watch/stU0lSRERIR1pYRFVdXVlRVFFV/company_mode_for_gnu_emacs][this screencast]].
 
 * Quick key reference
 
@@ -94,22 +134,23 @@
 
 *** In the REPL
 
-    |----------------+-------------------------------------------|
-    | C-c C-z, C-c z | Start Scheme REPL (if it's not running)   |
-    |----------------+-------------------------------------------|
-    | M-.            | Edit identifier at point                  |
-    | TAB, M-TAB     | Complete identifier at point              |
-    | M-`, C-.       | Complete module name at point             |
-    |----------------+-------------------------------------------|
-    | M-p, M-n       | Prompt history, matching current prefix   |
-    |----------------+-------------------------------------------|
-    | C-c k          | Compile and load scheme file              |
-    | C-c l          | Load scheme file                          |
-    |----------------+-------------------------------------------|
-    | C-c d          | See documentation for identifier at point |
-    | C-c m          | See module documentation                  |
-    | C-c a          | Toggle autodoc mode                       |
-    |----------------+-------------------------------------------|
+    |----------------+----------------------------------------------------|
+    | C-c C-z, C-c z | Start Scheme REPL (if it's not running)            |
+    |----------------+----------------------------------------------------|
+    | M-.            | Edit identifier at point                           |
+    | TAB, M-TAB     | Complete identifier at point                       |
+    | M-`, C-.       | Complete module name at point                      |
+    |----------------+----------------------------------------------------|
+    | M-p, M-n       | Prompt history, matching current prefix            |
+    |----------------+----------------------------------------------------|
+    | C-c C-k, C-c k | Nuke REPL: use it if the REPL becomes unresponsive |
+    |----------------+----------------------------------------------------|
+    | C-c l          | Load scheme file                                   |
+    |----------------+----------------------------------------------------|
+    | C-c d          | See documentation for identifier at point          |
+    | C-c m          | See module documentation                           |
+    | C-c a          | Toggle autodoc mode                                |
+    |----------------+----------------------------------------------------|
 
 *** In the documentation browser:
 
