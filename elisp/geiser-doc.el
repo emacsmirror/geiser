@@ -1,28 +1,15 @@
-;; geiser-doc.el -- accessing documentation
+;;; geiser-doc.el -- accessing scheme-provided documentation
 
 ;; Copyright (C) 2009 Jose Antonio Ortega Ruiz
 
-;; Author: Jose Antonio Ortega Ruiz <jao@gnu.org>
+;; This program is free software; you can redistribute it and/or
+;; modify it under the terms of the Modified BSD License. You should
+;; have received a copy of the license along with this program. If
+;; not, see <http://www.xfree86.org/3.3.6/COPYRIGHT2.html#5>.
+
 ;; Start date: Sat Feb 14, 2009 14:09
 
-;; This file is free software; you can redistribute it and/or modify
-;; it under the terms of the GNU General Public License as published by
-;; the Free Software Foundation; either version 3 of the License, or
-;; (at your option) any later version.
-
-;; This file is distributed in the hope that it will be useful,
-;; but WITHOUT ANY WARRANTY; without even the implied warranty of
-;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-;; GNU General Public License for more details.
-
-;; You should have received a copy of the GNU General Public License
-;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-;;; Comentary:
-
-;; Utilities for accessing docstrings and texinfo documentation.
-
-;;; Code:
+
 
 (require 'geiser-impl)
 (require 'geiser-completion)
