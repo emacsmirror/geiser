@@ -25,7 +25,7 @@
   "Customization for Geiser's PLT flavour."
   :group 'geiser)
 
-(defcustom geiser-plt-binary
+(geiser-custom--defcustom geiser-plt-binary
   (cond ((eq system-type 'windows-nt) "MzScheme.exe")
         ((eq system-type 'darwin) "mzscheme")
         (t "mzscheme"))
@@ -33,12 +33,12 @@
   :type '(choice string (repeat string))
   :group 'geiser-plt)
 
-(defcustom geiser-plt-collects nil
+(geiser-custom--defcustom geiser-plt-collects nil
   "A list of paths to be added to mzscheme's collection directories."
   :type '(repeat file)
   :group 'geiser-plt)
 
-(defcustom geiser-plt-init-file "~/.plt-geiser"
+(geiser-custom--defcustom geiser-plt-init-file "~/.plt-geiser"
   "Initialization file with user code for the mzscheme REPL."
   :type 'string
   :group 'geiser-plt)

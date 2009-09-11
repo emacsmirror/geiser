@@ -12,6 +12,7 @@
 
 
 (require 'geiser-eval)
+(require 'geiser-custom)
 (require 'geiser-base)
 (require 'geiser-completion)
 
@@ -22,17 +23,17 @@
   "Generic support for multiple Scheme implementations."
   :group 'geiser)
 
-(defcustom geiser-impl-default-implementation nil
+(geiser-custom--defcustom geiser-impl-default-implementation nil
   "Symbol naming the default Scheme implementation."
   :type 'symbol
   :group 'geiser-impl)
 
-(defcustom geiser-impl-installed-implementations nil
+(geiser-custom--defcustom geiser-impl-installed-implementations nil
   "Initial list of installed Scheme implementations."
   :type '(repeat symbol)
   :group 'geiser-impl)
 
-(defcustom geiser-impl-implementations-alist nil
+(geiser-custom--defcustom geiser-impl-implementations-alist nil
   "A map from regular expressions or directories to implementations.
 When opening a new file, its full path will be matched against
 each one of the regular expressions or directories in this map in order to

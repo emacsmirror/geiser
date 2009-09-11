@@ -27,41 +27,41 @@
   "Interacting with the Geiser REPL."
   :group 'geiser)
 
-(defcustom geiser-repl-use-other-window t
+(geiser-custom--defcustom geiser-repl-use-other-window t
   "Whether to Use a window other than the current buffer's when
 switching to the Geiser REPL buffer."
   :type 'boolean
   :group 'geiser-repl)
 
-(defcustom geiser-repl-window-allow-split t
+(geiser-custom--defcustom geiser-repl-window-allow-split t
   "Whether to allow window splitting when switching to the Geiser
 REPL buffer."
   :type 'boolean
   :group 'geiser-repl)
 
-(defcustom geiser-repl-history-filename (expand-file-name "~/.geiser_history")
+(geiser-custom--defcustom geiser-repl-history-filename (expand-file-name "~/.geiser_history")
   "File where REPL input history is saved, so that it persists between sessions.
 This is actually the base name: the concrete Scheme
 implementation name gets appended to it."
   :type 'filename
   :group 'geiser-repl)
 
-(defcustom geiser-repl-history-size comint-input-ring-size
+(geiser-custom--defcustom geiser-repl-history-size comint-input-ring-size
   "Maximum size of the saved REPL input history."
   :type 'integer
   :group 'geiser-repl)
 
-(defcustom geiser-repl-autodoc-p t
+(geiser-custom--defcustom geiser-repl-autodoc-p t
   "Whether to enable `geiser-autodoc-mode' in the REPL by default."
   :type 'boolean
   :group 'geiser-repl)
 
-(defcustom geiser-repl-company-p t
+(geiser-custom--defcustom geiser-repl-company-p t
   "Whether to use company-mode for completion, if available."
   :group 'geiser-mode
   :type 'boolean)
 
-(defcustom geiser-repl-read-only-prompt-p t
+(geiser-custom--defcustom geiser-repl-read-only-prompt-p t
   "Whether the REPL's prompt should be read-only."
   :type 'boolean
   :group 'geiser-repl)

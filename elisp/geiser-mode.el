@@ -33,18 +33,18 @@
   "Mode enabling Geiser abilities in Scheme buffers &co.."
   :group 'geiser)
 
-(defcustom geiser-mode-autodoc-p t
+(geiser-custom--defcustom geiser-mode-autodoc-p t
   "Whether `geiser-autodoc-mode' gets enabled by default in Scheme buffers."
   :group 'geiser-mode
   :group 'geiser-autodoc
   :type 'boolean)
 
-(defcustom geiser-mode-company-p t
+(geiser-custom--defcustom geiser-mode-company-p t
   "Whether to use company-mode for completion, if available."
   :group 'geiser-mode
   :type 'boolean)
 
-(defcustom geiser-mode-smart-tab-p nil
+(geiser-custom--defcustom geiser-mode-smart-tab-p nil
   "Whether `geiser-smart-tab-mode' gets enabled by default in Scheme buffers."
   :group 'geiser-mode
   :type 'boolean)

@@ -22,7 +22,7 @@
 ;;; Customization:
 
 (defmacro geiser-edit--define-custom-visit (var group doc)
-  `(defcustom ,var nil
+  `(geiser-custom--defcustom ,var nil
      ,doc
      :group ',group
      :type '(choice (const :tag "Other window" window)

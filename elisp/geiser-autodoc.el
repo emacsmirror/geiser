@@ -32,17 +32,17 @@
   'font-lock-function-name-face
   geiser-autodoc "highlighting procedure name in autodoc messages")
 
-(defcustom geiser-autodoc-delay 0.3
+(geiser-custom--defcustom geiser-autodoc-delay 0.3
   "Delay before autodoc messages are fetched and displayed, in seconds."
   :type 'number
   :group 'geiser-autodoc)
 
-(defcustom geiser-autodoc-display-module-p t
+(geiser-custom--defcustom geiser-autodoc-display-module-p t
   "Whether to display procedure module in autodoc strings."
   :type 'boolean
   :group 'geiser-autodoc)
 
-(defcustom geiser-autodoc-procedure-name-format "%s:%s"
+(geiser-custom--defcustom geiser-autodoc-procedure-name-format "%s:%s"
   "Format for displaying module and procedure name, in that order,
 when `geiser-autodoc-display-module-p' is on."
   :type 'string

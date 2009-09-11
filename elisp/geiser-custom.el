@@ -41,5 +41,22 @@
 
 
 
+;;; Reload support:
+
+(defvar geiser-custom--memoized-vars nil)
+
+(defmacro geiser-custom--defcustom (name &rest body)
+  `(progn
+     (add-to-list 'geiser-custom--memoized-vars ',name)
+     (defcustom ,name ,@body)))
+
+(defun geiser-custom--memoized-state ()
+  (let ((result))
+    (dolist (name geiser-custom--memoized-vars result)
+      (when (boundp name)
+        (push (cons name (symbol-value name)) result)))))
+
+
+
 (provide 'geiser-custom)
 ;;; geiser-custom.el ends here
