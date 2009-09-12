@@ -171,6 +171,14 @@
       ((char string atom) (cdr token))
       (t (error "Reading scheme syntax: unexpected token: %s" token)))))
 
+(defun geiser-syntax--read-from-string (string &optional start end)
+  (when (stringp string)
+    (let ((start (or start 0))
+          (end (or end (length string))))
+      (with-temp-buffer
+        (save-excursion (insert string))
+        (cons (ignore-errors (geiser-syntax--read)) (point))))))
+
 (defsubst geiser-syntax--read/keyword-value (s)
   (and (consp s) (eq (car s) :keyword) (cdr s)))
 
