@@ -113,7 +113,7 @@
       (?\; (geiser-syntax--read/skip-comment))
       ((?\( ?\[) (geiser-syntax--read/token 'lparen))
       ((?\) ?\]) (geiser-syntax--read/token 'rparen))
-      (?. (if (memq (syntax-after (1+ (point))) '(0 11 12))
+      (?. (if (memq (car (syntax-after (1+ (point)))) '(0 11 12))
               (geiser-syntax--read/token 'dot)
             (cons 'atom (geiser-syntax--read/elisp))))
       (?\# (case (geiser-syntax--read/next-char)
