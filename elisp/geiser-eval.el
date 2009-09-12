@@ -132,10 +132,9 @@ EVAL, COMPILE, LOAD-FILE and COMPILE-FILE should be supported."))
 (defsubst geiser-eval--retort-p (ret)
   (and (listp ret) (or (assoc 'error ret) (assoc 'result ret))))
 
-(defun geiser-eval--retort-result (ret)
+(defsubst geiser-eval--retort-result (ret)
   (let ((values (cdr (assoc 'result ret))))
-    (and (stringp (car values))
-         (ignore-errors (car (read-from-string (car values)))))))
+    (car (geiser-syntax--read-from-string (car values)))))
 
 (defun geiser-eval--retort-result-str (ret)
   (let ((values (cdr (assoc 'result ret))))
