@@ -2,7 +2,7 @@ Installing Geiser.
 ------------------
 
 You'll find below the generic build and installation instructions for
-a GNU package, which Geiser happens to be. As you know, they can be
+an autotools package, which Geiser happens to be. As you know, they can be
 summarised as:
 
   mkdir build && cd build
