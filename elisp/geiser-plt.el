@@ -161,5 +161,20 @@ This function uses `geiser-plt-init-file' if it exists."
       (string-equal (file-name-extension (or (buffer-file-name) "")) "ss")))
 
 
+;;; Implementation definition:
+
+(define-geiser-implementation plt
+  (binary geiser-plt-binary)
+  (arglist geiser-plt-parameters)
+  (startup)
+  (prompt-regexp geiser-plt-prompt-regexp)
+  (marshall-procedure geiser-plt-geiser-procedure)
+  (find-module geiser-plt-get-module)
+  (find-symbol-begin geiser-plt-symbol-begin)
+  (display-error geiser-plt-display-error)
+  (display-help geiser-plt-external-help)
+  (check-buffer geiser-plt-guess))
+
+
 (provide 'geiser-plt)
 ;;; geiser-plt.el ends here

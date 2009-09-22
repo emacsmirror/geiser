@@ -14,6 +14,7 @@
 
 
 
+(require 'geiser-impl)
 (require 'geiser-connection)
 (require 'geiser-syntax)
 (require 'geiser-log)
@@ -22,20 +23,26 @@
 
 ;;; Plug-able functions:
 
-(make-variable-buffer-local
- (defvar geiser-eval--get-module-function nil
-   "Function used to obtain the module for current buffer. It
-takes an optional argument, for cases where we want to force its value."))
+(defvar geiser-eval--get-module-function nil)
+
+(geiser-impl--register-local-method
+ 'geiser-eval--get-module-function 'find-module '(lambda (&rest) nil)
+ "Function used to obtain the module for current buffer. It takes
+an optional argument, for cases where we want to force its
+value.")
 
 (defsubst geiser-eval--get-module (&optional module)
   (and geiser-eval--get-module-function
        (funcall geiser-eval--get-module-function module)))
 
-(make-variable-buffer-local
- (defvar geiser-eval--geiser-procedure-function nil
-   "Translate a bare procedure symbol to one executable in Guile's
-context. Return NULL for unsupported ones; at the very least,
-EVAL, COMPILE, LOAD-FILE and COMPILE-FILE should be supported."))
+(defvar geiser-eval--geiser-procedure-function nil)
+
+(geiser-impl--register-local-method
+ 'geiser-eval--geiser-procedure-function 'marshall-procedure 'identity
+ "Function to translate a bare procedure symbol to one executable
+in the Scheme context. Return NULL for unsupported ones; at the
+very least, EVAL, COMPILE, LOAD-FILE and COMPILE-FILE should be
+supported.")
 
 (defsubst geiser-eval--form (proc)
   (funcall geiser-eval--geiser-procedure-function proc))

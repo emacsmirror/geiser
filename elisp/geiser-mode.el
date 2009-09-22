@@ -251,8 +251,9 @@ interacting with the Geiser REPL is at your disposal.
   (dolist (b buffers)
     (when (buffer-live-p (car b))
       (set-buffer (car b))
-      (geiser-mode 1)
-      (when (cdr b) (geiser-impl--set-buffer-implementation (cdr b))))))
+      (when (cdr b)
+        (geiser-impl--set-buffer-implementation (cdr b)))
+      (geiser-mode 1))))
 
 (defun geiser-mode-unload-function ()
   (dolist (b (geiser-mode--buffers))

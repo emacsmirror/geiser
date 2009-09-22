@@ -119,12 +119,29 @@ implementation name gets appended to it."
   (geiser-repl-mode)
   (geiser-impl--set-buffer-implementation impl))
 
+(geiser-impl--define-caller geiser-repl--binary binary ()
+  "A variable or function returning the path to the scheme binary
+for this implementation.")
+
+(geiser-impl--define-caller geiser-repl--arglist arglist ()
+  "A function taking no arguments and returning a list of
+arguments to be used when invoking the scheme binary.")
+
+(geiser-impl--define-caller geiser-repl--prompt-regexp prompt-regexp ()
+  "A variable (or thunk returning a value) giving the regular
+expression for this implementation's scheme prompt.")
+
+(geiser-impl--define-caller geiser-repl--startup startup ()
+  "Function taking no parameters that is called after the REPL
+has been initialised. All Geiser functionality is available to
+you at that point.")
+
 (defun geiser-repl--start-repl (impl)
   (message "Starting Geiser REPL for %s ..." impl)
   (geiser-repl--to-repl-buffer impl)
-  (let ((binary (geiser-impl--binary impl))
-        (args (geiser-impl--parameters impl))
-        (prompt-rx (geiser-impl--prompt-regexp impl))
+  (let ((binary (geiser-repl--binary impl))
+        (args (geiser-repl--arglist impl))
+        (prompt-rx (geiser-repl--prompt-regexp impl))
         (cname (geiser-repl--repl-name impl)))
     (unless (and binary prompt-rx)
       (error "Sorry, I don't know how to start a REPL for %s" impl))
@@ -135,7 +152,7 @@ implementation name gets appended to it."
     (geiser-con--setup-connection (current-buffer) prompt-rx)
     (add-to-list 'geiser-repl--repls (current-buffer))
     (geiser-repl--set-this-buffer-repl (current-buffer))
-    (geiser-impl--startup impl)))
+    (geiser-repl--startup impl)))
 
 (defun geiser-repl--process ()
   (let ((buffer (geiser-repl--get-repl geiser-impl--implementation)))
@@ -163,8 +180,8 @@ implementation name gets appended to it."
   (geiser-impl--read-impl prompt (and active (geiser-repl--active-impls))))
 
 (defsubst geiser-repl--only-impl-p ()
-  (and (null (cdr geiser-impl--impls))
-       (car geiser-impl--impls)))
+  (and (null (cdr geiser-active-implementations))
+       (car geiser-active-implementations)))
 
 (defun run-geiser (impl)
   "Start a new Geiser REPL."
@@ -271,7 +288,7 @@ If no REPL is running, execute `run-geiser' to start a fresh one."
 (defun geiser-repl--doc-module ()
   (interactive)
   (let ((geiser-eval--get-module-function
-         (geiser-impl--module-function geiser-impl--implementation)))
+         (geiser-impl--method 'find-module geiser-impl--implementation)))
     (geiser-doc-module)))
 
 (define-derived-mode geiser-repl-mode comint-mode "Geiser REPL"
@@ -327,7 +344,7 @@ If no REPL is running, execute `run-geiser' to start a fresh one."
 
 (defun geiser-repl--restore (impls)
   (dolist (impl impls)
-    (when impl (geiser nil impl))))
+    (when impl (run-geiser impl))))
 
 (defun geiser-repl-unload-function ()
   (dolist (repl geiser-repl--repls)

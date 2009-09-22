@@ -11,29 +11,27 @@
 
 
 
-(require 'geiser-eval)
 (require 'geiser-custom)
 (require 'geiser-base)
-(require 'geiser-completion)
 
 
 ;;; Customization:
 
-(defgroup geiser-impl nil
+(defgroup geiser-implementation nil
   "Generic support for multiple Scheme implementations."
   :group 'geiser)
 
-(geiser-custom--defcustom geiser-impl-default-implementation nil
+(geiser-custom--defcustom geiser-default-implementation nil
   "Symbol naming the default Scheme implementation."
   :type 'symbol
-  :group 'geiser-impl)
+  :group 'geiser-implementation)
 
-(geiser-custom--defcustom geiser-impl-installed-implementations nil
-  "Initial list of installed Scheme implementations."
+(geiser-custom--defcustom geiser-active-implementations '(guile plt)
+  "List of active installed Scheme implementations."
   :type '(repeat symbol)
-  :group 'geiser-impl)
+  :group 'geiser-implementation)
 
-(geiser-custom--defcustom geiser-impl-implementations-alist nil
+(geiser-custom--defcustom geiser-implementations-alist nil
   "A map from regular expressions or directories to implementations.
 When opening a new file, its full path will be matched against
 each one of the regular expressions or directories in this map in order to
@@ -43,164 +41,126 @@ determine its scheme flavour."
                                (group :tag "Directory"
                                       (const dir) directory))
                        symbol))
-  :group 'geiser-impl)
+  :group 'geiser-implementation)
 
 
-;;; Auxiliary functions:
-(defsubst geiser-impl--sym (imp name)
-  (intern (format "geiser-%s-%s" imp name)))
+;;; Implementation registry:
 
-(defsubst geiser-impl--boundp (imp name)
-  (boundp (geiser-impl--sym imp name)))
+(defvar geiser-impl--registry nil)
+(defvar geiser-impl--load-files nil)
+(defvar geiser-impl--method-docs nil)
+(defvar geiser-impl--local-methods nil)
+(defvar geiser-impl--local-variables nil)
 
-(defsubst geiser-impl--fboundp (imp name)
-  (fboundp (geiser-impl--sym imp name)))
-
-(defsubst geiser-impl--impl-feature (impl)
-  (intern (format "geiser-%s" impl)))
-
-(defun geiser-impl--value (imp name &optional fun)
-  (let ((sym (geiser-impl--sym imp name)))
-    (unless (or (and (not fun) (boundp sym))
-                (and fun (fboundp sym)))
-      (error "Unbound %s '%s' in Geiser Scheme implementation %s"
-             (if fun "function" "variable") sym imp))
-    (if fun (symbol-function sym) (symbol-value sym))))
-
-(defsubst geiser-impl--call-if-bound (imp name &rest args)
-  (when (geiser-impl--fboundp imp name)
-    (apply (geiser-impl--value imp name t) args)))
-
-
-;;; Registering implementations:
-
-(defvar geiser-impl--impls nil)
+(geiser-custom--memoize 'geiser-impl--load-files)
 
 (make-variable-buffer-local
  (defvar geiser-impl--implementation nil))
-
-(defun geiser-impl--register (impl)
-  (when (and (not (memq impl geiser-impl--impls))
-             (require (geiser-impl--impl-feature impl) nil t))
-    (add-to-list 'geiser-impl--impls impl)))
-
-(defun geiser-impl--unregister (impl)
-  (setq geiser-impl--impls (remove impl geiser-impl--impls))
-  (ignore-errors (unload-feature (geiser-impl--impl-feature impl))))
-
-(defun geiser-impl--add-to-alist (kind what impl)
-  (add-to-list 'geiser-impl-implementations-alist (list (list kind what) impl)))
-
-(defvar geiser-impl--default-implementation
-  geiser-impl-default-implementation)
-
-(defun geiser-impl--default-implementation (&optional new)
-  (when new (setq geiser-impl--default-implementation new))
-  (or geiser-impl--default-implementation
-      geiser-impl-default-implementation
-      (car geiser-impl--impls)))
 
 (defsubst geiser-impl--impl-str (&optional impl)
   (let ((impl (or impl geiser-impl--implementation)))
     (and impl (capitalize (format "%s" impl)))))
 
-
-;;; Installing Scheme implementations:
+(defsubst geiser-impl--feature (impl)
+  (intern (format "geiser-%s" impl)))
 
-(defvar geiser-impl--impl-prompt-history nil)
+(defsubst geiser-impl--load-impl (impl)
+  (require (geiser-impl--feature impl)
+           (cdr (assq impl geiser-impl--load-files))
+           t))
 
-(defun geiser-impl--read-impl (&optional prompt impls non-req)
-  (let* ((impls (or impls geiser-impl--impls))
-         (impls (mapcar (lambda (s) (format "%s" s)) impls))
-         (prompt (or prompt "Scheme implementation: ")))
-    (intern (completing-read prompt impls nil (not non-req) nil
-                             geiser-impl--impl-prompt-history
-                             (and (car geiser-impl--impls)
-                                  (symbol-name (car geiser-impl--impls)))))))
+(defsubst geiser-impl--methods (impl)
+  (cdr (assq impl geiser-impl--registry)))
 
-(defun geiser-impl--set-buffer-implementation (&optional impl)
+(defun geiser-impl--method (method &optional impl)
   (let ((impl (or impl
-                  (geiser-impl--guess)
-                  (geiser-impl--read-impl nil nil t))))
-    (require (geiser-impl--impl-feature impl))
-    (setq geiser-impl--implementation impl)
-    (geiser-impl--install-vars impl)
-    (geiser-impl--register impl)))
+                  geiser-impl--implementation
+                  geiser-default-implementation)))
+    (cadr (assq method (geiser-impl--methods impl)))))
 
-(defsubst geiser-impl--module-function (impl)
-  (geiser-impl--sym impl "get-module"))
+(defun geiser-impl--call-method (method impl &rest args)
+  (let ((fun (geiser-impl--method method impl)))
+    (when (functionp fun) (apply fun args))))
 
-(defsubst geiser-impl--geiser-procedure-function (impl)
-  (geiser-impl--sym impl "geiser-procedure"))
+(defun geiser-impl--method-doc (method doc)
+  (push (cons method doc) geiser-impl--method-docs))
 
-(defsubst geiser-impl--symbol-begin (impl)
-  (geiser-impl--sym impl "symbol-begin"))
+(defun geiser-impl--register-local-method (var-name method fallback doc)
+  (add-to-list 'geiser-impl--local-methods (list var-name method fallback))
+  (geiser-impl--method-doc method doc))
 
-(defun geiser-impl--install-vars (impl)
-  (setq geiser-eval--get-module-function
-        (geiser-impl--module-function impl))
-  (setq geiser-eval--geiser-procedure-function
-        (geiser-impl--geiser-procedure-function impl))
-  (setq geiser-completion--symbol-begin-function
-        (geiser-impl--symbol-begin impl)))
+(defun geiser-impl--register-local-variable (var-name method fallback doc)
+  (add-to-list 'geiser-impl--local-variables (list var-name method fallback))
+  (geiser-impl--method-doc method doc))
 
-
-;;; Evaluating Elisp in a given implementation context:
+(defmacro geiser-impl--define-caller (fun-name method arglist doc)
+  (let ((m (make-symbol "method-candidate"))
+        (impl (make-symbol "implementation-name")))
+    `(progn
+       (defun ,fun-name ,(cons impl arglist) ,doc
+         (geiser-impl--call-method ',method ,impl ,@arglist))
+       (geiser-impl--method-doc ',method ,doc))))
+(put 'geiser-impl--define-caller 'lisp-indent-function 3)
 
-(defun with--geiser-implementation (imp thunk)
-  (let ((geiser-impl--implementation imp)
-        (geiser-eval--get-module-function
-         (geiser-impl--module-function imp))
-        (geiser-eval--geiser-procedure-function
-         (geiser-impl--geiser-procedure-function imp))
-        (geiser-completion--symbol-begin-function
-         (geiser-impl--symbol-begin imp)))
-    (funcall thunk)))
+(defun geiser-impl--register (file impl methods)
+  (let ((current (assq impl geiser-impl--registry)))
+    (if current (setcdr current methods)
+      (push (cons impl methods) geiser-impl--registry))
+    (push (cons impl file) geiser-impl--load-files)))
 
-(put 'with--geiser-implementation 'lisp-indent-function 1)
+(defsubst geiser-activate-implementation (impl)
+  (add-to-list 'geiser-active-implementations impl))
 
-
-;;; Default evaluation environment:
-
-(defun geiser-impl-module (&optional module)
-  (geiser-impl--call-if-bound (geiser-impl--default-implementation)
-                              "get-module"
-                              module))
-(set-default 'geiser-eval--get-module-function 'geiser-impl-module)
-
-(defun geiser-impl-geiser-procedure (proc)
-  (geiser-impl--call-if-bound (geiser-impl--default-implementation)
-                              "geiser-procedure"
-                              proc))
-(set-default 'geiser-eval--geiser-procedure-function
-             'geiser-impl-geiser-procedure)
+(defsubst geiser-deactivate-implementation (impl)
+  (setq geiser-active-implementations (delq impl geiser-active-implementations)))
 
 
-;;; Access to implementation specific execution parameters:
+;;; Defining implementations:
 
-(defsubst geiser-impl--binary (impl)
-  (or (geiser-impl--call-if-bound impl "binary")
-      (geiser-impl--value impl "binary")))
+(defun geiser-impl--normalize-method (m)
+  (when (and (listp m)
+             (= 2 (length m))
+             (symbolp (car m))
+             (symbolp (cadr m)))
+    (if (functionp (cadr m)) m
+      `(,(car m) (lambda (&rest) ,(cadr m))))))
 
-(defsubst geiser-impl--parameters (impl)
-  (or (geiser-impl--call-if-bound impl "parameters")
-      (ignore-errors (geiser-impl--value impl "parameters"))))
+(defun geiser-impl--define (file name parent methods)
+  (let* ((methods (mapcar 'geiser-impl--normalize-method methods))
+         (methods (delq nil methods))
+         (inherited-methods (and parent (geiser-impl--methods parent)))
+         (methods (append methods
+                          (dolist (m methods inherited-methods)
+                            (setq inherited-methods
+                                  (assq-delete-all m inherited-methods))))))
+    (geiser-impl--register file name methods)))
 
-(defsubst geiser-impl--prompt-regexp (impl)
-  (or (geiser-impl--call-if-bound impl "prompt-regexp")
-      (geiser-impl--value impl "prompt-regexp")))
+(defmacro define-geiser-implementation (name &rest methods)
+  (let ((name (if (listp name) (car name) name))
+        (parent (and (listp name) (cadr name))))
+    (unless (symbolp name)
+      (error "Malformed implementation name: %s" name))
+    (let ((runner (intern (format "run-%s" name)))
+          (switcher (intern (format "switch-%s" name)))
+          (runner-doc (format "Start a new %s REPL." name))
+          (switcher-doc (format "Switch to a running %s REPL, or start one." name)))
+      `(progn
+         (geiser-impl--define ,load-file-name ',name ',parent ',methods)
+         (require 'geiser-repl)
+         (defun ,runner ()
+           ,runner-doc
+           (interactive)
+           (run-geiser ',name))
+         (defun ,switcher (&optional ask)
+           (interactive "P")
+           (switch-to-geiser ask ',name))
+         (provide ',(geiser-impl--feature name))))))
 
-(defsubst geiser-impl--startup (impl)
-  (geiser-impl--call-if-bound impl "startup"))
-
-(defsubst geiser-impl--external-help (impl symbol module)
-  (geiser-impl--call-if-bound impl "external-help" symbol module))
-
-(defsubst geiser-impl--display-error (impl module key msg)
-  (geiser-impl--call-if-bound impl "display-error" module key msg))
+(defun geiser-impl--add-to-alist (kind what impl)
+  (add-to-list 'geiser-implementations-alist (list (list kind what) impl)))
 
 
-;;; Access to implementation guessing function:
+;;; Trying to guess the scheme implementation:
 
 (make-variable-buffer-local
  (defvar geiser-scheme-implementation nil
@@ -213,65 +173,96 @@ implementation to be used by Geiser."))
               (format "^%s" (regexp-quote (cadr desc))))))
     (and rx (string-match-p rx bn))))
 
-(defun geiser-impl--guess ()
+(defvar geiser-impl--impl-prompt-history nil)
+
+(defun geiser-impl--read-impl (&optional prompt impls non-req)
+  (let* ((impls (or impls geiser-active-implementations))
+         (impls (mapcar 'symbol-name impls))
+         (prompt (or prompt "Scheme implementation: ")))
+    (intern (completing-read prompt impls nil (not non-req) nil
+                             geiser-impl--impl-prompt-history
+                             (and (car impls) (car impls))))))
+
+(geiser-impl--define-caller geiser-impl--check-buffer check-buffer ()
+  "Method called without arguments that should check whether the current
+buffer contains Scheme code of the given implementation.")
+
+(defun geiser-impl--guess (&optional prompt)
   (or geiser-impl--implementation
       geiser-scheme-implementation
       (catch 'impl
         (let ((bn (buffer-file-name)))
           (when bn
-            (dolist (x geiser-impl-implementations-alist)
-              (when (geiser-impl--match-impl (car x) bn)
+            (dolist (x geiser-implementations-alist)
+              (when (and (memq (cadr x) geiser-active-implementations)
+                         (geiser-impl--match-impl (car x) bn))
                 (throw 'impl (cadr x))))))
-        (dolist (impl geiser-impl--impls)
-          (when (geiser-impl--call-if-bound impl "guess")
+        (dolist (impl geiser-active-implementations)
+          (when (geiser-impl--check-buffer impl)
             (throw 'impl impl))))
-      (geiser-impl--default-implementation)))
+      geiser-default-implementation
+      (and (null (cdr geiser-active-implementations))
+           (car geiser-active-implementations))
+      (and prompt (geiser-impl--read-impl))))
 
 
-;;; User commands
+;;; Using implementations:
 
-(defun geiser-register-implementation ()
-  "Register a new Scheme implementation."
-  (interactive)
-  (let ((current geiser-impl-installed-implementations)
-        (impl (geiser-impl--read-impl "New Scheme implementation: " nil t)))
-    (unless (geiser-impl--register impl)
-      (error "geiser-%s.el not found in load-path" impl))
-    (when (and (not (memq impl current))
-               (y-or-n-p "Remember this implementation using customize? "))
-      (customize-save-variable
-       'geiser-impl-installed-implementations (cons impl current)))))
+(defsubst geiser-impl--registered-method (impl method fallback)
+  (let ((m (geiser-impl--method method impl)))
+    (if (fboundp m) m
+      (or fallback (error "%s not defined for %s" method impl)))))
 
-(defun geiser-unregister-implementation ()
-  "Unregister an installed Scheme implementation."
-  (interactive)
-  (let* ((current geiser-impl-installed-implementations)
-         (impl (geiser-impl--read-impl "Forget implementation: " current)))
-    (geiser-impl--unregister impl)
-    (when (and impl
-               (y-or-n-p "Forget permanently using customize? "))
-      (customize-save-variable
-       'geiser-impl-installed-implementations (remove impl current)))))
+(defsubst geiser-impl--registered-value (impl method fallback)
+  (let ((m (geiser-impl--method method impl)))
+    (if (fboundp m) (funcall m)
+      (or fallback (error "%s not defined for %s" method impl)))))
+
+(defun geiser-impl--set-buffer-implementation (&optional impl)
+  (let ((impl (or impl (geiser-impl--guess))))
+    (when impl
+      (unless (geiser-impl--load-impl impl)
+        (error "Cannot find %s implementation" impl))
+      (setq geiser-impl--implementation impl)
+      (dolist (m geiser-impl--local-methods)
+        (set (make-local-variable (nth 0 m))
+             (geiser-impl--registered-method impl (nth 1 m) (nth 2 m))))
+      (dolist (m geiser-impl--local-variables)
+        (set (make-local-variable (nth 0 m))
+             (geiser-impl--registered-value impl (nth 1 m) (nth 2 m)))))))
+
+(defmacro with--geiser-implementation (impl &rest body)
+  (let* ((mbindings (mapcar (lambda (m)
+                              `(,(nth 0 m)
+                                (geiser-impl--registered-method ',impl
+                                                                ',(nth 1 m)
+                                                                ',(nth 2 m))))
+                            geiser-impl--local-methods))
+         (vbindings (mapcar (lambda (m)
+                              `(,(nth 0 m)
+                                (geiser-impl--registered-value ',impl
+                                                               ',(nth 1 m)
+                                                               ',(nth 2 m))))
+                            geiser-impl--local-variables))
+         (bindings (append mbindings vbindings)))
+    `(let* ,bindings ,@body)))
+(put 'with--geiser-implementation 'lisp-indent-function 1)
 
 
-;;; Unload support
+;;; Reload support:
 
 (defun geiser-impl-unload-function ()
-  (dolist (imp (mapcar 'geiser-impl--impl-feature geiser-impl--impls))
+  (dolist (imp (mapcar (lambda (i)
+                         (geiser-impl--feature (car i)))
+                       geiser-impl--registry))
     (when (featurep imp) (unload-feature imp t))))
-
-(defun geiser-impl--reload-implementations (impls)
-  (dolist (impl impls)
-    (load-library (format "geiser-%s" impl))))
-
-
-;;; Initialization:
-
-(eval-after-load 'geiser-impl
-  '(mapc 'geiser-impl--register
-         (or geiser-impl-installed-implementations '(guile plt))))
 
 
 (provide 'geiser-impl)
+
+
+;;; Initialization:
+;; After providing 'geiser-impl, so that impls can use us.
+(mapc 'geiser-impl--load-impl geiser-active-implementations)
 
 ;;; geiser-impl.el ends here

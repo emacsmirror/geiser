@@ -11,6 +11,7 @@
 
 
 
+(require 'geiser-impl)
 (require 'geiser-eval)
 (require 'geiser-log)
 (require 'geiser-syntax)
@@ -183,13 +184,20 @@ terminates a current completion."
         (minibuffer-message text)
       (message "%s" text))))
 
-(make-variable-buffer-local
- (defvar geiser-completion--symbol-begin-function nil))
+(defvar geiser-completion--symbol-begin-function nil)
+
+(defsubst geiser-completion--def-symbol-begin (module)
+  (save-excursion (skip-syntax-backward "^-()>") (point)))
+
+(geiser-impl--register-local-method
+ 'geiser-completion--symbol-begin-function 'find-symbol-begin
+ 'geiser-completion--def-symbol-begin
+ "An optional function finding the position of the beginning of
+the identifier around point. Takes a boolean, indicating whether
+we're looking for a module name.")
 
 (defsubst geiser-completion--symbol-begin (module)
-  (or (and geiser-completion--symbol-begin-function
-           (funcall geiser-completion--symbol-begin-function module))
-      (save-excursion (skip-syntax-backward "^-()>") (point))))
+  (funcall geiser-completion--symbol-begin-function module))
 
 (defsubst geiser-completion--prefix (module)
   (buffer-substring-no-properties (point)

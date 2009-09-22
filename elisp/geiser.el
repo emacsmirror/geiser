@@ -73,7 +73,7 @@
         geiser-mode
         geiser-guile
         geiser-plt
-        geiser-impl
+        geiser-implementation
         geiser-xref))
 
 

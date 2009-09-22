@@ -45,6 +45,13 @@
 
 ;;; Displaying retorts
 
+(geiser-impl--define-caller geiser-debug--display-error display-error (module key message)
+  "This method takes 3 parameters (a module name, the error key,
+and the accompanying error message) and should display
+(in the current buffer) a formatted version of the error. If the
+error was successfully displayed, the call should evaluate to a
+non-null value.")
+
 (defun geiser-debug--display-retort (what ret &optional res)
   (let* ((err (geiser-eval--retort-error ret))
          (key (geiser-eval--error-key err))
@@ -58,7 +65,7 @@
       (when res
         (insert res)
         (newline 2))
-      (unless (geiser-impl--display-error impl module key output)
+      (unless (geiser-debug--display-error impl module key output)
         (when err (insert (geiser-eval--error-str err) "\n\n"))
         (when output (insert output "\n\n")))
       (goto-char (point-min)))

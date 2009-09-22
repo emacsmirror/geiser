@@ -45,9 +45,12 @@
 
 (defvar geiser-custom--memoized-vars nil)
 
+(defun geiser-custom--memoize (name)
+  (add-to-list 'geiser-custom--memoized-vars name))
+
 (defmacro geiser-custom--defcustom (name &rest body)
   `(progn
-     (add-to-list 'geiser-custom--memoized-vars ',name)
+     (geiser-custom--memoize ',name)
      (defcustom ,name ,@body)))
 
 (defun geiser-custom--memoized-state ()
@@ -55,7 +58,6 @@
     (dolist (name geiser-custom--memoized-vars result)
       (when (boundp name)
         (push (cons name (symbol-value name)) result)))))
-
 
 
 (provide 'geiser-custom)

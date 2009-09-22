@@ -11,7 +11,6 @@
 
 
 
-(require 'geiser-impl)
 (require 'geiser-repl)
 (require 'geiser-mode)
 (require 'geiser-custom)
@@ -68,7 +67,6 @@ loaded again."
       (error "%s does not contain Geiser!" dir))
     (let ((installed (featurep 'geiser-install))
           (memo (geiser-custom--memoized-state))
-          (impls geiser-impl--impls)
           (repls (geiser-repl--repl-list))
           (buffers (geiser-mode--buffers)))
       (geiser-unload)
@@ -77,7 +75,6 @@ loaded again."
       (mapc (lambda (x) (set (car x) (cdr x))) memo)
       (require 'geiser-reload)
       (when installed (require 'geiser-install nil t))
-      (geiser-impl--reload-implementations impls)
       (geiser-repl--restore repls)
       (geiser-mode--restore buffers)
       (message "Geiser reloaded!"))))

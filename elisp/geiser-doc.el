@@ -90,13 +90,12 @@
 (defun geiser-doc--follow-link (link)
   (let ((target (geiser-doc--link-target link))
         (module (geiser-doc--link-module link))
-        (impl (or (geiser-doc--link-impl link)
-                  (geiser-impl--default-implementation))))
+        (impl (geiser-doc--link-impl link)))
     (when (and (or target module) impl)
       (with--geiser-implementation impl
-        `(lambda () (if (null ',target)
-                   (geiser-doc-module ',module ',impl)
-                 (geiser-doc-symbol ',target ',module ',impl)))))))
+        (if (null target)
+            (geiser-doc-module module impl)
+          (geiser-doc-symbol target module impl))))))
 
 (defun geiser-doc--button-action (button)
   (let ((link (button-get button 'geiser-link)))
@@ -146,6 +145,12 @@
 
 ;;; Commands:
 
+(geiser-impl--define-caller geiser-doc--external-help external-help (symbol module)
+  "By default, Geiser will display help about an identifier in a
+help buffer, after collecting the associated signature and
+docstring. You can provide an alternative function for displaying
+help (e.g. browse an HTML page) implementing this method.")
+
 (defun geiser-doc--get-docstring (symbol module)
   (geiser-eval--send/result
    `(:eval ((:ge symbol-documentation) ',symbol) ,module)))
@@ -156,7 +161,7 @@
 (defun geiser-doc-symbol (symbol &optional module impl)
   (let ((module (or module (geiser-eval--get-module)))
         (impl (or impl geiser-impl--implementation)))
-    (unless (geiser-impl--external-help impl symbol module)
+    (unless (geiser-doc--external-help impl symbol module)
       (let ((ds (geiser-doc--get-docstring symbol module)))
         (if (or (not ds) (not (listp ds)))
             (message "No documentation available for '%s'" symbol)
