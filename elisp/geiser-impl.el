@@ -141,9 +141,10 @@ determine its scheme flavour."
     (unless (symbolp name)
       (error "Malformed implementation name: %s" name))
     (let ((runner (intern (format "run-%s" name)))
-          (switcher (intern (format "switch-%s" name)))
+          (switcher (intern (format "switch-to-%s" name)))
           (runner-doc (format "Start a new %s REPL." name))
-          (switcher-doc (format "Switch to a running %s REPL, or start one." name)))
+          (switcher-doc (format "Switch to a running %s REPL, or start one." name))
+          (ask (make-symbol "ask")))
       `(progn
          (geiser-impl--define ,load-file-name ',name ',parent ',methods)
          (require 'geiser-repl)
@@ -151,9 +152,10 @@ determine its scheme flavour."
            ,runner-doc
            (interactive)
            (run-geiser ',name))
-         (defun ,switcher (&optional ask)
+         (defun ,switcher (&optional ,ask)
+           ,switcher-doc
            (interactive "P")
-           (switch-to-geiser ask ',name))
+           (switch-to-geiser ,ask ',name))
          (provide ',(geiser-impl--feature name))))))
 
 (defun geiser-impl--add-to-alist (kind what impl)
