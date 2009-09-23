@@ -136,7 +136,8 @@ terminates a current completion."
 
 (defun geiser-completion--symbol-list (prefix)
   (delete-duplicates
-   (append (mapcar (lambda (s) (format "%s" s)) (geiser-syntax--locals-around-point))
+   (append (all-completions prefix
+                            (mapcar 'symbol-name (geiser-syntax--locals-around-point)))
            (geiser-eval--send/result `(:eval ((:ge completions) ,prefix))))
    :test 'string=))
 
@@ -150,10 +151,9 @@ terminates a current completion."
   (completion-table-dynamic 'geiser-completion--module-list))
 
 (defun geiser-completion--complete (prefix modules)
-  (let* ((symbols (if modules (geiser-completion--module-list prefix)
-                    (geiser-completion--symbol-list prefix)))
-         (completions (all-completions prefix symbols))
-         (partial (try-completion prefix symbols))
+  (let* ((completions (if modules (geiser-completion--module-list prefix)
+                        (geiser-completion--symbol-list prefix)))
+         (partial (try-completion prefix completions))
          (partial (if (eq partial t) prefix partial)))
     (cons completions partial)))
 
