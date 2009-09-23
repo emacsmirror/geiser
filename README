@@ -20,10 +20,10 @@
       evaluation/compilation error in an Emacs' compilation-mode
       buffer).
 
-   Currently supported implementations are Guile and PLT.
+* Supported scheme implementations
 
-    - Guile 1.9.x virtual machine required.
-    - PLT Scheme 4.1.5.5 or better required.
+    - Guile 1.9.3 or better.
+    - PLT Scheme 4.1.5.5 or better.
 
 * Installation
   Geiser can be used either directly from its uninstalled source tree
