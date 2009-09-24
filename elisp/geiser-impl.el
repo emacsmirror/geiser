@@ -31,7 +31,7 @@
   :type '(repeat symbol)
   :group 'geiser-implementation)
 
-(geiser-custom--defcustom geiser-implementations-alist nil
+(geiser-custom--defcustom geiser-implementations-alist '(((regexp "\\.ss$") plt))
   "A map from regular expressions or directories to implementations.
 When opening a new file, its full path will be matched against
 each one of the regular expressions or directories in this map in order to
