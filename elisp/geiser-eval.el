@@ -36,7 +36,6 @@ value.")
        (funcall geiser-eval--get-module-function module)))
 
 (defvar geiser-eval--geiser-procedure-function nil)
-
 (geiser-impl--register-local-method
  'geiser-eval--geiser-procedure-function 'marshall-procedure 'identity
  "Function to translate a bare procedure symbol to one executable
@@ -44,7 +43,19 @@ in the Scheme context. Return NULL for unsupported ones; at the
 very least, EVAL, COMPILE, LOAD-FILE and COMPILE-FILE should be
 supported.")
 
+(defvar geiser-eval--unsupported nil)
+(geiser-impl--register-local-variable
+ 'geiser-eval--unsupported 'unsupported-procedures nil
+ "A list, or function returning a list, of the Geiser procedures
+not implemented by this Scheme implementation. Possible values
+include macroexpand, completions, module-completions, find-file,
+symbol-location, module-location, symbol-documentation,
+module-exports, autodoc, callers, callees and generic-methods.")
+
 (defsubst geiser-eval--form (proc)
+  (when (and geiser-eval--unsupported (memq proc geiser-eval--unsupported))
+    (error "Sorry, the %s scheme implementation does not support Geiser's %s"
+           geiser-impl--implementation proc))
   (funcall geiser-eval--geiser-procedure-function proc))
 
 
