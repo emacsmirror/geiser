@@ -167,7 +167,7 @@ help (e.g. browse an HTML page) implementing this method.")
             (message "No documentation available for '%s'" symbol)
           (geiser-doc--with-buffer
             (erase-buffer)
-            (geiser-doc--insert-title (geiser-autodoc--str (list (format "%s" symbol) 0)
+            (geiser-doc--insert-title (geiser-autodoc--str (list (symbol-name symbol) 0)
                                                            (cdr (assoc 'signature ds))))
             (newline)
             (insert (or (cdr (assoc 'docstring ds)) ""))

@@ -78,7 +78,7 @@ when `geiser-autodoc-display-module-p' is on."
                                     cached))))))))
       geiser-autodoc--cached-signatures)))
 
-(defun geiser-autodoc--insert-args (args current &optional pos)
+(defun geiser-autodoc--insert-arg-group (args current &optional pos)
   (dolist (a args)
     (let ((p (point)))
       (insert (format "%s" a))
@@ -95,6 +95,26 @@ when `geiser-autodoc-display-module-p' is on."
   (when args (backward-char))
   current)
 
+(defun geiser-autodoc--insert-args (args pos prev)
+  (let ((cpos 1)
+        (reqs (cdr (assoc 'required args)))
+        (opts (cdr (assoc 'optional args)))
+        (keys (cdr (assoc 'key args))))
+    (when reqs
+      (insert " ")
+      (setq cpos
+            (geiser-autodoc--insert-arg-group reqs
+                                              cpos
+                                              (and (not (zerop pos)) pos))))
+    (when opts
+      (insert " [")
+      (setq cpos (geiser-autodoc--insert-arg-group opts cpos pos))
+      (when keys
+        (insert " [")
+        (geiser-autodoc--insert-arg-group keys prev nil)
+        (insert "]"))
+      (insert "]"))))
+
 (defsubst geiser-autodoc--proc-name (proc module)
   (let ((str (if module
                  (format geiser-autodoc-procedure-name-format module proc)
@@ -106,32 +126,18 @@ when `geiser-autodoc-display-module-p' is on."
         (args (cdr (assoc 'args signature)))
         (module (cdr (assoc 'module signature))))
     (if (not args) (geiser-autodoc--proc-name proc module)
-      (let ((cpos 1)
-            (pos (or (cadr desc) 0))
-            (prev (caddr desc))
-            (reqs (cdr (assoc 'required args)))
-            (opts (cdr (assoc 'optional args)))
-            (keys (cdr (assoc 'key args))))
-        (save-current-buffer
-          (set-buffer (geiser-syntax--font-lock-buffer))
-          (erase-buffer)
-          (insert (format "(%s" (geiser-autodoc--proc-name proc module)))
-          (when reqs
-            (insert " ")
-            (setq cpos
-                  (geiser-autodoc--insert-args reqs
-                                               cpos
-                                               (and (not (zerop pos)) pos))))
-          (when opts
-            (insert " [")
-            (setq cpos (geiser-autodoc--insert-args opts cpos pos))
-            (when keys
-              (insert " [")
-              (geiser-autodoc--insert-args keys prev nil)
-              (insert "]"))
-            (insert "]"))
-          (insert ")")
-          (buffer-string))))))
+      (save-current-buffer
+        (set-buffer (geiser-syntax--font-lock-buffer))
+        (erase-buffer)
+        (insert (format "(%s" (geiser-autodoc--proc-name proc module)))
+        (let ((pos (or (cadr desc) 0))
+              (prev (caddr desc)))
+          (dolist (a args)
+            (geiser-autodoc--insert-args a pos prev)
+            (insert " |")))
+        (delete-char -2)
+        (insert ")")
+        (buffer-string)))))
 
 (defun geiser-autodoc--autodoc (path &optional keep-cached)
   (let ((signs (geiser-autodoc--get-signatures (mapcar 'car path) keep-cached))
