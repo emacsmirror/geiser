@@ -166,6 +166,7 @@ This function uses `geiser-plt-init-file' if it exists."
   (binary geiser-plt-binary)
   (arglist geiser-plt-parameters)
   (startup)
+  (unsupported-procedures '(callers callees generic-methods))
   (prompt-regexp geiser-plt-prompt-regexp)
   (marshall-procedure geiser-plt-geiser-procedure)
   (find-module geiser-plt-get-module)
