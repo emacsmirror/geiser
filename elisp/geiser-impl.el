@@ -120,8 +120,7 @@ determine its scheme flavour."
 (defun geiser-impl--normalize-method (m)
   (when (and (listp m)
              (= 2 (length m))
-             (symbolp (car m))
-             (symbolp (cadr m)))
+             (symbolp (car m)))
     (if (functionp (cadr m)) m
       `(,(car m) (lambda (&rest) ,(cadr m))))))
 
@@ -213,12 +212,11 @@ buffer contains Scheme code of the given implementation.")
 (defsubst geiser-impl--registered-method (impl method fallback)
   (let ((m (geiser-impl--method method impl)))
     (if (fboundp m) m
-      (or fallback (error "%s not defined for %s" method impl)))))
+      (or fallback (error "%s not defined for %s implementation" method impl)))))
 
 (defsubst geiser-impl--registered-value (impl method fallback)
   (let ((m (geiser-impl--method method impl)))
-    (if (fboundp m) (funcall m)
-      (or fallback (error "%s not defined for %s" method impl)))))
+    (if (functionp m) (funcall m) fallback)))
 
 (defun geiser-impl--set-buffer-implementation (&optional impl)
   (let ((impl (or impl (geiser-impl--guess))))
