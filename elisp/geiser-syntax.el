@@ -200,9 +200,8 @@
     (geiser-syntax--skip-comment/string)
     (let* ((fst (symbol-at-point))
            (path (and fst (list (list fst 0)))))
-      (when path (skip-syntax-backward "_w"))
       (while (not (zerop (geiser-syntax--nesting-level)))
-        (let ((boundary (point)))
+        (let ((boundary (1+ (point))))
           (backward-up-list)
           (let ((form
                  (nth-value 0 (geiser-syntax--form-after-point boundary))))
