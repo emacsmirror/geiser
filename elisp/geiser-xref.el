@@ -101,7 +101,7 @@
    (goto-char (point-min))))
 
 (defun geiser-xref--read-name (ask prompt)
-  (let ((name (or (and (not prompt) (symbol-at-point))
+  (let ((name (or (and (not ask) (symbol-at-point))
                   (read-string prompt nil nil (symbol-at-point)))))
     (and name (format "%s" name))))
 
