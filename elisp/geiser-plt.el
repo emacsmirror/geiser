@@ -175,6 +175,9 @@ This function uses `geiser-plt-init-file' if it exists."
   (display-help geiser-plt-external-help)
   (check-buffer geiser-plt-guess))
 
+(geiser-impl--add-to-alist 'regexp "\\.mzscheme\\.sl?s$" 'plt t)
+(geiser-impl--add-to-alist 'regexp "\\.ss$" 'plt t)
+
 
 (provide 'geiser-plt)
 ;;; geiser-plt.el ends here

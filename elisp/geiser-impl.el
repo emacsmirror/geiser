@@ -31,7 +31,7 @@
   :type '(repeat symbol)
   :group 'geiser-implementation)
 
-(geiser-custom--defcustom geiser-implementations-alist '(((regexp "\\.ss$") plt))
+(geiser-custom--defcustom geiser-implementations-alist nil
   "A map from regular expressions or directories to implementations.
 When opening a new file, its full path will be matched against
 each one of the regular expressions or directories in this map in order to
@@ -143,9 +143,11 @@ determine its scheme flavour."
           (switcher (intern (format "switch-to-%s" name)))
           (runner-doc (format "Start a new %s REPL." name))
           (switcher-doc (format "Switch to a running %s REPL, or start one." name))
+          (impl-rx (format "\\.\\(%s\\)\\.s\\(l?s|cm\\)$" name))
           (ask (make-symbol "ask")))
       `(progn
          (geiser-impl--define ,load-file-name ',name ',parent ',methods)
+         (geiser-impl--add-to-alist 'regexp ,impl-rx ',name t)
          (require 'geiser-repl)
          (defun ,runner ()
            ,runner-doc
@@ -157,8 +159,8 @@ determine its scheme flavour."
            (switch-to-geiser ,ask ',name))
          (provide ',(geiser-impl--feature name))))))
 
-(defun geiser-impl--add-to-alist (kind what impl)
-  (add-to-list 'geiser-implementations-alist (list (list kind what) impl)))
+(defun geiser-impl--add-to-alist (kind what impl &optional append)
+  (add-to-list 'geiser-implementations-alist (list (list kind what) impl) append))
 
 
 ;;; Trying to guess the scheme implementation:
