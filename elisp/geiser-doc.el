@@ -145,7 +145,7 @@
 
 ;;; Commands:
 
-(geiser-impl--define-caller geiser-doc--external-help external-help (symbol module)
+(geiser-impl--define-caller geiser-doc--external-help display-help (symbol module)
   "By default, Geiser will display help about an identifier in a
 help buffer, after collecting the associated signature and
 docstring. You can provide an alternative function for displaying
