@@ -47,10 +47,10 @@
 
 ;;; REPL support:
 
-(defun geiser-plt-binary ()
+(defun geiser-plt--binary ()
   (if (listp geiser-plt-binary) (car geiser-plt-binary) geiser-plt-binary))
 
-(defun geiser-plt-parameters ()
+(defun geiser-plt--parameters ()
   "Return a list with all parameters needed to start mzscheme.
 This function uses `geiser-plt-init-file' if it exists."
   (let ((init-file (and (stringp geiser-plt-init-file)
@@ -62,21 +62,12 @@ This function uses `geiser-plt-init-file' if it exists."
       ,@(and init-file (file-readable-p init-file) (list "-f" init-file))
       "-f" ,(expand-file-name "plt/geiser.ss" geiser-scheme-dir))))
 
-(defconst geiser-plt-prompt-regexp "^mzscheme@[^ ]*?> ")
-
-(defun switch-to-plt (&optional ask)
-  (interactive "P")
-  (switch-to-geiser ask 'plt))
-
-(defun run-plt ()
-  "Run Geiser using mzscheme."
-  (interactive)
-  (run-geiser 'plt))
+(defconst geiser-plt--prompt-regexp "^mzscheme@[^ ]*?> ")
 
 
 ;;; Evaluation support:
 
-(defun geiser-plt-geiser-procedure (proc)
+(defun geiser-plt--geiser-procedure (proc)
   (let ((proc (intern (format "geiser:%s" proc))))
     `(dynamic-require ''geiser ',proc)))
 
@@ -97,7 +88,7 @@ This function uses `geiser-plt-init-file' if it exists."
         (buffer-file-name)
       :f)))
 
-(defun geiser-plt-get-module (&optional module)
+(defun geiser-plt--get-module (&optional module)
   (cond ((and (null module) (buffer-file-name))) ;; (geiser-plt--explicit-module)
         ((null module) (geiser-plt--implicit-module))
         ((symbolp module) module)
@@ -105,13 +96,13 @@ This function uses `geiser-plt-init-file' if it exists."
         ((stringp module) (intern module))
         (t nil)))
 
-(defun geiser-plt-symbol-begin (module)
+(defun geiser-plt--symbol-begin (module)
   (save-excursion (skip-syntax-backward "^-()>") (point)))
 
 
 ;;; External help
 
-(defun geiser-plt-external-help (symbol module)
+(defun geiser-plt--external-help (symbol module)
   (message "Requesting help for '%s'..." symbol)
   (geiser-eval--send/wait
    `(:eval (get-help ',symbol (:module ,module)) geiser/autodoc))
@@ -134,7 +125,7 @@ This function uses `geiser-plt-init-file' if it exists."
                               (match-string 2)
                               (match-string 3)))))
 
-(defun geiser-plt-display-error (module key msg)
+(defun geiser-plt--display-error (module key msg)
   (when key
     (insert "Error: ")
     (geiser-doc--insert-button key nil 'plt)
@@ -153,7 +144,7 @@ This function uses `geiser-plt-init-file' if it exists."
 
 ;;; Trying to ascertain whether a buffer is mzscheme scheme:
 
-(defun geiser-plt-guess ()
+(defun geiser-plt--guess ()
   (or (save-excursion
         (goto-char (point-min))
         (re-search-forward "#lang " nil t))
@@ -163,17 +154,17 @@ This function uses `geiser-plt-init-file' if it exists."
 ;;; Implementation definition:
 
 (define-geiser-implementation plt
-  (binary geiser-plt-binary)
-  (arglist geiser-plt-parameters)
+  (binary geiser-plt--binary)
+  (arglist geiser-plt--parameters)
   (startup)
   (unsupported-procedures '(callers callees generic-methods))
-  (prompt-regexp geiser-plt-prompt-regexp)
-  (marshall-procedure geiser-plt-geiser-procedure)
-  (find-module geiser-plt-get-module)
-  (find-symbol-begin geiser-plt-symbol-begin)
-  (display-error geiser-plt-display-error)
-  (display-help geiser-plt-external-help)
-  (check-buffer geiser-plt-guess))
+  (prompt-regexp geiser-plt--prompt-regexp)
+  (marshall-procedure geiser-plt--geiser-procedure)
+  (find-module geiser-plt--get-module)
+  (find-symbol-begin geiser-plt--symbol-begin)
+  (display-error geiser-plt--display-error)
+  (display-help geiser-plt--external-help)
+  (check-buffer geiser-plt--guess))
 
 (geiser-impl--add-to-alist 'regexp "\\.mzscheme\\.sl?s$" 'plt t)
 (geiser-impl--add-to-alist 'regexp "\\.ss$" 'plt t)
