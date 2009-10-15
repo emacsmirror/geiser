@@ -62,14 +62,22 @@ This function uses `geiser-plt-init-file' if it exists."
       ,@(and init-file (file-readable-p init-file) (list "-f" init-file))
       "-f" ,(expand-file-name "plt/geiser.ss" geiser-scheme-dir))))
 
-(defconst geiser-plt--prompt-regexp "^mzscheme@[^ ]*?> ")
+(defconst geiser-plt--prompt-regexp "^=?mzscheme@[^ ]*?> ")
 
 
 ;;; Evaluation support:
 
+(defun geiser-plt--language ()
+  (save-excursion
+    (goto-char (point-min))
+    (if (re-search-forward "^#lang +\\([^ ]+?\\) *$" nil t)
+        (intern (match-string-no-properties 1))
+      :f)))
+
 (defun geiser-plt--geiser-procedure (proc)
-  (let ((proc (intern (format "geiser:%s" proc))))
-    `(dynamic-require ''geiser ',proc)))
+  (if (memq proc '(eval compile))
+      `((dynamic-require ''geiser 'geiser:eval) ',(geiser-plt--language))
+    `(dynamic-require ''geiser ',(intern (format "geiser:%s" proc)))))
 
 (defconst geiser-plt--module-re
   "^(module +\\([^ ]+\\)")
@@ -89,7 +97,8 @@ This function uses `geiser-plt-init-file' if it exists."
       :f)))
 
 (defun geiser-plt--get-module (&optional module)
-  (cond ((and (null module) (buffer-file-name))) ;; (geiser-plt--explicit-module)
+  (cond ((and (null module) (buffer-file-name)))
+        ;; (geiser-plt--explicit-module)
         ((null module) (geiser-plt--implicit-module))
         ((symbolp module) module)
         ((and (stringp module) (file-name-absolute-p module)) module)
