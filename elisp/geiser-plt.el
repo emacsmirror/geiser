@@ -70,8 +70,9 @@ This function uses `geiser-plt-init-file' if it exists."
 (defun geiser-plt--language ()
   (save-excursion
     (goto-char (point-min))
-    (if (re-search-forward "^#lang +\\([^ ]+?\\) *$" nil t)
-        (intern (match-string-no-properties 1))
+    (if (re-search-forward
+         "^\\(?:#lang\\|(module +[^ ]+?\\) +\\([^ ]+?\\|([^)]+)\\) *$" nil t)
+        (car (read-from-string (match-string-no-properties 1)))
       :f)))
 
 (defun geiser-plt--geiser-procedure (proc)
