@@ -195,6 +195,9 @@
 (defsubst geiser-syntax--nesting-level ()
   (or (nth 0 (syntax-ppss)) 0))
 
+(defsubst geiser-syntax--pair-length (p)
+  (if (cdr (last p)) (1+ (safe-length p)) (length p)))
+
 (defun geiser-syntax--scan-sexps ()
   (save-excursion
     (geiser-syntax--skip-comment/string)
@@ -206,7 +209,7 @@
           (let ((form
                  (nth-value 0 (geiser-syntax--form-after-point boundary))))
             (when (and (listp form) (car form) (symbolp (car form)))
-              (let* ((len-1 (1- (length form)))
+              (let* ((len-1 (1- (geiser-syntax--pair-length form)))
                      (prev (and (> len-1 1) (nth (1- len-1) form)))
                      (prev (and prev
                                 (geiser-syntax--read/keyword-value prev))))
