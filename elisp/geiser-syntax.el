@@ -202,7 +202,7 @@
   (save-excursion
     (geiser-syntax--skip-comment/string)
     (let* ((fst (symbol-at-point))
-           (path (and fst (list (list fst 0)))))
+           (path))
       (while (not (zerop (geiser-syntax--nesting-level)))
         (let ((boundary (1+ (point))))
           (backward-up-list)
@@ -216,7 +216,10 @@
                 (push `(,(car form)
                         ,len-1 ,@(and prev (symbolp prev) (list prev)))
                       path))))))
-      (nreverse path))))
+      (let ((path (nreverse path)))
+        (if (or (not fst) (eq fst (caar path)))
+            path
+          (cons (list fst 0) path))))))
 
 (defun geiser-syntax--scan-locals (form partial locals)
   (flet ((if-symbol (x) (and (symbolp x) x))
