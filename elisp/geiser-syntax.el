@@ -199,10 +199,9 @@
   (if (cdr (last p)) (1+ (safe-length p)) (length p)))
 
 (defun geiser-syntax--scan-sexps ()
-  (save-excursion
-    (geiser-syntax--skip-comment/string)
-    (let* ((fst (symbol-at-point))
-           (path))
+  (let ((path))
+    (save-excursion
+      (geiser-syntax--skip-comment/string)
       (while (not (zerop (geiser-syntax--nesting-level)))
         (let ((boundary (1+ (point))))
           (backward-up-list)
@@ -215,11 +214,10 @@
                                 (geiser-syntax--read/keyword-value prev))))
                 (push `(,(car form)
                         ,len-1 ,@(and prev (symbolp prev) (list prev)))
-                      path))))))
-      (let ((path (nreverse path)))
-        (if (or (not fst) (eq fst (caar path)))
-            path
-          (cons (list fst 0) path))))))
+                      path)))))))
+    (if path (nreverse path)
+      (let ((fst (symbol-at-point)))
+        (and fst `((,fst 0)))))))
 
 (defun geiser-syntax--scan-locals (form partial locals)
   (flet ((if-symbol (x) (and (symbolp x) x))
