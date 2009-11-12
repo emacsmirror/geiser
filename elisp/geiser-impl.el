@@ -236,17 +236,18 @@ buffer contains Scheme code of the given implementation.")
 (defmacro with--geiser-implementation (impl &rest body)
   (let* ((mbindings (mapcar (lambda (m)
                               `(,(nth 0 m)
-                                (geiser-impl--registered-method ',impl
+                                (geiser-impl--registered-method ,impl
                                                                 ',(nth 1 m)
                                                                 ',(nth 2 m))))
                             geiser-impl--local-methods))
          (vbindings (mapcar (lambda (m)
                               `(,(nth 0 m)
-                                (geiser-impl--registered-value ',impl
+                                (geiser-impl--registered-value ,impl
                                                                ',(nth 1 m)
                                                                ',(nth 2 m))))
                             geiser-impl--local-variables))
-         (bindings (append mbindings vbindings)))
+         (ibindings `((geiser-impl--implementation ,impl)))
+         (bindings (append ibindings mbindings vbindings)))
     `(let* ,bindings ,@body)))
 (put 'with--geiser-implementation 'lisp-indent-function 1)
 
