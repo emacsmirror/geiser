@@ -12,6 +12,7 @@
 
 
 (require' geiser-edit)
+(require 'geiser-autodoc)
 (require 'geiser-eval)
 (require 'geiser-popup)
 (require 'geiser-custom)
@@ -53,21 +54,24 @@
                                       geiser-xref-follow-link-method))))
 
 (defun geiser-xref--insert-button (xref)
+  (message "inserting %s" xref)
   (let* ((location (cdr (assoc 'location xref)))
          (file (geiser-edit--location-file location))
          (signature (cdr (assoc 'signature xref)))
+         (signature-txt (and signature
+                             (geiser-autodoc--str* signature)))
          (module (cdr (assoc 'module xref)))
          (p (point)))
     (when signature
       (insert "   - ")
       (if (stringp file)
-          (insert-text-button (format "%s" signature)
+          (insert-text-button signature-txt
                               :type 'geiser-xref--button
                               'location location
                               'name (car signature)
-                              'help-echo (format "%s in %s" (car signature)
-                                                 file))
-        (insert (format "%s" signature)))
+                              'help-echo (format "%s in %s"
+                                                 (car signature) file))
+        (insert (format "%s" signature-txt)))
       (fill-region p (point))
       (save-excursion (goto-char p) (indent-sexp))
       (newline))))

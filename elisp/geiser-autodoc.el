@@ -119,8 +119,11 @@ when `geiser-autodoc-display-module-p' is on."
 (defsubst geiser-autodoc--proc-name (proc module)
   (let ((str (if module
                  (format geiser-autodoc-procedure-name-format module proc)
-               proc)))
+               (format "%s" proc))))
     (propertize str 'face 'geiser-font-lock-autodoc-procedure-name)))
+
+(defun geiser-autodoc--str* (full-signature)
+  (geiser-autodoc--str (list (car full-signature)) full-signature))
 
 (defun geiser-autodoc--str (desc signature)
   (let ((proc (car desc))
