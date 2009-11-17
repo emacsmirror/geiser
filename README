@@ -43,18 +43,12 @@
       $ mkdir build; cd build
     - Configure and make:
       $ ../configure && make
-    You'll have a directory called "elisp" which contains Geiser's
-    elisp bytecode. Now, you can either use it in place, with the
-    .emacs incantation:
-
-      (load-file "<path-to-geiser>/build/elisp/geiser.elc")
-
-    or install it with:
-
+    - Install it with:
       $ make install
 
-    and require 'geiser-install (not 'geiser, mind you) in your emacs
-    initialization file:
+    (you might need to get root access, depending on your installation
+    directory) and require 'geiser-install (not 'geiser, mind you) in
+    your emacs initialization file:
 
       (require 'geiser-install)
 
