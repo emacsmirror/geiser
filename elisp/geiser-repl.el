@@ -187,7 +187,8 @@ you at that point.")
   "Start a new Geiser REPL."
   (interactive
    (list (or (geiser-repl--only-impl-p)
-             (and (eq major-mode 'geiser-repl-mode) geiser-impl--implementation)
+             (and (eq major-mode 'geiser-repl-mode)
+                  geiser-impl--implementation)
              (geiser-repl--read-impl
               "Start Geiser for scheme implementation: "))))
    (geiser-repl--start-repl impl))
