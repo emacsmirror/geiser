@@ -19,6 +19,7 @@
 (require 'geiser-base)
 
 (require 'comint)
+(require 'compile)
 
 
 ;;; Customization:
@@ -305,7 +306,8 @@ If no REPL is running, execute `run-geiser' to start a fresh one."
   (setq geiser-eval--get-module-function 'geiser-repl--module-function)
   (when geiser-repl-autodoc-p (geiser-autodoc-mode 1))
   (geiser-company--setup geiser-repl-company-p)
-  (compilation-shell-minor-mode 1))
+  ;; enabling compilation-shell-minor-mode without the annoying highlighter
+  (compilation-setup t)))
 
 (define-key geiser-repl-mode-map "\C-d" 'delete-char)
 
