@@ -292,7 +292,7 @@ If no REPL is running, execute `run-geiser' to start a fresh one."
          (geiser-impl--method 'find-module geiser-impl--implementation)))
     (geiser-doc-module)))
 
-(define-derived-mode geiser-repl-mode comint-mode "Geiser REPL"
+(define-derived-mode geiser-repl-mode comint-mode "REPL"
   "Major mode for interacting with an inferior scheme repl process.
 \\{geiser-repl-mode-map}"
   (set (make-local-variable 'mode-line-process) nil)
