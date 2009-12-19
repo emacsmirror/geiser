@@ -307,7 +307,7 @@ If no REPL is running, execute `run-geiser' to start a fresh one."
   (when geiser-repl-autodoc-p (geiser-autodoc-mode 1))
   (geiser-company--setup geiser-repl-company-p)
   ;; enabling compilation-shell-minor-mode without the annoying highlighter
-  (compilation-setup t)))
+  (compilation-setup t))
 
 (define-key geiser-repl-mode-map "\C-d" 'delete-char)
 
