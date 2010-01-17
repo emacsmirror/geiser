@@ -1,6 +1,6 @@
 ;;; geiser-connection.el -- talking to a scheme process
 
-;; Copyright (C) 2009 Jose Antonio Ortega Ruiz
+;; Copyright (C) 2009, 2010 Jose Antonio Ortega Ruiz
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the Modified BSD License. You should
@@ -155,7 +155,7 @@
           (re-search-forward "((\\(result\\|error\\)\\>")
           (goto-char (match-beginning 0))
           (let ((form (read (current-buffer))))
-            (if (listp form) form (error))))
+            (if (listp form) form (error ""))))
       (error `((error (key . geiser-con-error))
                (output . ,(buffer-string)))))))
 
