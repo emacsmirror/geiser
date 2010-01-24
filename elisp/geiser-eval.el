@@ -1,6 +1,6 @@
 ;;; geiser-eval.el -- sending scheme code for evaluation
 
-;; Copyright (C) 2009 Jose Antonio Ortega Ruiz
+;; Copyright (C) 2009, 2010 Jose Antonio Ortega Ruiz
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the Modified BSD License. You should
@@ -102,7 +102,8 @@ module-exports, autodoc, callers, callees and generic-methods.")
                ((eq (car code) :ge) (geiser-eval--ge (cadr code)))
                ((eq (car code) :scm) (cadr code))
                (t (concat "("
-                          (mapconcat 'geiser-eval--scheme-str code " ") ")"))))
+                          (mapconcat 'geiser-eval--scheme-str code " ")
+                          ")"))))
         ((symbolp code) (format "%s" code))
         (t (format "%S" code))))
 
