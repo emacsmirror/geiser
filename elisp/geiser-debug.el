@@ -1,6 +1,6 @@
 ;;; geiser-debug.el -- displaying debug information and evaluation results
 
-;; Copyright (C) 2009 Jose Antonio Ortega Ruiz
+;; Copyright (C) 2009, 2010 Jose Antonio Ortega Ruiz
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the Modified BSD License. You should
@@ -59,18 +59,19 @@ non-null value.")
          (output (geiser-eval--retort-output ret))
          (impl geiser-impl--implementation)
          (module (geiser-eval--get-module)))
-    (geiser-debug--with-buffer
-      (erase-buffer)
-      (insert what)
-      (newline 2)
-      (when res
-        (insert res)
-        (newline 2))
-      (unless (geiser-debug--display-error impl module key output)
-        (when err (insert (geiser-eval--error-str err) "\n\n"))
-        (when output (insert output "\n\n")))
-      (goto-char (point-min)))
-    (when err (geiser-debug--pop-to-buffer))))
+    (if (eq key 'geiser-debugger) (switch-to-geiser)
+      (geiser-debug--with-buffer
+        (erase-buffer)
+        (insert what)
+        (newline 2)
+        (when res
+          (insert res)
+          (newline 2))
+        (unless (geiser-debug--display-error impl module key output)
+          (when err (insert (geiser-eval--error-str err) "\n\n"))
+          (when output (insert output "\n\n")))
+        (goto-char (point-min)))
+      (when err (geiser-debug--pop-to-buffer)))))
 
 (defsubst geiser-debug--wrap-region (str)
   (format "(begin %s)" str))

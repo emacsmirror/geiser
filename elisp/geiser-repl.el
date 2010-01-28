@@ -1,6 +1,6 @@
 ;;; geiser-repl.el --- Geiser's REPL
 
-;; Copyright (C) 2009 Jose Antonio Ortega Ruiz
+;; Copyright (C) 2009, 2010 Jose Antonio Ortega Ruiz
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the Modified BSD License. You should
@@ -132,6 +132,11 @@ arguments to be used when invoking the scheme binary.")
   "A variable (or thunk returning a value) giving the regular
 expression for this implementation's scheme prompt.")
 
+(geiser-impl--define-caller
+    geiser-repl--debugger-prompt-regexp debugger-prompt-regexp ()
+  "A variable (or thunk returning a value) giving the regular
+expression for this implementation's debugging prompt.")
+
 (geiser-impl--define-caller geiser-repl--startup startup ()
   "Function taking no parameters that is called after the REPL
 has been initialised. All Geiser functionality is available to
@@ -143,14 +148,16 @@ you at that point.")
   (let ((binary (geiser-repl--binary impl))
         (args (geiser-repl--arglist impl))
         (prompt-rx (geiser-repl--prompt-regexp impl))
+        (deb-prompt-rx (geiser-repl--debugger-prompt-regexp impl))
         (cname (geiser-repl--repl-name impl)))
     (unless (and binary prompt-rx)
       (error "Sorry, I don't know how to start a REPL for %s" impl))
     (set (make-local-variable 'comint-prompt-regexp) prompt-rx)
-    (apply 'make-comint-in-buffer `(,cname ,(current-buffer) ,binary nil ,@args))
+    (apply 'make-comint-in-buffer
+           `(,cname ,(current-buffer) ,binary nil ,@args))
     (geiser-repl--wait-for-prompt 10000)
     (geiser-repl--history-setup)
-    (geiser-con--setup-connection (current-buffer) prompt-rx)
+    (geiser-con--setup-connection (current-buffer) prompt-rx deb-prompt-rx)
     (add-to-list 'geiser-repl--repls (current-buffer))
     (geiser-repl--set-this-buffer-repl (current-buffer))
     (geiser-repl--startup impl)))
@@ -305,6 +312,7 @@ If no REPL is running, execute `run-geiser' to start a fresh one."
   (set-syntax-table scheme-mode-syntax-table)
   (setq geiser-eval--get-module-function 'geiser-repl--module-function)
   (when geiser-repl-autodoc-p (geiser-autodoc-mode 1))
+  (setq geiser-autodoc--inhibit-function 'geiser-con--is-debugging)
   (geiser-company--setup geiser-repl-company-p)
   ;; enabling compilation-shell-minor-mode without the annoying highlighter
   (compilation-setup t))

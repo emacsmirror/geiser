@@ -123,23 +123,47 @@
 
 
 ;;; Connection setup:
+(make-variable-buffer-local
+ (defvar geiser-con--debugging-prompt-regexp nil))
+
+(defun geiser-con--is-debugging ()
+  (and geiser-con--debugging-prompt-regexp
+       comint-last-prompt-overlay
+       (string-match-p geiser-con--debugging-prompt-regexp
+                       (buffer-substring (overlay-start
+                                          comint-last-prompt-overlay)
+                                         (overlay-end
+                                          comint-last-prompt-overlay)))))
 
 (defun geiser-con--cleanup-connection (c)
   (geiser-con--connection-cancel-timer c))
 
-(defun geiser-con--setup-connection (buffer prompt-regexp)
+(defun geiser-con--setup-connection (buffer
+                                     prompt-regexp
+                                     &optional debug-prompt-regexp)
   (with-current-buffer buffer
     (when geiser-con--connection
       (geiser-con--cleanup-connection geiser-con--connection))
+    (setq geiser-con--debugging-prompt-regexp debug-prompt-regexp)
     (setq geiser-con--connection (geiser-con--make-connection buffer))
-    (geiser-con--setup-comint prompt-regexp)
+    (geiser-con--setup-comint prompt-regexp debug-prompt-regexp)
     (geiser-con--connection-start-timer geiser-con--connection)
     (message "Geiser REPL up and running!")))
 
-(defun geiser-con--setup-comint (prompt-regexp)
-  (set (make-local-variable 'comint-redirect-insert-matching-regexp) nil)
-  (set (make-local-variable 'comint-redirect-finished-regexp) prompt-regexp)
-  (add-hook 'comint-redirect-hook 'geiser-con--comint-redirect-hook nil t))
+(defun geiser-con--setup-comint (prompt-regexp debug-prompt-regexp)
+  (set (make-local-variable 'comint-redirect-insert-matching-regexp)
+       (not (null debug-prompt-regexp)))
+  (set (make-local-variable 'comint-redirect-finished-regexp)
+       (if debug-prompt-regexp
+           (format "\\(%s\\)\\|\\(%s\\)" prompt-regexp debug-prompt-regexp)
+         prompt-regexp))
+  (setq comint-prompt-regexp comint-redirect-finished-regexp)
+  (add-hook 'comint-redirect-hook 'geiser-con--comint-redirect-hook nil t)
+  (when debug-prompt-regexp
+    (add-hook 'comint-redirect-filter-functions
+              'geiser-con--debug-watcher
+              nil
+              t)))
 
 
 ;;; Requests handling:
@@ -149,29 +173,41 @@
 
 (defun geiser-con--comint-buffer-form ()
   (with-current-buffer (geiser-con--comint-buffer)
-    (condition-case nil
-        (progn
-          (goto-char (point-min))
-          (re-search-forward "((\\(result\\|error\\)\\>")
-          (goto-char (match-beginning 0))
-          (let ((form (read (current-buffer))))
-            (if (listp form) form (error ""))))
-      (error `((error (key . geiser-con-error))
-               (output . ,(buffer-string)))))))
+    (goto-char (point-max))
+    (if (and geiser-con--debugging-prompt-regexp
+             (re-search-backward geiser-con--debugging-prompt-regexp nil t))
+        `((error (key . geiser-debugger))
+          (output . ,(buffer-substring (point-min) (point))))
+      (condition-case nil
+          (progn
+            (goto-char (point-min))
+            (re-search-forward "((\\(result\\|error\\)\\>")
+            (goto-char (match-beginning 0))
+            (let ((form (read (current-buffer))))
+              (if (listp form) form (error ""))))
+        (error `((error (key . geiser-con-error))
+                 (output . ,(buffer-string))))))))
 
 (defun geiser-con--process-next (con)
   (when (not (geiser-con--connection-current-request con))
     (let* ((buffer (geiser-con--connection-buffer con))
+           (debug-prompt (with-current-buffer buffer
+                           geiser-con--debugging-prompt-regexp))
            (req (geiser-con--connection-pop-request con))
            (str (and req (geiser-con--request-string req)))
            (cbuf (geiser-con--comint-buffer)))
       (if (not (buffer-live-p buffer))
           (geiser-con--connection-cancel-timer con)
         (when (and buffer req str)
-          (with-current-buffer cbuf (delete-region (point-min) (point-max)))
+          (with-current-buffer cbuf
+            (setq comint-redirect-echo-input nil)
+            (setq geiser-con--debugging-prompt-regexp debug-prompt)
+            (delete-region (point-min) (point-max)))
           (set-buffer buffer)
-          (geiser-log--info "<%s>: %s" (geiser-con--request-id req) str)
-          (comint-redirect-send-command (format "%s" str) cbuf nil t))))))
+          (if (geiser-con--is-debugging)
+              (geiser-con--request-deactivate req)
+            (geiser-log--info "<%s>: %s" (geiser-con--request-id req) str)
+            (comint-redirect-send-command (format "%s" str) cbuf nil t)))))))
 
 (defun geiser-con--process-completed-request (req)
   (let ((cont (geiser-con--request-continuation req))
@@ -191,10 +227,20 @@
 (defun geiser-con--comint-redirect-hook ()
   (if (not geiser-con--connection)
       (geiser-log--error "No connection in buffer")
-    (let ((req (geiser-con--connection-current-request geiser-con--connection)))
+    (let ((req (geiser-con--connection-current-request
+                geiser-con--connection)))
       (if (not req) (geiser-log--error "No current request")
         (geiser-con--process-completed-request req)
-        (geiser-con--connection-clean-current-request geiser-con--connection)))))
+        (geiser-con--connection-clean-current-request
+         geiser-con--connection)))))
+
+(defun geiser-con--debug-watcher (pstr)
+  (when (string-match-p geiser-con--debugging-prompt-regexp pstr)
+    (setq comint-redirect-echo-input t)
+    (setq pstr (concat (with-current-buffer comint-redirect-output-buffer
+                         (buffer-string))
+                       pstr)))
+  pstr)
 
 (defadvice comint-redirect-setup
   (after geiser-con--advice
@@ -220,11 +266,15 @@
 (defvar geiser-connection-timeout 30000
   "Time limit, in msecs, blocking on synchronous evaluation requests")
 
-(defun geiser-con--send-string/wait (buffer/proc str cont &optional timeout sbuf)
+(defun geiser-con--send-string/wait (buffer/proc str cont
+                                     &optional timeout sbuf)
   (save-current-buffer
     (let ((con (geiser-con--get-connection buffer/proc)))
       (unless (geiser-con--connection-process con)
         (error geiser-con--error-message))
+      (with-current-buffer (geiser-con--connection-buffer con)
+        (when (geiser-con--is-debugging)
+          (error "Geiser REPL is in debug mode")))
       (let* ((req (geiser-con--send-string buffer/proc str cont sbuf))
              (id (and req (geiser-con--request-id req)))
              (time (or timeout geiser-connection-timeout))

@@ -1,6 +1,6 @@
 ;; geiser-autodoc.el -- autodoc mode
 
-;; Copyright (C) 2009 Jose Antonio Ortega Ruiz
+;; Copyright (C) 2009, 2010 Jose Antonio Ortega Ruiz
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the Modified BSD License. You should
@@ -158,11 +158,15 @@ when `geiser-autodoc-display-module-p' is on."
 ;;; Autodoc function:
 
 (make-variable-buffer-local
- (defvar geiser-autodoc--inhibit-flag nil))
+ (defvar geiser-autodoc--inhibit-function nil))
+
+(defsubst geiser-autodoc--inhibit ()
+  (and geiser-autodoc--inhibit-function
+       (funcall geiser-autodoc--inhibit-function)))
 
 (defun geiser-autodoc--eldoc-function ()
   (condition-case e
-      (and (not geiser-autodoc--inhibit-flag)
+      (and (not (geiser-autodoc--inhibit))
            (geiser-autodoc--autodoc (geiser-syntax--scan-sexps)))
     (error (format "Autodoc not available (%s)" (error-message-string e)))))
 
