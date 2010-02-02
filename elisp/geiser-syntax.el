@@ -1,6 +1,6 @@
 ;;; geiser-syntax.el -- utilities for parsing scheme syntax
 
-;; Copyright (C) 2009 Jose Antonio Ortega Ruiz
+;; Copyright (C) 2009, 2010 Jose Antonio Ortega Ruiz
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the Modified BSD License. You should
@@ -173,8 +173,9 @@
 
 (defun geiser-syntax--read-from-string (string &optional start end)
   (when (stringp string)
-    (let ((start (or start 0))
-          (end (or end (length string))))
+    (let* ((start (or start 0))
+           (end (or end (length string)))
+           (max-lisp-eval-depth (max max-lisp-eval-depth (- end start))))
       (with-temp-buffer
         (save-excursion (insert string))
         (cons (ignore-errors (geiser-syntax--read)) (point))))))
