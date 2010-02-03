@@ -1,6 +1,6 @@
 ;; geiser-plt.el -- geiser support for PLT scheme
 
-;; Copyright (C) 2009 Jose Antonio Ortega Ruiz
+;; Copyright (C) 2009, 2010 Jose Antonio Ortega Ruiz
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the Modified BSD License. You should
@@ -112,10 +112,15 @@ This function uses `geiser-plt-init-file' if it exists."
 
 ;;; External help
 
-(defun geiser-plt--external-help (symbol module)
-  (message "Requesting help for '%s'..." symbol)
+(defsubst geiser-plt--get-help (symbol module)
   (geiser-eval--send/wait
-   `(:eval (get-help ',symbol (:module ,module)) geiser/autodoc))
+   `(:eval (get-help ',symbol (:module ,module)) geiser/autodoc)))
+
+(defun geiser-plt--external-help (id module)
+  (message "Requesting help for '%s'..." id)
+  (let ((out (geiser-eval--retort-output (geiser-plt--get-help id module))))
+    (when (and out (string-match " but provided by:\n +\\(.+\\)\n" out))
+      (geiser-plt--get-help symbol (match-string 1 out))))
   (minibuffer-message "%s done" (current-message))
   t)
 
