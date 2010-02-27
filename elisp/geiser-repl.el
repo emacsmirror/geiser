@@ -20,6 +20,7 @@
 
 (require 'comint)
 (require 'compile)
+(require 'scheme)
 
 
 ;;; Customization:
@@ -287,10 +288,11 @@ If no REPL is running, execute `run-geiser' to start a fresh one."
   (when (= (point) (comint-bol)) (beginning-of-line)))
 
 (defun geiser-repl--beginning-of-defun ()
-  (let ((p (point)))
-    (comint-bol)
-    (when (not (eq (char-after (point)) ?\())
-      (skip-syntax-forward "^(" p))))
+  (save-restriction
+    (when comint-last-prompt-overlay
+      (narrow-to-region (overlay-end comint-last-prompt-overlay) (point)))
+    (let ((beginning-of-defun-function nil))
+      (beginning-of-defun))))
 
 (defun geiser-repl--module-function (&optional ignore) :f)
 
@@ -300,24 +302,45 @@ If no REPL is running, execute `run-geiser' to start a fresh one."
          (geiser-impl--method 'find-module geiser-impl--implementation)))
     (geiser-doc-module)))
 
+(defun geiser-repl--newline-and-indent ()
+  (interactive)
+  (save-restriction
+    (narrow-to-region comint-last-input-start (point-max))
+    (insert "\n")
+    (lisp-indent-line)))
+
+(defun geiser-repl--send-input ()
+  (interactive)
+  (let ((p (point)))
+    (end-of-line)
+    (if (zerop (geiser-syntax--nesting-level))
+        (comint-send-input)
+      (goto-char p)
+      (geiser-repl--newline-and-indent))))
+
 (define-derived-mode geiser-repl-mode comint-mode "REPL"
   "Major mode for interacting with an inferior scheme repl process.
 \\{geiser-repl-mode-map}"
+  (scheme-mode-variables)
   (set (make-local-variable 'mode-line-process) nil)
   (set (make-local-variable 'comint-use-prompt-regexp) t)
   (set (make-local-variable 'comint-prompt-read-only)
        geiser-repl-read-only-prompt-p)
   (set (make-local-variable 'beginning-of-defun-function)
        'geiser-repl--beginning-of-defun)
-  (set-syntax-table scheme-mode-syntax-table)
   (setq geiser-eval--get-module-function 'geiser-repl--module-function)
   (when geiser-repl-autodoc-p (geiser-autodoc-mode 1))
   (setq geiser-autodoc--inhibit-function 'geiser-con--is-debugging)
   (geiser-company--setup geiser-repl-company-p)
+  (setq geiser-smart-tab-mode-string "")
+  (geiser-smart-tab-mode 1)
   ;; enabling compilation-shell-minor-mode without the annoying highlighter
   (compilation-setup t))
 
 (define-key geiser-repl-mode-map "\C-d" 'delete-char)
+(define-key geiser-repl-mode-map "\C-m" 'geiser-repl--send-input)
+(define-key geiser-repl-mode-map [return] 'geiser-repl--send-input)
+(define-key geiser-repl-mode-map "\C-j" 'geiser-repl--newline-and-indent)
 
 (define-key geiser-repl-mode-map "\C-ck" 'geiser-repl-nuke)
 (define-key geiser-repl-mode-map "\C-c\C-k" 'geiser-repl-nuke)
@@ -331,15 +354,21 @@ If no REPL is running, execute `run-geiser' to start a fresh one."
 (define-key geiser-repl-mode-map "\C-cm" 'geiser-repl--doc-module)
 (define-key geiser-repl-mode-map "\C-cl" 'geiser-load-file)
 
-(define-key geiser-repl-mode-map "\M-p" 'comint-previous-matching-input-from-input)
-(define-key geiser-repl-mode-map "\M-n" 'comint-next-matching-input-from-input)
+(define-key geiser-repl-mode-map "\M-p"
+  'comint-previous-matching-input-from-input)
+(define-key geiser-repl-mode-map "\M-n"
+  'comint-next-matching-input-from-input)
 (define-key geiser-repl-mode-map "\C-c\M-p" 'comint-previous-input)
 (define-key geiser-repl-mode-map "\C-c\M-n" 'comint-next-input)
 
-(define-key geiser-repl-mode-map (kbd "TAB") 'geiser-completion--complete-symbol)
-(define-key geiser-repl-mode-map (kbd "M-TAB") 'geiser-completion--complete-symbol)
-(define-key geiser-repl-mode-map (kbd "M-`") 'geiser-completion--complete-module)
-(define-key geiser-repl-mode-map (kbd "C-.") 'geiser-completion--complete-module)
+(define-key geiser-repl-mode-map (kbd "TAB")
+  'geiser-completion--complete-symbol)
+(define-key geiser-repl-mode-map (kbd "M-TAB")
+  'geiser-completion--complete-symbol)
+(define-key geiser-repl-mode-map (kbd "M-`")
+  'geiser-completion--complete-module)
+(define-key geiser-repl-mode-map (kbd "C-.")
+  'geiser-completion--complete-module)
 (define-key geiser-repl-mode-map "\M-." 'geiser-edit-symbol-at-point)
 (define-key geiser-repl-mode-map "\M-," 'geiser-edit-pop-edit-symbol-stack)
 
