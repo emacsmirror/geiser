@@ -159,7 +159,8 @@
                  (geiser-syntax--read/list)))))
 
 (defun geiser-syntax--read ()
-  (let ((token (geiser-syntax--read/next-token)))
+  (let ((token (geiser-syntax--read/next-token))
+        (max-lisp-eval-depth (max max-lisp-eval-depth 3000)))
     (case (car token)
       (eob nil)
       (lparen (geiser-syntax--read/list))
