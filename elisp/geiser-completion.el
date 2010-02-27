@@ -1,6 +1,6 @@
 ;;; geiser-completion.el -- tab completion
 
-;; Copyright (C) 2009 Jose Antonio Ortega Ruiz
+;; Copyright (C) 2009, 2010 Jose Antonio Ortega Ruiz
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the Modified BSD License. You should
@@ -137,7 +137,8 @@ terminates a current completion."
 (defun geiser-completion--symbol-list (prefix)
   (delete-duplicates
    (append (all-completions prefix
-                            (mapcar 'symbol-name (geiser-syntax--locals-around-point)))
+                            (mapcar 'symbol-name
+                                    (geiser-syntax--locals-around-point)))
            (geiser-eval--send/result `(:eval ((:ge completions) ,prefix))))
    :test 'string=))
 
@@ -240,7 +241,8 @@ closing parenthesis, try completion otherwise."
   (interactive)
   (let ((indent (or (bolp) (memq (syntax-class (syntax-after (1- (point))))
                                  '(0 5)))))
-    (if indent (indent-according-to-mode) (geiser-completion--complete-symbol))))
+    (if indent (indent-according-to-mode)
+      (geiser-completion--complete-symbol))))
 
 (define-minor-mode geiser-smart-tab-mode
   "Toggle smart tab mode.
