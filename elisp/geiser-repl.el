@@ -68,6 +68,11 @@ implementation name gets appended to it."
   :type 'boolean
   :group 'geiser-repl)
 
+(geiser-custom--defcustom geiser-repl-auto-indent-p t
+  "Whether newlines for incomplete sexps are autoindented."
+  :type 'boolean
+  :group 'geiser-repl)
+
 
 ;;; Geiser REPL buffers and processes:
 
@@ -316,7 +321,9 @@ If no REPL is running, execute `run-geiser' to start a fresh one."
     (if (zerop (geiser-syntax--nesting-level))
         (comint-send-input)
       (goto-char p)
-      (geiser-repl--newline-and-indent))))
+      (if geiser-repl-auto-indent-p
+          (geiser-repl--newline-and-indent)
+        (insert "\n")))))
 
 (define-derived-mode geiser-repl-mode comint-mode "REPL"
   "Major mode for interacting with an inferior scheme repl process.
@@ -361,8 +368,6 @@ If no REPL is running, execute `run-geiser' to start a fresh one."
 (define-key geiser-repl-mode-map "\C-c\M-p" 'comint-previous-input)
 (define-key geiser-repl-mode-map "\C-c\M-n" 'comint-next-input)
 
-(define-key geiser-repl-mode-map (kbd "TAB")
-  'geiser-completion--complete-symbol)
 (define-key geiser-repl-mode-map (kbd "M-TAB")
   'geiser-completion--complete-symbol)
 (define-key geiser-repl-mode-map (kbd "M-`")
