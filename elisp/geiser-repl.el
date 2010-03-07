@@ -239,8 +239,14 @@ module command as a string")
     (switch-to-geiser)
     (when (and m (eq major-mode 'geiser-repl-mode))
       (goto-char (point-max))
-      (insert m)
-      (comint-send-input))))
+      (let ((b (or (and comint-last-prompt-overlay
+                        (overlay-start comint-last-prompt-overlay))
+                   (point))))
+        (insert m)
+        (let ((e (point))
+              (comint-input-filter (lambda (x) nil)))
+          (comint-send-input nil t)
+          (comint-kill-region b (1+ e)))))))
 
 (defun geiser-repl-nuke ()
   "Try this command if the REPL becomes unresponsive."
