@@ -205,7 +205,8 @@ interacting with the Geiser REPL is at your disposal.
 
 (defun geiser-mode--triple-chord (p k c)
   (define-key geiser-mode-map (vector '(control ?c) `(control ,p) k) c)
-  (define-key geiser-mode-map (vector '(control ?c) `(control ,p) `(control ,k)) c))
+  (define-key geiser-mode-map (vector '(control ?c) `(control ,p)
+                                      `(control ,k)) c))
 
 (define-key geiser-mode-map "\C-c\C-z" 'geiser-mode-switch-to-repl)
 (define-key geiser-mode-map "\C-c\C-s" 'geiser-set-scheme)

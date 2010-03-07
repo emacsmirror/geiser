@@ -1,6 +1,6 @@
 ;; geiser-company.el -- integration with company-mode
 
-;; Copyright (C) 2009 Jose Antonio Ortega Ruiz
+;; Copyright (C) 2009, 2010 Jose Antonio Ortega Ruiz
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the Modified BSD License. You should
@@ -96,9 +96,12 @@
      (geiser-company--make-backend company-geiser-ids nil)
      (geiser-company--make-backend company-geiser-modules t)
      (add-to-list 'company-backends geiser-company--backend)
-     (add-hook 'company-completion-finished-hook 'geiser-company--restore-autodoc)
-     (add-hook 'company-completion-cancelled-hook 'geiser-company--restore-autodoc)
-     (add-hook 'company-completion-started-hook 'geiser-company--inhibit-autodoc)))
+     (add-hook 'company-completion-finished-hook
+               'geiser-company--restore-autodoc)
+     (add-hook 'company-completion-cancelled-hook
+               'geiser-company--restore-autodoc)
+     (add-hook 'company-completion-started-hook
+               'geiser-company--inhibit-autodoc)))
 
 
 ;;; Reload support:
