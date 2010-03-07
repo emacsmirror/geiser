@@ -237,9 +237,10 @@ module command as a string")
   (let ((m (geiser-repl--enter-cmd geiser-impl--implementation
                                    (geiser-eval--get-module))))
     (switch-to-geiser)
-    (when m
-      (comint-send-string nil m)
-      (comint-send-eof))))
+    (when (and m (eq major-mode 'geiser-repl-mode))
+      (goto-char (point-max))
+      (insert m)
+      (comint-send-input))))
 
 (defun geiser-repl-nuke ()
   "Try this command if the REPL becomes unresponsive."
