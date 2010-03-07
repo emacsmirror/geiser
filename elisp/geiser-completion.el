@@ -134,11 +134,25 @@ terminates a current completion."
 
 ;;; Completion functionality:
 
+(defvar geiser-completion--binding-forms nil)
+(geiser-impl--register-local-variable
+ 'geiser-completion--binding-forms 'binding-forms nil
+ "A list of forms introducing local bindings, a la let or lambda.")
+
+(defvar geiser-completion--binding-forms* nil)
+(geiser-impl--register-local-variable
+ 'geiser-completion--binding-forms* 'binding-forms* nil
+ "A list of forms introducing nested local bindings, a la let*.")
+
+(defsubst geiser-completion--locals ()
+  (mapcar 'symbol-name
+          (geiser-syntax--locals-around-point
+           geiser-completion--binding-forms
+           geiser-completion--binding-forms*)))
+
 (defun geiser-completion--symbol-list (prefix)
   (delete-duplicates
-   (append (all-completions prefix
-                            (mapcar 'symbol-name
-                                    (geiser-syntax--locals-around-point)))
+   (append (all-completions prefix (geiser-completion--locals))
            (geiser-eval--send/result `(:eval ((:ge completions) ,prefix))))
    :test 'string=))
 

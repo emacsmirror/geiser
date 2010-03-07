@@ -221,29 +221,41 @@
       (let ((fst (symbol-at-point)))
         (and fst `((,fst 0)))))))
 
-(defun geiser-syntax--scan-locals (form partial locals)
+(defsubst geiser-syntax--binding-form-p (bfs sbfs f)
+  (or (memq f '(define define* lambda let let* letrec))
+      (memq f bfs)
+      (memq f sbfs)))
+
+(defsubst geiser-syntax--binding-form*-p (sbfs f)
+  (or (eq 'let* f) (memq f sbfs)))
+
+(defun geiser-syntax--scan-locals (bfs sbfs form partial locals)
   (flet ((if-symbol (x) (and (symbolp x) x))
          (if-list (x) (and (listp x) x))
          (normalize (vars) (mapcar (lambda (i) (if (listp i) (car i) i)) vars)))
     (cond ((or (null form) (not (listp form))) (normalize locals))
-          ((not (memq (car form) '(define let let* letrec lambda)))
-           (geiser-syntax--scan-locals (car (last form)) partial locals))
+          ((not (geiser-syntax--binding-form-p bfs sbfs (car form)))
+           (geiser-syntax--scan-locals bfs sbfs
+                                       (car (last form)) partial locals))
           (t
            (let* ((head (car form))
                   (name (if-symbol (cadr form)))
                   (names (if name (if-list (caddr form))
                            (if-list (cadr form))))
                   (rest (if name (cdddr form) (cddr form)))
-                  (use-names (or (eq head 'let*) (not partial) rest)))
+                  (use-names (or rest
+                                 (not partial)
+                                 (geiser-syntax--binding-form*-p sbfs head))))
              (when name (push name locals))
              (when use-names (dolist (n names) (push n locals)))
              (dolist (f (butlast rest))
                (when (eq (car f) 'define) (push (cadr f) locals)))
-             (geiser-syntax--scan-locals (car (last (or rest names)))
+             (geiser-syntax--scan-locals bfs sbfs
+                                         (car (last (or rest names)))
                                          partial
                                          locals))))))
 
-(defun geiser-syntax--locals-around-point ()
+(defun geiser-syntax--locals-around-point (bfs sbfs)
   (when (eq major-mode 'scheme-mode)
     (save-excursion
       (geiser-syntax--skip-comment/string)
@@ -252,7 +264,7 @@
           (backward-up-list))
         (multiple-value-bind (form end)
             (geiser-syntax--form-after-point boundary)
-          (geiser-syntax--scan-locals form (> end boundary) '()))))))
+          (geiser-syntax--scan-locals bfs sbfs form (> end boundary) '()))))))
 
 
 ;;; Fontify strings as Scheme code:
