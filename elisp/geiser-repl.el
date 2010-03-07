@@ -234,7 +234,8 @@ If no REPL is running, execute `run-geiser' to start a fresh one."
   (comint-kill-region comint-last-input-start (point))
   (comint-redirect-cleanup)
   (geiser-con--setup-connection (current-buffer)
-                                comint-prompt-regexp))
+                                comint-prompt-regexp
+                                geiser-con--debugging-prompt-regexp))
 
 
 ;;; REPL history and clean-up:

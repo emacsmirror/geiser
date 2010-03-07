@@ -143,7 +143,8 @@ determine its scheme flavour."
     (let ((runner (intern (format "run-%s" name)))
           (switcher (intern (format "switch-to-%s" name)))
           (runner-doc (format "Start a new %s REPL." name))
-          (switcher-doc (format "Switch to a running %s REPL, or start one." name))
+          (switcher-doc (format "Switch to a running %s REPL, or start one."
+                                name))
           (impl-rx (format "\\.\\(%s\\)\\.s\\(l?s|cm\\)$" name))
           (ask (make-symbol "ask")))
       `(progn
@@ -161,7 +162,8 @@ determine its scheme flavour."
          (provide ',(geiser-impl--feature name))))))
 
 (defun geiser-impl--add-to-alist (kind what impl &optional append)
-  (add-to-list 'geiser-implementations-alist (list (list kind what) impl) append))
+  (add-to-list 'geiser-implementations-alist
+               (list (list kind what) impl) append))
 
 
 ;;; Trying to guess the scheme implementation:
@@ -215,7 +217,8 @@ buffer contains Scheme code of the given implementation.")
 (defsubst geiser-impl--registered-method (impl method fallback)
   (let ((m (geiser-impl--method method impl)))
     (if (fboundp m) m
-      (or fallback (error "%s not defined for %s implementation" method impl)))))
+      (or fallback (error "%s not defined for %s implementation"
+                          method impl)))))
 
 (defsubst geiser-impl--registered-value (impl method fallback)
   (let ((m (geiser-impl--method method impl)))
