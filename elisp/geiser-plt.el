@@ -112,6 +112,13 @@ This function uses `geiser-plt-init-file' if it exists."
 (defun geiser-plt--enter-command (module)
   (and (stringp module) (format "(enter! (file %S))" module)))
 
+(defconst geiser-plt--binding-forms
+  '(for for/list for/hash for/hasheq for/and for/or
+    for/lists for/first for/last for/fold))
+
+(defconst geiser-plt--binding-forms*
+  '(for* for*/list for*/lists for*/hash for*/hasheq for*/and
+    for*/or for*/first for*/last for*/fold))
 
 ;;; External help
 
@@ -183,7 +190,9 @@ This function uses `geiser-plt-init-file' if it exists."
   (find-symbol-begin geiser-plt--symbol-begin)
   (display-error geiser-plt--display-error)
   (display-help geiser-plt--external-help)
-  (check-buffer geiser-plt--guess))
+  (check-buffer geiser-plt--guess)
+  (binding-forms geiser-plt--binding-forms)
+  (binding-forms* geiser-plt--binding-forms*))
 
 (geiser-impl--add-to-alist 'regexp "\\.mzscheme\\.sl?s$" 'plt t)
 (geiser-impl--add-to-alist 'regexp "\\.ss$" 'plt t)
