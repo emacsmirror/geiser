@@ -227,6 +227,20 @@ If no REPL is running, execute `run-geiser' to start a fresh one."
 
 (defalias 'geiser 'switch-to-geiser)
 
+(geiser-impl--define-caller geiser-repl--enter-cmd enter-command (module)
+  "Function taking a module designator and returning a REPL enter
+module command as a string")
+
+(defun switch-to-geiser-module ()
+  "Switch to running Geiser REPL and try to enter current module."
+  (interactive)
+  (let ((m (geiser-repl--enter-cmd geiser-impl--implementation
+                                   (geiser-eval--get-module))))
+    (switch-to-geiser)
+    (when m
+      (comint-send-string nil m)
+      (comint-send-eof))))
+
 (defun geiser-repl-nuke ()
   "Try this command if the REPL becomes unresponsive."
   (interactive)

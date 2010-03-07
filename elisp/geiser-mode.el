@@ -1,6 +1,6 @@
 ;; geiser-mode.el -- minor mode for scheme buffers
 
-;; Copyright (C) 2009 Jose Antonio Ortega Ruiz
+;; Copyright (C) 2009, 2010 Jose Antonio Ortega Ruiz
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the Modified BSD License. You should
@@ -150,6 +150,12 @@ With prefix, recursively macro-expand the resulting expression."
     (geiser-impl--set-buffer-implementation impl)
     (geiser-repl--get-repl impl)))
 
+(defun geiser-mode-switch-to-repl (arg)
+  "Switches to Geiser REPL.
+With prefix, try to enter the current's buffer module."
+  (interactive "P")
+  (if arg (switch-to-geiser-module) (switch-to-geiser)))
+
 
 ;;; Geiser mode:
 
@@ -201,7 +207,7 @@ interacting with the Geiser REPL is at your disposal.
   (define-key geiser-mode-map (vector '(control ?c) `(control ,p) k) c)
   (define-key geiser-mode-map (vector '(control ?c) `(control ,p) `(control ,k)) c))
 
-(define-key geiser-mode-map "\C-c\C-z" 'switch-to-geiser)
+(define-key geiser-mode-map "\C-c\C-z" 'geiser-mode-switch-to-repl)
 (define-key geiser-mode-map "\C-c\C-s" 'geiser-set-scheme)
 
 (define-key geiser-mode-map "\C-c\C-l" 'geiser-load-current-buffer)

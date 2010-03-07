@@ -109,6 +109,9 @@ This function uses `geiser-plt-init-file' if it exists."
 (defun geiser-plt--symbol-begin (module)
   (save-excursion (skip-syntax-backward "^-()>") (point)))
 
+(defun geiser-plt--enter-command (module)
+  (and (stringp module) (format "(enter! (file %S))" module)))
+
 
 ;;; External help
 
@@ -169,13 +172,14 @@ This function uses `geiser-plt-init-file' if it exists."
 ;;; Implementation definition:
 
 (define-geiser-implementation plt
+  (unsupported-procedures '(callers callees generic-methods))
   (binary geiser-plt--binary)
   (arglist geiser-plt--parameters)
   (startup)
-  (unsupported-procedures '(callers callees generic-methods))
   (prompt-regexp geiser-plt--prompt-regexp)
   (marshall-procedure geiser-plt--geiser-procedure)
   (find-module geiser-plt--get-module)
+  (enter-command geiser-plt--enter-command)
   (find-symbol-begin geiser-plt--symbol-begin)
   (display-error geiser-plt--display-error)
   (display-help geiser-plt--external-help)
