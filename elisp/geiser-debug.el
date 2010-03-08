@@ -59,7 +59,10 @@ non-null value.")
          (output (geiser-eval--retort-output ret))
          (impl geiser-impl--implementation)
          (module (geiser-eval--get-module)))
-    (if (eq key 'geiser-debugger) (switch-to-geiser)
+    (if (eq key 'geiser-debugger)
+        (progn
+          (switch-to-geiser)
+          (geiser-debug--display-error impl module key output))
       (geiser-debug--with-buffer
         (erase-buffer)
         (insert what)

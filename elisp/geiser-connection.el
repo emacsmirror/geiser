@@ -158,12 +158,7 @@
            (format "\\(%s\\)\\|\\(%s\\)" prompt-regexp debug-prompt-regexp)
          prompt-regexp))
   (setq comint-prompt-regexp comint-redirect-finished-regexp)
-  (add-hook 'comint-redirect-hook 'geiser-con--comint-redirect-hook nil t)
-  (when debug-prompt-regexp
-    (add-hook 'comint-redirect-filter-functions
-              'geiser-con--debug-watcher
-              nil
-              t)))
+  (add-hook 'comint-redirect-hook 'geiser-con--comint-redirect-hook nil t))
 
 
 ;;; Requests handling:
@@ -233,14 +228,6 @@
         (geiser-con--process-completed-request req)
         (geiser-con--connection-clean-current-request
          geiser-con--connection)))))
-
-(defun geiser-con--debug-watcher (pstr)
-  (when (string-match-p geiser-con--debugging-prompt-regexp pstr)
-    (setq comint-redirect-echo-input t)
-    (setq pstr (concat (with-current-buffer comint-redirect-output-buffer
-                         (buffer-string))
-                       pstr)))
-  pstr)
 
 (defadvice comint-redirect-setup
   (after geiser-con--advice
