@@ -146,9 +146,10 @@ or following links in error buffers.")
 
 (defun geiser-edit-symbol (symbol &optional method)
   "Asks for a symbol to edit, with completion."
-  (interactive (list (geiser-completion--read-symbol "Edit symbol: "
-                                                     nil
-                                                     geiser-edit--symbol-history)))
+  (interactive
+   (list (geiser-completion--read-symbol "Edit symbol: "
+                                         nil
+                                         geiser-edit--symbol-history)))
   (let ((cmd `(:eval ((:ge symbol-location) ',symbol))))
     (geiser-edit--try-edit symbol (geiser-eval--send/wait cmd) method)))
 
