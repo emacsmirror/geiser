@@ -1,6 +1,6 @@
 ;;; geiser-doc.el -- accessing scheme-provided documentation
 
-;; Copyright (C) 2009 Jose Antonio Ortega Ruiz
+;; Copyright (C) 2009, 2010 Jose Antonio Ortega Ruiz
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the Modified BSD License. You should
@@ -142,6 +142,9 @@
 (make-variable-buffer-local
  (defvar geiser-doc--buffer-link nil))
 
+(defsubst geiser-doc--implementation ()
+  (geiser-doc--link-impl geiser-doc--buffer-link))
+
 
 ;;; Commands:
 
@@ -156,7 +159,8 @@ help (e.g. browse an HTML page) implementing this method.")
    `(:eval ((:ge symbol-documentation) ',symbol) ,module)))
 
 (defun geiser-doc--get-module-exports (module)
-  (geiser-eval--send/result `(:eval ((:ge module-exports) (:module ,module)))))
+  (geiser-eval--send/result
+   `(:eval ((:ge module-exports) (:module ,module)))))
 
 (defun geiser-doc-symbol (symbol &optional module impl)
   (let ((module (or module (geiser-eval--get-module)))
@@ -167,8 +171,9 @@ help (e.g. browse an HTML page) implementing this method.")
             (message "No documentation available for '%s'" symbol)
           (geiser-doc--with-buffer
             (erase-buffer)
-            (geiser-doc--insert-title (geiser-autodoc--str (list (symbol-name symbol) 0)
-                                                           (cdr (assoc 'signature ds))))
+            (geiser-doc--insert-title
+             (geiser-autodoc--str (list (symbol-name symbol) 0)
+                                  (cdr (assoc 'signature ds))))
             (newline)
             (insert (or (cdr (assoc 'docstring ds)) ""))
             (goto-char (point-min))
@@ -253,6 +258,23 @@ With prefix, the current page is deleted from history."
 
 ;;; Documentation browser and mode:
 
+(defsubst geiser-doc--module ()
+  (geiser-impl--call-method
+   'find-module
+   (geiser-doc--implementation)
+   (geiser-doc--link-module geiser-doc--buffer-link)))
+
+(defun geiser-doc-edit-symbol-at-point ()
+  "Open definition of symbol at point."
+  (interactive)
+  (let* ((impl (geiser-doc--implementation))
+         (module (geiser-doc--module)))
+    (unless (and impl module)
+      (error "I don't know what module this buffer refers to."))
+    (with--geiser-implementation impl
+      (let ((geiser-eval--get-module-function (lambda (&rest x) module)))
+        (geiser-edit-symbol-at-point)))))
+
 (defvar geiser-doc-mode-map
   (let ((map (make-sparse-keymap)))
     (suppress-keymap map)
@@ -266,7 +288,7 @@ With prefix, the current page is deleted from history."
     (define-key map "r" 'geiser-doc-refresh)
     (define-key map (kbd "SPC")  'scroll-up)
     (define-key map (kbd "S-SPC") 'scroll-down)
-    (define-key map "\M-." 'geiser-edit-symbol-at-point)
+    (define-key map "\M-." 'geiser-doc-edit-symbol-at-point)
     (define-key map "\C-cz" 'run-geiser)
     (define-key map "\C-c\C-z" 'run-geiser)
     map))
