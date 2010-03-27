@@ -158,12 +158,12 @@ This function uses `geiser-plt-init-file' if it exists."
   (when msg
     (let ((p (point)))
       (insert msg)
-      (let ((end (point)))
+      (when key
+        (let ((end (point)))
         (goto-char p)
         (mapc 'geiser-plt--find-files geiser-plt--file-rxs)
         (goto-char end)
-        (fill-region p end)
-        (newline))))
+        (newline)))))
   t)
 
 
