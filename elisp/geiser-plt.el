@@ -60,7 +60,8 @@ This function uses `geiser-plt-init-file' if it exists."
       ,@(apply 'append (mapcar (lambda (p) (list "-S" p)) geiser-plt-collects))
       ,@(and (listp geiser-plt-binary) (cdr geiser-plt-binary))
       ,@(and init-file (file-readable-p init-file) (list "-f" init-file))
-      "-f" ,(expand-file-name "plt/geiser.ss" geiser-scheme-dir))))
+      "-f" ,(expand-file-name "plt/geiser.ss" geiser-scheme-dir)
+      "-e" "(require 'geiser)")))
 
 (defconst geiser-plt--prompt-regexp "^=?mzscheme@[^ ]*?> ")
 
