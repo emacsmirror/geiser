@@ -336,11 +336,19 @@ module command as a string")
     (insert "\n")
     (lisp-indent-line)))
 
+(defun geiser-repl--nesting-level ()
+  (let ((begin (if comint-last-prompt-overlay
+                   (overlay-end comint-last-prompt-overlay)
+                 (save-excusion (geiser-repl--bol) (point)))))
+    (save-restriction
+      (narrow-to-region begin (point-max))
+      (geiser-syntax--nesting-level))))
+
 (defun geiser-repl--send-input ()
   (interactive)
   (let ((p (point)))
     (end-of-line)
-    (if (zerop (geiser-syntax--nesting-level))
+    (if (<= (geiser-repl--nesting-level) 0)
         (comint-send-input)
       (goto-char p)
       (if geiser-repl-auto-indent-p
