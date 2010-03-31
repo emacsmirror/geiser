@@ -60,8 +60,7 @@ This function uses `geiser-plt-init-file' if it exists."
       ,@(apply 'append (mapcar (lambda (p) (list "-S" p)) geiser-plt-collects))
       ,@(and (listp geiser-plt-binary) (cdr geiser-plt-binary))
       ,@(and init-file (file-readable-p init-file) (list "-f" init-file))
-      "-f" ,(expand-file-name "plt/geiser.ss" geiser-scheme-dir)
-      "-e" "(require 'geiser)")))
+      "-f" ,(expand-file-name "plt/geiser.ss" geiser-scheme-dir))))
 
 (defconst geiser-plt--prompt-regexp "^=?mzscheme@[^ ]*?> ")
 
@@ -78,8 +77,8 @@ This function uses `geiser-plt-init-file' if it exists."
 
 (defun geiser-plt--geiser-procedure (proc)
   (if (memq proc '(eval compile))
-      `((dynamic-require ''geiser 'geiser:eval) ',(geiser-plt--language))
-    `(dynamic-require ''geiser ',(intern (format "geiser:%s" proc)))))
+      `((dynamic-require 'geiser 'geiser:eval) ',(geiser-plt--language))
+    `(dynamic-require 'geiser ',(intern (format "geiser:%s" proc)))))
 
 (defconst geiser-plt--module-re
   "^(module +\\([^ ]+\\)")
