@@ -125,6 +125,7 @@
              (?\\ (cons 'char (geiser-syntax--read/elisp)))
              (?\( (geiser-syntax--read/token 'vectorb))
              (?\< (geiser-syntax--read/unprintable))
+             ((?' ?` ?,) (char-before) (geiser-syntax--read/next-token))
              (t (let ((tok (geiser-syntax--read/elisp)))
                   (if tok (cons 'atom (intern (format "#%s" tok)))
                     (geiser-syntax--read/next-token))))))
@@ -143,6 +144,13 @@
     (if (memq (car token) tks) token
       (error "Unexpected token: %s" token))))
 
+(defsubst geiser-syntax--read/skip-until (&rest tks)
+  (let (token)
+    (while (and (not (memq (car token) tks))
+                (not (eq (car token) 'eob)))
+      (setq token (geiser-syntax--read/next-token)))
+    token))
+
 (defsubst geiser-syntax--read/try (&rest tks)
   (let ((p (point))
         (tk (ignore-errors (apply 'geiser-syntax--read/match tks))))
@@ -152,7 +160,7 @@
 (defun geiser-syntax--read/list ()
   (cond ((geiser-syntax--read/try 'dot)
          (let ((tail (geiser-syntax--read)))
-           (geiser-syntax--read/match 'eob 'rparen)
+           (geiser-syntax--read/skip-until 'eob 'rparen)
            tail))
         ((geiser-syntax--read/try 'rparen 'eob) nil)
         (t (cons (geiser-syntax--read)
