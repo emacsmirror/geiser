@@ -72,7 +72,7 @@ This function uses `geiser-plt-init-file' if it exists."
     (goto-char (point-min))
     (if (re-search-forward
          "^\\(?:#lang\\|(module +[^ ]+?\\) +\\([^ ]+?\\|([^)]+)\\) *$" nil t)
-        (car (read-from-string (match-string-no-properties 1)))
+        (car (geiser-syntax--read-from-string (match-string-no-properties 1)))
       :f)))
 
 (defun geiser-plt--geiser-procedure (proc)
@@ -88,7 +88,8 @@ This function uses `geiser-plt-init-file' if it exists."
     (goto-char (point-min))
     (and (re-search-forward geiser-plt--module-re nil t)
          (ignore-errors
-           (car (read-from-string (match-string-no-properties 1)))))))
+           (car (geiser-syntax--read-from-string
+                 (match-string-no-properties 1)))))))
 
 (defsubst geiser-plt--implicit-module ()
   (save-excursion
