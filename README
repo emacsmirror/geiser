@@ -22,7 +22,7 @@
 
 * Supported scheme implementations
 
-    - Guile 1.9.9 or better.
+    - Guile 1.9.10 or better.
     - PLT Scheme 4.2 or better.
 
 * Installation
