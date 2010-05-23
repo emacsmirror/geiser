@@ -26,9 +26,9 @@
   :group 'geiser)
 
 (geiser-custom--defcustom geiser-plt-binary
-  (cond ((eq system-type 'windows-nt) "MzScheme.exe")
-        ((eq system-type 'darwin) "mzscheme")
-        (t "mzscheme"))
+  (cond ((eq system-type 'windows-nt) "Racket.exe")
+        ((eq system-type 'darwin) "racket")
+        (t "racket"))
   "Name to use to call the mzscheme executable when starting a REPL."
   :type '(choice string (repeat string))
   :group 'geiser-plt)
@@ -60,9 +60,9 @@ This function uses `geiser-plt-init-file' if it exists."
       ,@(apply 'append (mapcar (lambda (p) (list "-S" p)) geiser-plt-collects))
       ,@(and (listp geiser-plt-binary) (cdr geiser-plt-binary))
       ,@(and init-file (file-readable-p init-file) (list "-f" init-file))
-      "-f" ,(expand-file-name "plt/geiser.ss" geiser-scheme-dir))))
+      "-f" ,(expand-file-name "plt/geiser.rkt" geiser-scheme-dir))))
 
-(defconst geiser-plt--prompt-regexp "^=?mzscheme@[^ ]*?> ")
+(defconst geiser-plt--prompt-regexp "^=?\\(mzscheme\\|racket\\)@[^ ]*?> ")
 
 
 ;;; Evaluation support:
@@ -195,8 +195,13 @@ This function uses `geiser-plt-init-file' if it exists."
   (binding-forms geiser-plt--binding-forms)
   (binding-forms* geiser-plt--binding-forms*))
 
-(geiser-impl--add-to-alist 'regexp "\\.mzscheme\\.sl?s$" 'plt t)
+(geiser-impl--add-to-alist 'regexp
+                           "\\.\\(mzscheme\\|racket\\)\\.sl?s$" 'plt t)
 (geiser-impl--add-to-alist 'regexp "\\.ss$" 'plt t)
+(geiser-impl--add-to-alist 'regexp "\\.rkt$" 'plt t)
+
+(defalias 'run-racket 'run-plt)
+(defalias 'switch-to-racket 'switch-to-plt)
 
 
 (provide 'geiser-plt)
