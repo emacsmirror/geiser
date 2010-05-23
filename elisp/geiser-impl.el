@@ -26,7 +26,7 @@
   :type 'symbol
   :group 'geiser-implementation)
 
-(geiser-custom--defcustom geiser-active-implementations '(guile plt)
+(geiser-custom--defcustom geiser-active-implementations '(guile racket)
   "List of active installed Scheme implementations."
   :type '(repeat symbol)
   :group 'geiser-implementation)

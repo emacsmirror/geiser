@@ -47,11 +47,11 @@
 (autoload 'switch-to-guile "geiser-guile.el"
   "Start a Geiser Guile REPL, or switch to a running one." t)
 
-(autoload 'run-plt "geiser-plt.el"
-  "Start a Geiser MzScheme REPL, or switch to a running one." t)
+(autoload 'run-racket "geiser-racket.el"
+  "Start a Geiser Racket REPL, or switch to a running one." t)
 
-(autoload 'switch-to-plt "geiser-guile.el"
-  "Start a Geiser MzScheme REPL, or switch to a running one." t)
+(autoload 'switch-to-racket "geiser-guile.el"
+  "Start a Geiser Racket REPL, or switch to a running one." t)
 
 (autoload 'geiser-mode "geiser-mode.el"
   "Minor mode adding Geiser REPL interaction to Scheme buffers." t)
@@ -72,7 +72,7 @@
         geiser-faces
         geiser-mode
         geiser-guile
-        geiser-plt
+        geiser-racket
         geiser-implementation
         geiser-xref))
 
