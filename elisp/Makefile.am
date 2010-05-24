@@ -17,7 +17,7 @@ dist_lisp_LISP = \
    geiser-impl.el \
    geiser-log.el \
    geiser-mode.el \
-   geiser-plt.el \
+   geiser-racket.el \
    geiser-popup.el \
    geiser-reload.el \
    geiser-repl.el \
