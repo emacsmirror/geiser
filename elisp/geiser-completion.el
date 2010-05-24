@@ -101,9 +101,10 @@ terminates a current completion."
             (get-buffer-window geiser-completion--comp-buffer)))))
 
 (defun geiser-completion--display-or-scroll (completions base)
-  (cond ((and (eq last-command this-command) (geiser-completion--window-active-p))
-         (geiser-completion--scroll-completions))
-        (t (geiser-completion--display-comp-list completions base)))
+  (if (and (eq last-command this-command)
+           (geiser-completion--window-active-p))
+      (geiser-completion--scroll-completions)
+    (geiser-completion--display-comp-list completions base))
   (geiser-completion--delay-restoration))
 
 (defun geiser-completion--scroll-completions ()

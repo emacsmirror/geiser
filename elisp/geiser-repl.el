@@ -339,7 +339,7 @@ module command as a string")
 (defun geiser-repl--nesting-level ()
   (let ((begin (if comint-last-prompt-overlay
                    (overlay-end comint-last-prompt-overlay)
-                 (save-excusion (geiser-repl--bol) (point)))))
+                 (save-excursion (geiser-repl--bol) (point)))))
     (save-restriction
       (narrow-to-region begin (point-max))
       (geiser-syntax--nesting-level))))
