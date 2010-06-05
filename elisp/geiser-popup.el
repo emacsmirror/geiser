@@ -1,6 +1,6 @@
 ;; geiser-popup.el -- popup windows
 
-;; Copyright (C) 2009 Jose Antonio Ortega Ruiz
+;; Copyright (C) 2009, 2010 Jose Antonio Ortega Ruiz
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the Modified BSD License. You should
@@ -8,41 +8,6 @@
 ;; not, see <http://www.xfree86.org/3.3.6/COPYRIGHT2.html#5>.
 
 ;; Start date: Sat Feb 07, 2009 14:05
-
-
-
-(make-variable-buffer-local
- (defvar geiser-popup--created-window nil))
-
-(make-variable-buffer-local
- (defvar geiser-popup--selected-window nil))
-
-(defun geiser-popup--display (&optional buffer)
-  (when buffer (set-buffer buffer))
-  (let ((selected-window (selected-window))
-        (buffer (current-buffer)))
-    (unless (eq selected-window (get-buffer-window buffer))
-      (let ((windows))
-        (walk-windows (lambda (w) (push w windows)) nil t)
-        (prog1 (pop-to-buffer buffer)
-          (set (make-local-variable 'geiser-popup--created-window)
-               (unless (memq (selected-window) windows) (selected-window)))
-          (set (make-local-variable 'geiser-popup--selected-window)
-               selected-window))))))
-
-(defun geiser-popup--quit ()
-  (interactive)
-  (let ((selected geiser-popup--selected-window)
-        (created geiser-popup--created-window))
-    (bury-buffer)
-    (when (eq created (selected-window)) (delete-window created))
-    (when (window-live-p selected) (select-window selected))))
-
-(define-minor-mode geiser-popup-mode
-  "Mode for displaying read only stuff"
-  nil nil
-  '(("q" . geiser-popup--quit))
-  (setq buffer-read-only t))
 
 
 ;;; Support for defining popup buffers and accessors:
@@ -53,19 +18,21 @@
   (let ((get-buff (intern (format "geiser-%s--buffer" base)))
         (pop-buff (intern (format "geiser-%s--pop-to-buffer" base)))
         (with-macro (intern (format "geiser-%s--with-buffer" base)))
-        (method (make-symbol "method")))
+        (method (make-symbol "method"))
+        (buffer (make-symbol "buffer")))
   `(progn
      (add-to-list 'geiser-popup--registry ,name)
      (defun ,get-buff ()
        (or (get-buffer ,name)
            (with-current-buffer (get-buffer-create ,name)
              (,mode)
-             (geiser-popup-mode)
+             (view-mode-enable)
              (current-buffer))))
      (defun ,pop-buff (&optional ,method)
-       (cond ((eq ,method 'buffer) (switch-to-buffer (,get-buff)))
-             ((eq ,method 'frame) (switch-to-buffer-other-frame (,get-buff)))
-             (t (geiser-popup--display (,get-buff)))))
+       (let ((,buffer (,get-buff)))
+         (cond ((eq ,method 'buffer) (view-buffer ,buffer))
+               ((eq ,method 'frame) (view-buffer-other-frame ,buffer))
+               (t (view-buffer-other-window ,buffer)))))
      (defmacro ,with-macro (&rest body)
        (let ((buff ',get-buff))
          `(with-current-buffer (funcall ',buff)
