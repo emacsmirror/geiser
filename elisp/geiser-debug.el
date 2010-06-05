@@ -47,7 +47,7 @@
 
 (geiser-impl--define-caller geiser-debug--display-error
     display-error (module key message)
-  "This method takes 3 parameters (a module name, the error key,
+    "This method takes 3 parameters (a module name, the error key,
 and the accompanying error message) and should display
 (in the current buffer) a formatted version of the error. If the
 error was successfully displayed, the call should evaluate to a
