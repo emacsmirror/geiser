@@ -78,8 +78,14 @@ when `geiser-autodoc-display-module-p' is on."
                                     cached))))))))
       geiser-autodoc--cached-signatures)))
 
+(defun geiser-autodoc--sanitize-args (args)
+  (cond ((null args) nil)
+        ((listp args)
+         (cons (car args) (geiser-autodoc--sanitize-args (cdr args))))
+        (t '(...))))
+
 (defun geiser-autodoc--insert-arg-group (args current &optional pos)
-  (dolist (a args)
+  (dolist (a (geiser-autodoc--sanitize-args args))
     (let ((p (point)))
       (insert (format "%s" a))
       (when (or (and (numberp pos)
