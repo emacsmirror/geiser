@@ -85,7 +85,8 @@ terminates a current completion."
 (defun geiser-completion--window-active-p ()
   "Is the completion window currently active?"
   (and (window-live-p geiser-completion--completions-window)
-       (equal (buffer-name (window-buffer geiser-completion--completions-window))
+       (equal (buffer-name
+               (window-buffer geiser-completion--completions-window))
               geiser-completion--comp-buffer)))
 
 (defun geiser-completion--display-comp-list (completions base)
