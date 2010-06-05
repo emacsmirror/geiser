@@ -125,7 +125,7 @@
              (?\\ (cons 'char (geiser-syntax--read/elisp)))
              (?\( (geiser-syntax--read/token 'vectorb))
              (?\< (geiser-syntax--read/unprintable))
-             ((?' ?` ?,) (backward-char) (geiser-syntax--read/next-token))
+             ((?' ?` ?,) (geiser-syntax--read/next-token))
              (t (let ((tok (geiser-syntax--read/elisp)))
                   (if tok (cons 'atom (intern (format "#%s" tok)))
                     (geiser-syntax--read/next-token))))))
