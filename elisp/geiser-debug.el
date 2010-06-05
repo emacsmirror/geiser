@@ -67,7 +67,7 @@ non-null value.")
         (erase-buffer)
         (insert what)
         (newline 2)
-        (when res
+        (when (and res (not err))
           (insert res)
           (newline 2))
         (unless (geiser-debug--display-error impl module key output)
