@@ -175,7 +175,7 @@
       (vectorb (apply 'vector (geiser-syntax--read/list)))
       ((quote backquote unquote splice) (list (cdr token)
                                               (geiser-syntax--read)))
-      (kwd `(:keyword . ,(cdr token)))
+      (kwd (intern (format ":%s" (cdr token))))
       (unprintable (format "#<%s>" (cdr token)))
       ((char string atom) (cdr token))
       (t (error "Reading scheme syntax: unexpected token: %s" token)))))
@@ -188,9 +188,6 @@
       (with-temp-buffer
         (save-excursion (insert string))
         (cons (ignore-errors (geiser-syntax--read)) (point))))))
-
-(defsubst geiser-syntax--read/keyword-value (s)
-  (and (consp s) (eq (car s) :keyword) (cdr s)))
 
 (defsubst geiser-syntax--form-after-point (&optional boundary)
   (let ((geiser-syntax--read/buffer-limit (and (numberp boundary) boundary)))
@@ -220,11 +217,8 @@
             (when (and (listp form) (car form) (symbolp (car form)))
               (let* ((len-1 (1- (geiser-syntax--pair-length form)))
                      (prev (and (> len-1 1) (nth (1- len-1) form)))
-                     (prev (and prev
-                                (geiser-syntax--read/keyword-value prev))))
-                (push `(,(car form)
-                        ,len-1 ,@(and prev (symbolp prev) (list prev)))
-                      path)))))))
+                     (prev (and (keywordp prev) (list prev))))
+                (push `(,(car form) ,len-1 ,@prev) path)))))))
     (if path (nreverse path)
       (let ((fst (symbol-at-point)))
         (and fst `((,fst 0)))))))
