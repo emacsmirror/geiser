@@ -150,13 +150,13 @@
 *** In the documentation browser:
 
     |-----------+----------------------------------------------|
-    | n/p       | next/previous page                           |
-    | l         | previous page                                |
+    | C-c C-f   | next page                                    |
+    | C-c C-b   | previous page                                |
     | SPC/S-SPC | scroll up/down                               |
     | TAB/S-TAB | next/previous link                           |
-    | k         | kill current page and go to previous or next |
-    | r         | refresh page                                 |
-    | c         | clean browsing history                       |
+    | C-c C-k   | kill current page and go to previous or next |
+    | C-c C-r   | refresh page                                 |
+    | C-c C-c   | clean browsing history                       |
     | M-.       | edit identifier at point                     |
     | C-cz      | switch to REPL                               |
     | q         | bury buffer                                  |
