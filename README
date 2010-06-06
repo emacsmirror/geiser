@@ -22,7 +22,7 @@
 
 * Supported scheme implementations
 
-    - Guile 1.9.10 or better.
+    - Guile 1.10 (not released yet: use the latest git master branch).
     - PLT Racket 5.0 or better.
 
 * Installation
