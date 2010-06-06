@@ -1,6 +1,6 @@
 ;;; geiser-edit.el -- scheme edit locations
 
-;; Copyright (C) 2009 Jose Antonio Ortega Ruiz
+;; Copyright (C) 2009, 2010 Jose Antonio Ortega Ruiz
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the Modified BSD License. You should
@@ -70,6 +70,7 @@ or following links in error buffers.")
                 "defmacro"
                 "define-macro"
                 "define-syntax"
+                "define-syntax-rule"
                 "-define-syntax"
                 "-define"
                 "define*"
