@@ -81,7 +81,11 @@ when `geiser-autodoc-display-module-p' is on."
 (defun geiser-autodoc--sanitize-args (args)
   (cond ((null args) nil)
         ((listp args)
-         (cons (car args) (geiser-autodoc--sanitize-args (cdr args))))
+         (let* ((arg (car args))
+                (arg (if (and (consp arg) (eq (caar arg) ':keyword))
+                         (format "(#:%s %s)" (cdar arg) (cdr arg))
+                       arg)))
+           (cons arg (geiser-autodoc--sanitize-args (cdr args)))))
         (t '(...))))
 
 (defun geiser-autodoc--insert-arg-group (args current &optional pos)
@@ -115,12 +119,12 @@ when `geiser-autodoc-display-module-p' is on."
                                               (and (not (zerop pos)) pos))))
     (when opts
       (insert " [")
-      (setq cpos (geiser-autodoc--insert-arg-group opts cpos pos))
-      (when keys
-        (insert " [")
-        (geiser-autodoc--insert-arg-group keys prev nil)
-        (insert "]"))
-      (insert "]"))))
+      (setq cpos (geiser-autodoc--insert-arg-group opts cpos pos)))
+    (when keys
+      (insert " [")
+      (geiser-autodoc--insert-arg-group keys prev nil)
+      (insert "]"))
+    (when opts (insert "]"))))
 
 (defsubst geiser-autodoc--proc-name (proc module)
   (let ((str (if module
