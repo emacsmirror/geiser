@@ -9,6 +9,8 @@
 
 ;; Start date: Sat Feb 07, 2009 14:05
 
+(require 'view)
+
 
 ;;; Support for defining popup buffers and accessors:
 
