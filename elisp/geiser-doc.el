@@ -11,6 +11,7 @@
 
 
 
+(require 'geiser-edit)
 (require 'geiser-impl)
 (require 'geiser-completion)
 (require 'geiser-autodoc)
@@ -35,6 +36,9 @@
 (geiser-custom--defface doc-link
   'link geiser-doc "links in documentation buffers")
 
+(geiser-custom--defface doc-button
+  'button geiser-doc "buttons in documentation buffers")
+
 
 ;;; Documentation browser history:
 
@@ -49,22 +53,30 @@
   (car geiser-doc--history))
 
 (defun geiser-doc--history-push (link)
-  (unless (or (null link) (equal link (car geiser-doc--history)))
-    (let ((next (geiser-doc--history-next)))
-      (unless (equal link next)
-        (when next (geiser-doc--history-previous))
-        (ring-insert (nth 1 geiser-doc--history) (car geiser-doc--history))
-        (setcar geiser-doc--history link))))
+  (unless (or (null link) (equal link (geiser-doc--history-current)))
+    (when (not (null (geiser-doc--history-current)))
+      (let ((next (geiser-doc--history-next)))
+        (unless (equal link next)
+          (when next (geiser-doc--history-previous))
+          (ring-insert (nth 1 geiser-doc--history)
+                       (car geiser-doc--history)))))
+    (setcar geiser-doc--history link))
   link)
 
+(defsubst geiser-doc--history-next-p ()
+  (not (ring-empty-p (nth 2 geiser-doc--history))))
+
 (defun geiser-doc--history-next (&optional forget-current)
-  (when (not (ring-empty-p (nth 2 geiser-doc--history)))
+  (when (geiser-doc--history-next-p)
     (when (and (car geiser-doc--history) (not forget-current))
       (ring-insert (nth 1 geiser-doc--history) (car geiser-doc--history)))
     (setcar geiser-doc--history (ring-remove (nth 2 geiser-doc--history) 0))))
 
+(defsubst geiser-doc--history-previous-p ()
+  (not (ring-empty-p (nth 1 geiser-doc--history))))
+
 (defun geiser-doc--history-previous (&optional forget-current)
-  (when (not (ring-empty-p (nth 1 geiser-doc--history)))
+  (when (geiser-doc--history-previous-p)
     (when (and (car geiser-doc--history) (not forget-current))
       (ring-insert (nth 2 geiser-doc--history) (car geiser-doc--history)))
     (setcar geiser-doc--history (ring-remove (nth 1 geiser-doc--history) 0))))
@@ -97,6 +109,12 @@
             (geiser-doc-module module impl)
           (geiser-doc-symbol target module impl))))))
 
+(make-variable-buffer-local
+ (defvar geiser-doc--buffer-link nil))
+
+(defsubst geiser-doc--implementation ()
+  (geiser-doc--link-impl geiser-doc--buffer-link))
+
 (defun geiser-doc--button-action (button)
   (let ((link (button-get button 'geiser-link)))
     (when link (geiser-doc--follow-link link))))
@@ -117,10 +135,48 @@
                         'geiser-link link
                         'help-echo help)))
 
+(defun geiser-doc--xbutton-action (button)
+  (when geiser-doc--buffer-link
+    (let ((kind (or (button-get button 'x-kind) 'source))
+          (target (geiser-doc--link-target geiser-doc--buffer-link))
+          (module (geiser-doc--link-module geiser-doc--buffer-link))
+          (impl (geiser-doc--link-impl geiser-doc--buffer-link)))
+      (with--geiser-implementation impl
+        (if (eq kind 'source)
+            (if target (geiser-edit-symbol target nil (point-marker))
+              (geiser-edit-module module)))))))
+
+(define-button-type 'geiser-doc--xbutton
+  'action 'geiser-doc--xbutton-action
+  'face 'geiser-font-lock-doc-button
+  'follow-link t)
+
+(defun geiser-doc--insert-xbutton (&optional manual)
+  (insert-text-button (if manual "[manual]" "[source]")
+                      :type 'geiser-doc--xbutton
+                      'x-kind (if manual 'manual 'source)))
+
+(defun geiser-doc--insert-xbuttons ()
+  (geiser-doc--insert-xbutton))
+
+(defun geiser-doc--insert-footer ()
+  (newline)
+  (when (geiser-doc--history-previous-p)
+    (insert-text-button "[back]"
+                        'action '(lambda (b) (geiser-doc-previous))
+                        'face 'geiser-font-lock-doc-button
+                        'follow-link t)
+    (insert "  "))
+  (when (geiser-doc--history-next-p)
+    (insert-text-button "[forward]"
+                        'action '(lambda (b) (geiser-doc-next))
+                        'face 'geiser-font-lock-doc-button
+                        'follow-link t)))
+
 
 ;;; Auxiliary functions:
 
-(defun geiser-doc--insert-title (title)
+(defun geiser-doc--insert-title (title &optional top)
   (let ((p (point)))
     (if (not (listp title))
         (insert (format "%s" title))
@@ -129,6 +185,12 @@
         (insert " " (if (eq a '\#:rest) "." (format "%s" a))))
       (insert ")"))
     (put-text-property p (point) 'face 'geiser-font-lock-doc-title)
+    (when top
+      (let ((len (max 1 (- (window-width)
+                           (- (point) (line-beginning-position))
+                           10))))
+        (insert (make-string len ?\ ))
+        (geiser-doc--insert-xbuttons)))
     (newline)))
 
 (defun geiser-doc--insert-list (title lst module impl)
@@ -142,12 +204,6 @@
         (geiser-doc--insert-button nil w impl))
       (newline))
     (newline)))
-
-(make-variable-buffer-local
- (defvar geiser-doc--buffer-link nil))
-
-(defsubst geiser-doc--implementation ()
-  (geiser-doc--link-impl geiser-doc--buffer-link))
 
 
 ;;; Commands:
@@ -178,13 +234,15 @@ help (e.g. browse an HTML page) implementing this method.")
             (erase-buffer)
             (geiser-doc--insert-title
              (geiser-autodoc--str (list (symbol-name symbol) 0)
-                                  (cdr (assoc 'signature ds))))
+                                  (cdr (assoc 'signature ds)))
+             t)
             (newline)
             (insert (or (cdr (assoc 'docstring ds)) ""))
-            (goto-char (point-min))
             (setq geiser-doc--buffer-link
                   (geiser-doc--history-push
-                   (geiser-doc--make-link symbol module impl))))
+                   (geiser-doc--make-link symbol module impl)))
+            (geiser-doc--insert-footer)
+            (goto-char (point-min)))
           (geiser-doc--pop-to-buffer))))))
 
 (defun geiser-doc-symbol-at-point (&optional arg)
@@ -207,7 +265,7 @@ With prefix argument, ask for symbol (with completion)."
         (message "No information available for %s" module)
       (geiser-doc--with-buffer
         (erase-buffer)
-        (geiser-doc--insert-title (format "%s" module))
+        (geiser-doc--insert-title (format "%s" module) t)
         (newline)
         (dolist (g '(("Procedures:" . procs)
                      ("Variables:" . vars)
@@ -220,10 +278,11 @@ With prefix argument, ask for symbol (with completion)."
                                  (cdr (assoc 'modules exports))
                                  nil
                                  impl)
-        (goto-char (point-min))
         (setq geiser-doc--buffer-link
               (geiser-doc--history-push
-               (geiser-doc--make-link nil module impl))))
+               (geiser-doc--make-link nil module impl)))
+        (geiser-doc--insert-footer)
+        (goto-char (point-min)))
       (geiser-doc--pop-to-buffer))))
 
 (defun geiser-doc-next (&optional forget-current)

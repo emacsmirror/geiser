@@ -1,6 +1,6 @@
 ;; geiser-reload.el -- unload/load geiser packages
 
-;; Copyright (C) 2009 Jose Antonio Ortega Ruiz
+;; Copyright (C) 2009, 2010 Jose Antonio Ortega Ruiz
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the Modified BSD License. You should
@@ -25,11 +25,11 @@
            geiser-mode
            geiser-repl
            geiser-xref
-           geiser-edit
            geiser-doc
            geiser-debug
            geiser-impl
            geiser-company
+           geiser-edit
            geiser-completion
            geiser-autodoc
            geiser-compile

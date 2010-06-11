@@ -145,14 +145,15 @@ or following links in error buffers.")
 
 (defvar geiser-edit--symbol-history nil)
 
-(defun geiser-edit-symbol (symbol &optional method)
+(defun geiser-edit-symbol (symbol &optional method marker)
   "Asks for a symbol to edit, with completion."
   (interactive
    (list (geiser-completion--read-symbol "Edit symbol: "
                                          nil
                                          geiser-edit--symbol-history)))
   (let ((cmd `(:eval ((:ge symbol-location) ',symbol))))
-    (geiser-edit--try-edit symbol (geiser-eval--send/wait cmd) method)))
+    (geiser-edit--try-edit symbol (geiser-eval--send/wait cmd) method)
+    (when marker (ring-insert find-tag-marker-ring marker))))
 
 (defun geiser-edit-symbol-at-point (&optional arg)
   "Opens a new window visiting the definition of the symbol at point.
