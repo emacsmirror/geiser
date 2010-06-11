@@ -16,6 +16,14 @@
 
 (defvar geiser-popup--registry nil)
 
+(defun geiser-popup--setup-view-mode ()
+  (view-mode-enable)
+  (set (make-local-variable 'view-no-disable-on-exit) t)
+  (setq view-exit-action
+	(lambda (buffer)
+	  (with-current-buffer buffer
+	    (bury-buffer)))))
+
 (defmacro geiser-popup--define (base name mode)
   (let ((get-buff (intern (format "geiser-%s--buffer" base)))
         (pop-buff (intern (format "geiser-%s--pop-to-buffer" base)))
@@ -28,7 +36,7 @@
        (or (get-buffer ,name)
            (with-current-buffer (get-buffer-create ,name)
              (,mode)
-             (view-mode-enable)
+             (geiser-popup--setup-view-mode)
              (current-buffer))))
      (defun ,pop-buff (&optional ,method)
        (let ((,buffer (,get-buff)))
