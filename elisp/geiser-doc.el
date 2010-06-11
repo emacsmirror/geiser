@@ -160,7 +160,7 @@
   (geiser-doc--insert-xbutton))
 
 (defun geiser-doc--insert-footer ()
-  (newline)
+  (newline 3)
   (when (geiser-doc--history-previous-p)
     (insert-text-button "[back]"
                         'action '(lambda (b) (geiser-doc-previous))
