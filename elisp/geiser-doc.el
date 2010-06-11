@@ -108,8 +108,10 @@
 
 (defun geiser-doc--insert-button (target module impl)
   (let ((link (geiser-doc--make-link target module impl))
-        (text (format "%s" target))
-        (help (if module (format "%s in module %s" target module) "")))
+        (text (format "%s" (or target module)))
+        (help (format "%smodule %s"
+                      (if target (format "%s in " target) "")
+                      (or module "<unknown>"))))
     (insert-text-button text
                         :type 'geiser-doc--button
                         'geiser-link link
@@ -135,7 +137,9 @@
     (newline)
     (dolist (w lst)
       (insert (format "\t- "))
-      (geiser-doc--insert-button w module impl)
+      (if module
+          (geiser-doc--insert-button w module impl)
+        (geiser-doc--insert-button nil w impl))
       (newline))
     (newline)))
 
@@ -148,7 +152,8 @@
 
 ;;; Commands:
 
-(geiser-impl--define-caller geiser-doc--external-help display-help (symbol module)
+(geiser-impl--define-caller geiser-doc--external-help display-help
+  (symbol module)
   "By default, Geiser will display help about an identifier in a
 help buffer, after collecting the associated signature and
 docstring. You can provide an alternative function for displaying
@@ -206,12 +211,15 @@ With prefix argument, ask for symbol (with completion)."
         (newline)
         (dolist (g '(("Procedures:" . procs)
                      ("Variables:" . vars)
-                     ("Syntax:" . syntax)
-                     ("Submodules:" . modules)))
+                     ("Syntax:" . syntax)))
           (geiser-doc--insert-list (car g)
                                    (cdr (assoc (cdr g) exports))
                                    module
                                    impl))
+        (geiser-doc--insert-list "Submodules:"
+                                 (cdr (assoc 'modules exports))
+                                 nil
+                                 impl)
         (goto-char (point-min))
         (setq geiser-doc--buffer-link
               (geiser-doc--history-push
