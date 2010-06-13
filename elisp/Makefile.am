@@ -16,6 +16,7 @@ dist_lisp_LISP = \
    geiser-guile.el \
    geiser-impl.el \
    geiser-log.el \
+   geiser-menu.el \
    geiser-mode.el \
    geiser-racket.el \
    geiser-popup.el \
