@@ -151,6 +151,7 @@ determine its scheme flavour."
          (geiser-impl--define ,load-file-name ',name ',parent ',methods)
          (geiser-impl--add-to-alist 'regexp ,impl-rx ',name t)
          (require 'geiser-repl)
+         (require 'geiser-menu)
          (defun ,runner ()
            ,runner-doc
            (interactive)
@@ -159,6 +160,7 @@ determine its scheme flavour."
            ,switcher-doc
            (interactive "P")
            (switch-to-geiser ,ask ',name))
+         (geiser-menu--add-impl ',name ',runner ',switcher)
          (provide ',(geiser-impl--feature name))))))
 
 (defun geiser-impl--add-to-alist (kind what impl &optional append)

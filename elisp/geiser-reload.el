@@ -37,6 +37,7 @@
            geiser-connection
            geiser-syntax
            geiser-log
+           geiser-menu
            geiser-custom
            geiser-base
            geiser-popup
