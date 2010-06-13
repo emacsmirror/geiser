@@ -15,6 +15,7 @@
 (require 'geiser-impl)
 (require 'geiser-eval)
 (require 'geiser-connection)
+(require 'geiser-menu)
 (require 'geiser-custom)
 (require 'geiser-base)
 
@@ -370,7 +371,7 @@ module command as a string")
   (setq geiser-autodoc--inhibit-function 'geiser-con--is-debugging)
   (geiser-company--setup geiser-repl-company-p)
   (setq geiser-smart-tab-mode-string "")
-  (geiser-smart-tab-mode 1)
+  (geiser-menu--provide)
   ;; enabling compilation-shell-minor-mode without the annoying highlighter
   (compilation-setup t))
 
@@ -379,33 +380,36 @@ module command as a string")
 (define-key geiser-repl-mode-map [return] 'geiser-repl--send-input)
 (define-key geiser-repl-mode-map "\C-j" 'geiser-repl--newline-and-indent)
 
-(define-key geiser-repl-mode-map "\C-ck" 'geiser-repl-nuke)
-(define-key geiser-repl-mode-map "\C-c\C-k" 'geiser-repl-nuke)
-
-(define-key geiser-repl-mode-map "\C-cz" 'switch-to-geiser)
-(define-key geiser-repl-mode-map "\C-c\C-z" 'switch-to-geiser)
 (define-key geiser-repl-mode-map "\C-a" 'geiser-repl--bol)
 (define-key geiser-repl-mode-map (kbd "<home>") 'geiser-repl--bol)
-(define-key geiser-repl-mode-map "\C-ca" 'geiser-autodoc-mode)
-(define-key geiser-repl-mode-map "\C-cd" 'geiser-doc-symbol-at-point)
-(define-key geiser-repl-mode-map "\C-cm" 'geiser-repl--doc-module)
-(define-key geiser-repl-mode-map "\C-cl" 'geiser-load-file)
 
-(define-key geiser-repl-mode-map "\M-p"
-  'comint-previous-matching-input-from-input)
-(define-key geiser-repl-mode-map "\M-n"
-  'comint-next-matching-input-from-input)
-(define-key geiser-repl-mode-map "\C-c\M-p" 'comint-previous-input)
-(define-key geiser-repl-mode-map "\C-c\M-n" 'comint-next-input)
-
-(define-key geiser-repl-mode-map (kbd "M-TAB")
-  'geiser-completion--complete-symbol)
-(define-key geiser-repl-mode-map (kbd "M-`")
-  'geiser-completion--complete-module)
-(define-key geiser-repl-mode-map (kbd "C-.")
-  'geiser-completion--complete-module)
-(define-key geiser-repl-mode-map "\M-." 'geiser-edit-symbol-at-point)
-(define-key geiser-repl-mode-map "\M-," 'geiser-edit-pop-edit-symbol-stack)
+(geiser-menu--defmenu geiser-repl-mode-map (eq major-mode 'geiser-repl-mode)
+  ("Complete symbol" ((kbd "TAB") (kbd "M-TAB"))
+   geiser-completion--complete-symbol :enable (symbol-at-point))
+  ("Complete module name" ((kbd "C-.") (kbd "M-`"))
+   geiser-completion--complete-module :enable (symbol-at-point))
+  ("Edit symbol" "\M-." geiser-edit--symbol-at-point
+   :enable (symbol-at-point))
+  (menu "Navigation"
+        ("Previous matching input" "\M-p"
+         comint-previous-matching-input-from-input
+         "Previous input matching current")
+        ("Next matching input" "\M-n" comint-next-matching-input-from-input
+         "Next input matching current")
+        ("Previous input" "\C-c\M-p" comint-previous-input)
+        ("Next input" "\C-c\M-n" comint-next-input))
+  (mode "Autodoc mode" "\C-ca" geiser-autodoc-mode)
+  ("Symbol documentation" "\C-cd" geiser-doc-symbol-at-point
+   "Documentation for symbol at point" :enable (symbol-at-point))
+  ("Module documentation" "\C-cm" geiser-repl--doc-module
+   "Documentation for module at point" :enable (symbol-at-point))
+  ("Load module" "\C-cl" geiser-load-file)
+  ("Restart" ("\C-cz" "\C-c\C-z") switch-to-geiser
+   :enable (not (geiser-repl--this-buffer-repl)))
+  ("Revive REPL" ("\C-ck" "\C-c\C-k") geiser-repl-nuke
+   "Use this command if the REPL becomes irresponsive"
+   :enable (not (geiser-repl--this-buffer-repl)))
+  (custom "REPL options" geiser-repl))
 
 
 ;;; Unload:
