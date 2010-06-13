@@ -17,6 +17,7 @@
 (require 'geiser-autodoc)
 (require 'geiser-eval)
 (require 'geiser-syntax)
+(require 'geiser-menu)
 (require 'geiser-popup)
 (require 'geiser-custom)
 (require 'geiser-base)
@@ -342,20 +343,25 @@ With prefix, the current page is deleted from history."
       (let ((geiser-eval--get-module-function (lambda (&rest x) module)))
         (geiser-edit-symbol-at-point)))))
 
-(defvar geiser-doc-mode-map
-  (let ((map (make-sparse-keymap)))
-    (suppress-keymap map)
-    (set-keymap-parent map button-buffer-map)
-    (define-key map "\C-c\C-c" 'geiser-doc-clean-history)
-    (define-key map "\C-c\C-k" 'geiser-doc-kill-page)
-    (define-key map "\C-c\C-f" 'geiser-doc-next)
-    (define-key map "\C-c\C-b" 'geiser-doc-previous)
-    (define-key map "\C-c\C-r" 'geiser-doc-refresh)
-    (define-key map (kbd "S-SPC") 'scroll-down)
-    (define-key map "\M-." 'geiser-doc-edit-symbol-at-point)
-    (define-key map "\C-cz" 'run-geiser)
-    (define-key map "\C-c\C-z" 'run-geiser)
-    map))
+(defvar geiser-doc-mode-map nil)
+(setq geiser-doc-mode-map
+      (let ((map (make-sparse-keymap)))
+        (suppress-keymap map)
+        (set-keymap-parent map button-buffer-map)
+        map))
+
+(defun geiser-doc--visible-p () )
+
+(geiser-menu--defmenu geiser-doc-mode-map (eq major-mode 'geiser-doc-mode)
+  ("Next" "\C-c\C-f" geiser-doc-next "Next item"
+   :enable (geiser-doc--history-next-p))
+  ("Previous" "\C-c\C-b" geiser-doc-previous "Previous item"
+   :enable (geiser-doc--history-previous-p))
+  ("Refresh" "\C-c\C-r" geiser-doc-refresh "Refresh current page")
+  (menu "Manage history"
+        ("Kill item" "\C-c\C-k" geiser-doc-kill-page "Kill this page")
+        ("Clean history" "\C-c\C-c" geiser-doc-clean-history))
+  (custom "Browser options" geiser-doc))
 
 (defun geiser-doc-mode ()
   "Major mode for browsing scheme documentation.
@@ -367,6 +373,7 @@ With prefix, the current page is deleted from history."
   (set-syntax-table scheme-mode-syntax-table)
   (setq mode-name "Geiser Doc")
   (setq major-mode 'geiser-doc-mode)
+  (geiser-menu--provide)
   (setq buffer-read-only t))
 
 (geiser-popup--define doc "*Geiser documentation*" geiser-doc-mode)
