@@ -209,7 +209,7 @@
   (let ((path))
     (save-excursion
       (save-restriction
-        (narrow-to-region (or begin (point-min)) (1+ (point)))
+;;        (narrow-to-region (or begin (point-min)) (1+ (point)))
         (geiser-syntax--skip-comment/string)
         (while (not (zerop (geiser-syntax--nesting-level)))
           (let ((boundary (1+ (point))))
