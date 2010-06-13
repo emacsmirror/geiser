@@ -98,6 +98,11 @@
      ((,title nil (lambda () (interactive) (customize-group ',group))))
      ,visible))
 
+(defmacro geiser-menu--mode-toggle (title bindings mode keymap visible)
+  `(geiser-menu--add-items ,keymap
+     ((,title ,bindings ,mode :button (:toggle . (and (boundp ',mode) ,mode))))
+     ,visible))
+
 (defmacro geiser-menu--defmenu (keymap visible &rest keys)
   (let ((fs))
     (dolist (kd keys)
@@ -114,6 +119,12 @@
                                                    ,(nth 2 kd)
                                                    ,keymap
                                                    ,visible))
+                        ((eq 'mode (car kd))
+                         `(geiser-menu--mode-toggle ,(nth 1 kd)
+                                                    ,(nth 2 kd)
+                                                    ,(nth 3 kd)
+                                                    ,keymap
+                                                    ,visible))
                         (t (error "Bad form: %s" kd)))
                   fs)))
     `(progn ,@fs)))
