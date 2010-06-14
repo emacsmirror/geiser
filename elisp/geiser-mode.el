@@ -11,6 +11,8 @@
 
 
 
+(require 'geiser-repl)
+(require 'geiser-menu)
 (require 'geiser-doc)
 (require 'geiser-compile)
 (require 'geiser-completion)
@@ -21,7 +23,6 @@
 (require 'geiser-debug)
 (require 'geiser-impl)
 (require 'geiser-eval)
-(require 'geiser-repl)
 (require 'geiser-popup)
 (require 'geiser-custom)
 (require 'geiser-base)
@@ -156,6 +157,11 @@ With prefix, try to enter the current's buffer module."
   (interactive "P")
   (if arg (switch-to-geiser-module) (switch-to-geiser)))
 
+(defun geiser-mode-switch-to-repl-and-enter ()
+  "Switches to Geiser REPL and enters current's buffer module."
+  (interactive)
+  (geiser-mode-switch-to-repl t))
+
 
 ;;; Geiser mode:
 
@@ -167,8 +173,7 @@ With prefix, try to enter the current's buffer module."
   (or geiser-mode-string
       (format " %s" (or (geiser-impl--impl-str) "G"))))
 
-(defvar geiser-mode-map (make-sparse-keymap)
-  "Key map for geiser-mode")
+(defvar geiser-mode-map (make-sparse-keymap))
 
 (define-minor-mode geiser-mode
   "Toggle Geiser's mode.
@@ -203,44 +208,50 @@ interacting with the Geiser REPL is at your disposal.
 
 ;;; Keys:
 
-(defun geiser-mode--triple-chord (p k c)
-  (define-key geiser-mode-map (vector '(control ?c) `(control ,p) k) c)
-  (define-key geiser-mode-map (vector '(control ?c) `(control ,p)
-                                      `(control ,k)) c))
+(geiser-menu--defmenu geiserm geiser-mode-map
+  ("Eval sexp before point" "\C-x\C-e" geiser-eval-last-sexp)
+  ("Eval definition" "\M-\C-x" geiser-eval-definition)
+  ("Eval definition and go" "\C-c\M-e" geiser-eval-definition-and-go)
+  ("Eval region" "\C-c\C-r" geiser-eval-region :enable mark-active)
+  ("Eval region and go" "\C-c\M-r" geiser-eval-region-and-go
+   geiser-eval-region :enable mark-active)
+  ("Compile definition" "\C-c\M-c" geiser-compile-definition)
+  ("Compile definition and go" "\C-c\C-c" geiser-compile-definition-and-go)
+  (menu "Macroexpand"
+        ("Sexp before point" ("\C-c\C-m\C-e" "\C-c\C-me")
+         geiser-expand-last-sexp)
+        ("Region" ("\C-c\C-m\C-r" "\C-c\C-mr") geiser-expand-region)
+        ("Definition" ("\C-c\C-m\C-x" "\C-c\C-mx") geiser-expand-definition))
+  --
+  ("Symbol documentation" ("\C-c\C-d\C-d" "\C-c\C-dd")
+   geiser-doc-symbol-at-point :enable (symbol-at-point))
+  ("Module documentation" ("\C-c\C-d\C-m" "\C-c\C-dm") geiser-doc-module)
+  (mode "Autodoc mode" ("\C-c\C-d\C-a" "\C-c\C-da") geiser-autodoc-mode)
+  --
+  ("Compile buffer" "\C-c\C-k" geiser-compile-current-buffer)
+  ("Switch to REPL" "\C-c\C-z" geiser-mode-switch-to-repl)
+  ("Switch to REPL and enter module" "\C-c\C-Z"
+   geiser-mode-switch-to-repl-and-enter)
+  ("Set Scheme..." "\C-c\C-s" geiser-set-scheme)
+  ;;  ("Load buffer" "\C-l" geiser-compile-current-buffer)
+  --
+  ("Edit symbol at point" "\M-." geiser-edit-symbol-at-point
+   :enable (symbol-at-point))
+  ("Go to previous definition" "\M-," geiser-edit-pop-edit-symbol-stack)
+  ("Complete symbol" ((kbd "M-TAB")) geiser-completion--complete-symbol
+   :enable (symbol-at-point))
+  ("Complete module name" ((kbd "M-`") (kbd "C-."))
+   geiser-completion--complete-module)
+  ("Edit module" ("\C-c\C-e\C-m" "\C-c\C-em") geiser-edit-module)
+  --
+  ("Callers" ((kbd "C-c <")) geiser-xref-callers)
+  ("Callees" ((kbd "C-c >")) geiser-xref-callees)
+  --
+  (mode "Smart TAB mode" nil geiser-smart-tab-mode)
+  --
+  (custom "Customize Geiser mode" geiser-mode))
 
-(define-key geiser-mode-map "\C-c\C-z" 'geiser-mode-switch-to-repl)
-(define-key geiser-mode-map "\C-c\C-s" 'geiser-set-scheme)
-
-(define-key geiser-mode-map "\C-c\C-l" 'geiser-load-current-buffer)
-(define-key geiser-mode-map "\C-c\C-k" 'geiser-compile-current-buffer)
-
-(define-key geiser-mode-map (kbd "M-TAB") 'geiser-completion--complete-symbol)
-(define-key geiser-mode-map (kbd "M-`") 'geiser-completion--complete-module)
-(define-key geiser-mode-map (kbd "C-.") 'geiser-completion--complete-module)
-(define-key geiser-mode-map "\M-." 'geiser-edit-symbol-at-point)
-(define-key geiser-mode-map "\M-," 'geiser-edit-pop-edit-symbol-stack)
-(define-key geiser-mode-map (kbd "C-c <") 'geiser-xref-callers)
-(define-key geiser-mode-map (kbd "C-c >") 'geiser-xref-callees)
-
-(define-key geiser-mode-map "\M-\C-x" 'geiser-eval-definition)
-(define-key geiser-mode-map "\C-x\C-e" 'geiser-eval-last-sexp)
-(define-key geiser-mode-map "\C-c\M-e" 'geiser-eval-definition-and-go)
-(define-key geiser-mode-map "\C-c\C-r" 'geiser-eval-region)
-(define-key geiser-mode-map "\C-c\M-r" 'geiser-eval-region-and-go)
-(define-key geiser-mode-map "\C-c\M-c" 'geiser-compile-definition)
-(define-key geiser-mode-map "\C-c\C-c" 'geiser-compile-definition-and-go)
-
-(geiser-mode--triple-chord ?d ?a 'geiser-autodoc-mode)
-(geiser-mode--triple-chord ?d ?d 'geiser-doc-symbol-at-point)
-(geiser-mode--triple-chord ?d ?m 'geiser-doc-module)
-
-(geiser-mode--triple-chord ?e ?m 'geiser-edit-module)
-
-(geiser-mode--triple-chord ?m ?e 'geiser-expand-last-sexp)
-(geiser-mode--triple-chord ?m ?r 'geiser-expand-region)
-(geiser-mode--triple-chord ?m ?x 'geiser-expand-definition)
-
-(geiser-mode--triple-chord ?x ?m 'geiser-xref-generic-methods)
+;; (geiser-mode--triple-chord ?x ?m 'geiser-xref-generic-methods)
 
 
 ;;; Reload support:

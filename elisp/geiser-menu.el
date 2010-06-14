@@ -89,7 +89,8 @@
 
 (defmacro geiser-menu--mode-toggle (title bindings mode keymap map)
   `(geiser-menu--add-item ,keymap ,map
-     (,title ,bindings ,mode :button (:toggle . (and (boundp ',mode) ,mode)))))
+     (,title ,bindings ,mode
+             :button (:toggle . (and (boundp ',mode) ,mode)))))
 
 (defmacro geiser-menu--defmenu (name keymap &rest keys)
   (let ((mmap (make-symbol "mmap")))
@@ -102,7 +103,8 @@
            (cons "Switch to" geiser-menu--custom-switch))
          (define-key ,mmap [Run] (cons "Run" geiser-menu--custom-run))
          (geiser-menu--add-line ,mmap)
-         (geiser-menu--add-items ,keymap ,mmap ,keys)))))
+         (geiser-menu--add-items ,keymap ,mmap ,keys)
+         ,mmap))))
 
 (put 'geiser-menu--defmenu 'lisp-indent-function 2)
 
