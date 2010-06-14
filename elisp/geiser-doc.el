@@ -352,15 +352,16 @@ With prefix, the current page is deleted from history."
 
 (defun geiser-doc--visible-p () )
 
-(geiser-menu--defmenu geiser-doc-mode-map (eq major-mode 'geiser-doc-mode)
+(geiser-menu--defmenu doc geiser-doc-mode-map
   ("Next" "\C-c\C-f" geiser-doc-next "Next item"
    :enable (geiser-doc--history-next-p))
   ("Previous" "\C-c\C-b" geiser-doc-previous "Previous item"
    :enable (geiser-doc--history-previous-p))
   ("Refresh" "\C-c\C-r" geiser-doc-refresh "Refresh current page")
-  (menu "Manage history"
-        ("Kill item" "\C-c\C-k" geiser-doc-kill-page "Kill this page")
-        ("Clean history" "\C-c\C-c" geiser-doc-clean-history))
+  line
+  ("Kill item" "\C-c\C-k" geiser-doc-kill-page "Kill this page")
+  ("Clean history" "\C-c\C-c" geiser-doc-clean-history)
+  line
   (custom "Browser options" geiser-doc))
 
 (defun geiser-doc-mode ()
@@ -373,7 +374,6 @@ With prefix, the current page is deleted from history."
   (set-syntax-table scheme-mode-syntax-table)
   (setq mode-name "Geiser Doc")
   (setq major-mode 'geiser-doc-mode)
-  (geiser-menu--provide)
   (setq buffer-read-only t))
 
 (geiser-popup--define doc "*Geiser documentation*" geiser-doc-mode)

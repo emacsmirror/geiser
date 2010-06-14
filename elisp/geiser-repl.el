@@ -371,7 +371,6 @@ module command as a string")
   (setq geiser-autodoc--inhibit-function 'geiser-con--is-debugging)
   (geiser-company--setup geiser-repl-company-p)
   (setq geiser-smart-tab-mode-string "")
-  (geiser-menu--provide)
   ;; enabling compilation-shell-minor-mode without the annoying highlighter
   (compilation-setup t))
 
@@ -383,32 +382,34 @@ module command as a string")
 (define-key geiser-repl-mode-map "\C-a" 'geiser-repl--bol)
 (define-key geiser-repl-mode-map (kbd "<home>") 'geiser-repl--bol)
 
-(geiser-menu--defmenu geiser-repl-mode-map (eq major-mode 'geiser-repl-mode)
+(geiser-menu--defmenu repl geiser-repl-mode-map
   ("Complete symbol" ((kbd "TAB") (kbd "M-TAB"))
    geiser-completion--complete-symbol :enable (symbol-at-point))
   ("Complete module name" ((kbd "C-.") (kbd "M-`"))
    geiser-completion--complete-module :enable (symbol-at-point))
   ("Edit symbol" "\M-." geiser-edit--symbol-at-point
    :enable (symbol-at-point))
-  (menu "Navigation"
-        ("Previous matching input" "\M-p"
-         comint-previous-matching-input-from-input
-         "Previous input matching current")
-        ("Next matching input" "\M-n" comint-next-matching-input-from-input
-         "Next input matching current")
-        ("Previous input" "\C-c\M-p" comint-previous-input)
-        ("Next input" "\C-c\M-n" comint-next-input))
+  line
+  ("Previous matching input" "\M-p" comint-previous-matching-input-from-input
+   "Previous input matching current")
+  ("Next matching input" "\M-n" comint-next-matching-input-from-input
+   "Next input matching current")
+  ("Previous input" "\C-c\M-p" comint-previous-input)
+  ("Next input" "\C-c\M-n" comint-next-input)
+  line
   (mode "Autodoc mode" "\C-ca" geiser-autodoc-mode)
   ("Symbol documentation" "\C-cd" geiser-doc-symbol-at-point
    "Documentation for symbol at point" :enable (symbol-at-point))
   ("Module documentation" "\C-cm" geiser-repl--doc-module
    "Documentation for module at point" :enable (symbol-at-point))
   ("Load module" "\C-cl" geiser-load-file)
+  line
   ("Restart" ("\C-cz" "\C-c\C-z") switch-to-geiser
    :enable (not (geiser-repl--this-buffer-repl)))
   ("Revive REPL" ("\C-ck" "\C-c\C-k") geiser-repl-nuke
    "Use this command if the REPL becomes irresponsive"
    :enable (not (geiser-repl--this-buffer-repl)))
+  line
   (custom "REPL options" geiser-repl))
 
 
