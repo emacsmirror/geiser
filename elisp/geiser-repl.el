@@ -389,27 +389,27 @@ module command as a string")
    geiser-completion--complete-module :enable (symbol-at-point))
   ("Edit symbol" "\M-." geiser-edit--symbol-at-point
    :enable (symbol-at-point))
-  line
+  --
   ("Previous matching input" "\M-p" comint-previous-matching-input-from-input
    "Previous input matching current")
   ("Next matching input" "\M-n" comint-next-matching-input-from-input
    "Next input matching current")
   ("Previous input" "\C-c\M-p" comint-previous-input)
   ("Next input" "\C-c\M-n" comint-next-input)
-  line
+  --
   (mode "Autodoc mode" "\C-ca" geiser-autodoc-mode)
   ("Symbol documentation" "\C-cd" geiser-doc-symbol-at-point
    "Documentation for symbol at point" :enable (symbol-at-point))
   ("Module documentation" "\C-cm" geiser-repl--doc-module
    "Documentation for module at point" :enable (symbol-at-point))
   ("Load module" "\C-cl" geiser-load-file)
-  line
+  --
   ("Restart" ("\C-cz" "\C-c\C-z") switch-to-geiser
    :enable (not (geiser-repl--this-buffer-repl)))
   ("Revive REPL" ("\C-ck" "\C-c\C-k") geiser-repl-nuke
    "Use this command if the REPL becomes irresponsive"
    :enable (not (geiser-repl--this-buffer-repl)))
-  line
+  --
   (custom "REPL options" geiser-repl))
 
 

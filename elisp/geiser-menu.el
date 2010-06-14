@@ -39,7 +39,7 @@
                                         (list binding))))
                         `(progn (define-key ,map [,item]
                                   '(menu-item ,title ,cmd ,@hlp ,@rest))
-                                ,@(and binding
+                                ,@(and (car binding)
                                        `((put ',cmd
                                               :advertised-binding
                                               ,(car binding))))
@@ -81,12 +81,12 @@
               :button (:toggle . (and (boundp ',mode) ,mode))))))
 
 (defmacro geiser-menu--defmenu (e keymap &rest keys)
-  (let* ((fs)
-         (name (format "Geiser %s" e))
-         (mmap (make-symbol "mmap")))
+  (let ((fs)
+        (mmap (make-symbol "mmap")))
     (dolist (kd keys)
       (setq fs
-            (cons (cond ((eq 'line kd) `(geiser-menu--add-line ,mmap))
+            (cons (cond ((or (eq '-- kd) (eq 'line kd))
+                         `(geiser-menu--add-line ,mmap))
                         ((stringp (car kd))
                          `(geiser-menu--add-items ,keymap ,mmap ,(list kd)))
                         ((eq 'menu (car kd))
@@ -106,8 +106,8 @@
                         (t (error "Bad form: %s" kd)))
                   fs)))
     `(progn
-       (let ((,mmap (make-sparse-keymap ,name)))
-         (define-key ,keymap [menu-bar ,e] (cons ,name ,mmap))
+       (let ((,mmap (make-sparse-keymap "Geiser")))
+         (define-key ,keymap [menu-bar ,e] (cons "Geiser" ,mmap))
          (define-key ,mmap [customize]
            (cons "Customize" geiser-menu--custom-customize))
          (define-key ,mmap [switch]

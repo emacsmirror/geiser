@@ -358,10 +358,10 @@ With prefix, the current page is deleted from history."
   ("Previous" "\C-c\C-b" geiser-doc-previous "Previous item"
    :enable (geiser-doc--history-previous-p))
   ("Refresh" "\C-c\C-r" geiser-doc-refresh "Refresh current page")
-  line
+  --
   ("Kill item" "\C-c\C-k" geiser-doc-kill-page "Kill this page")
   ("Clean history" "\C-c\C-c" geiser-doc-clean-history)
-  line
+  --
   (custom "Browser options" geiser-doc))
 
 (defun geiser-doc-mode ()
