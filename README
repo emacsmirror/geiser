@@ -149,21 +149,19 @@
 
 *** In the documentation browser:
 
-    |-----------+----------------------------------------------|
-    | C-c C-f   | next page                                    |
-    | C-c C-b   | previous page                                |
-    | SPC/S-SPC | scroll up/down                               |
-    | TAB/S-TAB | next/previous link                           |
-    | C-c C-k   | kill current page and go to previous or next |
-    | C-c C-r   | refresh page                                 |
-    | C-c C-c   | clean browsing history                       |
-    | M-.       | edit identifier at point                     |
-    | C-cz      | switch to REPL                               |
-    | q         | bury buffer                                  |
-    |-----------+----------------------------------------------|
+    |------------+----------------------------------------------|
+    | n, f       | Next page                                    |
+    | p, b       | Previous page                                |
+    | TAB, S-TAB | Next/previous link                           |
+    | k          | Kill current page and go to previous or next |
+    | g, r       | Refresh page                                 |
+    | c          | Clear browsing history                       |
+    | ., M-.     | Edit identifier at point                     |
+    | z          | Switch to REPL                               |
+    | q          | Bury buffer                                  |
+    |------------+----------------------------------------------|
 
 *** In backtrace (evaluation/compile result) buffers:
 
-    - Default error navigation keys used by Emacs' compilation mode
-      (e.g. M-g n, M-g p for next/previous error).
+    - TAB, M-TAB for error navigation.
     - q to bury buffer.

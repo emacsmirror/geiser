@@ -255,7 +255,6 @@ With prefix argument, ask for symbol (with completion)."
                                                     (symbol-at-point)))))
     (when symbol (geiser-doc-symbol symbol))))
 
-
 (defun geiser-doc-module (&optional module impl)
   "Display information about a given module."
   (interactive)
@@ -353,16 +352,24 @@ With prefix, the current page is deleted from history."
 (defun geiser-doc--visible-p () )
 
 (geiser-menu--defmenu doc geiser-doc-mode-map
-  ("Next" "\C-c\C-f" geiser-doc-next "Next item"
+  ("Next page" ("n" "f") geiser-doc-next "Next item"
    :enable (geiser-doc--history-next-p))
-  ("Previous" "\C-c\C-b" geiser-doc-previous "Previous item"
+  ("Previous page" ("p" "b") geiser-doc-previous "Previous item"
    :enable (geiser-doc--history-previous-p))
-  ("Refresh" "\C-c\C-r" geiser-doc-refresh "Refresh current page")
+  ("Next link" nil forward-button)
+  ("Previous link" nil backward-button)
+  ("Go to REPL" ("z" "\C-cz" "\C-\C-z") switch-to-geiser)
+  ("Refresh" ("g" "r") geiser-doc-refresh "Refresh current page")
   --
-  ("Kill item" "\C-c\C-k" geiser-doc-kill-page "Kill this page")
-  ("Clean history" "\C-c\C-c" geiser-doc-clean-history)
+  ("Edit symbol" ("." "\M-.") geiser-doc-edit-symbol-at-point
+   :enable (symbol-at-point))
   --
-  (custom "Browser options" geiser-doc))
+  ("Kill item" "k" geiser-doc-kill-page "Kill this page")
+  ("Clear history" "c" geiser-doc-clean-history)
+  --
+  (custom "Browser options" geiser-doc)
+  --
+  ("Quit" nil View-quit))
 
 (defun geiser-doc-mode ()
   "Major mode for browsing scheme documentation.

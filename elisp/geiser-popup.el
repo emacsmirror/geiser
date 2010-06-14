@@ -16,9 +16,8 @@
 
 (defvar geiser-popup--registry nil)
 
-(defvar geiser-popup--overriding-map
+(setq geiser-popup--overriding-map
   (let ((map (make-sparse-keymap)))
-    (define-key map "\r" nil)
     (define-key map "q" 'View-quit)
     map))
 
