@@ -24,32 +24,47 @@
 
 ;;; Top-level menu
 
-(defmacro geiser-menu--add-items-1 (keymap map keys)
-  `(progn ,@(mapcar (lambda (kd)
-                      (let* ((title (nth 0 kd))
-                             (binding (nth 1 kd))
-                             (cmd (nth 2 kd))
-                             (hlp (nth 3 kd))
-                             (item (make-symbol title))
-                             (hlp (and (stringp hlp) (list :help hlp)))
-                             (rest (or (and hlp (nthcdr 4 kd))
-                                       (nthcdr 3 kd)))
-                             (binding (if (listp binding)
-                                          binding
-                                        (list binding))))
-                        `(progn (define-key ,map [,item]
-                                  '(menu-item ,title ,cmd ,@hlp ,@rest))
-                                ,@(and (car binding)
-                                       `((put ',cmd
-                                              :advertised-binding
-                                              ,(car binding))))
-                                ,@(mapcar (lambda (b)
-                                            `(define-key ,keymap ,b ',cmd))
-                                          binding))))
-                    keys)))
+(defmacro geiser-menu--add-item (keymap map kd)
+  (cond ((or (eq '-- kd) (eq 'line kd)) `(geiser-menu--add-line ,map))
+        ((stringp (car kd)) `(geiser-menu--add-basic-item ,keymap ,map ,kd))
+        ((eq 'menu (car kd)) `(geiser-menu--add-submenu ,(cadr kd)
+                                ,keymap ,map ,(cddr kd)))
+        ((eq 'custom (car kd)) `(geiser-menu--add-custom ,(nth 1 kd)
+                                                         ,(nth 2 kd)
+                                                         ,keymap
+                                                         ,map))
+        ((eq 'mode (car kd)) `(geiser-menu--mode-toggle ,(nth 1 kd)
+                                                        ,(nth 2 kd)
+                                                        ,(nth 3 kd)
+                                                        ,keymap
+                                                        ,map))
+        (t (error "Bad item form: %s" kd))))
+
+(defmacro geiser-menu--add-basic-item (keymap map kd)
+  (let* ((title (nth 0 kd))
+         (binding (nth 1 kd))
+         (cmd (nth 2 kd))
+         (hlp (nth 3 kd))
+         (item (make-symbol title))
+         (hlp (and (stringp hlp) (list :help hlp)))
+         (rest (or (and hlp (nthcdr 4 kd))
+                   (nthcdr 3 kd)))
+         (binding (if (listp binding)
+                      binding
+                    (list binding))))
+    `(progn (define-key ,map [,item]
+              '(menu-item ,title ,cmd ,@hlp ,@rest))
+            ,@(and (car binding)
+                   `((put ',cmd
+                          :advertised-binding
+                          ,(car binding))))
+            ,@(mapcar (lambda (b)
+                        `(define-key ,keymap ,b ',cmd))
+                      binding))))
 
 (defmacro geiser-menu--add-items (keymap map keys)
-  `(geiser-menu--add-items-1 ,keymap ,map ,(reverse keys)))
+  `(progn ,@(mapcar (lambda (k) (list 'geiser-menu--add-item keymap map k))
+                    (reverse keys))))
 
 (defmacro geiser-menu--add-submenu (name keymap map keys)
   (let ((ev (make-symbol name))
@@ -57,64 +72,37 @@
     `(progn
        (let ((,map2 (make-sparse-keymap ,name)))
          (define-key ,map [,ev] (cons ,name ,map2))
-         (geiser-menu--add-items-1 ,keymap ,map2 ,keys)))))
-
-(put 'geiser-menu--add-submenu 'lisp-indent-function 1)
-(put 'geiser-menu--add-items 'lisp-indent-function 1)
+         (geiser-menu--add-items ,keymap ,map2 ,keys)))))
 
 (defvar geiser-menu--line-counter 0)
 
-(defun geiser-menu--add-line (&optional keymap)
+(defun geiser-menu--add-line (&optional map)
   (let ((line (make-symbol (format "line%s"
                                    (setq geiser-menu--line-counter
                                          (1+ geiser-menu--line-counter))))))
-    (define-key (or keymap global-map) `[,line]
+    (define-key (or map global-map) `[,line]
       `(menu-item "--single-line"))))
 
 (defmacro geiser-menu--add-custom (title group keymap map)
-  `(geiser-menu--add-items ,keymap ,map
-     ((,title nil (lambda () (interactive) (customize-group ',group))))))
+  `(geiser-menu--add-item ,keymap ,map
+     (,title nil (lambda () (interactive) (customize-group ',group)))))
 
 (defmacro geiser-menu--mode-toggle (title bindings mode keymap map)
-  `(geiser-menu--add-items ,keymap ,map
-     ((,title ,bindings ,mode
-              :button (:toggle . (and (boundp ',mode) ,mode))))))
+  `(geiser-menu--add-item ,keymap ,map
+     (,title ,bindings ,mode :button (:toggle . (and (boundp ',mode) ,mode)))))
 
-(defmacro geiser-menu--defmenu (e keymap &rest keys)
-  (let ((fs)
-        (mmap (make-symbol "mmap")))
-    (dolist (kd keys)
-      (setq fs
-            (cons (cond ((or (eq '-- kd) (eq 'line kd))
-                         `(geiser-menu--add-line ,mmap))
-                        ((stringp (car kd))
-                         `(geiser-menu--add-items ,keymap ,mmap ,(list kd)))
-                        ((eq 'menu (car kd))
-                         `(geiser-menu--add-submenu ,(cadr kd)
-                            ,keymap ,mmap ,(cddr kd)))
-                        ((eq 'custom (car kd))
-                         `(geiser-menu--add-custom ,(nth 1 kd)
-                                                   ,(nth 2 kd)
-                                                   ,keymap
-                                                   ,mmap))
-                        ((eq 'mode (car kd))
-                         `(geiser-menu--mode-toggle ,(nth 1 kd)
-                                                    ,(nth 2 kd)
-                                                    ,(nth 3 kd)
-                                                    ,keymap
-                                                    ,mmap))
-                        (t (error "Bad form: %s" kd)))
-                  fs)))
+(defmacro geiser-menu--defmenu (name keymap &rest keys)
+  (let ((mmap (make-symbol "mmap")))
     `(progn
        (let ((,mmap (make-sparse-keymap "Geiser")))
-         (define-key ,keymap [menu-bar ,e] (cons "Geiser" ,mmap))
+         (define-key ,keymap [menu-bar ,name] (cons "Geiser" ,mmap))
          (define-key ,mmap [customize]
            (cons "Customize" geiser-menu--custom-customize))
          (define-key ,mmap [switch]
            (cons "Switch to" geiser-menu--custom-switch))
          (define-key ,mmap [Run] (cons "Run" geiser-menu--custom-run))
          (geiser-menu--add-line ,mmap)
-         ,@fs))))
+         (geiser-menu--add-items ,keymap ,mmap ,keys)))))
 
 (put 'geiser-menu--defmenu 'lisp-indent-function 2)
 
@@ -140,8 +128,10 @@
 (defun geiser-menu--add-impl (name runner switcher)
   (let ((title (capitalize (format "%s" name)))
         (group (intern (format "geiser-%s" name))))
-    (define-key geiser-menu--custom-run `[,name] (cons title runner))
-    (define-key geiser-menu--custom-switch `[,name] (cons title switcher))
+    (define-key geiser-menu--custom-run `[,name]
+      `(menu-item ,title ,runner :enable (geiser-impl--active-p ',name)))
+    (define-key geiser-menu--custom-switch `[,name]
+      `(menu-item ,title ,switcher :enable (geiser-repl--get-repl ',name)))
     (geiser-menu--add-global-custom title group)))
 
 (geiser-menu--add-global-custom "Geiser" 'geiser)

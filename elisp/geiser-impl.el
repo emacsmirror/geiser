@@ -115,6 +115,9 @@ determine its scheme flavour."
   (setq geiser-active-implementations
         (delq impl geiser-active-implementations)))
 
+(defsubst geiser-impl--active-p (impl)
+  (memq impl geiser-active-implementations))
+
 
 ;;; Defining implementations:
 
