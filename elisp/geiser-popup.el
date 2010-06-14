@@ -16,9 +16,17 @@
 
 (defvar geiser-popup--registry nil)
 
+(defvar geiser-popup--overriding-map
+  (let ((map (make-sparse-keymap)))
+    (define-key map "\r" nil)
+    (define-key map "q" 'View-quit)
+    map))
+
 (defun geiser-popup--setup-view-mode ()
-  (view-mode-enable)
+  (view-mode t)
   (set (make-local-variable 'view-no-disable-on-exit) t)
+  (set (make-local-variable 'minor-mode-overriding-map-alist)
+       (list (cons 'view-mode geiser-popup--overriding-map)))
   (setq view-exit-action
 	(lambda (buffer)
 	  (with-current-buffer buffer
