@@ -251,6 +251,8 @@ interacting with the Geiser REPL is at your disposal.
   --
   (custom "Customize Geiser mode" geiser-mode))
 
+(define-key geiser-mode-map [menu-bar scheme] 'undefined)
+
 ;; (geiser-mode--triple-chord ?x ?m 'geiser-xref-generic-methods)
 
 
