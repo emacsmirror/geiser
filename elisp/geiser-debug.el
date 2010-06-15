@@ -13,6 +13,7 @@
 
 (require 'geiser-impl)
 (require 'geiser-eval)
+(require 'geiser-menu)
 (require 'geiser-popup)
 (require 'geiser-base)
 
@@ -36,6 +37,16 @@
   (setq mode-name "Geiser DBG")
   (setq major-mode 'geiser-debug-mode)
   (setq buffer-read-only t))
+
+(defun geiser-debug--button-p (nextp)
+  (let ((m (funcall (if nextp 'next-button 'previous-button) (point))))
+    (and m (funcall (if nextp '< '>) (point) (marker-position m)))))
+
+(geiser-menu--defmenu debug geiser-debug-mode-map
+  ("Next error" "n" forward-button :enable (geiser-debug--button-p t))
+  ("Previous error" "p" backward-button :enable (geiser-debug--button-p t))
+  --
+  ("Quit" nil View-quit))
 
 
 ;;; Buffer for displaying evaluation results:
