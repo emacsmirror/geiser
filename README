@@ -60,7 +60,7 @@
   setting the variable `geiser-impl-installed-implementations' *before*
   loading geiser.el. For instance:
 
-      (setq geiser-impl-installed-implementations '(plt guile))
+      (setq geiser-impl-installed-implementations '(racket guile))
 
    On opening a scheme file, Geiser will try to guess its Scheme,
    defaulting to the first in the list. Use `C-c C-s' to select the

@@ -1,0 +1,8 @@
+@node Quick start, Copying This Manual, Installation, Top
+@chapter Quick start
+
+
+@c Local Variables:
+@c mode: texinfo
+@c TeX-master: "geiser"
+@c End:

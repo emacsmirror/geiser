@@ -1,0 +1,111 @@
+@node Introduction, Installation, Top, Top
+@chapter Introduction
+
+Geiser is an Emacs environment to hack and have fun in Scheme. If that's
+enough for you, see @ref{Installation} to get it running and
+@ref{Quick start} for the fun.
+
+@menu
+* Manifesto::
+* Modus operandi::
+* Showing off::
+@end menu
+
+@node Manifesto, Modus operandi, Introduction, Introduction
+@section Manifesto
+
+Geiser is a collection of Emacs major and minor modes that conspire with
+one or more Scheme interpreters to keep the Lisp Machine Spirit alive.
+It draws inspiration (and a bit more) from environments such as Common
+Lisp's Slime, Factor's FUEL, Squeak or Emacs itself, and does its best
+to make Scheme hacking inside Emacs (even more) fun. Or, to be precise,
+what i consider fun. Geiser is thus my humble contribution to the
+dynamic school of expression, and a reaction against what i perceive as
+a derailment, in modern times, of standard Scheme towards the static
+camp. Because i prefer growing and healing to poking at corpses, the
+continuously running Scheme interpreter takes the center of the stage in
+Geiser. A bundle of Elisp shims orchestrates the dialog between the
+Scheme interpreter, Emacs and, ultimately, the programmer (that means,
+hopefully, you). It asks the live image for metadata in real time,
+providing access to them using, as much as possible, standard Emacs
+idioms.
+
+That's the dreal.
+
+@node Modus operandi, Showing off, Manifesto, Introduction
+@section Modus operandi
+
+As already mentioned, Geiser relies on a running Scheme process to
+obtain the information it makes accessible to the programmer. There's
+little effort, on the Elisp side, to understand, say, the module system
+used by the Scheme implementation at hand; instead, a generic interface
+between the two worlds is defined, and each supported Scheme includes a
+library implementing that API, together with some wee shims in Elisp
+allowing the reuse of the Emacs-side framework, which constitutes the
+bulk of the code.
+
+While being as generic as possible, the Scheme-Elisp interface makes
+some assumptions about the capabilities and interaction mode of the
+corresponding REPL. In particular, Geiser expects the latter to support
+namespaces in the form of a module system, and to provide a well defined
+way to establish the REPL's current namespace (or module), as well as
+the current's file module (or namespace). Thus, all evaluations
+performed by Geiser either in the REPL or in a source code buffer happen
+in the context of the current namespace. Every time you switch to a
+different file, you're switching namespaces automatically; at the REPL,
+you must request the switch explicitly (usually just using means
+provided by the Scheme implementation itself).
+
+If your favourite scheme supports the above modus operandi, it has all
+that's needed for a bare-bones Geiser mode. But Geiser can, and will,
+use any metadata available: procedure arities and argument lists to
+display interactive help, documentation strings, location information to
+jump to definitions, export lists to provide completion, and so on and
+so forth. Although this is not an all-or-none proposition (Geiser can
+operate with just part of that functionality available), i've
+concentrated initially in supporting those Schemes with the richest (to
+my knowledge) introspection capabilities, namely, Guile and Racket.
+
+@node Showing off,  , Modus operandi, Introduction
+@section Showing off
+
+When working with a fully conniving Scheme, Geiser can offer the
+following functionality:
+
+@itemize @bullet
+@item
+Form evaluation in the context of the current file's module.
+@item
+Macro expansion.
+@item
+File/module loading and/or compilation.
+@item
+Namespace-aware identifier completion (including local bindings, names
+visible in the current module, and module names).
+@item
+Autodoc: the echo area shows information about the signature of the
+procedure/macro around point automatically.
+@item
+Jump to definition of identifier at point.
+@item
+Access to documentation (including docstrings when the implementation
+provides it).
+@item
+Listings of identifiers exported by a given module.
+@item
+Listings of callers/callees of procedures.
+@item
+Rudimentary support for debugging (when the REPL provides a debugging)
+and error navigation.
+@item
+Support for multiple, simultaneous REPLs.
+@end itemize
+
+In the following sections, i'll try to explain what these features
+actually are (i'm just swanking here), and how to use them for your
+profit. But, before that, let's see how to install Geiser.
+
+@c Local Variables:
+@c mode: texinfo
+@c TeX-master: "geiser"
+@c End:

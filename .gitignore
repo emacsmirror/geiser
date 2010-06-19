@@ -13,3 +13,15 @@
 /scheme/Makefile.in
 /scheme/guile/Makefile.in
 /scheme/guile/geiser/Makefile.in
+/doc/geiser.aux
+/doc/geiser.cp
+/doc/geiser.dvi
+/doc/geiser.fn
+/doc/geiser.ky
+/doc/geiser.log
+/doc/geiser.pdf
+/doc/geiser.pg
+/doc/geiser.tmp
+/doc/geiser.toc
+/doc/geiser.tp
+/doc/geiser.vr

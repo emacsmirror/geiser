@@ -1,0 +1,50 @@
+@node Installation, Quick start, Introduction, Top
+@chapter Installation
+
+@menu
+* Must needs::
+* Friends::
+* Getting it::
+@end menu
+
+@node Must needs, Friends, Installation, Installation
+@section Must needs
+
+If Geiser came with any guarantees, you'd break all of them by not using
+GNU Emacs 23 (or better) and at least one of the supported schemes,
+which right now are @uref{http://www.racket-lang.org, Racket} 5.0 (or
+better) and the latest and greatest
+@uref{http://www.gnu.org/software/guile, Guile} 1.9 directly compiled
+from a recent checkout of
+@uref{http://www.gnu.org/software/guile/repository.html, its git master
+branch}. Since Geiser supports multiple REPLs, having both of them will
+just add to the fun.
+
+@node Friends, Getting it, Must needs, Installation
+@section Friends
+
+Although Geiser does not need them, it plays well with (and is enhanced
+by) the following Emacs packages:
+
+@itemize
+@item @uref{http://www.emacswiki.org/emacs/ParEdit, Paredit}.
+Regardless of whether you use Geiser or not, you shouldn't be coding
+in any Lisp dialect without the aid of Taylor Campbell's structured
+editing mode.
+@item @uref{http://nschum.de/src/emacs/company-mode/, Company}.
+Nikolaj Schumacher's @t{company-mode} provides a nice front-end for
+completion engines (such as Geiser's). Very nice if you like that kind
+of thing: judge by yourself with the help of
+@uref{http://www.screentoaster.com/watch/stU0lSRERIR1pYRFVdXVlRVFFV/company_mode_for_gnu_emacs,
+this screencast}.
+@end itemize
+
+@node Getting it,  , Friends, Installation
+@section Getting it
+
+
+
+@c Local Variables:
+@c mode: texinfo
+@c TeX-master: "geiser"
+@c End:
