@@ -1,4 +1,4 @@
-@node Quick start, Copying This Manual, Installation, Top
+@node Quick start, Index, Installation, Top
 @chapter Quick start
 
 @anchor{quick-start}

@@ -61,7 +61,7 @@ git clone git://git.sv.gnu.org/geiser.git
 git clone http://git.sv.gnu.org/r/geiser.git
 
 @end example
-@onindent
+@noindent
 If you don't want to install Git, you can instead grab a tarball from
 Geiser's @uref{http://gitorious.org/geiser/mainline/commits/master,
 Gitorious mirror}, where you'll find a
