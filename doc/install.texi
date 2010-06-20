@@ -1,11 +1,10 @@
-@node Installation, Quick start, Introduction, Top
+@node Installation
 @chapter Installation
 
 @menu
 * Must needs::
 * Friends::
-* On your marks ...::
-* ... set ...::
+* Setting it up::
 @end menu
 
 @node Must needs, Friends, Installation, Installation
@@ -21,7 +20,28 @@ directly compiled from a recent checkout of
 branch}. Since Geiser supports multiple REPLs, having both of them will
 just add to the fun.
 
-@node Friends, On your marks ..., Must needs, Installation
+You'll also need Geiser itself. Until version 0.1 is out (which will
+happen shortly after i finish writing a decent manual), your best bet is
+grabbing Geiser from its Git repository over at
+@uref{http://git.savannah.gnu.org/cgit/geiser.git/, Savannah}, either
+with the following incantation:
+@example
+git clone git://git.sv.gnu.org/geiser.git
+@end example
+@noindent or, if you happen to live under a firewall, with the alternative:
+@example
+git clone http://git.sv.gnu.org/r/geiser.git
+@end example
+@noindent
+If you don't want to install Git, you can instead grab a tarball from
+Geiser's @uref{http://gitorious.org/geiser/mainline/commits/master,
+Gitorious mirror}, where you'll find a
+@uref{http://gitorious.org/geiser/mainline/archive-tarball/master, link}
+generating it for you. Either way, you'll now be in possession of a copy
+of Geiser's libre code. I'll follow you into its directory and the next
+section.
+
+@node Friends, Setting it up, Must needs, Installation
 @section Friends
 
 Although Geiser does not need them, it plays well with (and is enhanced
@@ -43,35 +63,8 @@ In both cases, you just need to install and setup them as standalone
 packages that they are. Geiser will notice their presence and react
 accordingly.
 
-@node On your marks ..., ... set ..., Friends, Installation
-@section On your marks ...
-
-Until version 0.1 is out (which will happen shortly after i finish
-writing a decent manual), your best bet is grabbing Geiser from its
-Git repository over at @uref{http://git.savannah.gnu.org/cgit/geiser.git/,
-Savannah}, either with the following incantation:
-@example
-
-git clone git://git.sv.gnu.org/geiser.git
-
-@end example
-@noindent or, if you happen to live under a firewall, with the alternative:
-@example
-
-git clone http://git.sv.gnu.org/r/geiser.git
-
-@end example
-@noindent
-If you don't want to install Git, you can instead grab a tarball from
-Geiser's @uref{http://gitorious.org/geiser/mainline/commits/master,
-Gitorious mirror}, where you'll find a
-@uref{http://gitorious.org/geiser/mainline/archive-tarball/master, link}
-generating it for you. Either way, you'll now be in possession of a copy
-of Geiser's libre code. I'll follow you into its directory and the next
-section.
-
-@node ... set ...,  , On your marks ..., Installation
-@section ... set ...
+@node Setting it up,  , Friends, Installation
+@section Setting it up
 
 Geiser is ready to be used out of the box without much more ado. For the
 sake of concreteness, let's assume you put its source in the directory
@@ -79,9 +72,7 @@ sake of concreteness, let's assume you put its source in the directory
 line to your Emacs initialisation file (be it @file{~/.emacs} or any of
 its moral equivalents):
 @example
-
 (load-file "~/lisp/geiser/geiser.el")
-
 @end example
 @noindent
 or simply evaluate that form inside Emacs (you wouldn't kill a friend
@@ -95,21 +86,17 @@ compile and install Geiser too. That is, you enter the source directory
 and (since we grabbed the development tree) run the customary
 @i{autogen} script:
 @example
-
 $ cd ~/lib/geiser
 $ ./autogen.sh
-
 @end example
 @noindent I recommend that you compile Geiser is a separate directory:
 @example
-
 $ mkdir build && cd build
 $ ../configure
 <some drivel here>
 $ make all
 <more of the above>
 $ sudo make install
-
 @end example
 @noindent
 With the above spell, Geiser will be compiled and installed in a safe
@@ -117,9 +104,7 @@ place inside Emacs load path. To load it into Emacs you'll need,
 @i{instead} of the @code{load-file} form above, the following line in
 your initialisation file:
 @example
-
 (require 'geiser-install)
-
 @end example
 @noindent
 Please note that we're requiring @code{geiser-install}, and @i{not}

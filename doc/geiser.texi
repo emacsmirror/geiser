@@ -7,7 +7,6 @@
 @copying
 This manual documents Geiser, an Emacs environment to hack in Scheme.
 
-@ifnothtml
 Copyright @copyright{} 2010  Jose Antonio Ortega Ruiz
 
 @quotation
@@ -22,8 +21,6 @@ Foundation Web site at @url{http://www.gnu.org/licenses/fdl.html}.
 
 The document was typeset with
 @uref{http://www.texinfo.org/, GNU Texinfo}.
-
-@end ifnothtml
 @end copying
 
 @dircategory Emacs
@@ -45,13 +42,27 @@ The document was typeset with
 
 @ifnottex
 @node Top, Introduction, (dir), (dir)
-@top Geiser User Manual
+@top Geiser
 
+Geiser is a collection of Emacs major and minor modes that conspire with
+one or more Scheme interpreters to keep the Lisp Machine Spirit alive.
+It draws inspiration (and a bit more) from environments such as Common
+Lisp's Slime, Factor's FUEL, Squeak or Emacs itself, and does its best
+to make Scheme hacking inside Emacs (even more) fun.
+
+Or, to be precise, what i consider fun. Geiser is thus my humble
+contribution to the dynamic school of expression, and a reaction against
+what i perceive as a derailment, in modern times, of standard Scheme
+towards the static camp. Because i prefer growing and healing to poking
+at corpses, the continuously running Scheme interpreter takes the center
+of the stage in Geiser. A bundle of Elisp shims orchestrates the dialog
+between the Scheme interpreter, Emacs and, ultimately, the schemer,
+giving her access to live metadata.
+
+@ifnothtml
 @insertcopying
+@end ifnothtml
 @end ifnottex
-
-
-@c Generate the nodes for this menu with `C-c C-u C-m'.
 
 @menu
 * Introduction::
@@ -59,12 +70,12 @@ The document was typeset with
 * Quick start::
 * Index::
 
+@ifinfo
 @detailmenu
  --- The Detailed Node Listing ---
 
 Introduction
 
-* Manifesto::
 * Modus operandi::
 * Showing off::
 
@@ -72,11 +83,25 @@ Installation
 
 * Must needs::
 * Friends::
-* On your marks ...::
-* ... set ...::
+* Setting it up::
 
 @end detailmenu
+@end ifinfo
+
 @end menu
+
+@ifhtml
+@html
+<div class="navigation">
+@end html
+@flushright
+@uref{http://savannah.nongnu.org/news/?group=geiser, News}@ @ @ @ @uref{https://savannah.nongnu.org/files/?group=geiser, Download}@ @ @ @ @uref{http://git.savannah.gnu.org/cgit/geiser.git, Source}@ @ @ @ @uref{https://savannah.nongnu.org/bugs/?group=geiser, Bugs}@ @ @ @ @uref{http://lists.nongnu.org/mailman/listinfo/geiser-users, Mailing list}@ @
+@end flushright
+@html
+</div>
+@end html
+@end ifhtml
+
 
 @include intro.texi
 @include install.texi
@@ -86,4 +111,3 @@ Installation
 @bye
 
 @c geiser.texinfo ends here
-
