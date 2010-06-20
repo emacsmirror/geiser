@@ -1,6 +1,8 @@
 @node Quick start, Copying This Manual, Installation, Top
 @chapter Quick start
 
+@anchor{quick-start}
+
 
 @c Local Variables:
 @c mode: texinfo

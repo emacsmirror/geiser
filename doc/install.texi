@@ -4,23 +4,24 @@
 @menu
 * Must needs::
 * Friends::
-* Getting it::
+* On your marks ...::
+* ... set ...::
 @end menu
 
 @node Must needs, Friends, Installation, Installation
 @section Must needs
 
 If Geiser came with any guarantees, you'd break all of them by not using
-GNU Emacs 23 (or better) and at least one of the supported schemes,
-which right now are @uref{http://www.racket-lang.org, Racket} 5.0 (or
-better) and the latest and greatest
-@uref{http://www.gnu.org/software/guile, Guile} 1.9 directly compiled
-from a recent checkout of
-@uref{http://www.gnu.org/software/guile/repository.html, its git master
+GNU Emacs 23 (or better, if there actually @i{is} anything better) and
+at least one of the supported schemes, which right now are
+@uref{http://www.racket-lang.org, Racket} 5.0 (or better) and the latest
+and greatest @uref{http://www.gnu.org/software/guile, Guile} 1.9
+directly compiled from a recent checkout of
+@uref{http://www.gnu.org/software/guile/repository.html, its Git @i{master}
 branch}. Since Geiser supports multiple REPLs, having both of them will
 just add to the fun.
 
-@node Friends, Getting it, Must needs, Installation
+@node Friends, On your marks ..., Must needs, Installation
 @section Friends
 
 Although Geiser does not need them, it plays well with (and is enhanced
@@ -38,11 +39,98 @@ of thing: judge by yourself with the help of
 @uref{http://www.screentoaster.com/watch/stU0lSRERIR1pYRFVdXVlRVFFV/company_mode_for_gnu_emacs,
 this screencast}.
 @end itemize
+In both cases, you just need to install and setup them as standalone
+packages that they are. Geiser will notice their presence and react
+accordingly.
 
-@node Getting it,  , Friends, Installation
-@section Getting it
+@node On your marks ..., ... set ..., Friends, Installation
+@section On your marks ...
 
+Until version 0.1 is out (which will happen shortly after i finish
+writing a decent manual), your best bet is grabbing Geiser from its
+Git repository over at @uref{http://git.savannah.gnu.org/cgit/geiser.git/,
+Savannah}, either with the following incantation:
+@example
 
+git clone git://git.sv.gnu.org/geiser.git
+
+@end example
+@noindent or, if you happen to live under a firewall, with the alternative:
+@example
+
+git clone http://git.sv.gnu.org/r/geiser.git
+
+@end example
+@onindent
+If you don't want to install Git, you can instead grab a tarball from
+Geiser's @uref{http://gitorious.org/geiser/mainline/commits/master,
+Gitorious mirror}, where you'll find a
+@uref{http://gitorious.org/geiser/mainline/archive-tarball/master, link}
+generating it for you. Either way, you'll now be in possession of a copy
+of Geiser's libre code. I'll follow you into its directory and the next
+section.
+
+@node ... set ...,  , On your marks ..., Installation
+@section ... set ...
+
+Geiser is ready to be used out of the box without much more ado. For the
+sake of concreteness, let's assume you put its source in the directory
+@file{~/lisp/geiser}. All you need to do is to add the following
+line to your Emacs initialisation file (be it @file{~/.emacs} or any of
+its moral equivalents):
+@example
+
+(load-file "~/lisp/geiser/geiser.el")
+
+@end example
+@noindent
+or simply evaluate that form inside Emacs (you wouldn't kill a friend
+just to start using Geiser, would you?). That's it: you're ready to
+@ref{quick-start,,go}.
+
+What? You still here? I promise the above is all that's needed to start
+using Geiser. But, in case you are missing your @t{configure/make all
+install} routine, by all means, you can go through those motions to byte
+compile and install Geiser too. That is, you enter the source directory
+and (since we grabbed the development tree) run the customary
+@i{autogen} script:
+@example
+
+$ cd ~/lib/geiser
+$ ./autogen.sh
+
+@end example
+@noindent I recommend that you compile Geiser is a separate directory:
+@example
+
+$ mkdir build && cd build
+$ ../configure
+<some drivel here>
+$ make all
+<more of the above>
+$ sudo make install
+
+@end example
+@noindent
+With the above spell, Geiser will be compiled and installed in a safe
+place inside Emacs load path. To load it into Emacs you'll need,
+@i{instead} of the @code{load-file} form above, the following line in
+your initialisation file:
+@example
+
+(require 'geiser-install)
+
+@end example
+@noindent
+Please note that we're requiring @code{geiser-install}, and @i{not}
+@code{geiser}, and that there's no @code{load-file} to be seen this
+time. There are some ways of fine-tuning this process, mainly by
+providing additional arguments in the call to @t{configure}: you'll find
+those gory details in the file called @file{INSTALL}, right at the root
+of the source tree. The installation will also take care of placing this
+manual, in Info format, where Emacs can find it, so you can continue to
+learn about Geiser inside its natural habitat. See you there and into
+the next chapter!
 
 @c Local Variables:
 @c mode: texinfo
