@@ -3,11 +3,11 @@
 
 @menu
 * Must needs::
-* Friends::
 * Setting it up::
+* Friends::
 @end menu
 
-@node Must needs, Friends, Installation, Installation
+@node Must needs, Setting it up, Installation, Installation
 @section Must needs
 
 If Geiser came with any guarantees, you'd break all of them by not using
@@ -41,29 +41,7 @@ generating it for you. Either way, you'll now be in possession of a copy
 of Geiser's libre code. I'll follow you into its directory and the next
 section.
 
-@node Friends, Setting it up, Must needs, Installation
-@section Friends
-
-Although Geiser does not need them, it plays well with (and is enhanced
-by) the following Emacs packages:
-
-@itemize
-@item @uref{http://www.emacswiki.org/emacs/ParEdit, Paredit}.
-Regardless of whether you use Geiser or not, you shouldn't be coding
-in any Lisp dialect without the aid of Taylor Campbell's structured
-editing mode.
-@item @uref{http://nschum.de/src/emacs/company-mode/, Company}.
-Nikolaj Schumacher's @t{company-mode} provides a nice front-end for
-completion engines (such as Geiser's). Very nice if you like that kind
-of thing: judge by yourself with the help of
-@uref{http://www.screentoaster.com/watch/stU0lSRERIR1pYRFVdXVlRVFFV/company_mode_for_gnu_emacs,
-this screencast}.
-@end itemize
-In both cases, you just need to install and setup them as standalone
-packages that they are. Geiser will notice their presence and react
-accordingly.
-
-@node Setting it up,  , Friends, Installation
+@node Setting it up, Friends, Must needs, Installation
 @section Setting it up
 
 Geiser is ready to be used out of the box without much more ado. For the
@@ -89,7 +67,8 @@ and (since we grabbed the development tree) run the customary
 $ cd ~/lib/geiser
 $ ./autogen.sh
 @end example
-@noindent I recommend that you compile Geiser is a separate directory:
+@noindent
+I recommend that you compile Geiser is a separate directory:
 @example
 $ mkdir build && cd build
 $ ../configure
@@ -116,6 +95,33 @@ of the source tree. The installation will also take care of placing this
 manual, in Info format, where Emacs can find it, so you can continue to
 learn about Geiser inside its natural habitat. See you there and into
 the next chapter!
+
+@node Friends,  , Setting it up, Installation
+@section Friends
+
+Although Geiser does not need them, it plays well with (and is enhanced
+by) the following Emacs packages:
+
+@itemize
+@item @uref{http://www.emacswiki.org/emacs/ParEdit, Paredit}.
+Regardless of whether you use Geiser or not, you shouldn't be coding
+in any Lisp dialect without the aid of Taylor Campbell's structured
+editing mode.
+@item @uref{http://nschum.de/src/emacs/company-mode/, Company}.
+Nikolaj Schumacher's @code{company-mode} provides a nice front-end for
+completion engines (such as Geiser's). Very nice if you like that kind
+of thing: judge by yourself with the help of
+@uref{http://www.screentoaster.com/watch/stU0lSRERIR1pYRFVdXVlRVFFV/company_mode_for_gnu_emacs,
+this screencast}.
+@item @uref{http://www.neilvandyke.org/quack/, Quack}.
+You can still use the many goodies provided by Neil van Dyke's
+@code{quack-mode}, since most of them are not (yet) available in Geiser.
+The only caveat might be a conflict between Quack's and Geiser's default
+key bindings, which i'm sure you'll manage to tackle just fine.
+@end itemize
+You just need to install and setup them as usual, for every package's
+definition of usual. Geiser will notice their presence and react
+accordingly.
 
 @c Local Variables:
 @c mode: texinfo

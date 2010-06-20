@@ -82,8 +82,8 @@ Introduction
 Installation
 
 * Must needs::
-* Friends::
 * Setting it up::
+* Friends::
 
 @end detailmenu
 @end ifinfo
@@ -91,11 +91,14 @@ Installation
 @end menu
 
 @ifhtml
+@macro sLink {WHERE, TEXT}
+@uref{http://savannah.nongnu.org/\WHERE\/?group=geiser, \TEXT\}@ @
+@end macro
 @html
 <div class="navigation">
 @end html
 @flushright
-@uref{http://savannah.nongnu.org/news/?group=geiser, News}@ @ @ @ @uref{https://savannah.nongnu.org/files/?group=geiser, Download}@ @ @ @ @uref{http://git.savannah.gnu.org/cgit/geiser.git, Source}@ @ @ @ @uref{https://savannah.nongnu.org/bugs/?group=geiser, Bugs}@ @ @ @ @uref{http://lists.nongnu.org/mailman/listinfo/geiser-users, Mailing list}@ @
+@sLink{news, News} @ @ @sLink{files, Downloads} @ @ @sLink{bugs, Bugs} @ @ @uref{http://git.savannah.gnu.org/cgit/geiser.git, Source}@ @ @ @ @uref{http://lists.nongnu.org/mailman/listinfo/geiser-users, Mailing list}@ @
 @end flushright
 @html
 </div>
