@@ -3,7 +3,7 @@
 
 Geiser is an Emacs environment to hack and have fun in Scheme. If that's
 enough for you, see @ref{Installation} to get it running and
-@ref{Quick start} for the fun part.
+@ref{Tutorial} for the fun part.
 
 @menu
 * Modus operandi::

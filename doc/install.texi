@@ -37,9 +37,9 @@ If you don't want to install Git, you can instead grab a tarball from
 Geiser's @uref{http://gitorious.org/geiser/mainline/commits/master,
 Gitorious mirror}, where you'll find a
 @uref{http://gitorious.org/geiser/mainline/archive-tarball/master, link}
-generating it for you. Either way, you'll now be in possession of a copy
-of Geiser's libre code. I'll follow you into its directory and the next
-section.
+generating said tarball for you. Either way, you'll now be in possession
+of a copy of Geiser's libre code. I'll follow you into its directory and
+the next section.
 
 @node Setting it up, Friends, Must needs, Installation
 @section Setting it up
@@ -68,7 +68,7 @@ $ cd ~/lib/geiser
 $ ./autogen.sh
 @end example
 @noindent
-I recommend that you compile Geiser is a separate directory:
+I recommend that you compile Geiser in a separate directory:
 @example
 $ mkdir build && cd build
 $ ../configure

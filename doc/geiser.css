@@ -62,4 +62,19 @@ ul {
 
 div.navigation {
     background-color: #efebe7;
+    line-height: 100%;
+    top-margin: 5px;
+    padding: 3px;
+    /* background-color: #000000; */
+    /* border-top-style: solid; */
+    /* border-bottom-style: solid; */
+    /* border-width: 0px; */
+    /* border-top-width: 4px; */
+    /* border-color: rgb(200, 200, 200); */
 }
+
+.navlink {
+    text-decoration: none;
+    /* color: white; */
+}
+
