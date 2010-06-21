@@ -1,4 +1,4 @@
-SUBDIRS = . elisp scheme
+SUBDIRS = . elisp scheme doc
 
 EXTRA_DIST = THANKS
 

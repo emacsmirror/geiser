@@ -1,4 +1,4 @@
-# Copyright (C) 2009 Free Software Foundation, Inc.
+# Copyright (C) 2009, 2010 Jose A Ortega Ruiz.
 #
 # This file is free software; as a special exception the author gives
 # unlimited permission to copy and/or distribute it, with or without
@@ -16,7 +16,6 @@ AC_PROG_MAKE_SET
 AC_PROG_INSTALL
 AC_PROG_MKDIR_P
 AC_CHECK_PROG(MAKEINFO, makeinfo, makeinfo, no)
-AC_CHECK_PROG(TEXI2PDF, texi2pdf, texi2pdf, false)
 
 AM_PATH_LISPDIR
 
@@ -25,6 +24,7 @@ Makefile
 elisp/Makefile
 elisp/geiser-version.el
 scheme/Makefile
+doc/Makefile
 ])
 
 AC_OUTPUT
