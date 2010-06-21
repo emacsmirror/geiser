@@ -1,0 +1,10 @@
+@node Tutorial, Index, Installation, Top
+@chapter Tutorial
+
+@anchor{quick-start}
+
+
+@c Local Variables:
+@c mode: texinfo
+@c TeX-master: "geiser"
+@c End:
