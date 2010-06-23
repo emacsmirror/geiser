@@ -50,6 +50,8 @@ It draws inspiration (and a bit more) from environments such as Common
 Lisp's Slime, Factor's FUEL, Squeak or Emacs itself, and does its best
 to make Scheme hacking inside Emacs (even more) fun.
 
+@cindex derailment
+@cindex corpses
 Or, to be precise, what @uref{http://hacks-galore.org/jao, i} consider
 fun. Geiser is thus my humble contribution to the dynamic school of
 expression, and a reaction against what i perceive as a derailment, in

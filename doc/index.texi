@@ -4,7 +4,7 @@
 
 @node Index
 @unnumbered Index
-
+@cindex recursion
 @printindex cp
 
 

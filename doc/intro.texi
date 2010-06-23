@@ -22,6 +22,7 @@ library implementing that API, together with some wee shims in Elisp
 allowing the reuse of the Emacs-side framework, which constitutes the
 bulk of the code.
 
+@cindex current module
 While being as generic as possible, the Scheme-Elisp interface makes
 some assumptions about the capabilities and interaction mode of the
 corresponding REPL. In particular, Geiser expects the latter to support
@@ -46,7 +47,7 @@ my knowledge) introspection capabilities, namely, Guile and Racket.
 
 @node Showing off,  , Modus operandi, Introduction
 @section Showing off
-
+@cindex swanking
 When working with a fully conniving Scheme, Geiser can offer the
 following functionality:
 
@@ -79,7 +80,7 @@ and error navigation.
 Support for multiple, simultaneous REPLs.
 @end itemize
 
-In the following sections, i'll try to explain what these features
+In the following pages, i'll try to explain what these features
 actually are (i'm just swanking here), and how to use them for your
 profit. But, before that, let's see how to install Geiser.
 

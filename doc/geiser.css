@@ -78,3 +78,7 @@ div.navigation {
     /* color: white; */
 }
 
+.index-cp {
+    line-height:120%;
+    font-size: smaller;
+}

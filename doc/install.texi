@@ -10,6 +10,7 @@
 @node Must needs, Setting it up, Installation, Installation
 @section Must needs
 
+@cindex supported versions
 If Geiser came with any guarantees, you'd break all of them by not using
 GNU Emacs 23 (or better, if there actually @i{is} anything better) and
 at least one of the supported schemes, which right now are
@@ -20,6 +21,7 @@ directly compiled from a recent checkout of
 branch}. Since Geiser supports multiple REPLs, having both of them will
 just add to the fun.
 
+@cindex use the source, Luke
 You'll also need Geiser itself. Until version 0.1 is out (which will
 happen shortly after i finish writing a decent manual), your best bet is
 grabbing Geiser from its Git repository over at
@@ -57,6 +59,7 @@ or simply evaluate that form inside Emacs (you wouldn't kill a friend
 just to start using Geiser, would you?). That's it: you're ready to
 @ref{quick-start,,go}.
 
+@cindex byte-compilation
 What? You still here? I promise the above is all that's needed to start
 using Geiser. But, in case you are missing your @t{configure/make all
 install} routine, by all means, you can go through those motions to byte
@@ -102,7 +105,10 @@ the next chapter!
 Although Geiser does not need them, it plays well with (and is enhanced
 by) the following Emacs packages:
 
-@itemize
+@cindex paredit
+@cindex company
+@cindex quack
+@itemize @bullet
 @item @uref{http://www.emacswiki.org/emacs/ParEdit, Paredit}.
 Regardless of whether you use Geiser or not, you shouldn't be coding
 in any Lisp dialect without the aid of Taylor Campbell's structured

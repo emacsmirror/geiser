@@ -2,7 +2,9 @@
 @chapter Tutorial
 
 @anchor{quick-start}
-
+I'm working on it... perhaps the
+@uref{http://git.savannah.gnu.org/cgit/geiser.git/plain/README, README}
+file will work for you in the meantime?
 
 @c Local Variables:
 @c mode: texinfo

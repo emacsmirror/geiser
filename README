@@ -140,11 +140,11 @@
     |----------------+----------------------------------------------------|
     | C-c C-k, C-c k | Nuke REPL: use it if the REPL becomes unresponsive |
     |----------------+----------------------------------------------------|
-    | C-c l          | Load scheme file                                   |
+    | C-c C-m, C-c m | Set current module
+    | C-c C-l, C-c l | Load scheme file                                   |
     |----------------+----------------------------------------------------|
-    | C-c d          | See documentation for identifier at point          |
-    | C-c m          | See module documentation                           |
-    | C-c a          | Toggle autodoc mode                                |
+    | C-c C-d, C-c d | See module documentation                           |
+    | C-c C-a, C-c a | Toggle autodoc mode                                |
     |----------------+----------------------------------------------------|
 
 *** In the documentation browser:
