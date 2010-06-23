@@ -187,7 +187,8 @@ terminates a current completion."
 (defvar geiser-completion--module-history nil)
 
 (defun geiser-completion--read-module (&optional prompt default history)
-  (let ((minibuffer-local-completion-map geiser-completion--module-minibuffer-map))
+  (let ((minibuffer-local-completion-map
+         geiser-completion--module-minibuffer-map))
     (completing-read (or prompt "Module name: ")
                      geiser-completion--module-list-func
                      nil nil nil

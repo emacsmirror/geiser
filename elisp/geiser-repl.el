@@ -228,26 +228,28 @@ If no REPL is running, execute `run-geiser' to start a fresh one."
 
 (defalias 'geiser 'switch-to-geiser)
 
+(defun geiser-repl--send (cmd)
+  (when (and cmd (eq major-mode 'geiser-repl-mode))
+    (goto-char (point-max))
+    (comint-kill-input)
+    (insert cmd)
+    (let ((comint-input-filter (lambda (x) nil)))
+      (comint-send-input nil t))))
+
 (geiser-impl--define-caller geiser-repl--enter-cmd enter-command (module)
   "Function taking a module designator and returning a REPL enter
 module command as a string")
 
-(defun switch-to-geiser-module ()
-  "Switch to running Geiser REPL and try to enter current module."
+(defun switch-to-geiser-module (&optional module)
+  "Switch to running Geiser REPL and try to enter a given module."
   (interactive)
-  (let ((m (geiser-repl--enter-cmd geiser-impl--implementation
-                                   (geiser-eval--get-module))))
+  (let* ((module (or module
+                     (geiser-completion--read-module "Switch to module: ")))
+         (cmd (and module
+                   (geiser-repl--enter-cmd geiser-impl--implementation
+                                           module))))
     (switch-to-geiser)
-    (when (and m (eq major-mode 'geiser-repl-mode))
-      (goto-char (point-max))
-      (let ((b (or (and comint-last-prompt-overlay
-                        (overlay-start comint-last-prompt-overlay))
-                   (point))))
-        (insert m)
-        (let ((e (point))
-              (comint-input-filter (lambda (x) nil)))
-          (comint-send-input nil t)
-          (comint-kill-region b (1+ e)))))))
+    (geiser-repl--send cmd)))
 
 (defun geiser-repl-nuke ()
   "Try this command if the REPL becomes unresponsive."
@@ -272,21 +274,24 @@ module command as a string")
         (comint-prompt-read-only nil))
     (setq geiser-repl--repls (remove cb geiser-repl--repls))
     (dolist (buffer (buffer-list))
-      (with-current-buffer buffer
-        (when (and (eq geiser-impl--implementation impl)
-                   (equal cb (geiser-repl--this-buffer-repl)))
-          (geiser-repl--get-repl geiser-impl--implementation))))))
+      (when (buffer-live-p buffer)
+        (with-current-buffer buffer
+          (when (and (eq geiser-impl--implementation impl)
+                     (equal cb (geiser-repl--this-buffer-repl)))
+            (geiser-repl--get-repl geiser-impl--implementation)))))))
 
 (defun geiser-repl--sentinel (proc event)
-  (with-current-buffer (process-buffer proc)
-    (let ((comint-prompt-read-only nil)
-          (comint-input-ring-file-name (geiser-repl--history-file)))
-      (geiser-repl--on-quit)
-      (push (current-buffer) geiser-repl--closed-repls)
-      (when (buffer-name (current-buffer))
-        (comint-kill-region comint-last-input-start (point))
-        (insert "\nIt's been nice interacting with you!\n")
-        (insert "Press C-cz to bring me back.\n" )))))
+  (let ((pb (process-buffer proc)))
+    (when (buffer-live-p pb)
+      (with-current-buffer pb
+        (let ((comint-prompt-read-only nil)
+              (comint-input-ring-file-name (geiser-repl--history-file)))
+          (geiser-repl--on-quit)
+          (push pb geiser-repl--closed-repls)
+          (when (buffer-name (current-buffer))
+            (comint-kill-region comint-last-input-start (point))
+            (insert "\nIt's been nice interacting with you!\n")
+            (insert "Press C-cz to bring me back.\n" )))))))
 
 (defun geiser-repl--on-kill ()
   (geiser-repl--on-quit)
@@ -389,6 +394,9 @@ module command as a string")
   ("Edit symbol" "\M-." geiser-edit--symbol-at-point
    :enable (symbol-at-point))
   --
+  ("Switch to module..." ("\C-c\C-m" "\C-cm") switch-to-geiser-module)
+  ("Load module" ("\C-c\C-l" "\C-cl") geiser-load-file)
+  --
   ("Previous matching input" "\M-p" comint-previous-matching-input-from-input
    "Previous input matching current")
   ("Next matching input" "\M-n" comint-next-matching-input-from-input
@@ -396,12 +404,9 @@ module command as a string")
   ("Previous input" "\C-c\M-p" comint-previous-input)
   ("Next input" "\C-c\M-n" comint-next-input)
   --
-  (mode "Autodoc mode" "\C-ca" geiser-autodoc-mode)
-  ("Symbol documentation" "\C-cd" geiser-doc-symbol-at-point
-   "Documentation for symbol at point" :enable (symbol-at-point))
-  ("Module documentation" "\C-cm" geiser-repl--doc-module
+  (mode "Autodoc mode" ("\C-c\C-a" "\C-ca") geiser-autodoc-mode)
+  ("Module documentation" ("\C-c\C-d" "\C-cd") geiser-repl--doc-module
    "Documentation for module at point" :enable (symbol-at-point))
-  ("Load module" "\C-cl" geiser-load-file)
   --
   ("Restart" ("\C-cz" "\C-c\C-z") switch-to-geiser
    :enable (not (geiser-repl--this-buffer-repl)))
