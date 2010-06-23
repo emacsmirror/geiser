@@ -408,11 +408,13 @@ module command as a string")
   ("Module documentation" ("\C-c\C-d" "\C-cd") geiser-repl--doc-module
    "Documentation for module at point" :enable (symbol-at-point))
   --
+  ("Kill Scheme interpreter" "\C-c\C-q" comint-kill-subjob
+   :enable (geiser-repl--this-buffer-repl))
   ("Restart" ("\C-cz" "\C-c\C-z") switch-to-geiser
    :enable (not (geiser-repl--this-buffer-repl)))
   ("Revive REPL" ("\C-ck" "\C-c\C-k") geiser-repl-nuke
    "Use this command if the REPL becomes irresponsive"
-   :enable (not (geiser-repl--this-buffer-repl)))
+   :enable (geiser-repl--this-buffer-repl))
   --
   (custom "REPL options" geiser-repl))
 

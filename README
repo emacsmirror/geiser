@@ -131,6 +131,7 @@
 
     |----------------+----------------------------------------------------|
     | C-c C-z, C-c z | Start Scheme REPL (if it's not running)            |
+    | C-c C-q        | Kill Scheme process                                |
     |----------------+----------------------------------------------------|
     | M-.            | Edit identifier at point                           |
     | TAB, M-TAB     | Complete identifier at point                       |
@@ -140,7 +141,7 @@
     |----------------+----------------------------------------------------|
     | C-c C-k, C-c k | Nuke REPL: use it if the REPL becomes unresponsive |
     |----------------+----------------------------------------------------|
-    | C-c C-m, C-c m | Set current module
+    | C-c C-m, C-c m | Set current module                                 |
     | C-c C-l, C-c l | Load scheme file                                   |
     |----------------+----------------------------------------------------|
     | C-c C-d, C-c d | See module documentation                           |
