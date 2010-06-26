@@ -14,7 +14,7 @@ EXTRA_DIST = geiser.css site.conf
 
 
 info_TEXINFOS = geiser.texi
-geiser_TEXINFOS = intro.texi install.texi tutorial.texi index.texi
+geiser_TEXINFOS = top.texi intro.texi install.texi tutorial.texi index.texi
 
 output_dir=$(top_builddir)/doc/html
 
@@ -26,5 +26,5 @@ web:
                   --nonumber-section \
                   --init-file=$(top_srcdir)/doc/site.conf \
                   --top-file=index.html \
-                  $(top_srcdir)/doc/geiser.texi
+                  $(top_srcdir)/doc/web.texi
 	cp $(top_srcdir)/doc/geiser.css ${output_dir}

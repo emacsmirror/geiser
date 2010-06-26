@@ -1,0 +1,35 @@
+
+@contents
+
+@include top.texi
+
+@menu
+* Introduction::
+* Installation::
+* Tutorial::
+* Index::
+@end menu
+
+@html
+<div class="navigation" align="right">
+<a class="navlink"
+href="http://savannah.nongnu.org/news/?group=geiser">News</a>&nbsp;&nbsp;&nbsp;&nbsp;<a class="navlink"
+href="http://savannah.nongnu.org/files/?group=geiser">Downloads</a>&nbsp;&nbsp;&nbsp;&nbsp;<a class="navlink"
+href="http://savannah.nongnu.org/bugs/?group=geiser">Bugs</a>&nbsp;&nbsp;&nbsp;&nbsp;<a class="navlink"
+href="http://git.savannah.gnu.org/cgit/geiser.git">Source</a>&nbsp;&nbsp;&nbsp;&nbsp;<a class="navlink"
+href="http://lists.nongnu.org/mailman/listinfo/geiser-users">Mailing
+list</a>&nbsp;
+</div>
+@end html
+
+@include intro.texi
+@include install.texi
+@include tutorial.texi
+@include index.texi
+
+@bye
+
+@c Local Variables:
+@c mode: texinfo
+@c TeX-master: t
+@c End:
