@@ -40,12 +40,16 @@ The document was typeset with
 @c Output the table of the contents at the beginning.
 @contents
 
-@include top.texi
+@ifnottex
+@node Top, Introduction, (dir), (dir)
+@top Geiser
+
+@insertcopying
 
 @menu
 * Introduction::
 * Installation::
-* Tutorial::
+* The REPL::
 * Index::
 
 @detailmenu
@@ -62,12 +66,18 @@ Installation
 * Setting it up::
 * Friends::
 
+The REPL
+
+* Starting the REPL::
+
 @end detailmenu
 @end menu
 
+@end ifnottex
+
 @include intro.texi
 @include install.texi
-@include tutorial.texi
+@include repl.texi
 @include index.texi
 
 @bye

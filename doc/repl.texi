@@ -1,0 +1,85 @@
+@node The REPL
+@chapter The REPL
+@anchor{quick-start}
+If you've followed the indications in @ref{Setting it up}, your Emacs is
+now ready to start playing. Otherwise, i'll wait for you: when you're
+ready, just come back here and proceed to the following sections.
+
+@menu
+* Starting the REPL::
+* First aids::
+* Switching contexts::
+@end menu
+
+@node Starting the REPL, First aids, The REPL, The REPL
+@section Starting the REPL
+
+To start a Scheme REPL (meaning, a scheme process offering you a
+Read-Eval-Print Loop), Geiser provides the generic interactive command
+@command{run-geiser}. If you run it (via, as is customary in Emacs,
+@kbd{M-x run-geiser}, you'll be saluted by a prompt asking which one of
+the supported implementations you want to launch (yes, you can stop the
+asking: see below). Tabbing for completion will offer you, as of this
+writing, @code{guile} and @code{racket}. Just choose your poison, and a
+new REPL buffer will pop-up.
+
+@image{img/repls}
+
+If all went according to plan, you'll be facing an
+implementation-dependent banner, followed by an interactive prompt.
+Going according to plan includes having the executable of the Scheme you
+chose in your path. If that's not the case, you can tell Emacs where it
+is by setting the variable @var{geiser-<impl>-binary} to an appropriate
+value. Returning to our REPL, the first thing to notice is that the
+funny prompt is telling you your current module: its name is the part
+just after the @@ sign (in Guile, that means @code{guile-user}, while
+Racket's top namespace doesn't have a name; cf. @ref{Switching contexts}
+below). Other than that, this is pretty much equivalent to having a
+command-line interpreter in a terminal, with a bunch of add-ons that
+we'll be reviewing below. You can start typing sexps right there: Geiser
+will only dispatch them for evaluation when they're complete, and will
+indent new lines properly until then.
+
+@node First aids, Switching contexts, Starting the REPL, The REPL
+@section First aids
+
+@img{repl-menu, right}
+A quick way of seeing what else Geiser's REPL can do for you, is to
+display the corresponding entry up there in your menu bar. No, i don't
+normally use menus either; but they can come in handy until you've
+memorized Geiser's commands, as a learning device. And yes, i usually
+run Emacs inside a terminal, but one can always use
+@uref{http://www.emacswiki.org/emacs/LaCarte, La Carte} to access the
+menus in a convenient enough fashion.
+
+Or just press @kbd{C-h m} and be done with that.
+
+Among the commands at your disposal, we find the familiar input
+navigation keys, with a twist. By default, @kbd{M-p} and @kbd{M-n} are
+bound to @i{matching} items in your input history. That is, they'll find
+the previous or next sexp that start with the current input prefix
+(defined as the text between the end of the prompt and your current
+position, a.k.a. @dfn{point}, in the buffer). For going up and down the
+list unconditionally, just use @kbd{C-c M-p} and @kbd{C-c M-n}.
+
+There are also a few commands to twiddle with the Scheme process.
+@kbd{C-c C-q} will mercilessly kill it (but not before stowing your
+history in the file system). A softer nuke is performed by @kbd{C-c
+C-k}: some (rare, i promise) times, Geiser's REPL can get confused by
+the input received from then underlying Scheme (specially if you have
+multiple threads writing to the standard ports), and become
+irresponsive; you can try this command to try to revive it without
+killing the process. Finally, if bad comes to worst and the process is
+dead, @kbd{C-c z} will restart it.
+
+The remaining commands are meatier, and deserve sections of their own.
+
+@node Switching contexts,  , First aids, The REPL
+@section Switching contexts
+@comment  node-name,  next,  previous,  up
+
+
+@c Local Variables:
+@c mode: texinfo
+@c TeX-master: "geiser"
+@c End:

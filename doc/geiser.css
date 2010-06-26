@@ -9,7 +9,8 @@ html {
 body {
     padding:10px 10% 10px 10%;
     margin:0px;
-    text-align:justify
+    text-align:justify;
+    /* width: 750px; */
 }
 
 a { color:black; weight=normal }
@@ -49,9 +50,21 @@ pre.example {
 table { width: 100%; }
 
 img {
-    display:block;
+    /* display:block; */
     margin:10px auto 10px auto;
     border:none
+}
+
+img.floatleft {
+    float: left;
+    margin: 4px;
+    padding-right: 1em;
+}
+
+img.floatright {
+    float: right;
+    margin: 4px;
+    padding-left: 1em;
 }
 
 ul {

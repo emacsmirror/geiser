@@ -1,12 +1,17 @@
+@settitle Geiser
+
+@include macros.texi
 
 @contents
+
+@node Top, Introduction, (dir), (dir)
 
 @include top.texi
 
 @menu
 * Introduction::
 * Installation::
-* Tutorial::
+* The REPL::
 * Index::
 @end menu
 
@@ -24,7 +29,7 @@ list</a>&nbsp;
 
 @include intro.texi
 @include install.texi
-@include tutorial.texi
+@include repl.texi
 @include index.texi
 
 @bye
