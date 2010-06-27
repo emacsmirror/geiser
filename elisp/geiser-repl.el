@@ -251,6 +251,21 @@ module command as a string")
     (switch-to-geiser)
     (geiser-repl--send cmd)))
 
+(geiser-impl--define-caller geiser-repl--import-cmd import-command (module)
+  "Function taking a module designator and returning a REPL import
+module command as a string")
+
+(defun geiser-repl-import-module (&optional module)
+  "Import a given module in the current namespace."
+  (interactive)
+  (let* ((module (or module
+                     (geiser-completion--read-module "Import module: ")))
+         (cmd (and module
+                   (geiser-repl--import-cmd geiser-impl--implementation
+                                            module))))
+    (switch-to-geiser)
+    (geiser-repl--send cmd)))
+
 (defun geiser-repl-nuke ()
   "Try this command if the REPL becomes unresponsive."
   (interactive)
@@ -395,7 +410,7 @@ module command as a string")
    :enable (symbol-at-point))
   --
   ("Switch to module..." ("\C-c\C-m" "\C-cm") switch-to-geiser-module)
-  ("Load module" ("\C-c\C-l" "\C-cl") geiser-load-file)
+  ("Import module" ("\C-c\C-i" "\C-ci") geiser-repl-import-module)
   --
   ("Previous matching input" "\M-p" comint-previous-matching-input-from-input
    "Previous input matching current")
