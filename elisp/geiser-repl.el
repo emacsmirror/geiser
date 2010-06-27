@@ -314,14 +314,22 @@ module command as a string")
         (remove (current-buffer) geiser-repl--closed-repls)))
 
 (defun geiser-repl--input-filter (str)
-  (and (not (string-match "^\\s *$" str))
-       (not (string-match "^,quit *$" str))))
+  (not (or (geiser-con--is-debugging)
+           (string-match "^\\s *$" str)
+           (string-match "^,quit *$" str))))
+
+(defun geiser-repl--old-input ()
+  (save-excursion
+    (let ((end (point)))
+      (backward-sexp)
+      (buffer-substring (point) end))))
 
 (defun geiser-repl--history-setup ()
   (set (make-local-variable 'comint-input-ring-file-name)
        (geiser-repl--history-file))
   (set (make-local-variable 'comint-input-ring-size) geiser-repl-history-size)
   (set (make-local-variable 'comint-input-filter) 'geiser-repl--input-filter)
+  (set (make-local-variable 'comint-get-old-input) 'geiser-repl--old-input)
   (add-hook 'kill-buffer-hook 'geiser-repl--on-kill nil t)
   (comint-read-input-ring t)
   (set-process-sentinel (get-buffer-process (current-buffer))
@@ -409,8 +417,8 @@ module command as a string")
   ("Edit symbol" "\M-." geiser-edit--symbol-at-point
    :enable (symbol-at-point))
   --
-  ("Switch to module..." ("\C-c\C-m" "\C-cm") switch-to-geiser-module)
-  ("Import module" ("\C-c\C-i" "\C-ci") geiser-repl-import-module)
+  ("Switch to module..." ("\C-cm" "\C-c\C-m") switch-to-geiser-module)
+  ("Import module..." ("\C-ci" "\C-c\C-i") geiser-repl-import-module)
   --
   ("Previous matching input" "\M-p" comint-previous-matching-input-from-input
    "Previous input matching current")
@@ -419,8 +427,8 @@ module command as a string")
   ("Previous input" "\C-c\M-p" comint-previous-input)
   ("Next input" "\C-c\M-n" comint-next-input)
   --
-  (mode "Autodoc mode" ("\C-c\C-a" "\C-ca") geiser-autodoc-mode)
-  ("Module documentation" ("\C-c\C-d" "\C-cd") geiser-repl--doc-module
+  (mode "Autodoc mode" ("\C-ca" "\C-c\C-a") geiser-autodoc-mode)
+  ("Module documentation" ("\C-cd" "\C-c\C-d") geiser-repl--doc-module
    "Documentation for module at point" :enable (symbol-at-point))
   --
   ("Kill Scheme interpreter" "\C-c\C-q" comint-kill-subjob
@@ -432,6 +440,8 @@ module command as a string")
    :enable (geiser-repl--this-buffer-repl))
   --
   (custom "REPL options" geiser-repl))
+
+(define-key geiser-repl-mode-map [menu-bar completion] 'undefined)
 
 
 ;;; Unload:
