@@ -8,20 +8,23 @@ ready, just come back here and proceed to the following sections.
 @menu
 * Starting the REPL::
 * First aids::
-* Switching contexts::
+* Switching context::
+* Let Geiser spy::
+* Customization and tips::
 @end menu
 
 @node Starting the REPL, First aids, The REPL, The REPL
 @section Starting the REPL
 
+@cindex REPL
 To start a Scheme REPL (meaning, a scheme process offering you a
 Read-Eval-Print Loop), Geiser provides the generic interactive command
 @command{run-geiser}. If you run it (via, as is customary in Emacs,
 @kbd{M-x run-geiser}, you'll be saluted by a prompt asking which one of
 the supported implementations you want to launch (yes, you can stop the
-asking: see below). Tabbing for completion will offer you, as of this
-writing, @code{guile} and @code{racket}. Just choose your poison, and a
-new REPL buffer will pop-up.
+asking: see @ref{active-implementations,,below}). Tabbing for completion
+will offer you, as of this writing, @code{guile} and @code{racket}. Just
+choose your poison, and a new REPL buffer will pop-up.
 
 @image{img/repls}
 
@@ -29,21 +32,26 @@ If all went according to plan, you'll be facing an
 implementation-dependent banner, followed by an interactive prompt.
 Going according to plan includes having the executable of the Scheme you
 chose in your path. If that's not the case, you can tell Emacs where it
-is by setting the variable @var{geiser-<impl>-binary} to an appropriate
-value. Returning to our REPL, the first thing to notice is that the
-funny prompt is telling you your current module: its name is the part
-just after the @@ sign (in Guile, that means @code{guile-user}, while
-Racket's top namespace doesn't have a name; cf. @ref{Switching contexts}
-below). Other than that, this is pretty much equivalent to having a
-command-line interpreter in a terminal, with a bunch of add-ons that
-we'll be reviewing below. You can start typing sexps right there: Geiser
-will only dispatch them for evaluation when they're complete, and will
-indent new lines properly until then.
+is, as described @ref{impl-binary,, below}. Returning to our REPL, the
+first thing to notice is that the funny prompt is telling you your
+current module: its name is the part just after the @@ sign (in Guile,
+that means @code{guile-user}, while Racket's top namespace doesn't have
+a name; cf. @ref{Switching context} below). Other than that, this is
+pretty much equivalent to having a command-line interpreter in a
+terminal, with a bunch of add-ons that we'll be reviewing below. You can
+start typing sexps right there: Geiser will only dispatch them for
+evaluation when they're complete, and will indent new lines properly
+until then. It will also keep track of your input, maintaining a history
+file that will be reloaded whenever you restart the REPL.
 
-@node First aids, Switching contexts, Starting the REPL, The REPL
+Nothing that fanciful this far, but there's more to Geiser's REPL. On to
+the next section!
+
+@node First aids, Switching context, Starting the REPL, The REPL
 @section First aids
 
 @img{repl-menu, right}
+@cindex REPL commands
 A quick way of seeing what else Geiser's REPL can do for you, is to
 display the corresponding entry up there in your menu bar. No, i don't
 normally use menus either; but they can come in handy until you've
@@ -55,12 +63,13 @@ menus in a convenient enough fashion.
 Or just press @kbd{C-h m} and be done with that.
 
 Among the commands at your disposal, we find the familiar input
-navigation keys, with a twist. By default, @kbd{M-p} and @kbd{M-n} are
-bound to @i{matching} items in your input history. That is, they'll find
-the previous or next sexp that start with the current input prefix
-(defined as the text between the end of the prompt and your current
-position, a.k.a. @dfn{point}, in the buffer). For going up and down the
-list unconditionally, just use @kbd{C-c M-p} and @kbd{C-c M-n}.
+navigation keys, with a couple twists. By default, @kbd{M-p} and
+@kbd{M-n} are bound to @i{matching} items in your input history. That
+is, they'll find the previous or next sexp that starts with the current
+input prefix (defined as the text between the end of the prompt and your
+current position, a.k.a. @dfn{point}, in the buffer). For going up and
+down the list unconditionally, just use @kbd{C-c M-p} and @kbd{C-c M-n}.
+In addition, navigation is sexp- rather than line-based.
 
 There are also a few commands to twiddle with the Scheme process.
 @kbd{C-c C-q} will mercilessly kill it (but not before stowing your
@@ -74,9 +83,88 @@ dead, @kbd{C-c z} will restart it.
 
 The remaining commands are meatier, and deserve sections of their own.
 
-@node Switching contexts,  , First aids, The REPL
-@section Switching contexts
-@comment  node-name,  next,  previous,  up
+@node Switching context, Let Geiser spy, First aids, The REPL
+@section Switching context
+
+@cindex current module
+In tune with Geiser's @ref{current-module,,modus operandi}, evaluations
+in the REPL take place if the namespace of the current module. As noted
+above, the REPL's prompt tells you the name of the current module. To
+switch to a different one, you can use the command
+@command{switch-to-geiser-module}, bound to @kbd{C-c m}. You'll notice
+that Geiser simply uses the underlying Scheme's native namespace switching
+facilities (@command{,m} in Guile and @command{enter!} in Racket), and
+that it doesn't even try to hide that fact. That means that you can
+freely use said native ways directly at the REPL, and Geiser will be
+happy to oblige.
+
+Once you enter a new module, only those bindings visible in its
+namespace will be available to your evaluations. All schemes supported
+by Geiser provide a way to import new modules in the current namespace.
+Again, there's a Geiser command, @command{geiser-repl-import-module}, to
+invoke such functionality, bound this time to @kbd{C-c i}. And, again,
+you'll see Geiser just introducing the native incantation for you, and
+you're free to use such incantations by hand whenever you want.
+
+One convenience provided by these two Geiser commands is that completion
+is available when introducing the new module name, using the
+@kbd{@key{TAB}} key. Pressing it at the command's prompt will offer you
+a prefix-aware list of available module names.
+
+@image{img/mod-completion}
+
+Which brings me to the next group of REPL commands.
+
+@node Let Geiser spy, Customization and tips, Switching context, The REPL
+@section Let Geiser spy, write and jump for you
+
+We've already seen Geiser completion of module names in action at the
+mini-buffer. You won't be surprised to know that it's also available at
+the REPL buffer itself. There, you can use either @kbd{C-.} or @kbd{M-`}
+to complete module names, and @kbd{@key{TAB}} or @kbd{M-@key{TAB}} to
+complete identifiers. Geiser will know what identifiers are bound in the
+current module and show you a list of those starting with the prefix at
+point. Needless to say, this is not a static list, and it will grow as
+you define or import new bindings in the namespace at hand.
+
+But, oftentimes, there's more you'll want to know about an identifier
+besides its name: what module does it belong to? is it a procedure and,
+if so, what arguments does it take? Geiser tries to help you answering
+those questions too.
+
+Actually, if you've been playing with the REPL as you read, you might
+have notice some frantic activity taking place in the minibuffer every
+now and then. That was Geiser trying to be helpful (while, hopefully,
+not being clippy), or, more concretely, what i call, for want of a
+better name, its @dfn{autodoc} mode. Whenever it's active (did you
+notice that @i{A} in the mode-line?), Geiser's gerbils will be scanning
+what you type and showing arity information about the procedure nearest
+to point.
+
+@image{img/repl-autodoc}
+
+That information includes the procedure's name, prefixed with the name
+of the module it belongs to, followed by the name of its arguments (or
+an underscore if Geiser cannot determine the name used in the
+definition). Optional arguments are surrounded by square brackets, and,
+when the optional argument has a default value, it's represented by a
+list made up of its name and that value. When the argument is a keyword
+argument, its name is preceded by a colon.
+
+If that's still not enough, Geiser can jump to the symbol's definition
+via @kbd{M-.}. A buffer with the corresponding file will popup, with its
+point resting upon the identifier's defining form. When you're done
+inspecting, @kbd{M-,} will bring you back to where you were. As we will
+see, these commands are also available in scheme buffers.
+
+@node Customization and tips,  , Let Geiser spy, The REPL
+@section Customization and tips
+@anchor{active-implementations}
+active implementations
+@anchor{impl-binary}
+geiser-impl-binary
+geiser-collections
+geiser-repl-history-no-dups-p
 
 
 @c Local Variables:

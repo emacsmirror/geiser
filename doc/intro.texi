@@ -23,6 +23,7 @@ allowing the reuse of the Emacs-side framework, which constitutes the
 bulk of the code.
 
 @cindex current module
+@anchor{current-module}
 While being as generic as possible, the Scheme-Elisp interface makes
 some assumptions about the capabilities and interaction mode of the
 corresponding REPL. In particular, Geiser expects the latter to support
