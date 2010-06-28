@@ -54,6 +54,11 @@ implementation name gets appended to it."
   :type 'integer
   :group 'geiser-repl)
 
+(geiser-custom--defcustom geiser-repl-history-no-dups-p t
+   "Whether to skip duplicates when recording history."
+   :type 'boolean
+   :group 'geiser-repl)
+
 (geiser-custom--defcustom geiser-repl-autodoc-p t
   "Whether to enable `geiser-autodoc-mode' in the REPL by default."
   :type 'boolean
@@ -393,6 +398,8 @@ module command as a string")
        geiser-repl-read-only-prompt-p)
   (set (make-local-variable 'beginning-of-defun-function)
        'geiser-repl--beginning-of-defun)
+  (set (make-local-variable 'comint-input-ignoredups)
+       'geiser-repl-history-no-dups-p)
   (setq geiser-eval--get-module-function 'geiser-repl--module-function)
   (when geiser-repl-autodoc-p (geiser-autodoc-mode 1))
   (setq geiser-autodoc--inhibit-function 'geiser-con--is-debugging)
@@ -414,7 +421,7 @@ module command as a string")
    geiser-completion--complete-symbol :enable (symbol-at-point))
   ("Complete module name" ((kbd "C-.") (kbd "M-`"))
    geiser-completion--complete-module :enable (symbol-at-point))
-  ("Edit symbol" "\M-." geiser-edit--symbol-at-point
+  ("Edit symbol" "\M-." geiser-edit-symbol-at-point
    :enable (symbol-at-point))
   --
   ("Switch to module..." ("\C-cm" "\C-c\C-m") switch-to-geiser-module)
