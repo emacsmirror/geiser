@@ -10,11 +10,18 @@
 
 # SUBDIRS = img
 SUFFIXES = .html
-EXTRA_DIST = geiser.css site.conf
+EXTRA_DIST = geiser.css site.conf web.texi
 
 
 info_TEXINFOS = geiser.texi
-geiser_TEXINFOS = top.texi intro.texi install.texi tutorial.texi index.texi
+geiser_TEXINFOS = \
+  macros.texi \
+  top.texi \
+  intro.texi \
+  install.texi \
+  repl.texi \
+  fun.texi \
+  index.texi
 
 output_dir=$(top_builddir)/doc/html
 

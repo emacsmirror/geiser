@@ -4,6 +4,8 @@
 @settitle Geiser User Manual
 @c %**end of header
 
+@include macros.texi
+
 @copying
 This manual documents Geiser, an Emacs environment to hack in Scheme.
 
@@ -44,12 +46,15 @@ The document was typeset with
 @node Top, Introduction, (dir), (dir)
 @top Geiser
 
+@include top.texi
+
 @insertcopying
 
 @menu
 * Introduction::
 * Installation::
 * The REPL::
+* Fun between the parens::
 * Index::
 
 @detailmenu
@@ -82,6 +87,7 @@ The REPL
 @include intro.texi
 @include install.texi
 @include repl.texi
+@include fun.texi
 @include index.texi
 
 @bye

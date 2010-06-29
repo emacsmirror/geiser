@@ -1,4 +1,4 @@
-@node The REPL, Index, Installation, Top
+@node The REPL, Fun between the parens, Installation, Top
 @chapter The REPL
 @anchor{quick-start}
 If you've followed the indications in @ref{Setting it up}, your Emacs is

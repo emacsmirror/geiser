@@ -12,6 +12,7 @@
 * Introduction::
 * Installation::
 * The REPL::
+* Fun between the parens::
 * Index::
 @end menu
 
@@ -30,6 +31,7 @@ list</a>&nbsp;
 @include intro.texi
 @include install.texi
 @include repl.texi
+@include fun.texi
 @include index.texi
 
 @bye
