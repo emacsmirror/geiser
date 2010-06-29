@@ -69,6 +69,10 @@ Installation
 The REPL
 
 * Starting the REPL::
+* First aids::
+* Switching context::
+* Let Geiser spy::
+* Customization and tips::
 
 @end detailmenu
 @end menu

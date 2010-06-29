@@ -50,7 +50,7 @@ pre.example {
 table { width: 100%; }
 
 img {
-    /* display:block; */
+    display:block;
     margin:10px auto 10px auto;
     border:none
 }
@@ -71,6 +71,10 @@ ul {
     list-style-type:square;
     padding-left:1em;
     margin-left:1em
+}
+
+kbd {
+    font-weight: bold;
 }
 
 div.navigation {
