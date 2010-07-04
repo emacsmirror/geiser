@@ -130,12 +130,14 @@ or following links in error buffers.")
   'follow-link t)
 
 (defun geiser-edit--button-action (button)
-  (let ((loc (button-get button 'geiser-location)))
-    (when loc (geiser-edit--try-edit-location nil loc))))
+  (let ((loc (button-get button 'geiser-location))
+        (method (button-get button 'geiser-method)))
+    (when loc (geiser-edit--try-edit-location nil loc method))))
 
-(defun geiser-edit--make-link (beg end file line col)
+(defun geiser-edit--make-link (beg end file line col &optional method)
   (make-button beg end
                :type 'geiser-edit--button
+               'geiser-method method
                'geiser-location
                (geiser-edit--make-location 'error file line col)
                'help-echo "Go to error location"))
