@@ -144,7 +144,8 @@
     | C-c C-m, C-c m | Set current module                                 |
     | C-c C-l, C-c l | Load scheme file                                   |
     |----------------+----------------------------------------------------|
-    | C-c C-d, C-c d | See module documentation                           |
+    | C-c C-d C-d    | See documentation for symbol at point              |
+    | C-c C-d C-m    | See documentation for module                       |
     | C-c C-a, C-c a | Toggle autodoc mode                                |
     |----------------+----------------------------------------------------|
 

@@ -434,8 +434,11 @@ module command as a string")
   ("Previous input" "\C-c\M-p" comint-previous-input)
   ("Next input" "\C-c\M-n" comint-next-input)
   --
-  (mode "Autodoc mode" ("\C-ca" "\C-c\C-a") geiser-autodoc-mode)
-  ("Module documentation" ("\C-cd" "\C-c\C-d") geiser-repl--doc-module
+  (mode "Autodoc mode" ("\C-c\C-da" "\C-c\C-d\C-a") geiser-autodoc-mode)
+  ("Symbol documentation" ("\C-c\C-dd" "\C-c\C-d\C-d")
+   geiser-doc-symbol-at-point
+   "Documentation for symbol at point" :enable (symbol-at-point))
+  ("Module documentation" ("\C-c\C-dm" "\C-c\C-d\C-m") geiser-repl--doc-module
    "Documentation for module at point" :enable (symbol-at-point))
   --
   ("Kill Scheme interpreter" "\C-c\C-q" comint-kill-subjob

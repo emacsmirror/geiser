@@ -151,6 +151,13 @@ when the optional argument has a default value, it's represented by a
 list made up of its name and that value. When the argument is a keyword
 argument, its name is preceded by a colon.
 
+If that's not enough documentation for you, @kbd{C-c C-d d} will open a
+separate documentation buffer with help on the symbol at point. For some
+implementations (e.g. Racket), this separate buffer will actually be a
+web page displaying the corresponding page in the manual, while for
+implementations supporting docstrings (e.g. (you guessed it) Guile)
+it'll be a real Emacs buffer displaying that information.
+
 If that's still not enough, Geiser can jump, via @kbd{M-.}, to the
 symbol's definition. A buffer with the corresponding file will pop up,
 with its point resting upon the identifier's defining form. When you're
@@ -159,7 +166,7 @@ will see, these commands are also available in scheme buffers.
 
 Finally, Geiser can produce for you a list, classified by kind, of the
 identifiers exported by a given module: all you need to do is press
-@kbd{C-c d}, and type or complete the desired module's name.
+@kbd{C-c C-d m}, and type or complete the desired module's name.
 
 @image{img/repl-mod}
 
