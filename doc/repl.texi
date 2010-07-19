@@ -207,7 +207,7 @@ forget about the richness of the Scheme ecosystem with something like
 default, that the corresponding Scheme binary is in your path. If that's
 not the case, the variables to tweak are @var{geiser-guile-binary} and
 @var{geiser-racket-binary}, which should be set to a string with the
-path to the adequate binary.
+full path to the requisite binary.
 
 @subsubheading History
 
@@ -224,6 +224,13 @@ configuration includes the following line:
 @file{geiser-history.racket} to live inside my home's @file{.emacs.d}
 directory.
 
+@subsubheading Autodoc
+
+If you happen to love peace and quiet and prefer to keep your REPL's
+echo area free from autodoc's noise, @var{geiser-repl-autodoc-p} is the
+customization variable for you: set it to @code{nil} and autodoc will be
+disabled by default in new REPLs. You can always bring the fairies back,
+on a per REPL basis, using @kbd{C-c a}.
 
 @c Local Variables:
 @c mode: texinfo
