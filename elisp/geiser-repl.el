@@ -149,6 +149,11 @@ expression for this implementation's scheme prompt.")
   "A variable (or thunk returning a value) giving the regular
 expression for this implementation's debugging prompt.")
 
+(geiser-impl--define-caller
+    geiser-repl--debugger-preamble-regexp debugger-preamble-regexp ()
+  "A variable (or thunk returning a value) used to determine whether
+the REPL has entered debugging mode.")
+
 (geiser-impl--define-caller geiser-repl--startup startup ()
   "Function taking no parameters that is called after the REPL
 has been initialised. All Geiser functionality is available to
@@ -161,6 +166,7 @@ you at that point.")
         (args (geiser-repl--arglist impl))
         (prompt-rx (geiser-repl--prompt-regexp impl))
         (deb-prompt-rx (geiser-repl--debugger-prompt-regexp impl))
+        (deb-preamble-rx (geiser-repl--debugger-preamble-regexp impl))
         (cname (geiser-repl--repl-name impl)))
     (unless (and binary prompt-rx)
       (error "Sorry, I don't know how to start a REPL for %s" impl))
@@ -169,7 +175,10 @@ you at that point.")
            `(,cname ,(current-buffer) ,binary nil ,@args))
     (geiser-repl--wait-for-prompt 10000)
     (geiser-repl--history-setup)
-    (geiser-con--setup-connection (current-buffer) prompt-rx deb-prompt-rx)
+    (geiser-con--setup-connection (current-buffer)
+                                  prompt-rx
+                                  deb-prompt-rx
+                                  deb-preamble-rx)
     (add-to-list 'geiser-repl--repls (current-buffer))
     (geiser-repl--set-this-buffer-repl (current-buffer))
     (geiser-repl--startup impl)))
@@ -279,7 +288,8 @@ module command as a string")
   (comint-redirect-cleanup)
   (geiser-con--setup-connection (current-buffer)
                                 comint-prompt-regexp
-                                geiser-con--debugging-prompt-regexp))
+                                geiser-con--debugging-prompt-regexp
+                                geiser-con--debugging-preamble-regexp))
 
 
 ;;; REPL history and clean-up:

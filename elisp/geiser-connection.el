@@ -126,8 +126,15 @@
 (make-variable-buffer-local
  (defvar geiser-con--debugging-prompt-regexp nil))
 
+(make-variable-buffer-local
+ (defvar geiser-con--debugging-inhibits-eval t))
+
+(make-variable-buffer-local
+ (defvar geiser-con--debugging-preamble-regexp nil))
+
 (defun geiser-con--is-debugging ()
   (and geiser-con--debugging-prompt-regexp
+       geiser-con--debugging-inhibits-eval
        comint-last-prompt-overlay
        (string-match-p geiser-con--debugging-prompt-regexp
                        (buffer-substring (overlay-start
@@ -135,16 +142,25 @@
                                          (overlay-end
                                           comint-last-prompt-overlay)))))
 
+(defsubst geiser-con--has-entered-debugger ()
+  (and geiser-con--debugging-prompt-regexp
+       (re-search-backward geiser-con--debugging-prompt-regexp nil t)
+       (or (null geiser-con--debugging-preamble-regexp)
+           (save-excursion
+             (re-search-backward geiser-con--debugging-preamble-regexp nil t)))))
+
 (defun geiser-con--cleanup-connection (c)
   (geiser-con--connection-cancel-timer c))
 
 (defun geiser-con--setup-connection (buffer
                                      prompt-regexp
-                                     &optional debug-prompt-regexp)
+                                     &optional debug-prompt-regexp
+                                     debug-preamble-regexp)
   (with-current-buffer buffer
     (when geiser-con--connection
       (geiser-con--cleanup-connection geiser-con--connection))
     (setq geiser-con--debugging-prompt-regexp debug-prompt-regexp)
+    (setq geiser-con--debugging-preamble-regexp debug-preamble-regexp)
     (setq geiser-con--connection (geiser-con--make-connection buffer))
     (geiser-con--setup-comint prompt-regexp debug-prompt-regexp)
     (geiser-con--connection-start-timer geiser-con--connection)
@@ -169,8 +185,7 @@
 (defun geiser-con--comint-buffer-form ()
   (with-current-buffer (geiser-con--comint-buffer)
     (goto-char (point-max))
-    (if (and geiser-con--debugging-prompt-regexp
-             (re-search-backward geiser-con--debugging-prompt-regexp nil t))
+    (if (geiser-con--has-entered-debugger)
         `((error (key . geiser-debugger))
           (output . ,(buffer-substring (point-min) (point))))
       (condition-case nil
@@ -188,6 +203,8 @@
     (let* ((buffer (geiser-con--connection-buffer con))
            (debug-prompt (with-current-buffer buffer
                            geiser-con--debugging-prompt-regexp))
+           (debug-preamble (with-current-buffer buffer
+                             geiser-con--debugging-preamble-regexp))
            (req (geiser-con--connection-pop-request con))
            (str (and req (geiser-con--request-string req)))
            (cbuf (geiser-con--comint-buffer)))
@@ -197,6 +214,7 @@
           (with-current-buffer cbuf
             (setq comint-redirect-echo-input nil)
             (setq geiser-con--debugging-prompt-regexp debug-prompt)
+            (setq geiser-con--debugging-preamble-regexp debug-preamble)
             (delete-region (point-min) (point-max)))
           (set-buffer buffer)
           (if (geiser-con--is-debugging)
