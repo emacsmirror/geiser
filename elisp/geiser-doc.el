@@ -378,6 +378,7 @@ With prefix, the current page is deleted from history."
   (interactive)
   (kill-all-local-variables)
   (buffer-disable-undo)
+  (setq truncate-lines t)
   (use-local-map geiser-doc-mode-map)
   (set-syntax-table scheme-mode-syntax-table)
   (setq mode-name "Geiser Doc")
