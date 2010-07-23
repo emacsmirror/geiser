@@ -199,11 +199,14 @@
     (geiser-doc--insert-title title)
     (newline)
     (dolist (w lst)
-      (insert (format "\t- "))
-      (if module
-          (geiser-doc--insert-button w module impl)
-        (geiser-doc--insert-button nil w impl))
-      (newline))
+      (let ((name (if (listp w) (car w) w))
+            (info (and (listp w) (cdr w))))
+        (insert (format "\t- "))
+        (if module
+            (geiser-doc--insert-button name module impl)
+          (geiser-doc--insert-button nil name impl))
+        (when info (insert (format "  %s" info)))
+        (newline)))
     (newline)))
 
 
