@@ -148,11 +148,9 @@ determine its scheme flavour."
           (runner-doc (format "Start a new %s REPL." name))
           (switcher-doc (format "Switch to a running %s REPL, or start one."
                                 name))
-          (impl-rx (format "\\.\\(%s\\)\\.s\\(l?s|cm\\)$" name))
           (ask (make-symbol "ask")))
       `(progn
          (geiser-impl--define ,load-file-name ',name ',parent ',methods)
-         (geiser-impl--add-to-alist 'regexp ,impl-rx ',name t)
          (require 'geiser-repl)
          (require 'geiser-menu)
          (defun ,runner ()
@@ -201,19 +199,19 @@ buffer contains Scheme code of the given implementation.")
 (defun geiser-impl--guess (&optional prompt)
   (or geiser-impl--implementation
       geiser-scheme-implementation
+      (and (null (cdr geiser-active-implementations))
+           (car geiser-active-implementations))
       (catch 'impl
+        (dolist (impl geiser-active-implementations)
+          (when (geiser-impl--check-buffer impl)
+            (throw 'impl impl)))
         (let ((bn (buffer-file-name)))
           (when bn
             (dolist (x geiser-implementations-alist)
               (when (and (memq (cadr x) geiser-active-implementations)
                          (geiser-impl--match-impl (car x) bn))
-                (throw 'impl (cadr x))))))
-        (dolist (impl geiser-active-implementations)
-          (when (geiser-impl--check-buffer impl)
-            (throw 'impl impl))))
+                (throw 'impl (cadr x)))))))
       geiser-default-implementation
-      (and (null (cdr geiser-active-implementations))
-           (car geiser-active-implementations))
       (and prompt (geiser-impl--read-impl))))
 
 

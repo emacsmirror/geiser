@@ -18,6 +18,7 @@ process giving you the REPL, make those Scheme buffers come to life.
 * The source and the REPL::
 * Autodoc redux::
 * Evaluating Scheme code::
+* Jumping around::
 * Geiser writes for you::
 * In good company::
 @end menu
@@ -69,18 +70,116 @@ Now, @i{geiser-mode} is just a useless wretch unless there's a running
 Scheme process backing it up. Meaning that virtually all the commands it
 provides require a REPL up and running, preferably corresponding to the
 correct Scheme implementation. In the following section, we'll see how
-to make sure that all these things happen.
+to make sure that that's actually the case.
 
 @node The source and the REPL, Autodoc redux, Activating Geiser, Fun between the parens
 @section The source and the REPL
 
+As i've already mentioned a couple of times, @i{geiser-mode} needs a
+running REPL to be operative. Thus, a common usage pattern will be for
+you to first call @code{run-geiser} (or one of its variants, see
+them described @ref{choosing-impl,,here}), and then open Scheme files;
+but there's nothing wrong in first opening a couple Scheme buffers and
+then starting the REPL (you can even find it more convenient, since
+pressing @kbd{C-c z} in a Scheme buffer will start the REPL for you).
+Since Geiser supports more than one Scheme implementation, though,
+there's the problem of knowing which of them is to be associated with
+each Scheme source file. Serviceable as it is, @i{geiser-mode} will try
+to guess the correct implementation for you, according to the algorithm
+described below. If you find that Geiser is already guessing right the
+Scheme implementation, feel free to skip to the
+@ref{switching-repl-buff,,next subsection}.
+
+@subsubheading How Geiser associates a REPL to your Scheme buffer
+To determine what Scheme implementation is to be used for a given source
+file, Geiser uses the following algorithm:
+@enumerate
+@item
+If the file-local variable @var{geiser-scheme-implementation} is
+defined, its value is used. A common way of setting buffer-local
+variables is to put them in a comment near the beginning of the file,
+surrounded by @code{-*-} marks, as in:
+@example
+;; -*- geiser-scheme-implementation: guile -*-
+@end example
+@item
+If you've customized @var{geiser-active-implementations} so that it's a
+single-element list (as explained @ref{choosing-impl,,here}), that
+element is used as the chosen implementation.
+@item
+The contents of the file is scanned for hints on its associated
+implementation. For instance, files that contain a @code{#lang}
+directive will be considered Racket source code, while those with a
+@code{define-module} form in them will be assigned to a Guile REPL.
+@item
+The current buffer's file name is checked against the rules given in
+@var{geiser-implementations-alist}, and the first match is applied. You
+can provide your own rules by customizing this variable, as explained
+below.
+@item
+If we haven't been lucky this far and you have customized
+@var{geiser-default-implementation} to the name of a supported
+implementation, we'll follow your lead.
+@item
+See? That's the problem of being a smart alec: one's always outsmarted
+by people around. At this point, @i{geiser-mode} will humbly give up and
+ask you to explicitly choose the Scheme implementation.
+@end enumerate
+As you can see in the list above, there are several ways to influence
+Geiser's guessing by mean customizable variables. The most direct (and
+most impoverishing) is probably limiting the active implementations to a
+single one, while customizing @var{geiser-implementations-alist} is the
+most flexible (and, unsurprisingly, also the most complex). Here's the
+default value for the latter variable:
+@example
+(((regexp "\\.scm$") guile)
+ ((regexp "\\.ss$") racket)
+ ((regexp "\\.rkt$") racket))
+@end example
+which describes the simple heuristic that files with @file{.scm} as
+extension are by default associated to a Guile REPL while those ending
+in @file{.ss} or @file{.rkt} correspond to Racket's implementation (with
+the caveat that these rules are applied only if the previous heuristics
+have failed to detect the correct implementation, and that they'll match
+only if the corresponding implementation is active). You can add rules
+to @var{geiser-implementations-alist} (or replace all of them) by
+customizing it. Besides regular expressions, you can also use a
+directory name; for instance, the following snippet:
+@example
+(eval-after-load "geiser-impl"
+  '(add-to-list 'geiser-implementations-alist
+                '((dir "/home/jao/prj/frob") guile)))
+@end example
+will add a new rule that says that any file inside my
+@file{/home/jao/prj/frob} directory (or, recursively, any of its
+children) is to be assigned to Guile. Since rules are first matched,
+first served, this new rule will take precedence over the default ones.
+
+@subsubheading Switching between source files and the REPL
+@anchor{switching-repl-buff} Once you have a working @i{geiser-mode},
+you can switch from Scheme source buffers to the REPL using @kbd{C-c z}
+or @kbd{C-c C-z} (as you might have noticed, in Geiser, whenever a key
+chord ends with a single letter, there's an equivalent one with that
+letter modified by @key{Ctrl}). If you use a prefix, as in @kbd{C-u C-c
+z}, besides being teleported to the REPL, the latter will switch to the
+namespace of the Scheme source file (as if you had used @kbd{C-c m} in
+the REPL, cf. @ref{Switching context}).
+
+If for some reason you're not happy with the Scheme implementation that
+Geiser has assigned to your file, you can change it with @kbd{C-c s},
+and probably take a look at @ref{switching-repl-buff,,the previous
+subsection} to make sure that Geiser doesn't get confused again.
+
 @node Autodoc redux, Evaluating Scheme code, The source and the REPL, Fun between the parens
 @section Autodoc redux
 
-@node Evaluating Scheme code, Geiser writes for you, Autodoc redux, Fun between the parens
+@node Evaluating Scheme code, Jumping around, Autodoc redux, Fun between the parens
 @section Evaluating Scheme code
 
-@node Geiser writes for you, In good company, Evaluating Scheme code, Fun between the parens
+@node Jumping around, Geiser writes for you, Evaluating Scheme code, Fun between the parens
+@section Jumping around
+
+@node Geiser writes for you, In good company, Jumping around, Fun between the parens
 @section Geiser writes for you
 
 @node In good company,  , Geiser writes for you, Fun between the parens

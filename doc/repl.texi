@@ -191,6 +191,7 @@ I'm documenting below a proper subset of those settings, together with
 some related tips.
 
 @subsubheading Choosing a Scheme implementation
+@anchor{choosing-impl}
 Instead of using the generic @command{run-geiser} command, you can start
 directly your Scheme of choice via @command{run-racket} or
 @command{run-guile}. @anchor{active-implementations} In addition, the
