@@ -110,6 +110,7 @@ by) the following Emacs packages:
 @cindex quack
 @itemize @bullet
 @item @uref{http://www.emacswiki.org/emacs/ParEdit, Paredit}.
+@anchor{paredit}
 Regardless of whether you use Geiser or not, you shouldn't be coding
 in any Lisp dialect without the aid of Taylor Campbell's structured
 editing mode.

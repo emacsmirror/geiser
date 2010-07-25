@@ -1,10 +1,90 @@
-@node Fun between the parens, Index, The REPL, Top
+@node Fun between the parens
 @chapter Fun between the parens
 
-I'm working on it... perhaps the
-@uref{http://git.savannah.gnu.org/cgit/geiser.git/plain/README, README}
-file will work for you in the meantime?
+A good REPL is a must, but just about half the story of a good Scheme
+hacking environment. Well, perhaps a bit more than a half; but, at any
+rate, one surely needs also a pleasant way of editing source code. Don't
+pay attention to naysayers: Emacs comes with an excellent editor
+included for about any language on Earth, and just the best one when
+that language is sexpy (specially if you use @ref{paredit,,Paredit}).
+Geiser's support for writing Scheme code adds to Emacs'
+@code{scheme-mode}, rather than supplanting it; and it does so by means
+of a minor mode (unimaginatively dubbed @code{geiser-mode}) that defines
+a bunch of new commands to try and, with the help of the same Scheme
+process giving you the REPL, make those Scheme buffers come to life.
 
+@menu
+* Activating Geiser::
+* The source and the REPL::
+* Autodoc redux::
+* Evaluating Scheme code::
+* Geiser writes for you::
+* In good company::
+@end menu
+
+@node Activating Geiser, The source and the REPL, Fun between the parens, Fun between the parens
+@section Activating Geiser
+@img{geiser-mode, right} With Geiser installed following any of the
+procedures described in @ref{Setting it up}, Emacs will automatically
+activate @i{geiser-mode} when opening a Scheme buffer. Geiser also
+instructs Emacs to consider files with the extension @file{rkt} Scheme
+files, so that, in principle, there's nothing you need to do to ensure
+that Geiser's extensions will be available, out of the box, when you
+start editing Scheme code.
+
+Indications that everything is working according to plan include the
+'Geiser' minor mode indicator in your mode-line and the appearance of a
+new entry for Geiser in the menu bar. If, moreover, the mode-line
+indicator is the name of a Scheme implementation, you're indeed in a
+perfect world; otherwise, don't despair and keep on reading: i'll tell
+you how to fix that in a moment.
+
+The menu provides a good synopsis of everthing Geiser brings to the
+party, including those keyboard shortcuts we Emacsers love. If you're
+seeing the name of your favourite Scheme implementation in the
+mode-line, have a running REPL and are comfortable with Emacs, you can
+stop reading now and, instead, discover Geiser's joys by yourself. I've
+tried to make Geiser as self-documenting as any self-respecting Emacs
+package should be. If you follow this route, make sure to take a look at
+Geiser's customization buffers (@kbd{M-x customize-group @key{RET}
+geiser}): there's lot of fine tunning available there.
+
+Since @i{geiser-mode} is a minor mode, you can toggle it with
+@kbd{M-x geiser-mode}, and control its activation in hooks with the
+functions @code{turn-on-geiser-mode} and @code{turn-off-geiser-mode}.
+If, for some reason i cannot fathom, you prefer @i{geiser-mode} not
+to be active by default, the following elisp incantation will do the
+trick:
+@example
+(eval-after-load "geiser-mode"
+  (remove-hook 'scheme-mode-hook 'turn-on-geiser-mode))
+@end example
+And if you happen to use a funky extension for your Scheme files that is
+not recognised as such by Emacs, just tell her about it with:
+@example
+(add-to-list 'auto-mode-alist '("\\.funky-extension\\'" . scheme-mode))
+@end example
+
+Now, @i{geiser-mode} is just a useless wretch unless there's a running
+Scheme process backing it up. Meaning that virtually all the commands it
+provides require a REPL up and running, preferably corresponding to the
+correct Scheme implementation. In the following section, we'll see how
+to make sure that all these things happen.
+
+@node The source and the REPL, Autodoc redux, Activating Geiser, Fun between the parens
+@section The source and the REPL
+
+@node Autodoc redux, Evaluating Scheme code, The source and the REPL, Fun between the parens
+@section Autodoc redux
+
+@node Evaluating Scheme code, Geiser writes for you, Autodoc redux, Fun between the parens
+@section Evaluating Scheme code
+
+@node Geiser writes for you, In good company, Evaluating Scheme code, Fun between the parens
+@section Geiser writes for you
+
+@node In good company,  , Geiser writes for you, Fun between the parens
+@section In good company
 
 @c Local Variables:
 @c mode: texinfo
