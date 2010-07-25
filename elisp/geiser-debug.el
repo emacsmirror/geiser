@@ -72,7 +72,7 @@ non-null value.")
          (module (geiser-eval--get-module)))
     (if (eq key 'geiser-debugger)
         (progn
-          (switch-to-geiser)
+          (switch-to-geiser nil nil (current-buffer))
           (geiser-debug--display-error impl module key output))
       (geiser-debug--with-buffer
         (erase-buffer)

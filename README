@@ -130,7 +130,7 @@
 *** In the REPL
 
     |----------------+----------------------------------------------------|
-    | C-c C-z, C-c z | Start Scheme REPL (if it's not running)            |
+    | C-c C-z, C-c z | Start Scheme REPL, or jump to previous buffer      |
     | C-c C-q        | Kill Scheme process                                |
     |----------------+----------------------------------------------------|
     | M-.            | Edit identifier at point                           |

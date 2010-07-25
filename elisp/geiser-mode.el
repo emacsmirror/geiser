@@ -55,7 +55,7 @@
 ;;; Evaluation commands:
 
 (defun geiser--go-to-repl ()
-  (switch-to-geiser)
+  (switch-to-geiser nil nil (current-buffer))
   (push-mark)
   (goto-char (point-max)))
 
@@ -155,8 +155,9 @@ With prefix, recursively macro-expand the resulting expression."
   "Switches to Geiser REPL.
 With prefix, try to enter the current's buffer module."
   (interactive "P")
-  (if arg (switch-to-geiser-module (geiser-eval--get-module))
-    (switch-to-geiser)))
+  (if arg
+      (switch-to-geiser-module (geiser-eval--get-module) (current-buffer))
+    (switch-to-geiser nil nil (current-buffer))))
 
 (defun geiser-mode-switch-to-repl-and-enter ()
   "Switches to Geiser REPL and enters current's buffer module."

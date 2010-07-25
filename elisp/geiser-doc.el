@@ -352,6 +352,10 @@ With prefix, the current page is deleted from history."
         (set-keymap-parent map button-buffer-map)
         map))
 
+(defun geiser-doc-switch-to-repl ()
+  (interactive)
+  (switch-to-geiser nil nil (current-buffer)))
+
 (geiser-menu--defmenu doc geiser-doc-mode-map
   ("Next page" ("n" "f") geiser-doc-next "Next item"
    :enable (geiser-doc--history-next-p))
@@ -359,7 +363,7 @@ With prefix, the current page is deleted from history."
    :enable (geiser-doc--history-previous-p))
   ("Next link" nil forward-button)
   ("Previous link" nil backward-button)
-  ("Go to REPL" ("z" "\C-cz" "\C-c\C-z") switch-to-geiser)
+  ("Go to REPL" ("z" "\C-cz" "\C-c\C-z") geiser-doc-switch-to-repl)
   ("Refresh" ("g" "r") geiser-doc-refresh "Refresh current page")
   --
   ("Edit symbol" ("." "\M-.") geiser-doc-edit-symbol-at-point

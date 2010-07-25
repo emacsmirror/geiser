@@ -222,7 +222,10 @@ you at that point.")
               "Start Geiser for scheme implementation: "))))
    (geiser-repl--start-repl impl))
 
-(defun switch-to-geiser (&optional ask impl)
+(make-variable-buffer-local
+ (defvar geiser-repl--last-scm-buffer nil))
+
+(defun switch-to-geiser (&optional ask impl buffer)
   "Switch to running Geiser REPL.
 With prefix argument, ask for which one if more than one is running.
 If no REPL is running, execute `run-geiser' to start a fresh one."
@@ -233,12 +236,17 @@ If no REPL is running, execute `run-geiser' to start a fresh one."
                                (car geiser-repl--repls))))
                      ((and (not ask) impl (geiser-repl--repl/impl impl)))))
          (pop-up-windows geiser-repl-window-allow-split))
-    (if repl
-        (pop-to-buffer repl)
-      (run-geiser (or impl
-                      (and (not ask)
-                           (geiser-repl--only-impl-p))
-                      (geiser-repl--read-impl "Switch to scheme REPL: "))))))
+    (cond ((and (eq (current-buffer) repl)
+                (buffer-live-p geiser-repl--last-scm-buffer))
+           (pop-to-buffer geiser-repl--last-scm-buffer))
+          (repl (pop-to-buffer repl))
+          (t (run-geiser (or impl
+                             (and (not ask)
+                                  (geiser-repl--only-impl-p))
+                             (geiser-repl--read-impl
+                              "Switch to scheme REPL: ")))))
+    (when (and buffer (eq major-mode 'geiser-repl-mode))
+      (setq geiser-repl--last-scm-buffer buffer))))
 
 (defalias 'geiser 'switch-to-geiser)
 
@@ -254,7 +262,7 @@ If no REPL is running, execute `run-geiser' to start a fresh one."
   "Function taking a module designator and returning a REPL enter
 module command as a string")
 
-(defun switch-to-geiser-module (&optional module)
+(defun switch-to-geiser-module (&optional module buffer)
   "Switch to running Geiser REPL and try to enter a given module."
   (interactive)
   (let* ((module (or module
@@ -262,7 +270,7 @@ module command as a string")
          (cmd (and module
                    (geiser-repl--enter-cmd geiser-impl--implementation
                                            module))))
-    (switch-to-geiser)
+    (switch-to-geiser nil nil buffer)
     (geiser-repl--send cmd)))
 
 (geiser-impl--define-caller geiser-repl--import-cmd import-command (module)

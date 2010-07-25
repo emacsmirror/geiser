@@ -160,15 +160,32 @@ first served, this new rule will take precedence over the default ones.
 you can switch from Scheme source buffers to the REPL using @kbd{C-c z}
 or @kbd{C-c C-z} (as you might have noticed, in Geiser, whenever a key
 chord ends with a single letter, there's an equivalent one with that
-letter modified by @key{Ctrl}). If you use a prefix, as in @kbd{C-u C-c
-z}, besides being teleported to the REPL, the latter will switch to the
-namespace of the Scheme source file (as if you had used @kbd{C-c m} in
-the REPL, cf. @ref{Switching context}).
+letter modified by @key{Ctrl}). Those shortcuts map to the interactive
+command @code{switch-to-geiser}.
+
+If you use a numeric prefix, as in @kbd{C-u C-c z}, besides being
+teleported to the REPL, the latter will switch to the namespace of the
+Scheme source file (as if you had used @kbd{C-c m} in the REPL, with the
+source file's module as argument; cf. @ref{Switching context}).
+
+Once you're in the REPL, the same @kbd{C-c z} shortcut will bring you
+back to the buffer you jumped from, provided you don't kill the Scheme
+process in between. This is why the command is called
+@i{switch-to-geiser} instead of @i{switch-to-repl}, and what makes it
+really handy, if you ask me.
 
 If for some reason you're not happy with the Scheme implementation that
 Geiser has assigned to your file, you can change it with @kbd{C-c s},
 and probably take a look at @ref{switching-repl-buff,,the previous
 subsection} to make sure that Geiser doesn't get confused again.
+
+@subsubheading A note about context
+As explained before (@pxref{Modus operandi}), all Geiser activities take
+place in the context of the @i{current namespace}, which, for Scheme
+buffers, corresponds to the module that the Scheme implementation
+associates to the source file at hand (for instance, in Racket, there's
+a one to one correspondence between paths and modules, while Guile
+relies on @code{define-module}).
 
 @node Autodoc redux, Evaluating Scheme code, The source and the REPL, Fun between the parens
 @section Autodoc redux
