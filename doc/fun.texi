@@ -185,10 +185,40 @@ place in the context of the @i{current namespace}, which, for Scheme
 buffers, corresponds to the module that the Scheme implementation
 associates to the source file at hand (for instance, in Racket, there's
 a one to one correspondence between paths and modules, while Guile
-relies on @code{define-module}).
+relies on explicit @code{define-module} forms in the source file).
+
+Now that we have @code{geiser-mode} happily alive in our Scheme buffers
+and communicating with the right REPL instance, let us see what it can
+do for us, besides jumping to and fro.
 
 @node Autodoc redux, Evaluating Scheme code, The source and the REPL, Fun between the parens
 @section Autodoc redux
+
+The first thing you will notice by moving around Scheme source is that,
+every now and then, the echo area lightens up with the same autodoc
+messages we know and love from our REPL forays. This happens every time
+the Scheme process is able to recognise an identifier in the buffer, and
+provide information on its arity and the name of its formal arguments,
+if any. That information will only be available if the module the
+identifier belongs to has been loaded in the running Scheme image. So it
+can be the case that, at first, no autodoc is shown for identifiers
+defined in the file you're editing. But as soon as you evaluate them
+(either individually or collectively using, for instance, @kbd{C-c k})
+their signatures will start appearing in the echo area.
+
+Autodoc activation is controlled by a minor mode, @code{geiser-autodoc},
+which you can toggle with @kbd{M-x geiser-autodoc}, or its associated
+keyboard shortcut, @kbd{C-c C-d a}. That @t{/A} indicator in the
+mode-line is telling you that autodoc is active. If you prefer, for some
+obscure reason, that it be inactive by default, just set
+@var{geiser-mode-autodoc-p} to @code{nil} in your customization files.
+
+@img{autodoc-req, right} The way autodoc displays arity information
+deserves some explanation. It will first show the name of the module
+where the identifier at hand is defined, followed by a colon and the
+identifier itself. If the latter corresponds to a procedure or macro, it
+will be followed by a list of argument names, starting with the ones
+that are required.
 
 @node Evaluating Scheme code, Jumping around, Autodoc redux, Fun between the parens
 @section Evaluating Scheme code
