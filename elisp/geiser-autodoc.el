@@ -131,11 +131,16 @@ when `geiser-autodoc-display-module-p' is on."
 (defun geiser-autodoc--str* (full-signature)
   (geiser-autodoc--str (list (car full-signature)) full-signature))
 
+(defsubst geiser-autodoc--value-str (proc module value)
+  (let ((name (geiser-autodoc--proc-name proc module)))
+    (if value (format "%s => %s" name value) name)))
+
 (defun geiser-autodoc--str (desc signature)
   (let ((proc (car desc))
         (args (cdr (assoc 'args signature)))
         (module (cdr (assoc 'module signature))))
-    (if (not args) (geiser-autodoc--proc-name proc module)
+    (if (not args)
+      (geiser-autodoc--value-str proc module (cdr (assoc 'value signature)))
       (save-current-buffer
         (set-buffer (geiser-syntax--font-lock-buffer))
         (erase-buffer)

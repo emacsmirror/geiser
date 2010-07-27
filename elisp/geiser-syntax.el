@@ -217,24 +217,21 @@
   (if (cdr (last p)) (1+ (safe-length p)) (length p)))
 
 (defun geiser-syntax--scan-sexps (&optional begin)
-  (let ((path))
+  (let* ((fst (symbol-at-point))
+         (path (and fst `((,fst 0)))))
     (save-excursion
-      (save-restriction
-;;        (narrow-to-region (or begin (point-min)) (1+ (point)))
-        (geiser-syntax--skip-comment/string)
-        (while (not (zerop (geiser-syntax--nesting-level)))
-          (let ((boundary (1+ (point))))
-            (backward-up-list)
-            (let ((form
-                   (nth-value 0 (geiser-syntax--form-after-point boundary))))
-              (when (and (listp form) (car form) (symbolp (car form)))
-                (let* ((len-1 (1- (geiser-syntax--pair-length form)))
-                       (prev (and (> len-1 1) (nth (1- len-1) form)))
-                       (prev (and (keywordp prev) (list prev))))
-                  (push `(,(car form) ,len-1 ,@prev) path))))))
-        (if path (nreverse path)
-          (let ((fst (symbol-at-point)))
-            (and fst `((,fst 0)))))))))
+      (geiser-syntax--skip-comment/string)
+      (while (not (zerop (geiser-syntax--nesting-level)))
+        (let ((boundary (1+ (point))))
+          (backward-up-list)
+          (let ((form
+                 (nth-value 0 (geiser-syntax--form-after-point boundary))))
+            (when (and (listp form) (car form) (symbolp (car form)))
+              (let* ((len-1 (1- (geiser-syntax--pair-length form)))
+                     (prev (and (> len-1 1) (nth (1- len-1) form)))
+                     (prev (and (keywordp prev) (list prev))))
+                (push `(,(car form) ,len-1 ,@prev) path)))))))
+    (nreverse path)))
 
 (defsubst geiser-syntax--binding-form-p (bfs sbfs f)
   (or (memq f '(define define* lambda let let* letrec))
