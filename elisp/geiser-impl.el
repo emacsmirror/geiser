@@ -176,6 +176,8 @@ determine its scheme flavour."
    "Set this buffer local variable to specify the Scheme
 implementation to be used by Geiser."))
 
+(put 'geiser-scheme-implementation 'safe-local-variable 'symbolp)
+
 (defun geiser-impl--match-impl (desc bn)
   (let ((rx (if (eq (car desc) 'regexp)
                 (cadr desc)
@@ -198,7 +200,10 @@ buffer contains Scheme code of the given implementation.")
 
 (defun geiser-impl--guess (&optional prompt)
   (or geiser-impl--implementation
-      geiser-scheme-implementation
+      (progn (hack-local-variables)
+             (and (memq geiser-scheme-implementation
+                        geiser-active-implementations)
+                  geiser-scheme-implementation))
       (and (null (cdr geiser-active-implementations))
            (car geiser-active-implementations))
       (catch 'impl
