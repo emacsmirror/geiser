@@ -227,10 +227,11 @@
           (let ((form
                  (nth-value 0 (geiser-syntax--form-after-point boundary))))
             (when (and (listp form) (car form) (symbolp (car form)))
-              (let* ((len-1 (1- (geiser-syntax--pair-length form)))
-                     (prev (and (> len-1 1) (nth (1- len-1) form)))
+              (let* ((len (geiser-syntax--pair-length form))
+                     (pos (if path (1- len) len))
+                     (prev (and (> pos 1) (nth (1- pos) form)))
                      (prev (and (keywordp prev) (list prev))))
-                (push `(,(car form) ,len-1 ,@prev) path)))))))
+                (push `(,(car form) ,pos ,@prev) path)))))))
     (nreverse path)))
 
 (defsubst geiser-syntax--binding-form-p (bfs sbfs f)
