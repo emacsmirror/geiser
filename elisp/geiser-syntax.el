@@ -218,6 +218,7 @@
 
 (defun geiser-syntax--scan-sexps (&optional begin)
   (let* ((fst (symbol-at-point))
+         (smth (or fst (not (looking-at-p "[\\s \\s)\\s>\\s<\n]"))))
          (path (and fst `((,fst 0)))))
     (save-excursion
       (geiser-syntax--skip-comment/string)
@@ -228,7 +229,7 @@
                  (nth-value 0 (geiser-syntax--form-after-point boundary))))
             (when (and (listp form) (car form) (symbolp (car form)))
               (let* ((len (geiser-syntax--pair-length form))
-                     (pos (if path (1- len) len))
+                     (pos (if smth (1- len) (progn (setq smth t) len)))
                      (prev (and (> pos 1) (nth (1- pos) form)))
                      (prev (and (keywordp prev) (list prev))))
                 (push `(,(car form) ,pos ,@prev) path)))))))
