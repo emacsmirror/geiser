@@ -149,7 +149,7 @@ With prefix, recursively macro-expand the resulting expression."
   (interactive)
   (let ((impl (geiser-impl--read-impl)))
     (geiser-impl--set-buffer-implementation impl)
-    (geiser-repl--get-repl impl)))
+    (geiser-repl--set-up-repl impl)))
 
 (defun geiser-mode-switch-to-repl (arg)
   "Switches to Geiser REPL.

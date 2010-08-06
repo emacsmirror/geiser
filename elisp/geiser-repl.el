@@ -102,7 +102,7 @@ implementation name gets appended to it."
         (when (eq geiser-impl--implementation impl)
           (throw 'repl repl))))))
 
-(defun geiser-repl--get-repl (&optional impl)
+(defun geiser-repl--set-up-repl (impl)
   (or (and (not impl) geiser-repl--repl)
       (setq geiser-repl--repl
             (let ((impl (or impl
@@ -185,7 +185,7 @@ you at that point.")
     (geiser-repl--startup impl)))
 
 (defun geiser-repl--process ()
-  (let ((buffer (geiser-repl--get-repl geiser-impl--implementation)))
+  (let ((buffer (geiser-repl--set-up-repl geiser-impl--implementation)))
     (or (and (buffer-live-p buffer) (get-buffer-process buffer))
         (error "No Geiser REPL for this buffer (try M-x run-geiser)"))))
 
@@ -316,7 +316,7 @@ module command as a string")
         (with-current-buffer buffer
           (when (and (eq geiser-impl--implementation impl)
                      (equal cb geiser-repl--repl))
-            (geiser-repl--get-repl geiser-impl--implementation)))))))
+            (geiser-repl--set-up-repl geiser-impl--implementation)))))))
 
 (defun geiser-repl--sentinel (proc event)
   (let ((pb (process-buffer proc)))
