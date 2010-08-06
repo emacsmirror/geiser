@@ -133,7 +133,7 @@
     (define-key geiser-menu--custom-run `[,name]
       `(menu-item ,title ,runner :enable (geiser-impl--active-p ',name)))
     (define-key geiser-menu--custom-switch `[,name]
-      `(menu-item ,title ,switcher :enable (geiser-repl--get-repl ',name)))
+      `(menu-item ,title ,switcher :enable (geiser-repl--repl/impl ',name)))
     (geiser-menu--add-global-custom title group)))
 
 (geiser-menu--add-global-custom "Geiser" 'geiser)
