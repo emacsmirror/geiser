@@ -329,7 +329,7 @@ module command as a string")
           (when (buffer-name (current-buffer))
             (comint-kill-region comint-last-input-start (point))
             (insert "\nIt's been nice interacting with you!\n")
-            (insert "Press C-cz to bring me back.\n" )))))))
+            (insert "Press C-c C-z to bring me back.\n" )))))))
 
 (defun geiser-repl--on-kill ()
   (geiser-repl--on-quit)
@@ -442,8 +442,8 @@ module command as a string")
   ("Edit symbol" "\M-." geiser-edit-symbol-at-point
    :enable (symbol-at-point))
   --
-  ("Switch to module..." ("\C-cm" "\C-c\C-m") switch-to-geiser-module)
-  ("Import module..." ("\C-ci" "\C-c\C-i") geiser-repl-import-module)
+  ("Switch to module..." "\C-c\C-m" switch-to-geiser-module)
+  ("Import module..." "\C-c\C-i" geiser-repl-import-module)
   --
   ("Previous matching input" "\M-p" comint-previous-matching-input-from-input
    "Previous input matching current")
@@ -461,9 +461,9 @@ module command as a string")
   --
   ("Kill Scheme interpreter" "\C-c\C-q" comint-kill-subjob
    :enable (geiser-repl--this-buffer-repl))
-  ("Restart" ("\C-cz" "\C-c\C-z") switch-to-geiser
+  ("Restart" "\C-c\C-z" switch-to-geiser
    :enable (not (geiser-repl--this-buffer-repl)))
-  ("Revive REPL" ("\C-ck" "\C-c\C-k") geiser-repl-nuke
+  ("Revive REPL" "\C-c\C-k" geiser-repl-nuke
    "Use this command if the REPL becomes irresponsive"
    :enable (geiser-repl--this-buffer-repl))
   --
