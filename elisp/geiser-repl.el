@@ -88,11 +88,12 @@ implementation name gets appended to it."
 (make-variable-buffer-local
  (defvar geiser-repl--repl nil))
 
-(defsubst geiser-repl--this-buffer-repl ()
-  geiser-repl--repl)
-
 (defsubst geiser-repl--set-this-buffer-repl (r)
   (setq geiser-repl--repl r))
+
+(defun geiser-repl--live-p ()
+  (and geiser-repl--repl
+       (get-buffer-process geiser-repl--repl)))
 
 (defun geiser-repl--repl/impl (impl &optional repls)
   (catch 'repl
@@ -232,8 +233,7 @@ If no REPL is running, execute `run-geiser' to start a fresh one."
   (interactive "P")
   (let* ((impl (or impl geiser-impl--implementation))
          (repl (cond ((and (not ask) (not impl)
-                           (or (geiser-repl--this-buffer-repl)
-                               (car geiser-repl--repls))))
+                           (or geiser-repl--repl (car geiser-repl--repls))))
                      ((and (not ask) impl (geiser-repl--repl/impl impl)))))
          (pop-up-windows geiser-repl-window-allow-split))
     (cond ((and (eq (current-buffer) repl)
@@ -315,7 +315,7 @@ module command as a string")
       (when (buffer-live-p buffer)
         (with-current-buffer buffer
           (when (and (eq geiser-impl--implementation impl)
-                     (equal cb (geiser-repl--this-buffer-repl)))
+                     (equal cb geiser-repl--repl))
             (geiser-repl--get-repl geiser-impl--implementation)))))))
 
 (defun geiser-repl--sentinel (proc event)
@@ -460,12 +460,11 @@ module command as a string")
    "Documentation for module at point" :enable (symbol-at-point))
   --
   ("Kill Scheme interpreter" "\C-c\C-q" comint-kill-subjob
-   :enable (geiser-repl--this-buffer-repl))
-  ("Restart" "\C-c\C-z" switch-to-geiser
-   :enable (not (geiser-repl--this-buffer-repl)))
+   :enable (geiser-repl--live-p))
+  ("Restart" "\C-c\C-z" switch-to-geiser :enable (not (geiser-repl--live-p)))
   ("Revive REPL" "\C-c\C-k" geiser-repl-nuke
    "Use this command if the REPL becomes irresponsive"
-   :enable (geiser-repl--this-buffer-repl))
+   :enable (geiser-repl--live-p))
   --
   (custom "REPL options" geiser-repl))
 

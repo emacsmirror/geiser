@@ -81,7 +81,7 @@ you to first call @code{run-geiser} (or one of its variants, see
 them described @ref{choosing-impl,,here}), and then open Scheme files;
 but there's nothing wrong in first opening a couple Scheme buffers and
 then starting the REPL (you can even find it more convenient, since
-pressing @kbd{C-c z} in a Scheme buffer will start the REPL for you).
+pressing @kbd{C-c C-z} in a Scheme buffer will start the REPL for you).
 Since Geiser supports more than one Scheme implementation, though,
 there's the problem of knowing which of them is to be associated with
 each Scheme source file. Serviceable as it is, @i{geiser-mode} will try
@@ -91,7 +91,7 @@ Scheme implementation, feel free to skip to the
 @ref{switching-repl-buff,,next subsection}.
 
 @subsubheading How Geiser associates a REPL to your Scheme buffer
-To determine what Scheme implementation is to be used for a given source
+To determine what Scheme implementation corresponds to a given source
 file, Geiser uses the following algorithm:
 @enumerate
 @item
@@ -157,25 +157,23 @@ first served, this new rule will take precedence over the default ones.
 
 @subsubheading Switching between source files and the REPL
 @anchor{switching-repl-buff} Once you have a working @i{geiser-mode},
-you can switch from Scheme source buffers to the REPL using @kbd{C-c z}
-or @kbd{C-c C-z} (as you might have noticed, in Geiser, whenever a key
-chord ends with a single letter, there's an equivalent one with that
-letter modified by @key{Ctrl}). Those shortcuts map to the interactive
-command @code{switch-to-geiser}.
+you can switch from Scheme source buffers to the REPL or @kbd{C-c C-z}.
+Those shortcuts map to the interactive command @code{switch-to-geiser}.
 
-If you use a numeric prefix, as in @kbd{C-u C-c z}, besides being
+If you use a numeric prefix, as in @kbd{C-u C-c C-z}, besides being
 teleported to the REPL, the latter will switch to the namespace of the
-Scheme source file (as if you had used @kbd{C-c m} in the REPL, with the
-source file's module as argument; cf. @ref{Switching context}).
+Scheme source file (as if you had used @kbd{C-c C-m} in the REPL, with
+the source file's module as argument; cf. @ref{Switching context}). This
+command is also bound to @kbd{C-c C-Z}, with a capital zed.
 
-Once you're in the REPL, the same @kbd{C-c z} shortcut will bring you
+Once you're in the REPL, the same @kbd{C-c C-z} shortcut will bring you
 back to the buffer you jumped from, provided you don't kill the Scheme
 process in between. This is why the command is called
 @i{switch-to-geiser} instead of @i{switch-to-repl}, and what makes it
 really handy, if you ask me.
 
 If for some reason you're not happy with the Scheme implementation that
-Geiser has assigned to your file, you can change it with @kbd{C-c s},
+Geiser has assigned to your file, you can change it with @kbd{C-c C-s},
 and probably take a look at @ref{switching-repl-buff,,the previous
 subsection} to make sure that Geiser doesn't get confused again.
 
@@ -198,13 +196,14 @@ The first thing you will notice by moving around Scheme source is that,
 every now and then, the echo area lightens up with the same autodoc
 messages we know and love from our REPL forays. This happens every time
 the Scheme process is able to recognise an identifier in the buffer, and
-provide information on its arity and the name of its formal arguments,
-if any. That information will only be available if the module the
-identifier belongs to has been loaded in the running Scheme image. So it
-can be the case that, at first, no autodoc is shown for identifiers
-defined in the file you're editing. But as soon as you evaluate them
-(either individually or collectively using, for instance, @kbd{C-c k})
-their signatures will start appearing in the echo area.
+provide information either on its value (for variables) or on its arity
+and the name of its formal arguments (for procedures and macros). That
+information will only be available if the module the identifier belongs
+to has been loaded in the running Scheme image. So it can be the case
+that, at first, no autodoc is shown for identifiers defined in the file
+you're editing. But as soon as you evaluate them (either individually or
+collectively using any of the devices described in @ref{Evaluating
+Scheme code}) their signatures will start appearing in the echo area.
 
 Autodoc activation is controlled by a minor mode, @code{geiser-autodoc},
 which you can toggle with @kbd{M-x geiser-autodoc}, or its associated
@@ -213,12 +212,15 @@ mode-line is telling you that autodoc is active. If you prefer, for some
 obscure reason, that it be inactive by default, just set
 @var{geiser-mode-autodoc-p} to @code{nil} in your customization files.
 
-@img{autodoc-req, right} The way autodoc displays arity information
-deserves some explanation. It will first show the name of the module
-where the identifier at hand is defined, followed by a colon and the
-identifier itself. If the latter corresponds to a procedure or macro, it
-will be followed by a list of argument names, starting with the ones
-that are required.
+@img{autodoc-req, right} The way autodoc displays information deserves
+some explanation. It will first show the name of the module where the
+identifier at hand is defined, followed by a colon and the identifier
+itself. If the latter corresponds to a procedure or macro, it will be
+followed by a list of argument names, starting with the ones that are
+required. Then there comes a square-bracketed list of optional argument
+names, if any. When an optional argument has a default value (or a form
+defining its default value), instead of a plain name, autodoc will
+display a list with the name followed by its initialisation form
 
 @node Evaluating Scheme code, Jumping around, Autodoc redux, Fun between the parens
 @section Evaluating Scheme code

@@ -79,7 +79,7 @@ the input received from then underlying Scheme (specially if you have
 multiple threads writing to the standard ports), and become
 irresponsive; you can try this command to try to revive it without
 killing the process. Finally, if worse comes to worst and the process is
-dead, @kbd{C-c z} will restart it (but the same shortcut, issued when
+dead, @kbd{C-c C-z} will restart it (but the same shortcut, issued when
 the REPL is alive, will bring you back to the buffer you came from, as
 explained @ref{switching-repl-buff,,here}).
 
@@ -93,7 +93,7 @@ In tune with Geiser's @ref{current-module,,modus operandi}, evaluations
 in the REPL take place if the namespace of the current module. As noted
 above, the REPL's prompt tells you the name of the current module. To
 switch to a different one, you can use the command
-@command{switch-to-geiser-module}, bound to @kbd{C-c m}. You'll notice
+@command{switch-to-geiser-module}, bound to @kbd{C-c C-m}. You'll notice
 that Geiser simply uses the underlying Scheme's native namespace switching
 facilities (@command{,m} in Guile and @command{enter!} in Racket), and
 that it doesn't even try to hide that fact. That means that you can
@@ -104,7 +104,7 @@ Once you enter a new module, only those bindings visible in its
 namespace will be available to your evaluations. All schemes supported
 by Geiser provide a way to import new modules in the current namespace.
 Again, there's a Geiser command, @command{geiser-repl-import-module}, to
-invoke such functionality, bound this time to @kbd{C-c i}. And, again,
+invoke such functionality, bound this time to @kbd{C-c C-i}. And, again,
 you'll see Geiser just introducing the native incantation for you, and
 you're free to use such incantations by hand whenever you want.
 
@@ -140,18 +140,19 @@ now and then. That was Geiser trying to be helpful (while, hopefully,
 not being clippy), or, more concretely, what i call, for want of a
 better name, its @dfn{autodoc} mode. Whenever it's active (did you
 notice that @i{A} in the mode-line?), Geiser's gerbils will be scanning
-what you type and showing (unless you silent them with @kbd{C-c a})
-arity information about the procedure nearest to point.
+what you type and showing (unless you silent them with @kbd{C-c C-a})
+information about the identifier nearest to point.
 
 @image{img/repl-autodoc}
 
-That information includes the procedure's name, prefixed with the name
-of the module it belongs to, followed by the name of its arguments (or
-an underscore if Geiser cannot determine the name used in the
-definition). Optional arguments are surrounded by square brackets, and,
-when the optional argument has a default value, it's represented by a
-list made up of its name and that value. When the argument is a keyword
-argument, its name is preceded by a colon.
+If that identifier corresponds to a variable visible in the current
+namespace, you'll see the module it belongs to and its value. For
+procedures and macros, autodoc will display, instead of their value, the
+argument names (or an underscore if Geiser cannot determine the name
+used in the definition). Optional arguments are surrounded by square
+brackets, and, when the optional argument has a default value, it's
+represented by a list made up of its name and that value. When the
+argument is a keyword argument, its name is preceded by a colon.
 
 If that's not enough documentation for you, @kbd{C-c C-d d} will open a
 separate documentation buffer with help on the symbol at point. For some
@@ -233,7 +234,7 @@ If you happen to love peace and quiet and prefer to keep your REPL's
 echo area free from autodoc's noise, @var{geiser-repl-autodoc-p} is the
 customization variable for you: set it to @code{nil} and autodoc will be
 disabled by default in new REPLs. You can always bring the fairies back,
-on a per REPL basis, using @kbd{C-c a}.
+on a per REPL basis, using @kbd{C-c C-a}.
 
 @c Local Variables:
 @c mode: texinfo

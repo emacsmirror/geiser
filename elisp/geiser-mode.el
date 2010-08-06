@@ -235,7 +235,6 @@ interacting with the Geiser REPL is at your disposal.
   ("Switch to REPL and enter module" "\C-c\C-Z"
    geiser-mode-switch-to-repl-and-enter)
   ("Set Scheme..." "\C-c\C-s" geiser-set-scheme)
-  ;;  ("Load buffer" "\C-l" geiser-compile-current-buffer)
   --
   ("Edit symbol at point" "\M-." geiser-edit-symbol-at-point
    :enable (symbol-at-point))
