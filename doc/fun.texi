@@ -220,7 +220,39 @@ followed by a list of argument names, starting with the ones that are
 required. Then there comes a square-bracketed list of optional argument
 names, if any. When an optional argument has a default value (or a form
 defining its default value), instead of a plain name, autodoc will
-display a list with the name followed by its initialisation form
+display a list with the name followed by its initialisation form. When
+the optional arguments are keywords, their names are prefixed with a
+colon. An ellipsis (@dots{}) servers as a marker of an indeterminated
+number of parameters, as is the case with @i{rest} arguments or when
+autodoc cannot fathom the exact number of arguments (this is often the
+case with macros defined using @code{syntax-case}). Another way in which
+autodoc displays its ignorance is by using and underscore to display
+parameters whose name is beyond its powers.
+
+@img{autodoc-multi, right} It can also be the case that a function or
+macro has more than one signature (e.g., functions defined using
+@code{case-lambda}, or some @code{syntax-rules} macros, for which Geiser
+has often the black magic necessary to retrieve their actual arities).
+In those cases, autodoc shows all known signatures (using the above
+rules for each one) separated by a vertical bar (|). As you have already
+noticed, the whole thing is enclosed in parenthesis. After all, we're
+talking about Scheme here.
+
+@img{autodoc-var, right} Finally, life is much easier when your cursor
+is on a symbol corresponding to a plain variable: you'll see in the echo
+area its name, preceded by the module where it's defined, and followed
+by its value, with an intervening arrow for greater effect. This time,
+there are no enclosing parenthesis (i hope you see the logic in my
+madness).
+
+You can change the way Geiser displays the module/identifier combo by
+customizing @var{geiser-autodoc-identifier-format}. For example, if you
+wanted a tilde surrounded by spaces instead of a colon as a separator,
+you would write something like
+@example
+(setq geiser-autodoc-identifier-format "%s ~ %s")
+@end example
+in your Emacs initialization files.
 
 @node Evaluating Scheme code, Jumping around, Autodoc redux, Fun between the parens
 @section Evaluating Scheme code
