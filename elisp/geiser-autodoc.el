@@ -42,8 +42,8 @@
   :type 'boolean
   :group 'geiser-autodoc)
 
-(geiser-custom--defcustom geiser-autodoc-procedure-name-format "%s:%s"
-  "Format for displaying module and procedure name, in that order,
+(geiser-custom--defcustom geiser-autodoc-identifier-format "%s:%s"
+  "Format for displaying module and procedure or variable name, in that order,
 when `geiser-autodoc-display-module-p' is on."
   :type 'string
   :group 'geiser-autodoc)
@@ -124,7 +124,7 @@ when `geiser-autodoc-display-module-p' is on."
 
 (defsubst geiser-autodoc--proc-name (proc module)
   (let ((str (if module
-                 (format geiser-autodoc-procedure-name-format module proc)
+                 (format geiser-autodoc-identifier-format module proc)
                (format "%s" proc))))
     (propertize str 'face 'geiser-font-lock-autodoc-procedure-name)))
 
