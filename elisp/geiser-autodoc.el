@@ -28,7 +28,7 @@
 (geiser-custom--defface autodoc-current-arg
   'bold geiser-autodoc "highlighting current argument in autodoc messages")
 
-(geiser-custom--defface autodoc-procedure-name
+(geiser-custom--defface autodoc-identifier
   'font-lock-function-name-face
   geiser-autodoc "highlighting procedure name in autodoc messages")
 
@@ -122,17 +122,17 @@ when `geiser-autodoc-display-module-p' is on."
       (insert "]"))
     (when opts (insert "]"))))
 
-(defsubst geiser-autodoc--proc-name (proc module)
+(defsubst geiser-autodoc--id-name (proc module)
   (let ((str (if module
                  (format geiser-autodoc-identifier-format module proc)
                (format "%s" proc))))
-    (propertize str 'face 'geiser-font-lock-autodoc-procedure-name)))
+    (propertize str 'face 'geiser-font-lock-autodoc-identifier)))
 
 (defun geiser-autodoc--str* (full-signature)
   (geiser-autodoc--str (list (car full-signature)) full-signature))
 
 (defsubst geiser-autodoc--value-str (proc module value)
-  (let ((name (geiser-autodoc--proc-name proc module)))
+  (let ((name (geiser-autodoc--id-name proc module)))
     (if value (format "%s => %s" name value) name)))
 
 (defun geiser-autodoc--str (desc signature)
@@ -144,7 +144,7 @@ when `geiser-autodoc-display-module-p' is on."
       (save-current-buffer
         (set-buffer (geiser-syntax--font-lock-buffer))
         (erase-buffer)
-        (insert (format "(%s" (geiser-autodoc--proc-name proc module)))
+        (insert (format "(%s" (geiser-autodoc--id-name proc module)))
         (let ((pos (or (cadr desc) 0))
               (prev (caddr desc)))
           (dolist (a args)
