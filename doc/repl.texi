@@ -167,6 +167,7 @@ with its point resting upon the identifier's defining form. When you're
 done inspecting, @kbd{M-,} will bring you back to where you were. As we
 will see, these commands are also available in scheme buffers.
 
+@anchor{repl-mod}
 Finally, Geiser can produce for you a list, classified by kind, of the
 identifiers exported by a given module: all you need to do is press
 @kbd{C-c C-d m}, and type or complete the desired module's name.

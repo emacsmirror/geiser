@@ -16,11 +16,10 @@ process giving you the REPL, make those Scheme buffers come to life.
 @menu
 * Activating Geiser::
 * The source and the REPL::
-* Autodoc redux::
+* Documentation helpers::
 * Evaluating Scheme code::
 * Jumping around::
 * Geiser writes for you::
-* In good company::
 @end menu
 
 @node Activating Geiser, The source and the REPL, Fun between the parens, Fun between the parens
@@ -72,7 +71,7 @@ provides require a REPL up and running, preferably corresponding to the
 correct Scheme implementation. In the following section, we'll see how
 to make sure that that's actually the case.
 
-@node The source and the REPL, Autodoc redux, Activating Geiser, Fun between the parens
+@node The source and the REPL, Documentation helpers, Activating Geiser, Fun between the parens
 @section The source and the REPL
 
 As i've already mentioned a couple of times, @i{geiser-mode} needs a
@@ -189,8 +188,10 @@ Now that we have @code{geiser-mode} happily alive in our Scheme buffers
 and communicating with the right REPL instance, let us see what it can
 do for us, besides jumping to and fro.
 
-@node Autodoc redux, Evaluating Scheme code, The source and the REPL, Fun between the parens
-@section Autodoc redux
+@node Documentation helpers, Evaluating Scheme code, The source and the REPL, Fun between the parens
+@section Documentation helpers
+
+@subsubheading Autodoc redux
 
 The first thing you will notice by moving around Scheme source is that,
 every now and then, the echo area lightens up with the same autodoc
@@ -258,17 +259,46 @@ instance, with @kbd{M-x customize-face}) to change the appearance of the
 text. And another one (@var{geiser-font-lock-autodoc-current-arg}) that
 controls how the current argument position is highlighted.
 
-@node Evaluating Scheme code, Jumping around, Autodoc redux, Fun between the parens
+@subsubheading Other documentation commands
+
+Sometimes, autodoc won't provide enough information for you to
+understand what a function does. In those cases, you can ask Geiser to
+ask the running Scheme for further information on a given identifier or
+module.
+
+For symbols, the incantation is @kbd{M-x geiser-doc-symbol-at-point}, or
+@kbd{C-c C-d C-d} for short. If the associated scheme supports
+docstrings (as, for instance, Guile does), you'll be teleported to a new
+Emacs buffer displaying Geiser's documentation browser, filled with
+information about the identifier, including its docstring (if any;
+unfortunately, that an implementation supports docstrings doesn't mean
+that they're used everywhere).
+
+@image{img/docstring}
+
+Pressing @kbd{q} in the documentation buffer will bring you back,
+enlightened, to where you were. There's also a handful of other
+navigation commands available in that buffer, which you can discover by
+means of its menu or via the good old @kbd{C-h m} command.
+
+For Racket, which does not support docstrings out of the box, this
+command will invoke Racket's @code{help} procedure, thereby opening your
+configured web browser with the corresponding manual page for you to
+peruse.
+
+You can also ask Geiser to display information about a module, in the
+form of a list of its exported identifiers, using @kbd{C-c C-d C-m},
+exactly as you would do @ref{repl-mod,,in the REPL}. This commands works
+with all supported Schemes, no strings attached.
+
+@node Evaluating Scheme code, Jumping around, Documentation helpers, Fun between the parens
 @section Evaluating Scheme code
 
 @node Jumping around, Geiser writes for you, Evaluating Scheme code, Fun between the parens
 @section Jumping around
 
-@node Geiser writes for you, In good company, Jumping around, Fun between the parens
+@node Geiser writes for you,  , Jumping around, Fun between the parens
 @section Geiser writes for you
-
-@node In good company,  , Geiser writes for you, Fun between the parens
-@section In good company
 
 @c Local Variables:
 @c mode: texinfo
