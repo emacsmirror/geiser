@@ -160,7 +160,7 @@ when `geiser-autodoc-display-module-p' is on."
                                                keep-cached))
         (p (car path))
         (s))
-    (while (and path (not s))
+    (while (and p (not s))
       (unless (setq s (cdr (assq (car p) signs)))
         (setq p (car path))
         (setq path (cdr path))))
