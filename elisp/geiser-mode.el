@@ -164,6 +164,18 @@ With prefix, try to enter the current's buffer module."
   (interactive)
   (geiser-mode-switch-to-repl t))
 
+(defun geiser-restart-repl ()
+  "Restarts the REPL associated with the current buffer."
+  (interactive)
+  (let ((b (current-buffer)))
+    (geiser-mode-switch-to-repl nil)
+    (comint-kill-subjob)
+    (sit-for 0.1) ;; ugly hack; but i don't care enough to fix it
+    (call-interactively 'run-geiser)
+    (sit-for 0.2) ;; ditto
+    (end-of-buffer)
+    (pop-to-buffer b)))
+
 
 ;;; Geiser mode:
 

@@ -294,6 +294,35 @@ with all supported Schemes, no strings attached.
 @node Evaluating Scheme code, Jumping around, Documentation helpers, Fun between the parens
 @section Evaluating Scheme code
 
+One of Geiser's main goals is to facilitate incremental development. You
+might have noticed that i've made a big fuss of Geiser's ability to
+recognize context, by being aware of the namespace where its operations
+happen.
+
+That awareness is specially important when evaluating code in your
+scheme buffers, using the commands described below. They allow you to
+send code to the running Scheme with a granularity ranging from whole
+files to single s-expressions. That code will be evaluated in the module
+associated with the file you're editing, allowing you to redefine values
+and procedures to your heart's (and other modules') content.
+
+Macros are, of course, another kettle of fish: one needs to re-evaluate
+uses of a macro after redefining it. That's not a limitation imposed by
+Geiser, but a consequence of how macros work in Scheme (and other
+Lisps). There's also the risk that you lose track of what's actually
+defined and what's not during a given session. But,
+@uref{http://programming-musings.org/2009/03/29/from-my-cold-prying-hands/,in
+my opinion}, those are limitations we lispers are aware of, and they
+don't force us to throw the baby with the bathwater and ditch
+incremental evaluation. Some people disagree; if you happen to find
+@uref{http://blog.racket-lang.org/2009/03/drscheme-repl-isnt-lisp.html,
+their arguments} convincing, you don't have to throw away Geiser
+together with the baby: @kbd{M-x geiser-restart-repl} will let you
+restart the REPL as many times as you see fit.
+
+For all of you bearded old lispers still with me, here are the commands
+performing incremental evaluation in Geiser:
+
 @node Jumping around, Geiser writes for you, Evaluating Scheme code, Fun between the parens
 @section Jumping around
 
