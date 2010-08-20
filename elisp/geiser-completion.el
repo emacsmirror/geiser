@@ -218,14 +218,15 @@ we're looking for a module name.")
   (funcall geiser-completion--symbol-begin-function module))
 
 (defsubst geiser-completion--prefix (module)
-  (buffer-substring-no-properties (point)
-                                  (geiser-completion--symbol-begin module)))
+  (buffer-substring-no-properties (geiser-completion--symbol-begin module)
+                                  (point)))
 
 (defun geiser-completion--complete-symbol (&optional arg)
   "Complete the symbol at point.
 Perform completion similar to Emacs' complete-symbol.
 With prefix, complete module name."
   (interactive "P")
+  (geiser--respecting-message "Retrieving completions...")
   (let* ((prefix (geiser-completion--prefix arg))
          (result (geiser-completion--complete prefix arg))
          (completions (car result))
