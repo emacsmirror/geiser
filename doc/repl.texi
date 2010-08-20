@@ -199,7 +199,7 @@ some related tips.
 Instead of using the generic @command{run-geiser} command, you can start
 directly your Scheme of choice via @command{run-racket} or
 @command{run-guile}. @anchor{active-implementations} In addition, the
-variable @var{geiser-active-implementations} contains a list of those
+variable @code{geiser-active-implementations} contains a list of those
 Schemes Geiser should be aware of. Thus, if you happen to be, say, a
 racketeer not to be beguiled by other schemes, you can tell Geiser to
 forget about the richness of the Scheme ecosystem with something like
@@ -210,17 +210,17 @@ forget about the richness of the Scheme ecosystem with something like
 
 @anchor{impl-binary} When starting a new REPL, Geiser assumes, by
 default, that the corresponding Scheme binary is in your path. If that's
-not the case, the variables to tweak are @var{geiser-guile-binary} and
-@var{geiser-racket-binary}, which should be set to a string with the
+not the case, the variables to tweak are @code{geiser-guile-binary} and
+@code{geiser-racket-binary}, which should be set to a string with the
 full path to the requisite binary.
 
 @subsubheading History
 
 By default, Geiser won't record duplicates in your input history. If you
-prefer it did, just set @var{geiser-repl-history-no-dups-p} to
+prefer it did, just set @code{geiser-repl-history-no-dups-p} to
 @code{nil}. History entries are persistent across REPL sessions: they're
 saved in implementation-specific files whose location is controlled by
-the variable @var{geiser-repl-history-filename}. For example, my Geiser
+the variable @code{geiser-repl-history-filename}. For example, my Geiser
 configuration includes the following line:
 @example
 (setq geiser-repl-history-filename "~/.emacs.d/geiser-history")
@@ -232,7 +232,7 @@ directory.
 @subsubheading Autodoc
 
 If you happen to love peace and quiet and prefer to keep your REPL's
-echo area free from autodoc's noise, @var{geiser-repl-autodoc-p} is the
+echo area free from autodoc's noise, @code{geiser-repl-autodoc-p} is the
 customization variable for you: set it to @code{nil} and autodoc will be
 disabled by default in new REPLs. You can always bring the fairies back,
 on a per REPL basis, using @kbd{C-c C-a}.
