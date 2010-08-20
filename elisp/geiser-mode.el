@@ -173,7 +173,7 @@ With prefix, try to enter the current's buffer module."
     (sit-for 0.1) ;; ugly hack; but i don't care enough to fix it
     (call-interactively 'run-geiser)
     (sit-for 0.2) ;; ditto
-    (end-of-buffer)
+    (goto-char (point-max))
     (pop-to-buffer b)))
 
 
