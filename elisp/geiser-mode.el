@@ -229,8 +229,8 @@ interacting with the Geiser REPL is at your disposal.
   ("Eval region" "\C-c\C-r" geiser-eval-region :enable mark-active)
   ("Eval region and go" "\C-c\M-r" geiser-eval-region-and-go
    geiser-eval-region :enable mark-active)
-  ("Compile definition" "\C-c\M-c" geiser-compile-definition)
-  ("Compile definition and go" "\C-c\C-c" geiser-compile-definition-and-go)
+;;  ("Compile definition" "\C-c\M-c" geiser-compile-definition)
+;;  ("Compile definition and go" "\C-c\C-c" geiser-compile-definition-and-go)
   (menu "Macroexpand"
         ("Sexp before point" ("\C-c\C-m\C-e" "\C-c\C-me")
          geiser-expand-last-sexp)
