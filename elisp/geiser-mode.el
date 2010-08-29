@@ -250,7 +250,7 @@ interacting with the Geiser REPL is at your disposal.
   --
   ("Edit symbol at point" "\M-." geiser-edit-symbol-at-point
    :enable (symbol-at-point))
-  ("Go to previous definition" "\M-," geiser-edit-pop-edit-symbol-stack)
+  ("Go to previous definition" "\M-," geiser-pop-symbol-stack)
   ("Complete symbol" ((kbd "M-TAB")) geiser-completion--complete-symbol
    :enable (symbol-at-point))
   ("Complete module name" ((kbd "M-`") (kbd "C-."))

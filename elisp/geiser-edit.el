@@ -168,7 +168,7 @@ With prefix, asks for the symbol to edit."
     (geiser-edit--try-edit symbol (geiser-eval--send/wait cmd))
     (when marker (ring-insert find-tag-marker-ring marker))))
 
-(defun geiser-edit-pop-edit-symbol-stack ()
+(defun geiser-pop-symbol-stack ()
   "Pop back to where \\[geiser-edit-symbol-at-point] was last invoked."
   (interactive)
   (condition-case nil
