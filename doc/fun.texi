@@ -362,6 +362,19 @@ error are clickable (you can navigate them using the @key{TAB} key).
 @node Jumping around, Geiser writes for you, Evaluating Scheme code, Fun between the parens
 @section Jumping around
 
+This one feature is as sweet as easy to explain: @kbd{M-.} will open the
+file where the identifier around point is defined and land your point on
+its definition. To return to where you were, press @kbd{M-,}.
+
+Sometimes, the underlying Scheme will tell Geiser only the file where
+the symbol is defined, but Geiser will use some heuristics (read,
+regular expressions) to locate the exact line and bring you there.
+
+You can control how the destination buffer pops up by setting
+@code{geiser-edit-symbol-method} to either @code{nil} (to open the file
+in the current window), @code{'window} (other window in the same frame)
+or @code{'frame} (in a new frame).
+
 @node Geiser writes for you,  , Jumping around, Fun between the parens
 @section Geiser writes for you
 
