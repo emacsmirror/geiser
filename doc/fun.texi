@@ -386,6 +386,25 @@ or @code{'frame} (in a new frame).
 @node Geiser writes for you,  , Jumping around, Fun between the parens
 @section Geiser writes for you
 
+No self-respecting programming mode would be complete without
+completion. In geiser-mode, identifier completion is bound to
+@kbd{M-@key{TAB}}, and will offer all visible identifiers starting with
+the prefix before point. Visible here means all symbols imported or
+defined in the current namespace plus locally bound ones. E.g., if
+you're at the end of the following partial expression:
+
+@example
+(let ((default 42))
+  (frob def
+@end example
+
+and press @kbd{M-@key{TAB}}, one of the possible completions will be
+@code{definite}.
+
+Geiser also knows how to complete module names, but it's not yet smart
+enough to infer by context that that's what you want. Instead, you must
+use a separate command, bound to @kbd{M-`} (that's a backtick).
+
 @c Local Variables:
 @c mode: texinfo
 @c TeX-master: "geiser"
