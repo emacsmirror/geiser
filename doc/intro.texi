@@ -13,6 +13,7 @@ enough for you, see @ref{Installation} to get it running and
 @node Modus operandi, Showing off, Introduction, Introduction
 @section Modus operandi
 
+@cindex modus operandi
 As already mentioned, Geiser relies on a running Scheme process to
 obtain the information it makes accessible to the programmer. There's
 little effort, on the Elisp side, to understand, say, the module system

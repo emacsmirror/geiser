@@ -22,8 +22,8 @@
 
 * Supported scheme implementations
 
-    - Guile 1.10 (not released yet: use the latest git master branch).
-    - PLT Racket 5.0 or better.
+    - Guile 2.0 (not released yet: use the latest git master branch).
+    - PLT Racket 5.0.1 or better.
 
 * Installation
   Geiser can be used either directly from its uninstalled source tree

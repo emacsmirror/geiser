@@ -6,6 +6,7 @@ to make Scheme hacking inside Emacs (even more) fun.
 
 @cindex derailment
 @cindex corpses
+@cindex philosophy
 Or, to be precise, what @uref{http://hacks-galore.org/jao, i} consider
 fun. Geiser is thus my humble contribution to the dynamic school of
 expression, and a reaction against what i perceive as a derailment, in

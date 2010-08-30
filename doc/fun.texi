@@ -24,13 +24,15 @@ process giving you the @repl{}, make those Scheme buffers come to life.
 
 @node Activating Geiser, The source and the REPL, Fun between the parens, Fun between the parens
 @section Activating Geiser
+
+@cindex geiser-mode
 @img{geiser-mode, right} With Geiser installed following any of the
 procedures described in @ref{Setting it up}, Emacs will automatically
 activate @i{geiser-mode} when opening a Scheme buffer. Geiser also
-instructs Emacs to consider files with the extension @file{rkt} Scheme
-files, so that, in principle, there's nothing you need to do to ensure
-that Geiser's extensions will be available, out of the box, when you
-start editing Scheme code.
+instructs Emacs to consider files with the extension @file{rkt} part of
+the family, so that, in principle, there's nothing you need to do to
+ensure that Geiser's extensions will be available, out of the box, when
+you start editing Scheme code.
 
 Indications that everything is working according to plan include the
 'Geiser' minor mode indicator in your mode-line and the appearance of a
@@ -39,6 +41,7 @@ indicator is the name of a Scheme implementation, you're indeed in a
 perfect world; otherwise, don't despair and keep on reading: i'll tell
 you how to fix that in a moment.
 
+@cindex geiser-mode commands
 The menu provides a good synopsis of everthing Geiser brings to the
 party, including those keyboard shortcuts we Emacsers love. If you're
 seeing the name of your favourite Scheme implementation in the
@@ -59,12 +62,14 @@ trick:
 (eval-after-load "geiser-mode"
   (remove-hook 'scheme-mode-hook 'turn-on-geiser-mode))
 @end example
+@cindex scheme file extensions
 And if you happen to use a funky extension for your Scheme files that is
 not recognised as such by Emacs, just tell her about it with:
 @example
 (add-to-list 'auto-mode-alist '("\\.funky-extension\\'" . scheme-mode))
 @end example
 
+@cindex useless wretch
 Now, @i{geiser-mode} is just a useless wretch unless there's a running
 Scheme process backing it up. Meaning that virtually all the commands it
 provides require a @repl{} up and running, preferably corresponding to
@@ -90,6 +95,7 @@ Scheme implementation, feel free to skip to the
 @ref{switching-repl-buff,,next subsection}.
 
 @subsubheading How Geiser associates a REPL to your Scheme buffer
+@cindex scheme implementation, choosing
 To determine what Scheme implementation corresponds to a given source
 file, Geiser uses the following algorithm:
 @enumerate
@@ -155,11 +161,14 @@ children) is to be assigned to Guile. Since rules are first matched,
 first served, this new rule will take precedence over the default ones.
 
 @subsubheading Switching between source files and the REPL
+@cindex switching to REPL
+@cindex switching to source
 @anchor{switching-repl-buff} Once you have a working @i{geiser-mode},
 you can switch from Scheme source buffers to the @repl{} or @kbd{C-c
 C-z}. Those shortcuts map to the interactive command
 @code{switch-to-geiser}.
 
+@cindex switching to module
 If you use a numeric prefix, as in @kbd{C-u C-c C-z}, besides being
 teleported to the @repl{}, the latter will switch to the namespace of
 the Scheme source file (as if you had used @kbd{C-c C-m} in the @repl{},
@@ -172,6 +181,7 @@ Scheme process in between. This is why the command is called
 @i{switch-to-geiser} instead of @i{switch-to-repl}, and what makes it
 really handy, if you ask me.
 
+@cindex switching schemes
 If for some reason you're not happy with the Scheme implementation that
 Geiser has assigned to your file, you can change it with @kbd{C-c C-s},
 and probably take a look at @ref{switching-repl-buff,,the previous
@@ -194,6 +204,7 @@ can do for us, besides jumping to and fro.
 
 @subsubheading Autodoc redux
 
+@cindex autodoc, in scheme buffers
 The first thing you will notice by moving around Scheme source is that,
 every now and then, the echo area lightens up with the same autodoc
 messages we know and love from our @repl{} forays. This happens every
@@ -208,6 +219,7 @@ defined in the file you're editing. But as soon as you evaluate them
 in @ref{Evaluating Scheme code}) their signatures will start appearing
 in the echo area.
 
+@cindex disabling autodoc
 Autodoc activation is controlled by a minor mode, @code{geiser-autodoc},
 which you can toggle with @kbd{M-x geiser-autodoc}, or its associated
 keyboard shortcut, @kbd{C-c C-d a}. That @t{/A} indicator in the
@@ -215,6 +227,7 @@ mode-line is telling you that autodoc is active. If you prefer, for some
 obscure reason, that it be inactive by default, just set
 @code{geiser-mode-autodoc-p} to @code{nil} in your customization files.
 
+@cindex autodoc explained
 @img{autodoc-req, right} The way autodoc displays information deserves
 some explanation. It will first show the name of the module where the
 identifier at hand is defined, followed by a colon and the identifier
@@ -241,6 +254,7 @@ rules for each one) separated by a vertical bar (|). As you have already
 noticed, the whole thing is enclosed in parenthesis. After all, we're
 talking about Scheme here.
 
+@cindex autodoc for variables
 @img{autodoc-var, right} Finally, life is much easier when your cursor
 is on a symbol corresponding to a plain variable: you'll see in the echo
 area its name, preceded by the module where it's defined, and followed
@@ -248,6 +262,7 @@ by its value, with an intervening arrow for greater effect. This time,
 there are no enclosing parenthesis (i hope you see the logic in my
 madness).
 
+@cindex autodoc customized
 You can change the way Geiser displays the module/identifier combo by
 customizing @code{geiser-autodoc-identifier-format}. For example, if you
 wanted a tilde surrounded by spaces instead of a colon as a separator,
@@ -268,6 +283,8 @@ understand what a function does. In those cases, you can ask Geiser to
 ask the running Scheme for further information on a given identifier or
 module.
 
+@cindex documentation for symbol
+@cindex docstrings, maybe
 For symbols, the incantation is @kbd{M-x geiser-doc-symbol-at-point}, or
 @kbd{C-c C-d C-d} for short. If the associated scheme supports
 docstrings (as, for instance, Guile does), you'll be teleported to a new
@@ -296,6 +313,8 @@ with all supported Schemes, no strings attached.
 @node Evaluating Scheme code, Jumping around, Documentation helpers, Fun between the parens
 @section Evaluating Scheme code
 
+@cindex philosophy
+@cindex incremental development
 One of Geiser's main goals is to facilitate incremental development. You
 might have noticed that i've made a big fuss of Geiser's ability to
 recognize context, by being aware of the namespace where its operations
@@ -308,6 +327,7 @@ files to single s-expressions. That code will be evaluated in the module
 associated with the file you're editing, allowing you to redefine values
 and procedures to your heart's (and other modules') content.
 
+@cindex incremental development, evil
 Macros are, of course, another kettle of fish: one needs to re-evaluate
 uses of a macro after redefining it. That's not a limitation imposed by
 Geiser, but a consequence of how macros work in Scheme (and other
@@ -322,6 +342,8 @@ their arguments} convincing, you don't have to throw away Geiser
 together with the baby: @kbd{M-x geiser-restart-repl} will let you
 restart the @repl{} as many times as you see fit.
 
+@cindex evaluation
+@cindex incremental development, not evil
 For all of you bearded old lispers still with me, here are some of the
 commands performing incremental evaluation in Geiser.
 
@@ -358,6 +380,7 @@ macro-expand them. The corresponding keybindings start with the prefix
 @kbd{C-r}. The result of the macro expansion always appears in a pop up
 buffer.
 
+@cindex backtraces
 When an error occurs during evaluation, you'll be presented with a
 backtrace, in a new buffer where file paths locating the origin of the
 error are clickable (you can navigate them using the @key{TAB} key, and
@@ -366,6 +389,7 @@ use @key{RET} or the mouse to jump to the offending spot).
 @node Jumping around, Geiser writes for you, Evaluating Scheme code, Fun between the parens
 @section Jumping around
 
+@cindex jumping in scheme buffers
 This one feature is as sweet as easy to explain: @kbd{M-.}
 (@code{geiser-edit-symbol-at-point}) will open the file where the
 identifier around point is defined and land your point on its
@@ -378,6 +402,7 @@ regular expressions) to locate the exact line and bring you there. Thus,
 if you find Geiser systematically missing your definitions, send a
 message to the mailing list and we'll try to make the algorithm smarter.
 
+@cindex jumping customized
 You can control how the destination buffer pops up by setting
 @code{geiser-edit-symbol-method} to either @code{nil} (to open the file
 in the current window), @code{'window} (other window in the same frame)
@@ -386,6 +411,7 @@ or @code{'frame} (in a new frame).
 @node Geiser writes for you,  , Jumping around, Fun between the parens
 @section Geiser writes for you
 
+@cindex completion in scheme buffers
 No self-respecting programming mode would be complete without
 completion. In geiser-mode, identifier completion is bound to
 @kbd{M-@key{TAB}}, and will offer all visible identifiers starting with
@@ -401,6 +427,7 @@ you're at the end of the following partial expression:
 and press @kbd{M-@key{TAB}}, one of the possible completions will be
 @code{definite}.
 
+@cindex completion for module names
 Geiser also knows how to complete module names, but it's not yet smart
 enough to infer by context that that's what you want. Instead, you must
 use a separate command, bound to @kbd{M-`} (that's a backtick).

@@ -88,7 +88,7 @@ The remaining commands are meatier, and deserve sections of their own.
 @node Switching context, Let Geiser spy, First aids, The REPL
 @section Switching context
 
-@cindex current module
+@cindex current module, in REPL
 In tune with Geiser's @ref{current-module,,modus operandi}, evaluations
 in the @repl{} take place if the namespace of the current module. As
 noted above, the @repl{}'s prompt tells you the name of the current
@@ -100,6 +100,7 @@ Racket), and that it doesn't even try to hide that fact. That means that
 you can freely use said native ways directly at the @repl{}, and Geiser
 will be happy to oblige.
 
+@cindex current module, change
 Once you enter a new module, only those bindings visible in its
 namespace will be available to your evaluations. All schemes supported
 by Geiser provide a way to import new modules in the current namespace.
@@ -120,6 +121,7 @@ Which brings me to the next group of @repl{} commands.
 @node Let Geiser spy, Customization and tips, Switching context, The REPL
 @section Let Geiser spy, write and jump for you
 
+@cindex completion, module name
 We've already seen Geiser completion of module names in action at the
 mini-buffer. You won't be surprised to know that it's also available at
 the @repl{} buffer itself. There, you can use either @kbd{C-.} or
@@ -135,6 +137,7 @@ besides its name: what module does it belong to? is it a procedure and,
 if so, what arguments does it take? Geiser tries to help you answering
 those questions too.
 
+@cindex autodoc, in the REPL
 Actually, if you've been playing with the @repl{} as you read, you might
 have notice some frantic activity taking place in the minibuffer every
 now and then. That was Geiser trying to be helpful (while, hopefully,
@@ -155,6 +158,7 @@ brackets, and, when the optional argument has a default value, it's
 represented by a list made up of its name and that value. When the
 argument is a keyword argument, its name is preceded by a colon.
 
+@cindex help on identifier
 If that's not enough documentation for you, @kbd{C-c C-d d} will open a
 separate documentation buffer with help on the symbol at point. For some
 implementations (e.g. Racket), this separate buffer will actually be a
@@ -162,12 +166,14 @@ web page displaying the corresponding page in the manual, while for
 implementations supporting docstrings (e.g. (you guessed it) Guile)
 it'll be a real Emacs buffer displaying that information.
 
+@cindex jump, at the REPL
 If that's still not enough, Geiser can jump, via @kbd{M-.}, to the
 symbol's definition. A buffer with the corresponding file will pop up,
 with its point resting upon the identifier's defining form. When you're
 done inspecting, @kbd{M-,} will bring you back to where you were. As we
 will see, these commands are also available in scheme buffers.
 
+@cindex module exports
 @anchor{repl-mod}
 Finally, Geiser can produce for you a list, classified by kind, of the
 identifiers exported by a given module: all you need to do is press
@@ -184,6 +190,7 @@ information to use it effectively enough).
 @node Customization and tips,  , Let Geiser spy, The REPL
 @section Customization and tips
 
+@cindex REPL customization
 The looks and ways of the @repl{} can be fine-tuned via a bunch of
 customization variables. You can see and modify them all in the
 corresponding customization group (by using the menu entry or the good
@@ -196,6 +203,7 @@ I'm documenting below a proper subset of those settings, together with
 some related tips.
 
 @subsubheading Choosing a Scheme implementation
+@cindex scheme implementation, choosing
 @anchor{choosing-impl}
 Instead of using the generic @command{run-geiser} command, you can start
 directly your Scheme of choice via @command{run-racket} or
@@ -209,6 +217,8 @@ forget about the richness of the Scheme ecosystem with something like
 @end example
 @noindent in your initialisation files.
 
+@cindex scheme binary
+@cindex scheme executable path
 @anchor{impl-binary} When starting a new @repl{}, Geiser assumes, by
 default, that the corresponding Scheme binary is in your path. If that's
 not the case, the variables to tweak are @code{geiser-guile-binary} and
@@ -232,6 +242,8 @@ directory.
 
 @subsubheading Autodoc
 
+@cindex autodoc, disabling
+@cindex peace and quiet
 If you happen to love peace and quiet and prefer to keep your @repl{}'s
 echo area free from autodoc's noise, @code{geiser-repl-autodoc-p} is the
 customization variable for you: set it to @code{nil} and autodoc will be
