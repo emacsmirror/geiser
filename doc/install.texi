@@ -11,6 +11,7 @@
 @section Must needs
 
 @cindex supported versions
+@cindex versions supported
 If Geiser came with any guarantees, you'd break all of them by not using
 GNU Emacs 23 (or better, if there actually @i{is} anything better) and
 at least one of the supported schemes, which right now are
