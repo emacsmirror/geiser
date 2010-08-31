@@ -206,8 +206,10 @@ interacting with the Geiser REPL is at your disposal.
   (setq geiser-autodoc-mode-string "/A")
   (setq geiser-smart-tab-mode-string "/T")
   (geiser-company--setup (and geiser-mode geiser-mode-company-p))
-  (when geiser-mode-autodoc-p (geiser-autodoc-mode geiser-mode))
-  (when geiser-mode-smart-tab-p (geiser-smart-tab-mode geiser-mode)))
+  (when geiser-mode-autodoc-p
+    (geiser-autodoc-mode (if geiser-mode 1 -1)))
+  (when geiser-mode-smart-tab-p
+    (geiser-smart-tab-mode (if geiser-mode 1 -1))))
 
 (defun turn-on-geiser-mode ()
   "Enable `geiser-mode' (in a Scheme buffer)."
