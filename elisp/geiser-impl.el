@@ -232,8 +232,8 @@ buffer contains Scheme code of the given implementation.")
   (let ((m (geiser-impl--method method impl)))
     (if (functionp m) (funcall m) fallback)))
 
-(defun geiser-impl--set-buffer-implementation (&optional impl)
-  (let ((impl (or impl (geiser-impl--guess))))
+(defun geiser-impl--set-buffer-implementation (&optional impl prompt)
+  (let ((impl (or impl (geiser-impl--guess prompt))))
     (when impl
       (unless (geiser-impl--load-impl impl)
         (error "Cannot find %s implementation" impl))

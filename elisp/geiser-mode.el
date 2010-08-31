@@ -202,7 +202,7 @@ interacting with the Geiser REPL is at your disposal.
   :lighter (:eval (geiser-mode--lighter))
   :group 'geiser-mode
   :keymap geiser-mode-map
-  (when geiser-mode (geiser-impl--set-buffer-implementation))
+  (when geiser-mode (geiser-impl--set-buffer-implementation nil t))
   (setq geiser-autodoc-mode-string "/A")
   (setq geiser-smart-tab-mode-string "/T")
   (geiser-company--setup (and geiser-mode geiser-mode-company-p))
