@@ -237,6 +237,7 @@ If no REPL is running, execute `run-geiser' to start a fresh one."
                      ((and (not ask) impl (geiser-repl--repl/impl impl)))))
          (pop-up-windows geiser-repl-window-allow-split))
     (cond ((and (eq (current-buffer) repl)
+                (not (eq repl buffer))
                 (buffer-live-p geiser-repl--last-scm-buffer))
            (pop-to-buffer geiser-repl--last-scm-buffer))
           (repl (pop-to-buffer repl))
@@ -278,14 +279,14 @@ module command as a string")
 module command as a string")
 
 (defun geiser-repl-import-module (&optional module)
-  "Import a given module in the current namespace."
+  "Import a given module in the current namespace of the REPL."
   (interactive)
   (let* ((module (or module
                      (geiser-completion--read-module "Import module: ")))
          (cmd (and module
                    (geiser-repl--import-cmd geiser-impl--implementation
                                             module))))
-    (switch-to-geiser)
+    (switch-to-geiser nil nil (current-buffer))
     (geiser-repl--send cmd)))
 
 (defun geiser-repl-nuke ()
