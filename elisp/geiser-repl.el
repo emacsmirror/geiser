@@ -271,7 +271,8 @@ module command as a string")
          (cmd (and module
                    (geiser-repl--enter-cmd geiser-impl--implementation
                                            module))))
-    (switch-to-geiser nil nil buffer)
+    (unless (eq major-mode 'geiser-repl-mode)
+      (switch-to-geiser nil nil (or buffer (current-buffer))))
     (geiser-repl--send cmd)))
 
 (geiser-impl--define-caller geiser-repl--import-cmd import-command (module)
