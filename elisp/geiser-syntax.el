@@ -265,7 +265,8 @@
                (when name (push name locals))
                (when use-names (dolist (n names) (push n locals)))
                (dolist (f (butlast rest))
-                 (when (eq (car f) 'define) (push (cadr f) locals)))
+                 (when (and (listp f) (eq (car f) 'define))
+                   (push (cadr f) locals)))
                (geiser-syntax--scan-locals bfs sbfs
                                            (car (last (or rest names)))
                                            partial
