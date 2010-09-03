@@ -225,6 +225,15 @@ not the case, the variables to tweak are @code{geiser-guile-binary} and
 @code{geiser-racket-binary}, which should be set to a string with the
 full path to the requisite binary.
 
+@cindex scheme load path
+@cindex scheme init file
+You can also specify a couple more initialisation parameters. For Guile,
+@code{geiser-guile-load-path} is a list of paths to add to its load path
+when it's started, while @code{geiser-guile-init-file} is the path to an
+initialisation file to be loaded on startup. The equivalent variables
+for Racket are @code{geiser-racket-collects} and
+@code{geiser-racket-init-file}.
+
 @subsubheading History
 
 By default, Geiser won't record duplicates in your input history. If you
