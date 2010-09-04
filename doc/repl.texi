@@ -9,7 +9,8 @@ ready, just come back here and proceed to the following sections.
 * Starting the REPL::
 * First aids::
 * Switching context::
-* Let Geiser spy::
+* Completion and error handling::
+* Autodoc and friends::
 * Customization and tips::
 @end menu
 
@@ -85,7 +86,7 @@ as explained @ref{switching-repl-buff,,here}).
 
 The remaining commands are meatier, and deserve sections of their own.
 
-@node Switching context, Let Geiser spy, First aids, The REPL
+@node Switching context, Completion and error handling, First aids, The REPL
 @section Switching context
 
 @cindex current module, in REPL
@@ -118,8 +119,8 @@ a prefix-aware list of available module names.
 
 Which brings me to the next group of @repl{} commands.
 
-@node Let Geiser spy, Customization and tips, Switching context, The REPL
-@section Let Geiser spy, write and jump for you
+@node Completion and error handling, Autodoc and friends, Switching context, The REPL
+@section Completion and error handling
 
 @cindex completion, module name
 We've already seen Geiser completion of module names in action at the
@@ -132,7 +133,19 @@ starting with the prefix at point. Needless to say, this is not a static
 list, and it will grow as you define or import new bindings in the
 namespace at hand.
 
-But, oftentimes, there's more you'll want to know about an identifier
+REPL buffers use Emacs' compilation mode to highlight errors reported by
+the Scheme interpreter, and you can use the @command{next-error} command
+(@kbd{M-g n}) to jump to their location. By default, every time you
+enter a new expression for evaluation old error messages are forgotten,
+so that @kbd{M-g n} will always jump to errors related to the last
+evaluation request, if any. If you prefer a not so forgetful REPL, set
+the customization variable @code{geiser-repl-forget-old-errors-p} to
+@code{nil}.
+
+@node Autodoc and friends, Customization and tips, Completion and error handling, The REPL
+@section Autodoc and friends
+
+Oftentimes, there's more you'll want to know about an identifier
 besides its name: what module does it belong to? is it a procedure and,
 if so, what arguments does it take? Geiser tries to help you answering
 those questions too.
@@ -187,7 +200,7 @@ sections (but just perusing it's associated key bindings, by any of the
 methods we've already used for the @repl{}, will give you enough
 information to use it effectively enough).
 
-@node Customization and tips,  , Let Geiser spy, The REPL
+@node Customization and tips,  , Autodoc and friends, The REPL
 @section Customization and tips
 
 @cindex REPL customization
@@ -227,6 +240,8 @@ full path to the requisite binary.
 
 @cindex scheme load path
 @cindex scheme init file
+@cindex GUILE_LOAD_PATH
+@cindex PLTCOLLECTS
 You can also specify a couple more initialisation parameters. For Guile,
 @code{geiser-guile-load-path} is a list of paths to add to its load path
 when it's started, while @code{geiser-guile-init-file} is the path to an

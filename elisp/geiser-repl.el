@@ -79,6 +79,16 @@ implementation name gets appended to it."
   :type 'boolean
   :group 'geiser-repl)
 
+(geiser-custom--defcustom geiser-repl-forget-old-errors-p t
+  "Whether to forget old errors upon entering a new expression.
+
+When on (the default), every time a new expression is entered in
+the REPL old error messages are flushed, and using [[next-error]]
+afterwards will jump only to error locations produced by the new
+expression, if any."
+  :type 'boolean
+  :group 'geiser-repl)
+
 
 ;;; Geiser REPL buffers and processes:
 
@@ -402,6 +412,9 @@ module command as a string")
          (pmark (and proc (process-mark proc)))
          (intxt (and pmark (buffer-substring pmark (point)))))
     (when intxt
+      (when (and geiser-repl-forget-old-errors-p
+                 (not (geiser-con--is-debugging)))
+        (compilation-forget-errors))
       (comint-send-input)
       (when (string-match "^\\s-*$" intxt)
         (comint-send-string proc

@@ -46,6 +46,8 @@ The document was typeset with
 @node Top, Introduction, (dir), (dir)
 @top Geiser
 
+@include top.texi
+
 @menu
 * Introduction::
 * Installation::
@@ -81,7 +83,8 @@ The REPL
 * Starting the REPL::
 * First aids::
 * Switching context::
-* Let Geiser spy::
+* Completion and error handling::
+* Autodoc and friends::
 * Customization and tips::
 
 Fun between the parens
@@ -96,18 +99,7 @@ Fun between the parens
 @end detailmenu
 @end menu
 
-@include top.texi
-
 @insertcopying
-
-@menu
-* Introduction::
-* Installation::
-* The REPL::
-* Fun between the parens::
-* Index::
-
-@end menu
 
 @end ifnottex
 
