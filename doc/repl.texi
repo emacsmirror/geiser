@@ -140,7 +140,9 @@ enter a new expression for evaluation old error messages are forgotten,
 so that @kbd{M-g n} will always jump to errors related to the last
 evaluation request, if any. If you prefer a not so forgetful REPL, set
 the customization variable @code{geiser-repl-forget-old-errors-p} to
-@code{nil}.
+@code{nil}. Note, however, that even when that variable is left as
+@kdb{t}, you can always jump to an old error by moving to its line at
+the REPL and pressing return.
 
 @node Autodoc and friends, Customization and tips, Completion and error handling, The REPL
 @section Autodoc and friends
