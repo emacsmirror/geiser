@@ -1,6 +1,6 @@
 ;; geiser-xref.el -- utilities for cross-referencing
 
-;; Copyright (C) 2009 Jose Antonio Ortega Ruiz
+;; Copyright (C) 2009, 2010 Jose Antonio Ortega Ruiz
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the Modified BSD License. You should
@@ -54,7 +54,6 @@
                                       geiser-xref-follow-link-method))))
 
 (defun geiser-xref--insert-button (xref)
-  (message "inserting %s" xref)
   (let* ((location (cdr (assoc 'location xref)))
          (file (geiser-edit--location-file location))
          (signature (cdr (assoc 'signature xref)))
@@ -100,9 +99,9 @@
                                      'geiser-font-lock-xref-header)
            (newline 2)
            (setq last-module module))
-         (geiser-xref--insert-button xref))))
-   (geiser-xref--pop-to-buffer)
-   (goto-char (point-min))))
+         (geiser-xref--insert-button xref)))))
+  (geiser-xref--pop-to-buffer)
+  (goto-char (point-min)))
 
 (defun geiser-xref--read-name (ask prompt)
   (let ((name (or (and (not ask) (symbol-at-point))
