@@ -26,13 +26,13 @@
            geiser-repl
            geiser-xref
            geiser-doc
+           geiser-compile
            geiser-debug
            geiser-impl
            geiser-company
            geiser-edit
            geiser-completion
            geiser-autodoc
-           geiser-compile
            geiser-eval
            geiser-connection
            geiser-syntax

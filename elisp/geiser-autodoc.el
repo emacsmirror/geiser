@@ -54,6 +54,9 @@ when `geiser-autodoc-display-module-p' is on."
 (make-variable-buffer-local
  (defvar geiser-autodoc--cached-signatures nil))
 
+(defsubst geiser-autodoc--clean-cache ()
+  (setq geiser-autodoc--cached-signatures nil))
+
 (defun geiser-autodoc--get-signatures (funs &optional keep-cached)
   (when funs
     (let ((fs (assq (car funs) geiser-autodoc--cached-signatures)))
@@ -65,8 +68,7 @@ when `geiser-autodoc-display-module-p' is on."
               (let ((cf (assq f geiser-autodoc--cached-signatures)))
                 (if cf (push cf cached)
                   (push f missing)))))
-          (unless (or cached keep-cached)
-            (setq geiser-autodoc--cached-signatures nil))
+          (unless (or cached keep-cached) (geiser-autodoc--clean-cache))
           (when missing
             (let ((res (geiser-eval--send/result `(:eval ((:ge autodoc)
                                                           (quote ,missing)))

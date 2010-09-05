@@ -11,6 +11,7 @@
 
 
 
+(require 'geiser-autodoc)
 (require 'geiser-impl)
 (require 'geiser-eval)
 (require 'geiser-menu)
@@ -103,6 +104,7 @@ non-null value.")
          (ret (geiser-eval--send/wait code))
          (res (geiser-eval--retort-result-str ret))
          (err (geiser-eval--retort-error ret)))
+    (geiser-autodoc--clean-cache)
     (when and-go (funcall and-go))
     (when (not err) (message "%s" res))
     (geiser-debug--display-retort str ret res)))
