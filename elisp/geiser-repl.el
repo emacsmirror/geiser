@@ -83,7 +83,7 @@ implementation name gets appended to it."
   "Whether to forget old errors upon entering a new expression.
 
 When on (the default), every time a new expression is entered in
-the REPL old error messages are flushed, and using [[next-error]]
+the REPL old error messages are flushed, and using \\[next-error]
 afterwards will jump only to error locations produced by the new
 expression, if any."
   :type 'boolean
