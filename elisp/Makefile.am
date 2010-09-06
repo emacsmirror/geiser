@@ -1,4 +1,4 @@
-EXTRA_DIST = geiser-install.el.in
+EXTRA_DIST = geiser-install.el.in geiser-load.el.in
 
 dist_lisp_LISP = \
    geiser-autodoc.el \
@@ -27,9 +27,11 @@ dist_lisp_LISP = \
    geiser-version.el
 
 lisp_LISP = geiser-install.el
+noinst_LISP = geiser-load.el
 
-CLEANFILES = geiser-install.el
+CLEANFILES = geiser-install.el geiser-load.el
 
 geiser-install.el: $(srcdir)/geiser.el $(srcdir)/geiser-install.el.in
-	@sed -e "s|@SCHEME_DIR[@]|$(datarootdir)/geiser|"  $(srcdir)/geiser-install.el.in >$@
+	@sed -e "s|@SCHEME_DIR[@]|$(datarootdir)/geiser|" \
+             $(srcdir)/geiser-install.el.in >$@
 

@@ -8,7 +8,7 @@
 # WITHOUT ANY WARRANTY, to the extent permitted by law; without even the
 # implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
-AC_INIT([GNU Geiser],[0.0.7],[jao@gnu.org],geiser)
+AC_INIT([GNU Geiser],[0.1],[jao@gnu.org],geiser)
 AC_CONFIG_SRCDIR([elisp/geiser.el])
 AM_INIT_AUTOMAKE
 
@@ -23,6 +23,7 @@ AC_CONFIG_FILES([
 Makefile
 elisp/Makefile
 elisp/geiser-version.el
+elisp/geiser-load.el
 scheme/Makefile
 doc/Makefile
 ])

@@ -16,6 +16,8 @@
 (require 'geiser-custom)
 (require 'geiser-base)
 (require 'geiser)
+(require 'geiser-load nil t)
+(require 'geiser-install nil t)
 
 
 ;;; Reload:
@@ -24,8 +26,8 @@
   (quote '(
            geiser-mode
            geiser-repl
-           geiser-xref
            geiser-doc
+           geiser-xref
            geiser-compile
            geiser-debug
            geiser-company
@@ -35,15 +37,15 @@
            geiser-eval
            geiser-connection
            geiser-syntax
-           geiser-log
            geiser-menu
            geiser-impl
            geiser-custom
-           geiser-base
+           geiser-log
            geiser-popup
+           geiser-base
+           geiser-version
            geiser-install
            geiser
-           geiser-version
            )))
 
 (defun geiser-unload ()
@@ -66,8 +68,7 @@ loaded again."
     (unless (or (file-exists-p (expand-file-name "geiser-reload.el" dir))
                 (file-exists-p (expand-file-name "geiser-reload.elc" dir)))
       (error "%s does not contain Geiser!" dir))
-    (let ((installed (featurep 'geiser-install))
-          (memo (geiser-custom--memoized-state))
+    (let ((memo (geiser-custom--memoized-state))
           (repls (geiser-repl--repl-list))
           (buffers (geiser-mode--buffers)))
       (geiser-unload)
@@ -75,7 +76,6 @@ loaded again."
       (add-to-list 'load-path dir)
       (mapc (lambda (x) (set (car x) (cdr x))) memo)
       (require 'geiser-reload)
-      (when installed (require 'geiser-install nil t))
       (geiser-repl--restore repls)
       (geiser-mode--restore buffers)
       (message "Geiser reloaded!"))))

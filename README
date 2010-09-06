@@ -43,12 +43,20 @@
       $ mkdir build; cd build
     - Configure and make:
       $ ../configure && make
-    - Install it with:
+
+    Now, you can use the byte-compiled Geiser in place by adding to
+    your .emacs:
+
+    (load "<path-to-geiser>/build/elisp/geiser-load")
+
+    or, alternatively, install it with:
+
       $ make install
 
     (you might need to get root access, depending on your installation
-    directory) and require 'geiser-install (not 'geiser, mind you) in
-    your emacs initialization file:
+    directory) and, instead of the above load forms, require
+    'geiser-install (not 'geiser, mind you) in your emacs
+    initialization file:
 
       (require 'geiser-install)
 

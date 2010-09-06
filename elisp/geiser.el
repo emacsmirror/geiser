@@ -26,40 +26,40 @@
 
 ;;; Autoloads:
 
-(autoload 'geiser-version "geiser-version.el" "Echo Geiser's version." t)
+(autoload 'geiser-version "geiser-version" "Echo Geiser's version." t)
 
-(autoload 'geiser-unload "geiser-reload.el" "Unload all Geiser code." t)
+(autoload 'geiser-unload "geiser-reload" "Unload all Geiser code." t)
 
-(autoload 'geiser-reload "geiser-reload.el" "Reload Geiser code." t)
+(autoload 'geiser-reload "geiser-reload" "Reload Geiser code." t)
 
-(autoload 'geiser "geiser-repl.el"
+(autoload 'geiser "geiser-repl"
   "Start a Geiser REPL, or switch to a running one." t)
 
-(autoload 'run-geiser "geiser-repl.el"
+(autoload 'run-geiser "geiser-repl"
   "Start a Geiser REPL." t)
 
-(autoload 'switch-to-geiser "geiser-guile.el"
+(autoload 'switch-to-geiser "geiser-guile"
   "Switch to a running one Geiser REPL." t)
 
-(autoload 'run-guile "geiser-guile.el"
+(autoload 'run-guile "geiser-guile"
   "Start a Geiser Guile REPL, or switch to a running one." t)
 
-(autoload 'switch-to-guile "geiser-guile.el"
+(autoload 'switch-to-guile "geiser-guile"
   "Start a Geiser Guile REPL, or switch to a running one." t)
 
-(autoload 'run-racket "geiser-racket.el"
+(autoload 'run-racket "geiser-racket"
   "Start a Geiser Racket REPL, or switch to a running one." t)
 
-(autoload 'switch-to-racket "geiser-guile.el"
+(autoload 'switch-to-racket "geiser-guile"
   "Start a Geiser Racket REPL, or switch to a running one." t)
 
-(autoload 'geiser-mode "geiser-mode.el"
+(autoload 'geiser-mode "geiser-mode"
   "Minor mode adding Geiser REPL interaction to Scheme buffers." t)
 
-(autoload 'turn-on-geiser-mode "geiser-mode.el"
+(autoload 'turn-on-geiser-mode "geiser-mode"
   "Enable Geiser's mode (useful in Scheme buffers)." t)
 
-(autoload 'turn-off-geiser-mode "geiser-mode.el"
+(autoload 'turn-off-geiser-mode "geiser-mode"
   "Disable Geiser's mode (useful in Scheme buffers)." t)
 
 (mapc (lambda (group)
