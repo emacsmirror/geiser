@@ -142,6 +142,20 @@ or following links in error buffers.")
                (geiser-edit--make-location 'error file line col)
                'help-echo "Go to error location"))
 
+(defconst geiser-edit--default-file-rx
+  "^\\([^<>:\n\"]+\\):\\([0-9]+\\):\\([0-9]+\\)")
+
+(defun geiser-edit--buttonize-files (&optional rx)
+  (let ((rx (or rx geiser-edit--default-file-rx)))
+    (save-excursion
+      (while (re-search-forward rx nil t)
+        (geiser-edit--make-link (match-beginning 1)
+                                (match-end 1)
+                                (match-string 1)
+                                (match-string 2)
+                                (match-string 3)
+                                'window)))))
+
 
 ;;; Commands:
 

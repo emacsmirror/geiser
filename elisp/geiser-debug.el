@@ -65,29 +65,33 @@ and the accompanying error message) and should display
 error was successfully displayed, the call should evaluate to a
 non-null value.")
 
+(geiser-impl--define-caller geiser-debug--enter-debugger
+    enter-debugger ()
+  "This method is called upon entering the debugger, in the REPL
+buffer.")
+
 (defun geiser-debug--display-retort (what ret &optional res)
   (let* ((err (geiser-eval--retort-error ret))
          (key (geiser-eval--error-key err))
          (output (geiser-eval--retort-output ret))
          (impl geiser-impl--implementation)
-         (module (geiser-eval--get-module)))
-    (if (eq key 'geiser-debugger)
-        (progn
-          (switch-to-geiser nil nil (current-buffer))
-          (geiser-debug--display-error impl module key output))
-      (geiser-debug--with-buffer
-        (erase-buffer)
-        (insert what)
-        (newline 2)
-        (when (and res (not err))
-          (insert res)
-          (newline 2))
-        (unless (geiser-debug--display-error impl module key output)
-          (when err (insert (geiser-eval--error-str err) "\n\n"))
-          (when output (insert output "\n\n")))
-        (goto-char (point-min)))
-      (when (or err (and output (> (length output) 0)))
-        (geiser-debug--pop-to-buffer)))))
+         (module (geiser-eval--get-module))
+         (jump nil)
+         (buffer (current-buffer))
+         (debug (eq key 'geiser-debugger)))
+    (when debug
+      (switch-to-geiser nil nil buffer)
+      (geiser-debug--enter-debugger impl))
+    (geiser-debug--with-buffer
+      (erase-buffer)
+      (insert what)
+      (newline 2)
+      (when (and res (not err))
+        (insert res)
+        (newline 2))
+      (setq jump (geiser-debug--display-error impl module key output))
+      (goto-char (point-min)))
+    (when jump (geiser-debug--pop-to-buffer))))
 
 (defsubst geiser-debug--wrap-region (str)
   (format "(begin %s)" str))
@@ -107,7 +111,7 @@ non-null value.")
     (geiser-autodoc--clean-cache)
     (when and-go (funcall and-go))
     (when (not err) (message "%s" res))
-    (geiser-debug--display-retort str ret res)))
+    (geiser-debug--display-retort (geiser-syntax--scheme-str str) ret res)))
 
 (defun geiser-debug--expand-region (start end all wrap)
   (let* ((str (buffer-substring-no-properties start end))
