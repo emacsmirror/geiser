@@ -11,6 +11,7 @@
 
 
 
+(require 'geiser-edit)
 (require 'geiser-autodoc)
 (require 'geiser-impl)
 (require 'geiser-eval)
@@ -37,6 +38,7 @@
   (set-syntax-table scheme-mode-syntax-table)
   (setq mode-name "Geiser DBG")
   (setq major-mode 'geiser-debug-mode)
+  (setq next-error-function 'geiser-edit--open-next)
   (setq buffer-read-only t))
 
 (defun geiser-debug--button-p (nextp)

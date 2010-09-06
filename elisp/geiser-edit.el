@@ -145,8 +145,9 @@ or following links in error buffers.")
 (defconst geiser-edit--default-file-rx
   "^\\([^<>:\n\"]+\\):\\([0-9]+\\):\\([0-9]+\\)")
 
-(defun geiser-edit--buttonize-files (&optional rx)
-  (let ((rx (or rx geiser-edit--default-file-rx)))
+(defun geiser-edit--buttonize-files (&optional rx no-fill)
+  (let ((rx (or rx geiser-edit--default-file-rx))
+        (fill-column (- (window-width) 2)))
     (save-excursion
       (while (re-search-forward rx nil t)
         (geiser-edit--make-link (match-beginning 1)
@@ -154,7 +155,30 @@ or following links in error buffers.")
                                 (match-string 1)
                                 (match-string 2)
                                 (match-string 3)
-                                'window)))))
+                                'window)
+        (unless no-fill (fill-region (match-beginning 0) (point-at-eol)))))))
+
+(defun geiser-edit--open-next (&optional n reset)
+  (interactive)
+  (let* ((n (or n 1))
+         (nxt (if (< n 0) 'backward-button 'forward-button))
+         (msg (if (< n 0) "previous" "next"))
+         (n (abs n))
+         (p (point))
+         (found nil))
+    (when reset (goto-char (point-min)))
+    (while (> n 0)
+      (let ((b (ignore-errors (funcall nxt 1))))
+        (unless b (setq n 0))
+        (when (and b (eq (button-type b) 'geiser-edit--button))
+          (setq n (- n 1))
+          (when (<= n 0)
+            (setq found t)
+            (push-button (point))))))
+    (unless found
+      (goto-char p)
+      (error "No %s error" msg))))
+
 
 
 ;;; Commands:
