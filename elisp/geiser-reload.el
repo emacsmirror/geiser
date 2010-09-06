@@ -28,7 +28,6 @@
            geiser-doc
            geiser-compile
            geiser-debug
-           geiser-impl
            geiser-company
            geiser-edit
            geiser-completion
@@ -38,6 +37,7 @@
            geiser-syntax
            geiser-log
            geiser-menu
+           geiser-impl
            geiser-custom
            geiser-base
            geiser-popup

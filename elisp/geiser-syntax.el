@@ -11,6 +11,7 @@
 
 
 
+(require 'geiser-impl)
 (require 'geiser-popup)
 (require 'geiser-base)
 
@@ -286,14 +287,15 @@
 
 ;;; Fontify strings as Scheme code:
 
-(geiser-popup--define syntax " *geiser syntax analyst*" scheme-mode)
-
 (defun geiser-syntax--font-lock-buffer ()
   (let ((name " *geiser font lock*"))
     (or (get-buffer name)
         (let ((buffer (get-buffer-create name)))
           (set-buffer buffer)
-          (scheme-mode)
+          (let ((geiser-default-implementation
+                 (or geiser-default-implementation
+                     (car geiser-active-implementations))))
+            (scheme-mode))
           buffer))))
 
 (defun geiser-syntax--scheme-str (str)
