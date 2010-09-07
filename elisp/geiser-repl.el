@@ -89,6 +89,11 @@ expression, if any."
   :type 'boolean
   :group 'geiser-repl)
 
+(geiser-custom--defcustom geiser-repl-query-on-exit-p nil
+  "Whether to prompt for confirmation on \\[geiser-repl-exit]."
+  :type 'boolean
+  :group 'geiser-repl)
+
 
 ;;; Geiser REPL buffers and processes:
 
@@ -169,6 +174,17 @@ the REPL has entered debugging mode.")
   "Function taking no parameters that is called after the REPL
 has been initialised. All Geiser functionality is available to
 you at that point.")
+
+(geiser-impl--define-caller geiser-repl--enter-cmd enter-command (module)
+  "Function taking a module designator and returning a REPL enter
+module command as a string")
+
+(geiser-impl--define-caller geiser-repl--import-cmd import-command (module)
+  "Function taking a module designator and returning a REPL import
+module command as a string")
+
+(geiser-impl--define-caller geiser-repl--exit-cmd exit-command ()
+  "Function returning the REPL exit command as a string")
 
 (defun geiser-repl--start-repl (impl)
   (message "Starting Geiser REPL for %s ..." impl)
@@ -269,10 +285,6 @@ If no REPL is running, execute `run-geiser' to start a fresh one."
     (let ((comint-input-filter (lambda (x) nil)))
       (comint-send-input nil t))))
 
-(geiser-impl--define-caller geiser-repl--enter-cmd enter-command (module)
-  "Function taking a module designator and returning a REPL enter
-module command as a string")
-
 (defun switch-to-geiser-module (&optional module buffer)
   "Switch to running Geiser REPL and try to enter a given module."
   (interactive)
@@ -285,10 +297,6 @@ module command as a string")
       (switch-to-geiser nil nil (or buffer (current-buffer))))
     (geiser-repl--send cmd)))
 
-(geiser-impl--define-caller geiser-repl--import-cmd import-command (module)
-  "Function taking a module designator and returning a REPL import
-module command as a string")
-
 (defun geiser-repl-import-module (&optional module)
   "Import a given module in the current namespace of the REPL."
   (interactive)
@@ -299,6 +307,18 @@ module command as a string")
                                             module))))
     (switch-to-geiser nil nil (current-buffer))
     (geiser-repl--send cmd)))
+
+(defun geiser-repl-exit (&optional arg)
+  "Exit the current REPL.
+With a prefix argument, force exit by killing the scheme process."
+  (interactive "P")
+  (when (or (not geiser-repl-query-on-exit-p)
+            (y-or-n-p "Really quit this REPL? "))
+    (let ((cmd (and (not arg)
+                    (geiser-repl--exit-cmd geiser-impl--implementation))))
+      (if cmd
+          (when (stringp cmd) (geiser-repl--send cmd))
+        (comint-kill-subjob)))))
 
 (defun geiser-repl-nuke ()
   "Try this command if the REPL becomes unresponsive."
@@ -485,7 +505,7 @@ module command as a string")
   ("Module documentation" ("\C-c\C-dm" "\C-c\C-d\C-m") geiser-repl--doc-module
    "Documentation for module at point" :enable (symbol-at-point))
   --
-  ("Kill Scheme interpreter" "\C-c\C-q" comint-kill-subjob
+  ("Kill Scheme interpreter" "\C-c\C-q" geiser-repl-exit
    :enable (geiser-repl--live-p))
   ("Restart" "\C-c\C-z" switch-to-geiser :enable (not (geiser-repl--live-p)))
   ("Revive REPL" "\C-c\C-k" geiser-repl-nuke
