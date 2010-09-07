@@ -41,7 +41,7 @@ or following links in error buffers.")
 ;;; Auxiliar functions:
 
 (defun geiser-edit--visit-file (file method)
-  (cond ((eq method 'window) (find-file-other-window file))
+  (cond ((eq method 'window) (pop-to-buffer (find-file-noselect file t)))
         ((eq method 'frame) (find-file-other-frame file))
         ((eq method 'noselect) (find-file-noselect file t))
         (t (find-file file))))
