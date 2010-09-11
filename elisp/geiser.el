@@ -47,10 +47,11 @@
 (autoload 'switch-to-guile "geiser-guile"
   "Start a Geiser Guile REPL, or switch to a running one." t)
 
-(autoload 'run-racket "geiser-racket"
-  "Start a Geiser Racket REPL, or switch to a running one." t)
+(autoload 'run-racket "geiser-racket" "Start a Geiser Racket REPL." t)
 
-(autoload 'switch-to-racket "geiser-guile"
+(autoload 'run-gracket "geiser-racket" "Start a Geiser GRacket REPL." t)
+
+(autoload 'switch-to-racket "geiser-racket"
   "Start a Geiser Racket REPL, or switch to a running one." t)
 
 (autoload 'geiser-mode "geiser-mode"
