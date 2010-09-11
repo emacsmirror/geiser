@@ -1,6 +1,6 @@
 ;;; geiser-base.el --- shared bits
 
-;; Copyright (C) 2009  Jose Antonio Ortega Ruiz
+;; Copyright (C) 2009, 2010  Jose Antonio Ortega Ruiz
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the Modified BSD License. You should
@@ -66,6 +66,15 @@
   (let ((p (point)))
     (insert str)
     (put-text-property p (point) 'face face)))
+
+
+(defmacro geiser--save-msg (&rest body)
+  (let ((msg (make-symbol "msg")))
+    `(let ((,msg (current-message)))
+       ,@body
+       (message ,msg))))
+
+(put 'geiser--save-msg 'lisp-indent-function 0)
 
 
 (provide 'geiser-base)
