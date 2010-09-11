@@ -156,7 +156,7 @@ or following links in error buffers.")
                                 (match-string 2)
                                 (match-string 3)
                                 'window)
-        (unless no-fill (fill-region (match-beginning 0) (point-at-eol)))))))
+        (unless no-fill (fill-region (match-end 0) (point-at-eol)))))))
 
 (defun geiser-edit--open-next (&optional n reset)
   (interactive)
