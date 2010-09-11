@@ -465,7 +465,10 @@ With a prefix argument, force exit by killing the scheme process."
   (set (make-local-variable 'comint-input-ignoredups)
        geiser-repl-history-no-dups-p)
   (setq geiser-eval--get-module-function 'geiser-repl--module-function)
-  (when geiser-repl-autodoc-p (geiser-autodoc-mode 1))
+  (when geiser-repl-autodoc-p
+    (let ((msg (current-message)))
+      (geiser-autodoc-mode 1)
+      (message msg)))
   (setq geiser-autodoc--inhibit-function 'geiser-con--is-debugging)
   (geiser-company--setup geiser-repl-company-p)
   (setq geiser-smart-tab-mode-string "")
