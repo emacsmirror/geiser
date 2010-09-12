@@ -92,7 +92,8 @@ Fun between the parens
 * Activating Geiser::
 * The source and the REPL::
 * Documentation helpers::
-* Evaluating Scheme code::
+* To eval or not to eval::
+* To err perchance to debug::
 * Jumping around::
 * Geiser writes for you::
 

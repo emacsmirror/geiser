@@ -8,8 +8,13 @@
 <img src="img/\FILE\.png" class="float\ALIGN\"/>
 @end html
 @end ifhtml
-@ifnothtml
-@image{img/\FILE\}
-@end ifnothtml
+@end macro
+
+@macro imgc{FILE}
+@ifhtml
+@html
+<img src="img/\FILE\.png"/>
+@end html
+@end ifhtml
 @end macro
 

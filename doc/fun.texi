@@ -1,4 +1,4 @@
-@node Fun between the parens
+@node Fun between the parens, Index, The REPL, Top
 @chapter Fun between the parens
 
 A good @repl{} is a must, but just about half the story of a good Scheme
@@ -294,7 +294,7 @@ information about the identifier, including its docstring (if any;
 unfortunately, that an implementation supports docstrings doesn't mean
 that they're used everywhere).
 
-@image{img/docstring}
+@imgc{docstring}
 
 Pressing @kbd{q} in the documentation buffer will bring you back,
 enlightened, to where you were. There's also a handful of other
@@ -393,7 +393,7 @@ jump to the offending spot; or invoke Emacs' stock commands
 @code{next-error} and @code{previous-error}, bound to @kbd{M-g n} and
 @kbd{M-g p} by default).
 
-@image{img/eval-error}
+@imgc{eval-error}
 
 The Racket backtrace also highlights the exception type, making it
 clickable. Following the link will open the documentation corresponding
@@ -409,7 +409,7 @@ there you have the debugger at your disposal, with the REPL's current
 module set to that of the offender, and a host of special debugging
 commands that are described in Guile's fine documentation.
 
-@image{img/guile-eval-error}
+@imgc{guile-eval-error}
 
 In addition, Guile will sometimes report warnings for otherwise
 successful evaluations. In those cases, it won't enter the debugger, and

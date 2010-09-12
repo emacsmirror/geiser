@@ -27,7 +27,7 @@ asking: see @ref{active-implementations,,below}). Tabbing for completion
 will offer you, as of this writing, @code{guile} and @code{racket}. Just
 choose your poison, and a new @repl{} buffer will pop-up.
 
-@image{img/repls}
+@imgc{repls}
 
 If all went according to plan, you'll be facing an
 implementation-dependent banner, followed by an interactive prompt.
@@ -116,7 +116,7 @@ is available when introducing the new module name, using the
 @kbd{@key{TAB}} key. Pressing it at the command's prompt will offer you
 a prefix-aware list of available module names.
 
-@image{img/mod-completion}
+@imgc{mod-completion}
 
 Which brings me to the next group of @repl{} commands.
 
@@ -163,7 +163,7 @@ notice that @i{A} in the mode-line?), Geiser's gerbils will be scanning
 what you type and showing (unless you silent them with @kbd{C-c C-a})
 information about the identifier nearest to point.
 
-@image{img/repl-autodoc}
+@imgc{repl-autodoc}
 
 If that identifier corresponds to a variable visible in the current
 namespace, you'll see the module it belongs to and its value. For
@@ -195,7 +195,7 @@ Finally, Geiser can produce for you a list, classified by kind, of the
 identifiers exported by a given module: all you need to do is press
 @kbd{C-c C-d m}, and type or complete the desired module's name.
 
-@image{img/repl-mod}
+@imgc{repl-mod}
 
 The list of exported bindings is shown in a buffer belonging to Geiser's
 documentation browser, of which more details are given in forthcoming
