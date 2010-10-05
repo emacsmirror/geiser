@@ -70,7 +70,7 @@ compile and install Geiser too. That is, you enter the source directory
 and (since we grabbed the development tree) run the customary
 @i{autogen} script:
 @example
-$ cd ~/lib/geiser
+$ cd ~/lisp/geiser
 $ ./autogen.sh
 @end example
 @noindent

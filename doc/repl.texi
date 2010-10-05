@@ -92,7 +92,7 @@ The remaining commands are meatier, and deserve sections of their own.
 
 @cindex current module, in REPL
 In tune with Geiser's @ref{current-module,,modus operandi}, evaluations
-in the @repl{} take place if the namespace of the current module. As
+in the @repl{} take place in the namespace of the current module. As
 noted above, the @repl{}'s prompt tells you the name of the current
 module. To switch to a different one, you can use the command
 @command{switch-to-geiser-module}, bound to @kbd{C-c C-m}. You'll notice
