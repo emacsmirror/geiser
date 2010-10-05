@@ -17,6 +17,8 @@
 
 (require 'scheme)
 
+(eval-when-compile (require 'cl))
+
 
 ;;; Indentation:
 
@@ -248,34 +250,37 @@
 (defsubst geiser-syntax--binding-form*-p (sbfs f)
   (or (eq 'let* f) (memq f sbfs)))
 
+(defsubst geiser-syntax--if-symbol (x) (and (symbolp x) x))
+(defsubst geiser-syntax--if-list (x) (and (listp x) x))
+(defsubst geiser-syntax--normalize (vars)
+  (mapcar (lambda (i) (if (listp i) (car i) i)) vars))
+
 (defun geiser-syntax--scan-locals (bfs sbfs form partial locals)
-  (flet ((if-symbol (x) (and (symbolp x) x))
-         (if-list (x) (and (listp x) x))
-         (normalize (vars) (mapcar (lambda (i) (if (listp i) (car i) i)) vars)))
-    (let ((form (if (listp form) (normalize form) form)))
-      (cond ((or (null form) (not (listp form))) (normalize locals))
-            ((not (geiser-syntax--binding-form-p bfs sbfs (car form)))
+  (let ((form (if (listp form) (geiser-syntax--normalize form) form)))
+    (cond ((or (null form) (not (listp form)))
+           (geiser-syntax--normalize locals))
+          ((not (geiser-syntax--binding-form-p bfs sbfs (car form)))
+           (geiser-syntax--scan-locals bfs sbfs
+                                       (car (last form)) partial locals))
+          (t
+           (let* ((head (car form))
+                  (name (geiser-syntax--if-symbol (cadr form)))
+                  (names (if name (geiser-syntax--if-list (caddr form))
+                           (geiser-syntax--if-list (cadr form))))
+                  (rest (if name (cdddr form) (cddr form)))
+                  (use-names (or rest
+                                 (not partial)
+                                 (geiser-syntax--binding-form*-p sbfs
+                                                                 head))))
+             (when name (push name locals))
+             (when use-names (dolist (n names) (push n locals)))
+             (dolist (f (butlast rest))
+               (when (and (listp f) (eq (car f) 'define))
+                 (push (cadr f) locals)))
              (geiser-syntax--scan-locals bfs sbfs
-                                         (car (last form)) partial locals))
-            (t
-             (let* ((head (car form))
-                    (name (if-symbol (cadr form)))
-                    (names (if name (if-list (caddr form))
-                             (if-list (cadr form))))
-                    (rest (if name (cdddr form) (cddr form)))
-                    (use-names (or rest
-                                   (not partial)
-                                   (geiser-syntax--binding-form*-p sbfs
-                                                                   head))))
-               (when name (push name locals))
-               (when use-names (dolist (n names) (push n locals)))
-               (dolist (f (butlast rest))
-                 (when (and (listp f) (eq (car f) 'define))
-                   (push (cadr f) locals)))
-               (geiser-syntax--scan-locals bfs sbfs
-                                           (car (last (or rest names)))
-                                           partial
-                                           locals)))))))
+                                         (car (last (or rest names)))
+                                         partial
+                                         locals))))))
 
 (defun geiser-syntax--locals-around-point (bfs sbfs)
   (when (eq major-mode 'scheme-mode)

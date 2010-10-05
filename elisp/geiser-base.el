@@ -14,8 +14,6 @@
 
 ;;; Emacs compatibility:
 
-(require 'cl)
-
 (eval-after-load "ring"
   '(when (not (fboundp 'ring-member))
      (defun ring-member (ring item)
@@ -23,15 +21,6 @@
          (dotimes (ind (ring-length ring) nil)
            (when (equal item (ring-ref ring ind))
              (throw 'found ind)))))))
-
-(when (not (fboundp 'completion-table-dynamic))
-  (defun completion-table-dynamic (fun)
-    (lexical-let ((fun fun))
-      (lambda (string pred action)
-        (with-current-buffer (let ((win (minibuffer-selected-window)))
-                               (if (window-live-p win) (window-buffer win)
-                                 (current-buffer)))
-          (complete-with-action action (funcall fun string) string pred))))))
 
 (when (not (fboundp 'looking-at-p))
   (defsubst looking-at-p (regexp)
@@ -75,6 +64,11 @@
        (message ,msg))))
 
 (put 'geiser--save-msg 'lisp-indent-function 0)
+
+(defun geiser--del-dups (lst)
+  (let (result)
+    (dolist (e lst (nreverse result))
+      (unless (member e result) (push e result)))))
 
 
 (provide 'geiser-base)

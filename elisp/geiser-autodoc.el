@@ -148,7 +148,7 @@ when `geiser-autodoc-display-module-p' is on."
         (erase-buffer)
         (insert (format "(%s" (geiser-autodoc--id-name proc module)))
         (let ((pos (or (cadr desc) 0))
-              (prev (caddr desc)))
+              (prev (car (cddr desc))))
           (dolist (a args)
             (when (not (member a (cdr (member a args))))
               (geiser-autodoc--insert-args a pos prev)
