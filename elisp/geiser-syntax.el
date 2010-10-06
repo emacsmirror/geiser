@@ -214,6 +214,9 @@
 
 ;;; Code parsing:
 
+(defsubst geiser-syntax--symbol-at-point ()
+  (and (not (nth 8 (syntax-ppss))) (symbol-at-point)))
+
 (defsubst geiser-syntax--skip-comment/string ()
   (let ((pos (nth 8 (syntax-ppss))))
     (goto-char (or pos (point)))
@@ -226,8 +229,8 @@
   (if (cdr (last p)) (1+ (safe-length p)) (length p)))
 
 (defun geiser-syntax--scan-sexps (&optional begin)
-  (let* ((fst (symbol-at-point))
-         (smth (or fst (not (looking-at-p "[\\s \\s)\\s>\\s<\n]"))))
+  (let* ((fst (geiser-syntax--symbol-at-point))
+         (smth (or fst (not (looking-at-p "[\s \s)\s>\s<\n]"))))
          (path (and fst `((,fst 0)))))
     (save-excursion
       (geiser-syntax--skip-comment/string)
