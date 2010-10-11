@@ -259,8 +259,10 @@ interacting with the Geiser REPL is at your disposal.
    geiser-completion--complete-module)
   ("Edit module" ("\C-c\C-e\C-m" "\C-c\C-em") geiser-edit-module)
   --
-  ("Callers" ((kbd "C-c <")) geiser-xref-callers)
-  ("Callees" ((kbd "C-c >")) geiser-xref-callees)
+  ("Callers" ((kbd "C-c <")) geiser-xref-callers
+   :enable (and (geiser-eval--supported-p 'callers) (symbol-at-point)))
+  ("Callees" ((kbd "C-c >")) geiser-xref-callees
+   :enable (and (geiser-eval--supported-p 'callees) (symbol-at-point)))
   --
   (mode "Smart TAB mode" nil geiser-smart-tab-mode)
   --

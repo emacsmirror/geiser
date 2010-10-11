@@ -52,6 +52,9 @@ include macroexpand, completions, module-completions, find-file,
 symbol-location, module-location, symbol-documentation,
 module-exports, autodoc, callers, callees and generic-methods.")
 
+(defun geiser-eval--supported-p (feat)
+  (not (memq feat geiser-eval--unsupported)))
+
 (defsubst geiser-eval--form (proc)
   (when (and geiser-eval--unsupported (memq proc geiser-eval--unsupported))
     (error "Sorry, the %s scheme implementation does not support Geiser's %s"
