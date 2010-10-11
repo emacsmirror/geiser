@@ -35,14 +35,15 @@
 (autoload 'geiser "geiser-repl"
   "Start a Geiser REPL, or switch to a running one." t)
 
-(autoload 'run-geiser "geiser-repl"
-  "Start a Geiser REPL." t)
+(autoload 'run-geiser "geiser-repl" "Start a Geiser REPL." t)
 
-(autoload 'switch-to-geiser "geiser-guile"
+(autoload 'geiser-connect "geiser-repl"
+  "Start a Geiser REPL connected to a remote server." t)
+
+(autoload 'switch-to-geiser "geiser-repl"
   "Switch to a running one Geiser REPL." t)
 
-(autoload 'run-guile "geiser-guile"
-  "Start a Geiser Guile REPL, or switch to a running one." t)
+(autoload 'run-guile "geiser-guile" "Start a Geiser Guile REPL." t)
 
 (autoload 'switch-to-guile "geiser-guile"
   "Start a Geiser Guile REPL, or switch to a running one." t)
