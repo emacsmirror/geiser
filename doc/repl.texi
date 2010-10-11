@@ -45,6 +45,20 @@ evaluation when they're complete, and will indent new lines properly
 until then. It will also keep track of your input, maintaining a history
 file that will be reloaded whenever you restart the @repl{}.
 
+@cindex remote REPL
+@cindex connect to server
+If you use Guile, there's an alternative way of starting a Geiser REPL:
+you can connect to a remote Guile process, provided the latter is
+running a REPL server. For that to happen, you just need to start your
+Guile process (outside Emacs) passing to it the flag @code{--listen}.
+Then, come back to Emacs and execute @kbd{M-x connect-to-guile}. You'll
+be asked for a host and a port, with suitable default values (Guile's
+@code{--listen} flag accepts an optional port as argument (as in
+@code{--listen=1969}), if you don't want to use the default). And voila,
+you'll have a Geiser REPL that is served by the remote Guile process in
+a dedicated thread, meaning that your Guile can go on doing whatever it
+was doing while you tinker with it from Emacs.
+
 Nothing that fanciful this far, but there's more to Geiser's @repl{}. On
 to the next section!
 
