@@ -48,6 +48,9 @@
 (autoload 'switch-to-guile "geiser-guile"
   "Start a Geiser Guile REPL, or switch to a running one." t)
 
+(autoload 'connect-to-guile "geiser-guile"
+  "Connect to a remote Geiser Guile REPL." t)
+
 (autoload 'run-racket "geiser-racket" "Start a Geiser Racket REPL." t)
 
 (autoload 'run-gracket "geiser-racket" "Start a Geiser GRacket REPL." t)
