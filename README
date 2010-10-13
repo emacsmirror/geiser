@@ -20,6 +20,10 @@
       evaluation/compilation error in an Emacs' compilation-mode
       buffer).
 
+   NOTE: if you're not in a hurry, Geiser's website,
+   http://www.nongnu.org/geiser/ contains a nicer manual, also
+   included in Geiser tarballs as a texinfo file (doc/geiser.info).
+
 * Supported scheme implementations
 
     - Guile 2.0 (not released yet: use the latest git master branch).
@@ -78,8 +82,8 @@
 
       M-x customize-group RET geiser RET
 
-  In particular, customize `geiser-repl-<impl>-binary' (in
-  geiser-repl), which should point to an executable in your path.
+  In particular, customize `geiser-<impl>-binary', which should point
+  to an executable in your path.
 
   To start a REPL, M-x geiser.
 
