@@ -119,7 +119,9 @@ or following links in error buffers.")
     (cons (current-buffer) (point))))
 
 (defsubst geiser-edit--try-edit (symbol ret &optional method)
-  (geiser-edit--try-edit-location symbol (geiser-eval--retort-result ret) method))
+  (geiser-edit--try-edit-location symbol
+                                  (geiser-eval--retort-result ret)
+                                  method))
 
 
 ;;; Links
