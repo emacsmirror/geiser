@@ -463,6 +463,14 @@ you're at the end of the following partial expression:
 and press @kbd{M-@key{TAB}}, one of the possible completions will be
 @code{definite}.
 
+@cindex smart tabs
+If you find the @kbd{M} modifier annoying, you always have the option to
+activate @code{geiser-smart-tab-mode}, which will make the @key{TAB} key
+double duty as the regular Emacs indentation command (when the cursor is
+not near a symbol) and Geiser's completion function. If you want this
+smarty pants mode always on in Scheme buffers, customize
+@code{geiser-mode-smart-tab-p} to @code{t}.
+
 @cindex completion for module names
 Geiser also knows how to complete module names, but it's not yet smart
 enough to infer by context that that's what you want. Instead, you must
