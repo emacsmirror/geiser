@@ -208,7 +208,9 @@ If that's still not enough, Geiser can jump, via @kbd{M-.}, to the
 symbol's definition. A buffer with the corresponding file will pop up,
 with its point resting upon the identifier's defining form. When you're
 done inspecting, @kbd{M-,} will bring you back to where you were. As we
-will see, these commands are also available in scheme buffers.
+will see, these commands are also available in scheme buffers. @kbd{M-.}
+also works for modules: if your point is on an unambiguous module name,
+the file where it's defined will be opened for you.
 
 @cindex module exports
 @anchor{repl-mod}
