@@ -20,9 +20,9 @@
       evaluation/compilation error in an Emacs' compilation-mode
       buffer).
 
-   NOTE: if you're not in a hurry, Geiser's website,
-   http://www.nongnu.org/geiser/ contains a nicer manual, also
-   included in Geiser tarballs as a texinfo file (doc/geiser.info).
+   NOTE: if you're not in a hurry, [[http://www.nongnu.org/geiser/][Geiser's website]] contains a nicer
+   manual, also included in Geiser tarballs as a texinfo file
+   (doc/geiser.info).
 
 * Supported scheme implementations
 
