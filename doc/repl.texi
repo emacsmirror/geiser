@@ -57,7 +57,12 @@ be asked for a host and a port, with suitable default values (Guile's
 @code{--listen=1969}), if you don't want to use the default). And voila,
 you'll have a Geiser REPL that is served by the remote Guile process in
 a dedicated thread, meaning that your Guile can go on doing whatever it
-was doing while you tinker with it from Emacs.
+was doing while you tinker with it from Emacs. Note, however,
+that all Guile threads share the heap, so that you'll be able to
+interact with those other threads in the running scheme from Emacs in a
+variety of ways. For starters, all you (re)defintions will be visible
+everywhere. That's dangerous, but will come in handy when you need to
+debug your running webserver.
 
 Nothing that fanciful this far, but there's more to Geiser's @repl{}. On
 to the next section!
