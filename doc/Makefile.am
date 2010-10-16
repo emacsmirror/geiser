@@ -12,7 +12,6 @@
 SUFFIXES = .html
 EXTRA_DIST = geiser.css site.conf web.texi
 
-
 info_TEXINFOS = geiser.texi
 geiser_TEXINFOS = \
   macros.texi \
@@ -21,6 +20,7 @@ geiser_TEXINFOS = \
   install.texi \
   repl.texi \
   fun.texi \
+  cheat.texi \
   index.texi
 
 output_dir=$(top_builddir)/doc/html

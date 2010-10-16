@@ -46,13 +46,12 @@ The document was typeset with
 @node Top, Introduction, (dir), (dir)
 @top Geiser
 
-@include top.texi
-
 @menu
 * Introduction::
 * Installation::
 * The REPL::
 * Fun between the parens::
+* Cheat sheet::
 * Index::
 
 @detailmenu
@@ -97,8 +96,16 @@ Fun between the parens
 * Jumping around::
 * Geiser writes for you::
 
+Cheat sheet
+
+* Scheme buffers::
+* REPL::
+* Documentation browser::
+
 @end detailmenu
 @end menu
+
+@include top.texi
 
 @insertcopying
 
@@ -108,6 +115,7 @@ Fun between the parens
 @include install.texi
 @include repl.texi
 @include fun.texi
+@include cheat.texi
 @include index.texi
 
 @bye

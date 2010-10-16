@@ -13,6 +13,7 @@
 * Installation::
 * The REPL::
 * Fun between the parens::
+* Cheat sheet::
 * Index::
 @end menu
 
@@ -33,6 +34,7 @@ list</a>&nbsp;
 @include install.texi
 @include repl.texi
 @include fun.texi
+@include cheat.texi
 @include index.texi
 
 @bye

@@ -121,10 +121,8 @@
     | C-c C-m x           | Macro-expand definition around point            |
     | C-c C-m e           | Macro-expand sexp before point                  |
     | C-c C-m r           | Marcro-expand region                            |
-    | C-u C-c C-m [x,e,r] | (With prefix, macro expansions are recursive)   |
     |---------------------+-------------------------------------------------|
     | C-c C-k             | Compile and load current file                   |
-    | C-c C-l             | Load current file                               |
     |---------------------+-------------------------------------------------|
     | C-c C-d d           | See documentation for identifier at point       |
     | C-c C-d m           | See a list of a module's exported identifiers   |
@@ -153,7 +151,6 @@
     |-------------+----------------------------------------------------|
     | C-c C-m     | Set current module                                 |
     | C-c C-i     | Import module into current namespace               |
-    | C-c C-l     | Load scheme file                                   |
     |-------------+----------------------------------------------------|
     | C-c C-d C-d | See documentation for symbol at point              |
     | C-c C-d C-m | See documentation for module                       |
@@ -179,5 +176,5 @@
 
 *** In backtrace (evaluation/compile result) buffers:
 
-    - TAB, M-TAB for error navigation.
+    - M-g n, M-g p, C-x ` for error navigation.
     - q to bury buffer.

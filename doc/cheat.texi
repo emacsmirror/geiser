@@ -1,0 +1,178 @@
+@node Cheat sheet, Index, Fun between the parens, Top
+@chapter Cheat sheet
+
+@menu
+* Scheme buffers::
+* REPL::
+* Documentation browser::
+@end menu
+
+@node Scheme buffers, REPL, Cheat sheet, Cheat sheet
+@section Scheme buffers
+
+@multitable @columnfractions .20 .4 .4
+@headitem Key @tab Command @tab Description
+@item C-c C-z
+@tab geiser-mode-switch-to-repl
+@tab Switch to REPL
+@item C-u C-c C-z
+@tab geiser-mode-switch-to-repl
+@tab Switch to REPL and current module
+@item C-c C-s
+@tab geiser-set-scheme
+@tab Specify Scheme implementation for buffer
+@item @tab @tab
+@item M-.
+@tab geiser-edit-symbol-at-point
+@tab Go to definition of identifier at point
+@item M-,
+@tab geiser-pop-symbol-stack
+@tab Go back to where M-. was last invoked
+@item C-c C-e C-m
+@tab geiser-edit-module
+@tab Ask for a module and open its file
+@item @tab @tab
+@item C-M-x
+@tab geiser-eval-definition
+@tab Eval definition around point
+@item C-c M-e
+@tab geiser-eval-definition-and-go
+@tab Eval definition around point and switch to REPL
+@item C-x C-e
+@tab geiser-eval-last-sexp
+@tab Eval sexp before point
+@item C-c C-r
+@tab geiser-eval-region
+@tab Eval region
+@item C-c M-r
+@tab geiser-eval-region-and-go
+@tab Eval region and switch to REPL
+@item @tab @tab
+@item C-c C-m C-x
+@tab geiser-expand-definition
+@tab Macro-expand definition around point
+@item C-c C-m C-e
+@tab geiser-expand-last-sexp
+@tab Macro-expand sexp before point
+@item C-c C-m C-r
+@tab geiser-expand-region
+@tab Macro-expand region
+@item @tab @tab
+@item C-c C-k
+@tab geiser-compile-current-buffer
+@tab Compile and load current file
+@item M-g n, C-x `
+@tab next-error
+@tab Jump to the location of next error
+@item M-g p
+@tab previous-error
+@tab Jump to the location of previous error
+@item @tab @tab
+@item C-c C-d C-d
+@tab geiser-doc-symbol-at-point
+@tab See documentation for identifier at point
+@item C-c C-d C-m
+@tab geiser-doc-module
+@tab See a list of a module's exported identifiers
+@item C-c C-d C-a
+@tab geiser-autodoc-mode
+@tab Toggle autodoc mode
+@item @tab @tab
+@item C-c<
+@tab geiser-xref-callers
+@tab Show callers of procedure at point
+@item C-c>
+@tab geiser-xref-callees
+@tab Show callees of procedure at point
+@item @tab @tab
+@item M-TAB
+@tab geiser-completion--complete-symbol
+@tab Complete identifier at point
+@item M-`, C-.
+@tab geiser-completion--complete-module
+@tab Complete module name at point
+@end multitable
+
+@node REPL, Documentation browser, Scheme buffers, Cheat sheet
+@section REPL
+
+@multitable @columnfractions .20 .4 .4
+@headitem Key @tab Command @tab Description
+@item C-c C-z
+@tab switch-to-geiser
+@tab Start Scheme REPL, or jump to previous buffer
+@item C-c C-q
+@tab geiser-repl-exit
+@tab Kill Scheme process
+@item C-c C-k
+@tab geiser-repl-nuke
+@tab Nuke REPL: use it if the REPL becomes unresponsive
+@item M-.
+@tab geiser-edit-symbol-at-point
+@tab Edit identifier at point
+@item TAB, M-TAB
+@tab geiser-completion--complete-symbol
+@tab Complete identifier at point
+@item M-`, C-.
+@tab geiser-completion--complete-module
+@tab Complete module name at point
+@item M-p, M-n
+@tab (comint commands)
+@tab Prompt history, matching current prefix
+@item C-c M-p, C-c M-n
+@tab (comint commands)
+@tab Previous/next prompt inputs
+@item C-c C-m
+@tab switch-to-geiser-module
+@tab Set current module
+@item C-c C-i
+@tab geiser-repl-import-module
+@tab Import module into current namespace
+@item C-c C-d C-d
+@tab geiser-doc-symbol-at-point
+@tab See documentation for symbol at point
+@item C-c C-d C-m
+@tab geiser-repl--doc-module
+@tab See documentation for module
+@item C-c C-d C-a
+@tab geiser-autodoc-mode
+@tab Toggle autodoc mode
+@end multitable
+
+@node Documentation browser,  , REPL, Cheat sheet
+@section Documentation browser
+
+@multitable @columnfractions .20 .4 .4
+@headitem Key @tab Command @tab Description
+@item n, f
+@tab geiser-doc-next @tab Next page
+@item p, b
+@tab geiser-doc-previous @tab Previous page
+@item TAB, S-TAB
+@tab forward-button, backwards-button
+@tab Next/previous link
+@item k
+@tab geiser-doc-kill-page
+@tab Kill current page and go to previous or next
+@item g, r
+@tab geiser-doc-refresh
+@tab Refresh page
+@item c
+@tab geiser-doc-clean-history
+@tab Clear browsing history
+@item ., M-.
+@tab geiser-doc-edit-symbol-at-point
+@tab Edit identifier at point
+@item z
+@tab geiser-doc-switch-to-repl
+@tab Switch to REPL
+@item q
+@tab View-quit
+@tab Bury buffer
+@end multitable
+
+@flushright
+.
+@end flushright
+
+

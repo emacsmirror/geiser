@@ -1,4 +1,4 @@
-@node Fun between the parens, Index, The REPL, Top
+@node Fun between the parens, Cheat sheet, The REPL, Top
 @chapter Fun between the parens
 
 A good @repl{} is a must, but just about half the story of a good Scheme
