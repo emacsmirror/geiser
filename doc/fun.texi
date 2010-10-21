@@ -464,7 +464,7 @@ you're at the end of the following partial expression:
 @end example
 
 and press @kbd{M-@key{TAB}}, one of the possible completions will be
-@code{definite}.
+@code{default}.
 
 @cindex smart tabs
 If you find the @kbd{M} modifier annoying, you always have the option to
