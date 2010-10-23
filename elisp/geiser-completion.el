@@ -145,7 +145,7 @@ terminates a current completion."
  "A list of forms introducing nested local bindings, a la let*.")
 
 (defsubst geiser-completion--locals ()
-  (mapcar 'symbol-name
+  (mapcar (lambda (s) (and (symbolp s) (symbol-name s)))
           (geiser-syntax--locals-around-point
            geiser-completion--binding-forms
            geiser-completion--binding-forms*)))

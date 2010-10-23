@@ -261,7 +261,8 @@
     (nreverse path)))
 
 (defsubst geiser-syntax--binding-form-p (bfs sbfs f)
-  (or (memq f '(define define* lambda let let* letrec parameterize))
+  (or (memq f '(define define* define-syntax define-syntax-rule
+                lambda let let* letrec parameterize))
       (memq f bfs)
       (memq f sbfs)))
 
