@@ -51,7 +51,8 @@ can stop reading now and, instead, discover Geiser's joys by yourself.
 I've tried to make Geiser as self-documenting as any self-respecting
 Emacs package should be. If you follow this route, make sure to take a
 look at Geiser's customization buffers (@kbd{M-x customize-group
-@key{RET} geiser}): there's lot of fine tunning available there.
+@key{RET} geiser}): there's lot of fine tunning available there. You
+might also want to take a glance at the @ref{Cheat sheet}.
 
 Since @i{geiser-mode} is a minor mode, you can toggle it with
 @kbd{M-x geiser-mode}, and control its activation in hooks with the

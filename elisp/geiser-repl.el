@@ -514,6 +514,7 @@ With a prefix argument, force exit by killing the scheme process."
   (setq geiser-autodoc--inhibit-function 'geiser-con--is-debugging)
   (geiser-company--setup geiser-repl-company-p)
   (setq geiser-smart-tab-mode-string "")
+  (geiser-smart-tab-mode t)
   ;; enabling compilation-shell-minor-mode without the annoying highlighter
   (compilation-setup t))
 
