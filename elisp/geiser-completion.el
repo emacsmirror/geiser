@@ -153,10 +153,10 @@ terminates a current completion."
 (defun geiser-completion--symbol-list (prefix)
   (geiser--del-dups
    (append (all-completions prefix (geiser-completion--locals))
-           (geiser-eval--send/result `(:eval ((:ge completions) ,prefix))))))
+           (geiser-eval--send/result `(:eval (:ge completions ,prefix))))))
 
 (defsubst geiser-completion--module-list (prefix)
-  (geiser-eval--send/result `(:eval ((:ge module-completions) ,prefix))))
+  (geiser-eval--send/result `(:eval (:ge module-completions ,prefix))))
 
 (defvar geiser-completion--symbol-list-func
   (completion-table-dynamic 'geiser-completion--symbol-list))

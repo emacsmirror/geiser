@@ -29,7 +29,7 @@
 
 (defun geiser-compile--display-result (title ret)
   (if (not (geiser-eval--retort-error ret))
-      (message "%s %s" title (or (geiser-eval--retort-result ret) "done."))
+      (message "%s done" title)
     (message ""))
   (geiser-debug--display-retort title ret))
 

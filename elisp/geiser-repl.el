@@ -481,8 +481,7 @@ With a prefix argument, force exit by killing the scheme process."
         (compilation-forget-errors))
       (comint-send-input)
       (when (string-match "^\\s-*$" intxt)
-        (comint-send-string proc
-                            (geiser-eval--scheme-str '((:ge no-values))))
+        (comint-send-string proc (geiser-eval--scheme-str '(:ge no-values)))
         (comint-send-string proc "\n")))))
 
 (defun geiser-repl--maybe-send ()

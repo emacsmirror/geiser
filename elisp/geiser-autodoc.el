@@ -70,7 +70,7 @@ when `geiser-autodoc-display-module-p' is on."
                   (push f missing)))))
           (unless (or cached keep-cached) (geiser-autodoc--clean-cache))
           (when missing
-            (let ((res (geiser-eval--send/result `(:eval ((:ge autodoc)
+            (let ((res (geiser-eval--send/result `(:eval (:ge autodoc
                                                           (quote ,missing)))
                                                  500)))
               (when res

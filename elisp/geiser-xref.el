@@ -111,7 +111,7 @@
 (defun geiser-xref--fetch-xrefs (ask kind rkind proc)
   (let* ((name (geiser-xref--read-name ask (format "%s: " (capitalize kind))))
          (res (and name (geiser-eval--send/result
-                         `(:eval ((:ge ,proc) (quote (:scm ,name))))))))
+                         `(:eval (:ge ,proc (quote (:scm ,name))))))))
     (message "Retrieving %ss list for '%s'..." rkind name)
     (if (or (not res) (not (listp res)))
         (message "No %ss found for '%s'" rkind name)

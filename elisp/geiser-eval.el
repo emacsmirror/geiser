@@ -53,42 +53,46 @@ symbol-location, module-location, symbol-documentation,
 module-exports, autodoc, callers, callees and generic-methods.")
 
 (defun geiser-eval--supported-p (feat)
-  (not (memq feat geiser-eval--unsupported)))
+  (or (not geiser-eval--unsupported)
+      (not (memq feat geiser-eval--unsupported))))
 
-(defsubst geiser-eval--form (proc)
-  (when (and geiser-eval--unsupported (memq proc geiser-eval--unsupported))
+(defsubst geiser-eval--form (&rest args)
+  (when (not (geiser-eval--supported-p (car args)))
     (error "Sorry, the %s scheme implementation does not support Geiser's %s"
-           geiser-impl--implementation proc))
-  (funcall geiser-eval--geiser-procedure-function proc))
+           geiser-impl--implementation (car args)))
+  (apply geiser-eval--geiser-procedure-function args))
 
 
 ;;; Code formatting:
 
 (defsubst geiser-eval--eval (code)
-  (geiser-eval--scheme-str
-   `(,(geiser-eval--form 'eval) (quote ,(nth 0 code))
-     (:module ,(nth 1 code)))))
+  (geiser-eval--form 'eval
+                     (geiser-eval--module (nth 1 code))
+                     (geiser-eval--scheme-str (nth 0 code))))
 
 (defsubst geiser-eval--comp (code)
-  (geiser-eval--scheme-str
-   `(,(geiser-eval--form 'compile)
-     (quote ,(nth 0 code)) (:module ,(nth 1 code)))))
+  (geiser-eval--form 'compile
+                     (geiser-eval--module (nth 1 code))
+                     (geiser-eval--scheme-str (nth 0 code))))
 
 (defsubst geiser-eval--load-file (file)
-  (geiser-eval--scheme-str `(,(geiser-eval--form 'load-file) ,file)))
+  (geiser-eval--form 'load-file
+                     (geiser-eval--scheme-str file)))
 
 (defsubst geiser-eval--comp-file (file)
-  (geiser-eval--scheme-str `(,(geiser-eval--form 'compile-file) ,file)))
+  (geiser-eval--form 'compile-file
+                     (geiser-eval--scheme-str file)))
 
 (defsubst geiser-eval--module (code)
   (geiser-eval--scheme-str
    (cond ((or (null code) (eq code :t) (eq code :buffer))
-          (list 'quote (funcall geiser-eval--get-module-function)))
+          (funcall geiser-eval--get-module-function))
          ((or (eq code :repl) (eq code :f)) :f)
-         (t (list 'quote (funcall geiser-eval--get-module-function code))))))
+         (t (funcall geiser-eval--get-module-function code)))))
 
-(defsubst geiser-eval--ge (proc)
-  (geiser-eval--scheme-str (geiser-eval--form proc)))
+(defsubst geiser-eval--ge (proc args)
+  (apply 'geiser-eval--form (cons proc
+                                  (mapcar 'geiser-eval--scheme-str args))))
 
 (defun geiser-eval--scheme-str (code)
   (cond ((null code) "'()")
@@ -102,7 +106,8 @@ module-exports, autodoc, callers, callees and generic-methods.")
                ((eq (car code) :comp-file)
                 (geiser-eval--comp-file (cadr code)))
                ((eq (car code) :module) (geiser-eval--module (cadr code)))
-               ((eq (car code) :ge) (geiser-eval--ge (cadr code)))
+               ((eq (car code) :ge) (geiser-eval--ge (cadr code)
+                                                     (cddr code)))
                ((eq (car code) :scm) (cadr code))
                (t (concat "("
                           (mapconcat 'geiser-eval--scheme-str code " ")
