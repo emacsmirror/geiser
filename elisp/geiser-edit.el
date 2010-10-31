@@ -205,8 +205,10 @@ With prefix, asks for the symbol to edit."
                      (geiser-completion--read-symbol "Edit symbol: ")))
          (cmd `(:eval (:ge symbol-location ',symbol)))
          (marker (point-marker)))
-    (geiser-edit--try-edit symbol (geiser-eval--send/wait cmd))
-    (when marker (ring-insert find-tag-marker-ring marker))))
+    (condition-case nil
+        (progn (geiser-edit--try-edit symbol (geiser-eval--send/wait cmd))
+               (when marker (ring-insert find-tag-marker-ring marker)))
+      (error (geiser-edit-module-at-point)))))
 
 (defun geiser-pop-symbol-stack ()
   "Pop back to where \\[geiser-edit-symbol-at-point] was last invoked."
@@ -220,6 +222,16 @@ With prefix, asks for the symbol to edit."
   (interactive (list (geiser-completion--read-module)))
   (let ((cmd `(:eval (:ge module-location '(:module ,module)))))
     (geiser-edit--try-edit module (geiser-eval--send/wait cmd) method)))
+
+
+(defun geiser-edit-module-at-point ()
+  "Opens a new window visiting the module at point."
+  (interactive)
+  (let ((marker (point-marker)))
+    (geiser-edit-module (or (geiser-completion--module-at-point)
+                            (geiser-completion--read-module)))
+    (when marker (ring-insert find-tag-marker-ring marker))))
+
 
 
 (provide 'geiser-edit)

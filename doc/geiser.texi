@@ -52,19 +52,11 @@ The document was typeset with
 * The REPL::
 * Fun between the parens::
 * Cheat sheet::
+* No hacker is an island::
 * Index::
 
 @detailmenu
  --- The Detailed Node Listing ---
-
-Geiser
-
-* Introduction::
-* Installation::
-* The REPL::
-* Fun between the parens::
-* Index::
-
 
 Introduction
 
@@ -116,6 +108,7 @@ Cheat sheet
 @include repl.texi
 @include fun.texi
 @include cheat.texi
+@include thanks.texi
 @include index.texi
 
 @bye

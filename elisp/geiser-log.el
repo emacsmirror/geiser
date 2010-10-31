@@ -1,6 +1,6 @@
 ;; geiser-log.el -- logging utilities
 
-;; Copyright (C) 2009 Jose Antonio Ortega Ruiz
+;; Copyright (C) 2009, 2010 Jose Antonio Ortega Ruiz
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the Modified BSD License. You should
@@ -28,11 +28,11 @@
 (defvar geiser-log--max-buffer-size 32000
   "Maximum size of the Geiser messages log.")
 
-(defvar geiser-log--max-message-size 512
+(defvar geiser-log--max-message-size 2048
   "Maximum size of individual Geiser log messages.")
 
-(defvar geiser-log--verbose-p t
-  "Log level for Geiser messages")
+(defvar geiser-log-verbose-p nil
+  "Log purely informational messages. Useful for debugging.")
 
 (defvar geiser-log--inhibit-p nil
   "Set this to t to inhibit all log messages")
@@ -61,7 +61,9 @@
 (defun geiser-log--msg (type &rest args)
   (unless geiser-log--inhibit-p
     (geiser-log--with-buffer
-      (insert (geiser--shorten-str (format "\n%s: %s\n" type (apply 'format args))
+      (goto-char (point-max))
+      (insert (geiser--shorten-str (format "\n%s: %s\n" type
+                                           (apply 'format args))
                                    geiser-log--max-message-size)))))
 
 (defsubst geiser-log--warn (&rest args)
@@ -71,16 +73,23 @@
   (apply 'geiser-log--msg 'ERROR args))
 
 (defsubst geiser-log--info (&rest args)
-  (when geiser-log--verbose-p
+  (when geiser-log-verbose-p
     (apply 'geiser-log--msg 'INFO args) ""))
 
 
 ;;; User commands:
 
-(defun geiser-show-logs ()
-  "Show Geiser log messages."
-  (interactive)
+(defun geiser-show-logs (&optional arg)
+  "Show Geiser log messages.
+With prefix, activates all logging levels."
+  (interactive "P")
+  (when arg (setq geiser-log-verbose-p t))
   (geiser-log--pop-to-buffer))
+
+(defun geiser-log-clear ()
+  "Clean all logs."
+  (interactive)
+  (geiser-log--with-buffer (delete-region (point-min) (point-max))))
 
 
 (provide 'geiser-log)

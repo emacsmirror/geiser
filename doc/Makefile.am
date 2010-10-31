@@ -21,6 +21,7 @@ geiser_TEXINFOS = \
   repl.texi \
   fun.texi \
   cheat.texi \
+  thanks.texi \
   index.texi
 
 output_dir=$(top_builddir)/doc/html
