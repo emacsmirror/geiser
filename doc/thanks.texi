@@ -1,0 +1,35 @@
+@node No hacker is an island, Index, Cheat sheet, Top
+@chapter No hacker is an island
+
+Andy Wingo, Geiser's first user, has been a continuous source of
+encouragement and suggestions, and keeps improving Guile and heeding
+my feature requests.
+
+The nice thing about collaborating with Andreas Rottmann over all
+these years is that he will not only make your project better with
+insightful comments and prodding: he'll send you patches galore too.
+
+Ludovic Courtès, #geiser's citizen no. 1, joined the fun after a
+while, and has since then been a continuous source of encouragement,
+ideas and bug reports.
+
+Eduardo Cavazos' contagious enthusiasm has helped in many ways to keep
+Geiser alive, and he's become its best evangelist in R6RS circles.
+
+Eli Barzilay took the time to play with an early alpha and made many
+valuable suggestions, besides answering all my 'how do you in PLT'
+questions.
+
+Matthew Flatt, Robby Findler and the rest of the PLT team did not only
+answer my inquiries, but provided almost instant fixes to the few
+issues i found.
+
+Thanks also to the PLT and Guile communities, for showing me that
+Geiser was not only possible, but a pleasure to hack on. And to the
+Slime hackers, who led the way.
+
+
+@c Local Variables:
+@c mode: texinfo
+@c TeX-master: "geiser"
+@c End:
