@@ -214,6 +214,11 @@ we're looking for a module name.")
 (defsubst geiser-completion--symbol-begin (module)
   (funcall geiser-completion--symbol-begin-function module))
 
+(defun geiser-completion--module-at-point ()
+  (save-excursion
+    (goto-char (geiser-completion--symbol-begin t))
+    (ignore-errors (thing-at-point 'sexp))))
+
 (defsubst geiser-completion--prefix (module)
   (buffer-substring-no-properties (geiser-completion--symbol-begin module)
                                   (point)))
