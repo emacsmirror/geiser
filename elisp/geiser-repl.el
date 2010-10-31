@@ -463,13 +463,20 @@ With a prefix argument, force exit by killing the scheme process."
     (insert "\n")
     (lisp-indent-line)))
 
+(defun geiser-repl--last-prompt-end ()
+  (if comint-last-prompt-overlay
+      (overlay-end comint-last-prompt-overlay)
+    (save-excursion (geiser-repl--bol) (point))))
+
+(defun geiser-repl--last-prompt-start ()
+  (if comint-last-prompt-overlay
+      (overlay-start comint-last-prompt-overlay)
+    (save-excursion (geiser-repl--bol) (point))))
+
 (defun geiser-repl--nesting-level ()
-  (let ((begin (if comint-last-prompt-overlay
-                   (overlay-end comint-last-prompt-overlay)
-                 (save-excursion (geiser-repl--bol) (point)))))
-    (save-restriction
-      (narrow-to-region begin (point-max))
-      (geiser-syntax--nesting-level))))
+  (save-restriction
+    (narrow-to-region (geiser-repl--last-prompt-end) (point-max))
+    (geiser-syntax--nesting-level)))
 
 (defun geiser-repl--send-input ()
   (let* ((proc (get-buffer-process (current-buffer)))
@@ -487,13 +494,14 @@ With a prefix argument, force exit by killing the scheme process."
 (defun geiser-repl--maybe-send ()
   (interactive)
   (let ((p (point)))
-    (end-of-line)
-    (if (<= (geiser-repl--nesting-level) 0)
-        (geiser-repl--send-input)
-      (goto-char p)
-      (if geiser-repl-auto-indent-p
-          (geiser-repl--newline-and-indent)
-        (insert "\n")))))
+    (cond ((< p (geiser-repl--last-prompt-start))
+           (ignore-errors (compile-goto-error)))
+          ((progn (end-of-line) (<= (geiser-repl--nesting-level) 0))
+           (geiser-repl--send-input))
+          (t (goto-char p)
+             (if geiser-repl-auto-indent-p
+                 (geiser-repl--newline-and-indent)
+               (insert "\n"))))))
 
 (define-derived-mode geiser-repl-mode comint-mode "REPL"
   "Major mode for interacting with an inferior scheme repl process.
