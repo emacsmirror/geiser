@@ -12,6 +12,7 @@
 (require 'geiser-company)
 (require 'geiser-autodoc)
 (require 'geiser-edit)
+(require 'geiser-completion)
 (require 'geiser-impl)
 (require 'geiser-eval)
 (require 'geiser-connection)
@@ -503,6 +504,12 @@ With a prefix argument, force exit by killing the scheme process."
                  (geiser-repl--newline-and-indent)
                (insert "\n"))))))
 
+(defun geiser-repl--tab (n)
+  (interactive "p")
+  (if (> (point) (geiser-repl--last-prompt-end))
+      (geiser-completion--maybe-complete)
+    (compilation-next-error n)))
+
 (define-derived-mode geiser-repl-mode comint-mode "REPL"
   "Major mode for interacting with an inferior scheme repl process.
 \\{geiser-repl-mode-map}"
@@ -520,8 +527,6 @@ With a prefix argument, force exit by killing the scheme process."
     (geiser--save-msg (geiser-autodoc-mode 1)))
   (setq geiser-autodoc--inhibit-function 'geiser-con--is-debugging)
   (geiser-company--setup geiser-repl-company-p)
-  (setq geiser-smart-tab-mode-string "")
-  (geiser-smart-tab-mode t)
   ;; enabling compilation-shell-minor-mode without the annoying highlighter
   (compilation-setup t))
 
@@ -529,6 +534,7 @@ With a prefix argument, force exit by killing the scheme process."
 (define-key geiser-repl-mode-map "\C-m" 'geiser-repl--maybe-send)
 (define-key geiser-repl-mode-map [return] 'geiser-repl--maybe-send)
 (define-key geiser-repl-mode-map "\C-j" 'geiser-repl--newline-and-indent)
+(define-key geiser-repl-mode-map (kbd "TAB") 'geiser-repl--tab)
 
 (define-key geiser-repl-mode-map "\C-a" 'geiser-repl--bol)
 (define-key geiser-repl-mode-map (kbd "<home>") 'geiser-repl--bol)
