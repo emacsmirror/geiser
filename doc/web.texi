@@ -14,6 +14,7 @@
 * The REPL::
 * Fun between the parens::
 * Cheat sheet::
+* No hacker is an island::
 * Index::
 @end menu
 
@@ -35,6 +36,7 @@ list</a>&nbsp;
 @include repl.texi
 @include fun.texi
 @include cheat.texi
+@include thanks.texi
 @include index.texi
 
 @bye

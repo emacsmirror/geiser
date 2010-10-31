@@ -1,4 +1,4 @@
-@node Cheat sheet, Index, Fun between the parens, Top
+@node Cheat sheet, No hacker is an island, Fun between the parens, Top
 @chapter Cheat sheet
 
 @menu
