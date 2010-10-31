@@ -225,7 +225,7 @@ help (e.g. browse an HTML page) implementing this method.")
 
 (defun geiser-doc--get-module-exports (module)
   (geiser-eval--send/result
-   `(:eval (:ge module-exports (:module ,module)))))
+   `(:eval (:ge module-exports '(:module ,module)))))
 
 (defun geiser-doc-symbol (symbol &optional module impl)
   (let ((module (or module (geiser-eval--get-module)))
