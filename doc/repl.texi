@@ -222,7 +222,7 @@ identifiers exported by a given module: all you need to do is press
 
 The list of exported bindings is shown in a buffer belonging to Geiser's
 documentation browser, of which more details are given in forthcoming
-sections (but just perusing it's associated key bindings, by any of the
+sections (but just perusing its associated key bindings, by any of the
 methods we've already used for the @repl{}, will give you enough
 information to use it effectively enough).
 
