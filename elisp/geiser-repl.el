@@ -505,10 +505,18 @@ With a prefix argument, force exit by killing the scheme process."
                (insert "\n"))))))
 
 (defun geiser-repl--tab (n)
+  "If we're after the last prompt, complete symbol or indent (if
+there's no symbol at point). Otherwise, go to next error in the REPL
+buffer."
   (interactive "p")
   (if (> (point) (geiser-repl--last-prompt-end))
       (geiser-completion--maybe-complete)
     (compilation-next-error n)))
+
+(defun geiser-repl--previous-error (n)
+  "Go to previous error in the REPL buffer."
+  (interactive "p")
+  (compilation-next-error (- n)))
 
 (define-derived-mode geiser-repl-mode comint-mode "REPL"
   "Major mode for interacting with an inferior scheme repl process.
@@ -535,13 +543,14 @@ With a prefix argument, force exit by killing the scheme process."
 (define-key geiser-repl-mode-map [return] 'geiser-repl--maybe-send)
 (define-key geiser-repl-mode-map "\C-j" 'geiser-repl--newline-and-indent)
 (define-key geiser-repl-mode-map (kbd "TAB") 'geiser-repl--tab)
+(define-key geiser-repl-mode-map [backtab] 'geiser-repl--previous-error)
 
 (define-key geiser-repl-mode-map "\C-a" 'geiser-repl--bol)
 (define-key geiser-repl-mode-map (kbd "<home>") 'geiser-repl--bol)
 
 (geiser-menu--defmenu repl geiser-repl-mode-map
-  ("Complete symbol" ((kbd "TAB") (kbd "M-TAB"))
-   geiser-completion--complete-symbol :enable (symbol-at-point))
+  ("Complete symbol" ((kbd "M-TAB"))
+   geiser-repl--tab :enable (symbol-at-point))
   ("Complete module name" ((kbd "C-.") (kbd "M-`"))
    geiser-completion--complete-module :enable (symbol-at-point))
   ("Edit symbol" "\M-." geiser-edit-symbol-at-point
