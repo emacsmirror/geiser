@@ -224,7 +224,8 @@ The list of exported bindings is shown in a buffer belonging to Geiser's
 documentation browser, of which more details are given in forthcoming
 sections (but just perusing its associated key bindings, by any of the
 methods we've already used for the @repl{}, will give you enough
-information to use it effectively enough).
+information to use it effectively enough). Racketeers will be pleased (i
+hope) to note that contracts are part of the information displayed.
 
 @node Customization and tips,  , Autodoc and friends, The REPL
 @section Customization and tips
