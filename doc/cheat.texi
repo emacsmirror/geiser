@@ -112,12 +112,11 @@
 @tab Edit identifier at point
 @item TAB
 @tab geiser-completion--tab
-@tab Complete identifier at point or indent if none; away from
-last prompt, go to next error in the buffer.
+@tab Complete, indent or go to next error
 @item S-TAB (backtab)
 @tab geiser-completion--previous-error
 @tab Go to previous error in the REPL buffer
-@item TAB, M-TAB
+@item M-TAB
 @tab geiser-completion--complete-symbol
 @tab Complete identifier at point
 @item M-`, C-.
