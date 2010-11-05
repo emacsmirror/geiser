@@ -12,7 +12,7 @@
 * Introduction::
 * Installation::
 * The REPL::
-* Fun between the parens::
+* Between the parens::
 * Cheat sheet::
 * No hacker is an island::
 * Index::

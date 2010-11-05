@@ -1,5 +1,5 @@
-@node Fun between the parens, Cheat sheet, The REPL, Top
-@chapter Fun between the parens
+@node Between the parens, Cheat sheet, The REPL, Top
+@chapter Between the parens
 
 A good @repl{} is a must, but just about half the story of a good Scheme
 hacking environment. Well, perhaps a bit more than a half; but, at any
@@ -23,7 +23,7 @@ process giving you the @repl{}, make those Scheme buffers come to life.
 * Geiser writes for you::
 @end menu
 
-@node Activating Geiser, The source and the REPL, Fun between the parens, Fun between the parens
+@node Activating Geiser, The source and the REPL, Between the parens, Between the parens
 @section Activating Geiser
 
 @cindex geiser-mode
@@ -78,7 +78,7 @@ provides require a @repl{} up and running, preferably corresponding to
 the correct Scheme implementation. In the following section, we'll see
 how to make sure that that's actually the case.
 
-@node The source and the REPL, Documentation helpers, Activating Geiser, Fun between the parens
+@node The source and the REPL, Documentation helpers, Activating Geiser, Between the parens
 @section The source and the REPL
 
 As i've already mentioned a couple of times, @i{geiser-mode} needs a
@@ -201,7 +201,7 @@ Now that we have @code{geiser-mode} happily alive in our Scheme buffers
 and communicating with the right @repl{} instance, let us see what it
 can do for us, besides jumping to and fro.
 
-@node Documentation helpers, To eval or not to eval, The source and the REPL, Fun between the parens
+@node Documentation helpers, To eval or not to eval, The source and the REPL, Between the parens
 @section Documentation helpers
 
 @subsubheading Autodoc redux
@@ -312,7 +312,7 @@ form of a list of its exported identifiers, using @kbd{C-c C-d C-m},
 exactly as you would do @ref{repl-mod,,in the REPL}. This commands works
 with all supported Schemes, no strings attached.
 
-@node To eval or not to eval, To err perchance to debug, Documentation helpers, Fun between the parens
+@node To eval or not to eval, To err perchance to debug, Documentation helpers, Between the parens
 @section To eval or not to eval
 
 @cindex philosophy
@@ -378,7 +378,7 @@ macro-expand them. The corresponding keybindings start with the prefix
 @kbd{C-r}. The result of the macro expansion always appears in a pop up
 buffer.
 
-@node To err perchance to debug, Jumping around, To eval or not to eval, Fun between the parens
+@node To err perchance to debug, Jumping around, To eval or not to eval, Between the parens
 @section To err: perchance to debug
 
 @cindex to err is schemey
@@ -423,7 +423,7 @@ offer no further explanation here. The customization group
 tune how Geiser interacts with Guile's debugger (and more). Same thing
 for racketeers and @i{geiser-racket}.
 
-@node Jumping around, Geiser writes for you, To err perchance to debug, Fun between the parens
+@node Jumping around, Geiser writes for you, To err perchance to debug, Between the parens
 @section Jumping around
 
 @cindex jumping in scheme buffers
@@ -448,7 +448,7 @@ You can control how the destination buffer pops up by setting
 in the current window), @code{'window} (other window in the same frame)
 or @code{'frame} (in a new frame).
 
-@node Geiser writes for you,  , Jumping around, Fun between the parens
+@node Geiser writes for you,  , Jumping around, Between the parens
 @section Geiser writes for you
 
 @cindex completion in scheme buffers

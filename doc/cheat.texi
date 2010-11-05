@@ -1,4 +1,4 @@
-@node Cheat sheet, No hacker is an island, Fun between the parens, Top
+@node Cheat sheet, No hacker is an island, Between the parens, Top
 @chapter Cheat sheet
 
 @menu
@@ -106,7 +106,7 @@
 @tab Kill Scheme process
 @item C-c C-k
 @tab geiser-repl-nuke
-@tab Nuke REPL: use it if the REPL becomes unresponsive
+@tab Soft restart for unresponsive REPL
 @item M-.
 @tab geiser-edit-symbol-at-point
 @tab Edit identifier at point
@@ -177,8 +177,9 @@
 @tab Bury buffer
 @end multitable
 
-@flushright
-.
-@end flushright
-
+@ifhtml
+@html
+<hr>
+@end html
+@end ifhtml
 
