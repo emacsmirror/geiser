@@ -234,8 +234,11 @@ With prefix, complete module name."
          (completions (car result))
          (partial (cdr result)))
     (cond ((null completions)
-           (geiser--respecting-message "Can't find completion for %S" prefix)
-           (geiser-completion--restore-window-cfg))
+           (if (not arg)
+               (geiser-completion--complete-symbol t)
+             (geiser--respecting-message "Can't find completion for %S"
+                                         prefix)
+             (geiser-completion--restore-window-cfg)))
           (t (insert-and-inherit (substring partial (length prefix)))
              (cond ((= (length completions) 1)
                     (geiser--respecting-message "Sole completion")
