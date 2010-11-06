@@ -113,6 +113,7 @@ module-exports, autodoc, callers, callees and generic-methods.")
                           (mapconcat 'geiser-eval--scheme-str code " ")
                           ")"))))
         ((symbolp code) (format "%s" code))
+        ((stringp code) (format "%S" (substring-no-properties code)))
         (t (format "%S" code))))
 
 
