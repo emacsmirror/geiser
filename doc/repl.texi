@@ -153,7 +153,8 @@ the @repl{} buffer itself. There, you can use either @kbd{C-.} or
 identifiers are bound in the current module and show you a list of those
 starting with the prefix at point. Needless to say, this is not a static
 list, and it will grow as you define or import new bindings in the
-namespace at hand.
+namespace at hand. If no completion is found, @kbd{@key{TAB}} will try
+to complete the prefix after point as a module name.
 
 REPL buffers use Emacs' compilation mode to highlight errors reported by
 the Scheme interpreter, and you can use the @command{next-error} command
@@ -164,7 +165,9 @@ evaluation request, if any. If you prefer a not so forgetful REPL, set
 the customization variable @code{geiser-repl-forget-old-errors-p} to
 @code{nil}. Note, however, that even when that variable is left as
 @kbd{t}, you can always jump to an old error by moving to its line at
-the REPL and pressing return.
+the REPL and pressing @kbd{RET}. When your cursor is away from the last
+prompt, @kbd{TAB} will move to the next error in the buffer, and you can
+use @kbd{BACKTAB} everywhere to go to the previous one.
 
 @node Autodoc and friends, Customization and tips, Completion and error handling, The REPL
 @section Autodoc and friends
@@ -223,9 +226,9 @@ identifiers exported by a given module: all you need to do is press
 The list of exported bindings is shown in a buffer belonging to Geiser's
 documentation browser, of which more details are given in forthcoming
 sections (but just perusing its associated key bindings, by any of the
-methods we've already used for the @repl{}, will give you enough
-information to use it effectively enough). Racketeers will be pleased (i
-hope) to note that contracts are part of the information displayed.
+methods we've already mentioned, will give you enough information to use
+it). Racketeers will be pleased (i hope) to note that contracts are part
+of the information displayed.
 
 @node Customization and tips,  , Autodoc and friends, The REPL
 @section Customization and tips

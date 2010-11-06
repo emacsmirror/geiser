@@ -476,9 +476,11 @@ smarty pants mode always on in Scheme buffers, customize
 @code{geiser-mode-smart-tab-p} to @code{t}.
 
 @cindex completion for module names
-Geiser also knows how to complete module names, but it's not yet smart
-enough to infer by context that that's what you want. Instead, you must
-use a separate command, bound to @kbd{M-`} (that's a backtick).
+Geiser also knows how to complete module names: if no completion for the
+prefix at point is found among the currently visible bindings, it will
+try to find a module name that matches it. You can also request
+explicitly completion only over module names using @kbd{M-`} (that's a
+backtick).
 
 @c Local Variables:
 @c mode: texinfo
