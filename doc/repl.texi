@@ -18,14 +18,14 @@ ready, just come back here and proceed to the following sections.
 @section Starting the REPL
 
 @cindex REPL
-To start a Scheme @repl{} (meaning, a scheme process offering you a
+To start a Scheme REPL (meaning, a scheme process offering you a
 Read-Eval-Print Loop), Geiser provides the generic interactive command
 @command{run-geiser}. If you run it (via, as is customary in Emacs,
 @kbd{M-x run-geiser}, you'll be saluted by a prompt asking which one of
 the supported implementations you want to launch (yes, you can stop the
 asking: see @ref{active-implementations,,below}). Tabbing for completion
 will offer you, as of this writing, @code{guile} and @code{racket}. Just
-choose your poison, and a new @repl{} buffer will pop-up.
+choose your poison, and a new REPL buffer will pop-up.
 
 @imgc{repls}
 
@@ -33,7 +33,7 @@ If all went according to plan, you'll be facing an
 implementation-dependent banner, followed by an interactive prompt.
 Going according to plan includes having the executable of the Scheme you
 chose in your path. If that's not the case, you can tell Emacs where it
-is, as described @ref{impl-binary,, below}. Returning to our @repl{},
+is, as described @ref{impl-binary,, below}. Returning to our REPL,
 the first thing to notice is that the funny prompt is telling you your
 current module: its name is the part just after the @@ sign (in Guile,
 that means @code{guile-user}, while Racket's top namespace doesn't have
@@ -43,7 +43,7 @@ terminal, with a bunch of add-ons that we'll be reviewing below. You can
 start typing sexps right there: Geiser will only dispatch them for
 evaluation when they're complete, and will indent new lines properly
 until then. It will also keep track of your input, maintaining a history
-file that will be reloaded whenever you restart the @repl{}.
+file that will be reloaded whenever you restart the REPL.
 
 @cindex remote REPL
 @cindex connect to server
@@ -64,7 +64,7 @@ variety of ways. For starters, all you (re)defintions will be visible
 everywhere. That's dangerous, but will come in handy when you need to
 debug your running webserver.
 
-Nothing that fanciful this far, but there's more to Geiser's @repl{}. On
+Nothing that fanciful this far, but there's more to Geiser's REPL. On
 to the next section!
 
 @node First aids, Switching context, Starting the REPL, The REPL
@@ -72,7 +72,7 @@ to the next section!
 
 @img{repl-menu, right}
 @cindex REPL commands
-A quick way of seeing what else Geiser's @repl{} can do for you, is to
+A quick way of seeing what else Geiser's REPL can do for you, is to
 display the corresponding entry up there in your menu bar. No, i don't
 normally use menus either; but they can come in handy until you've
 memorized Geiser's commands, as a learning device. And yes, i usually
@@ -97,13 +97,13 @@ mercilessly kill the process (but not before stowing your history in the
 file system). Unless you're using a remote REPL, that is, in which case
 both commands will just sever the connection and leave the remote
 process alone. A softer nuke is performed by @kbd{C-c C-k}: some (rare,
-i promise) times, Geiser's @repl{} can get confused by the input
+i promise) times, Geiser's REPL can get confused by the input
 received from then underlying Scheme (specially if you have multiple
 threads writing to the standard ports), and become irresponsive; you can
 try this command to try to revive it without killing the process or
 closing your connection. Finally, if worse comes to worst and the
 process is dead, @kbd{C-c C-z} will restart it (but the same shortcut,
-issued when the @repl{} is alive, will bring you back to the buffer you
+issued when the REPL is alive, will bring you back to the buffer you
 came from, as explained @ref{switching-repl-buff,,here}).
 
 The remaining commands are meatier, and deserve sections of their own.
@@ -113,14 +113,14 @@ The remaining commands are meatier, and deserve sections of their own.
 
 @cindex current module, in REPL
 In tune with Geiser's @ref{current-module,,modus operandi}, evaluations
-in the @repl{} take place in the namespace of the current module. As
-noted above, the @repl{}'s prompt tells you the name of the current
+in the REPL take place in the namespace of the current module. As
+noted above, the REPL's prompt tells you the name of the current
 module. To switch to a different one, you can use the command
 @command{switch-to-geiser-module}, bound to @kbd{C-c C-m}. You'll notice
 that Geiser simply uses a couple of meta-commands provided by the Scheme
-@repl{} (the stock @command{,m} in Guile and @command{,enter} in
+REPL (the stock @command{,m} in Guile and @command{,enter} in
 Racket), and that it doesn't even try to hide that fact. That means that
-you can freely use said native ways directly at the @repl{}, and Geiser
+you can freely use said native ways directly at the REPL, and Geiser
 will be happy to oblige.
 
 @cindex current module, change
@@ -139,7 +139,7 @@ a prefix-aware list of available module names.
 
 @imgc{mod-completion}
 
-Which brings me to the next group of @repl{} commands.
+Which brings me to the next group of REPL commands.
 
 @node Completion and error handling, Autodoc and friends, Switching context, The REPL
 @section Completion and error handling
@@ -147,7 +147,7 @@ Which brings me to the next group of @repl{} commands.
 @cindex completion, module name
 We've already seen Geiser completion of module names in action at the
 mini-buffer. You won't be surprised to know that it's also available at
-the @repl{} buffer itself. There, you can use either @kbd{C-.} or
+the REPL buffer itself. There, you can use either @kbd{C-.} or
 @kbd{M-`} to complete module names, and @kbd{@key{TAB}} or
 @kbd{M-@key{TAB}} to complete identifiers. Geiser will know what
 identifiers are bound in the current module and show you a list of those
@@ -178,7 +178,7 @@ if so, what arguments does it take? Geiser tries to help you answering
 those questions too.
 
 @cindex autodoc, in the REPL
-Actually, if you've been playing with the @repl{} as you read, you might
+Actually, if you've been playing with the REPL as you read, you might
 have notice some frantic activity taking place in the minibuffer every
 now and then. That was Geiser trying to be helpful (while, hopefully,
 not being clippy), or, more concretely, what i call, for want of a
@@ -234,7 +234,7 @@ of the information displayed.
 @section Customization and tips
 
 @cindex REPL customization
-The looks and ways of the @repl{} can be fine-tuned via a bunch of
+The looks and ways of the REPL can be fine-tuned via a bunch of
 customization variables. You can see and modify them all in the
 corresponding customization group (by using the menu entry or the good
 old @kbd{M-x customize-group geiser-repl}), or by setting them in your
@@ -262,7 +262,7 @@ forget about the richness of the Scheme ecosystem with something like
 
 @cindex scheme binary
 @cindex scheme executable path
-@anchor{impl-binary} When starting a new @repl{}, Geiser assumes, by
+@anchor{impl-binary} When starting a new REPL, Geiser assumes, by
 default, that the corresponding Scheme binary is in your path. If that's
 not the case, the variables to tweak are @code{geiser-guile-binary} and
 @code{geiser-racket-binary}, which should be set to a string with the
@@ -283,7 +283,7 @@ for Racket are @code{geiser-racket-collects} and
 
 By default, Geiser won't record duplicates in your input history. If you
 prefer it did, just set @code{geiser-repl-history-no-dups-p} to
-@code{nil}. History entries are persistent across @repl{} sessions:
+@code{nil}. History entries are persistent across REPL sessions:
 they're saved in implementation-specific files whose location is
 controlled by the variable @code{geiser-repl-history-filename}. For
 example, my Geiser configuration includes the following line:
@@ -298,11 +298,11 @@ directory.
 
 @cindex autodoc, disabling
 @cindex peace and quiet
-If you happen to love peace and quiet and prefer to keep your @repl{}'s
+If you happen to love peace and quiet and prefer to keep your REPL's
 echo area free from autodoc's noise, @code{geiser-repl-autodoc-p} is the
 customization variable for you: set it to @code{nil} and autodoc will be
-disabled by default in new @repl{}s. You can always bring the fairies
-back, on a per @repl{} basis, using @kbd{C-c C-a}.
+disabled by default in new REPLs. You can always bring the fairies
+back, on a per REPL basis, using @kbd{C-c C-a}.
 
 @subsubheading Remote connections
 

@@ -1,7 +1,7 @@
 @node Between the parens, Cheat sheet, The REPL, Top
 @chapter Between the parens
 
-A good @repl{} is a must, but just about half the story of a good Scheme
+A good REPL is a must, but just about half the story of a good Scheme
 hacking environment. Well, perhaps a bit more than a half; but, at any
 rate, one surely needs also a pleasant way of editing source code. Don't
 pay attention to naysayers: Emacs comes with an excellent editor
@@ -11,7 +11,7 @@ Geiser's support for writing Scheme code adds to Emacs'
 @code{scheme-mode}, rather than supplanting it; and it does so by means
 of a minor mode (unimaginatively dubbed @code{geiser-mode}) that defines
 a bunch of new commands to try and, with the help of the same Scheme
-process giving you the @repl{}, make those Scheme buffers come to life.
+process giving you the REPL, make those Scheme buffers come to life.
 
 @menu
 * Activating Geiser::
@@ -46,7 +46,7 @@ you how to fix that in a moment.
 The menu provides a good synopsis of everthing Geiser brings to the
 party, including those keyboard shortcuts we Emacsers love. If you're
 seeing the name of your favourite Scheme implementation in the
-mode-line, have a running @repl{} and are comfortable with Emacs, you
+mode-line, have a running REPL and are comfortable with Emacs, you
 can stop reading now and, instead, discover Geiser's joys by yourself.
 I've tried to make Geiser as self-documenting as any self-respecting
 Emacs package should be. If you follow this route, make sure to take a
@@ -74,7 +74,7 @@ not recognised as such by Emacs, just tell her about it with:
 @cindex useless wretch
 Now, @i{geiser-mode} is just a useless wretch unless there's a running
 Scheme process backing it up. Meaning that virtually all the commands it
-provides require a @repl{} up and running, preferably corresponding to
+provides require a REPL up and running, preferably corresponding to
 the correct Scheme implementation. In the following section, we'll see
 how to make sure that that's actually the case.
 
@@ -82,12 +82,12 @@ how to make sure that that's actually the case.
 @section The source and the REPL
 
 As i've already mentioned a couple of times, @i{geiser-mode} needs a
-running @repl{} to be operative. Thus, a common usage pattern will be
+running REPL to be operative. Thus, a common usage pattern will be
 for you to first call @code{run-geiser} (or one of its variants, see
 them described @ref{choosing-impl,,here}), and then open Scheme files;
 but there's nothing wrong in first opening a couple Scheme buffers and
-then starting the @repl{} (you can even find it more convenient, since
-pressing @kbd{C-c C-z} in a Scheme buffer will start the @repl{} for
+then starting the REPL (you can even find it more convenient, since
+pressing @kbd{C-c C-z} in a Scheme buffer will start the REPL for
 you). Since Geiser supports more than one Scheme implementation, though,
 there's the problem of knowing which of them is to be associated with
 each Scheme source file. Serviceable as it is, @i{geiser-mode} will try
@@ -117,7 +117,7 @@ element is used as the chosen implementation.
 The contents of the file is scanned for hints on its associated
 implementation. For instance, files that contain a @code{#lang}
 directive will be considered Racket source code, while those with a
-@code{define-module} form in them will be assigned to a Guile @repl{}.
+@code{define-module} form in them will be assigned to a Guile REPL.
 @item
 The current buffer's file name is checked against the rules given in
 @code{geiser-implementations-alist}, and the first match is applied. You
@@ -144,7 +144,7 @@ default value for the latter variable:
  ((regexp "\\.rkt$") racket))
 @end example
 which describes the simple heuristic that files with @file{.scm} as
-extension are by default associated to a Guile @repl{} while those
+extension are by default associated to a Guile REPL while those
 ending in @file{.ss} or @file{.rkt} correspond to Racket's
 implementation (with the caveat that these rules are applied only if the
 previous heuristics have failed to detect the correct implementation,
@@ -166,18 +166,18 @@ first served, this new rule will take precedence over the default ones.
 @cindex switching to REPL
 @cindex switching to source
 @anchor{switching-repl-buff} Once you have a working @i{geiser-mode},
-you can switch from Scheme source buffers to the @repl{} or @kbd{C-c
+you can switch from Scheme source buffers to the REPL or @kbd{C-c
 C-z}. Those shortcuts map to the interactive command
 @code{switch-to-geiser}.
 
 @cindex switching to module
 If you use a numeric prefix, as in @kbd{C-u C-c C-z}, besides being
-teleported to the @repl{}, the latter will switch to the namespace of
-the Scheme source file (as if you had used @kbd{C-c C-m} in the @repl{},
+teleported to the REPL, the latter will switch to the namespace of
+the Scheme source file (as if you had used @kbd{C-c C-m} in the REPL,
 with the source file's module as argument; cf. @ref{Switching context}).
 This command is also bound to @kbd{C-c C-Z}, with a capital zed.
 
-Once you're in the @repl{}, the same @kbd{C-c C-z} shortcut will bring
+Once you're in the REPL, the same @kbd{C-c C-z} shortcut will bring
 you back to the buffer you jumped from, provided you don't kill the
 Scheme process in between. This is why the command is called
 @i{switch-to-geiser} instead of @i{switch-to-repl}, and what makes it
@@ -198,7 +198,7 @@ a one to one correspondence between paths and modules, while Guile
 relies on explicit @code{define-module} forms in the source file).
 
 Now that we have @code{geiser-mode} happily alive in our Scheme buffers
-and communicating with the right @repl{} instance, let us see what it
+and communicating with the right REPL instance, let us see what it
 can do for us, besides jumping to and fro.
 
 @node Documentation helpers, To eval or not to eval, The source and the REPL, Between the parens
@@ -209,7 +209,7 @@ can do for us, besides jumping to and fro.
 @cindex autodoc, in scheme buffers
 The first thing you will notice by moving around Scheme source is that,
 every now and then, the echo area lightens up with the same autodoc
-messages we know and love from our @repl{} forays. This happens every
+messages we know and love from our REPL forays. This happens every
 time the Scheme process is able to recognise an identifier in the
 buffer, and provide information either on its value (for variables) or
 on its arity and the name of its formal arguments (for procedures and
@@ -342,7 +342,7 @@ incremental evaluation. Some people disagree; if you happen to find
 @uref{http://blog.racket-lang.org/2009/03/drscheme-repl-isnt-lisp.html,
 their arguments} convincing, you don't have to throw away Geiser
 together with the baby: @kbd{M-x geiser-restart-repl} will let you
-restart the @repl{} as many times as you see fit.
+restart the REPL as many times as you see fit.
 
 @cindex evaluation
 @cindex incremental development, not evil
@@ -355,7 +355,7 @@ s-expression just before point.
 @code{geiser-eval-definition}, bound to @kbd{C-M-x}, finds the topmost
 definition containing point and sends it for evaluation. The variant
 @code{geiser-eval-definition-and-go} (@kbd{C-c M-e}) works in the same
-way, but it also teleports you to @repl{} after the evaluation.
+way, but it also teleports you to REPL after the evaluation.
 
 @code{geiser-eval-region}, bound to @kbd{C-c C-r}, evals the current
 region. Again, there's an @i{and go} version available,
@@ -368,7 +368,7 @@ perchance to debug}).
 At the risk of repeating myself, i'll remember you that all these
 evaluations will take place in the namespace of the module corresponding
 to the Scheme file from which you're sending your code, which, in
-general, will be different from the @repl{}'s current module. And, if
+general, will be different from the REPL's current module. And, if
 all goes according to plan, (re)defined variables and procedures should
 be immediately visible inside and, if exported, outside their module.
 

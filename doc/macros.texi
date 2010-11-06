@@ -1,7 +1,3 @@
-@macro repl{}
-@acronym{REPL}
-@end macro
-
 @macro img{FILE, ALIGN}
 @ifhtml
 @html

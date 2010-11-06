@@ -19,7 +19,7 @@ geiser_TEXINFOS = \
   intro.texi \
   install.texi \
   repl.texi \
-  fun.texi \
+  parens.texi \
   cheat.texi \
   thanks.texi \
   index.texi
