@@ -61,7 +61,7 @@ If, for some reason i cannot fathom, you prefer @i{geiser-mode} not
 to be active by default, the following elisp incantation will do the
 trick:
 @example
-(eval-after-load "geiser-mode"
+(eval-after-load "geiser"
   (remove-hook 'scheme-mode-hook 'turn-on-geiser-mode))
 @end example
 @cindex scheme file extensions
