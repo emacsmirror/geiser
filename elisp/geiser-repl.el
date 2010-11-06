@@ -156,9 +156,10 @@ expression, if any."
       (pop-to-buffer
        (or old
            (generate-new-buffer (format "* %s *"
-                                        (geiser-repl--repl-name impl)))))))
-  (geiser-repl-mode)
-  (geiser-impl--set-buffer-implementation impl))
+                                        (geiser-repl--repl-name impl)))))
+      (unless old
+        (geiser-repl-mode)
+        (geiser-impl--set-buffer-implementation impl)))))
 
 (geiser-impl--define-caller geiser-repl--binary binary ()
   "A variable or function returning the path to the scheme binary
