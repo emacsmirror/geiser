@@ -274,8 +274,9 @@
 (defun geiser-con--send-string/wait (buffer/proc str cont
                                      &optional timeout sbuf)
   (save-current-buffer
-    (let ((con (geiser-con--get-connection buffer/proc)))
-      (unless (geiser-con--connection-process con)
+    (let* ((con (geiser-con--get-connection buffer/proc))
+           (proc (and con (geiser-con--connection-process con))))
+      (unless proc
         (error geiser-con--error-message))
       (with-current-buffer (geiser-con--connection-buffer con)
         (when (geiser-con--is-debugging)
@@ -290,8 +291,8 @@
               (while (and (> time 0)
                           (geiser-con--connection-process con)
                           (not (geiser-con--connection-completed-p con id)))
-                (accept-process-output nil waitsecs)
-                (setq time (- time step)))
+                (unless (accept-process-output nil waitsecs)
+                  (setq time (- time step))))
             (error (setq time 0)))
           (or (> time 0)
               (geiser-con--request-deactivate req)
