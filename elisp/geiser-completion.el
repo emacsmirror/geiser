@@ -228,9 +228,11 @@ we're looking for a module name.")
 Perform completion similar to Emacs' complete-symbol.
 With prefix, complete module name."
   (interactive "P")
+  (unless (geiser-syntax--symbol-at-point)
+    (error "No symbol at point"))
   (geiser--respecting-message "Retrieving completions...")
   (let* ((prefix (geiser-completion--prefix arg))
-         (result (geiser-completion--complete prefix arg))
+         (result (and prefix (geiser-completion--complete prefix arg)))
          (completions (car result))
          (partial (cdr result)))
     (cond ((null completions)
