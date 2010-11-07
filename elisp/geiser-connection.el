@@ -224,17 +224,18 @@
           (comint-redirect-send-command (format "%s" str) rbuffer nil t))))))
 
 (defun geiser-con--process-completed-request (req)
-  (let ((cont (geiser-con--request-continuation req))
-        (id (geiser-con--request-id req))
-        (rstr (geiser-con--request-string req))
-        (buffer (geiser-con--request-buffer req))
-        (con (geiser-con--request-connection req)))
+  (let* ((cont (geiser-con--request-continuation req))
+         (id (geiser-con--request-id req))
+         (rstr (geiser-con--request-string req))
+         (buffer (geiser-con--request-buffer req))
+         (con (geiser-con--request-connection req))
+         (form (geiser-con--comint-buffer-form con)))
     (if (not cont)
-        (geiser-log--warn "<%s> Droping result for request %S (%s)"
-                          id rstr req)
+        (geiser-log--warn "<%s> Droping result for request %S: %s"
+                          id rstr form)
       (condition-case cerr
           (with-current-buffer (or buffer (current-buffer))
-            (funcall cont (geiser-con--comint-buffer-form con))
+            (funcall cont form)
             (geiser-log--info "<%s>: processed" id))
         (error (geiser-log--error
                 "<%s>: continuation failed %S \n\t%s" id rstr cerr))))))
