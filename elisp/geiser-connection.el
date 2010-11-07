@@ -35,12 +35,13 @@
 
 ;;; Request datatype:
 
-(defun geiser-con--make-request (str cont &optional sender-buffer)
+(defun geiser-con--make-request (con str cont &optional sender-buffer)
   (list :geiser-connection-request
-        (cons :id (random))
+        (cons :id (geiser-con--connection-inc-count con))
         (cons :string str)
         (cons :continuation cont)
-        (cons :buffer (or sender-buffer (current-buffer)))))
+        (cons :buffer (or sender-buffer (current-buffer)))
+        (cons :connection con)))
 
 (defsubst geiser-con--request-p (req)
   (and (listp req) (eq (car req) :geiser-connection-request)))
@@ -57,6 +58,9 @@
 (defsubst geiser-con--request-buffer (req)
   (cdr (assoc :buffer req)))
 
+(defsubst geiser-con--request-connection (req)
+  (cdr (assoc :connection req)))
+
 (defsubst geiser-con--request-deactivate (req)
   (setcdr (assoc :continuation req) nil))
 
@@ -70,9 +74,16 @@
   (list :geiser-connection
         (cons :requests (list))
         (cons :current nil)
+        (cons :count 0)
         (cons :completed (make-hash-table :weakness 'value))
         (cons :buffer buffer)
-        (cons :timer nil)))
+        (cons :timer nil)
+        (cons :reply (geiser-con--make-reply-buffer (buffer-name buffer)))))
+
+(defun geiser-con--make-reply-buffer (n)
+  (let ((rb (generate-new-buffer (concat " geiser-con-reply: " n))))
+    (buffer-disable-undo rb)
+    rb))
 
 (defsubst geiser-con--connection-p (c)
   (and (listp c) (eq (car c) :geiser-connection)))
@@ -88,6 +99,9 @@
 
 (defsubst geiser-con--connection-current-request (c)
   (cdr (assoc :current c)))
+
+(defsubst geiser-con--connection-reply-buffer (c)
+  (cdr (assoc :reply c)))
 
 (defun geiser-con--connection-clean-current-request (c)
   (let* ((cell (assoc :current c))
@@ -112,14 +126,11 @@
         (geiser-con--connection-pop-request c)
       (cdr current))))
 
-(defun geiser-con--connection-start-timer (c)
-  (let ((cell (assoc :timer c)))
-    (when (cdr cell) (cancel-timer (cdr cell)))
-    (setcdr cell (run-at-time t 0.5 'geiser-con--process-next c))))
-
-(defun geiser-con--connection-cancel-timer (c)
-  (let ((cell (assoc :timer c)))
-    (when (cdr cell) (cancel-timer (cdr cell)))))
+(defun geiser-con--connection-inc-count (c)
+  (let* ((cnt (assoc :count c))
+         (new (1+ (cdr cnt))))
+    (setcdr cnt new)
+    new))
 
 
 ;;; Connection setup:
@@ -142,50 +153,45 @@
                                          (overlay-end
                                           comint-last-prompt-overlay)))))
 
-(defsubst geiser-con--has-entered-debugger ()
-  (and geiser-con--debugging-prompt-regexp
-       (re-search-backward geiser-con--debugging-prompt-regexp nil t)
-       (or (null geiser-con--debugging-preamble-regexp)
-           (save-excursion
-             (re-search-backward geiser-con--debugging-preamble-regexp nil t)))))
+(defsubst geiser-con--has-entered-debugger (con)
+  (with-current-buffer (geiser-con--connection-buffer con)
+    (and geiser-con--debugging-prompt-regexp
+         (re-search-backward geiser-con--debugging-prompt-regexp nil t)
+         (or (null geiser-con--debugging-preamble-regexp)
+             (save-excursion
+               (re-search-backward geiser-con--debugging-preamble-regexp
+                                   nil t))))))
 
-(defun geiser-con--cleanup-connection (c)
-  (geiser-con--connection-cancel-timer c))
+(defun geiser-con--connection-teardown ()
+  (when geiser-con--connection
+    (kill-buffer
+     (geiser-con--connection-reply-buffer geiser-con--connection))))
 
 (defun geiser-con--setup-connection (buffer
                                      prompt-regexp
                                      &optional debug-prompt-regexp
                                      debug-preamble-regexp)
   (with-current-buffer buffer
-    (when geiser-con--connection
-      (geiser-con--cleanup-connection geiser-con--connection))
+    (geiser-con--connection-teardown)
     (setq geiser-con--debugging-prompt-regexp debug-prompt-regexp)
     (setq geiser-con--debugging-preamble-regexp debug-preamble-regexp)
     (setq geiser-con--connection (geiser-con--make-connection buffer))
-    (geiser-con--setup-comint prompt-regexp debug-prompt-regexp)
-    (geiser-con--connection-start-timer geiser-con--connection)
-    (message "Geiser REPL up and running!")))
-
-(defun geiser-con--setup-comint (prompt-regexp debug-prompt-regexp)
-  (set (make-local-variable 'comint-redirect-insert-matching-regexp)
-       (not (null debug-prompt-regexp)))
-  (set (make-local-variable 'comint-redirect-finished-regexp)
-       (if debug-prompt-regexp
-           (format "\\(%s\\)\\|\\(%s\\)" prompt-regexp debug-prompt-regexp)
-         prompt-regexp))
-  (setq comint-prompt-regexp comint-redirect-finished-regexp)
-  (add-hook 'comint-redirect-hook 'geiser-con--comint-redirect-hook nil t))
+    (set (make-local-variable 'comint-redirect-insert-matching-regexp)
+         (not (null debug-prompt-regexp)))
+    (set (make-local-variable 'comint-redirect-finished-regexp)
+         (if debug-prompt-regexp
+             (format "\\(%s\\)\\|\\(%s\\)" prompt-regexp debug-prompt-regexp)
+           prompt-regexp))
+    (setq comint-prompt-regexp comint-redirect-finished-regexp)
+    (add-hook 'comint-redirect-hook 'geiser-con--comint-redirect-hook nil t)))
 
 
 ;;; Requests handling:
 
-(defsubst geiser-con--comint-buffer ()
-  (get-buffer-create " *geiser connection retort*"))
-
-(defun geiser-con--comint-buffer-form ()
-  (with-current-buffer (geiser-con--comint-buffer)
+(defun geiser-con--comint-buffer-form (con)
+  (with-current-buffer (geiser-con--connection-reply-buffer con)
     (goto-char (point-max))
-    (if (geiser-con--has-entered-debugger)
+    (if (geiser-con--has-entered-debugger con)
         `((error (key . geiser-debugger))
           (output . ,(buffer-substring (point-min) (point))))
       (condition-case nil
@@ -207,32 +213,28 @@
                              geiser-con--debugging-preamble-regexp))
            (req (geiser-con--connection-pop-request con))
            (str (and req (geiser-con--request-string req)))
-           (cbuf (geiser-con--comint-buffer)))
-      (if (not (buffer-live-p buffer))
-          (geiser-con--connection-cancel-timer con)
-        (when (and buffer req str)
-          (with-current-buffer cbuf
-            (setq comint-redirect-echo-input nil)
-            (setq geiser-con--debugging-prompt-regexp debug-prompt)
-            (setq geiser-con--debugging-preamble-regexp debug-preamble)
-            (delete-region (point-min) (point-max)))
-          (set-buffer buffer)
-          (if (geiser-con--is-debugging)
-              (geiser-con--request-deactivate req)
-            (geiser-log--info "<%s>: %s" (geiser-con--request-id req) str)
-            (comint-redirect-send-command (format "%s" str) cbuf nil t)))))))
+           (rbuffer (geiser-con--connection-reply-buffer con)))
+      (when (and buffer (buffer-live-p buffer) req str)
+        (with-current-buffer rbuffer
+          (delete-region (point-min) (point-max)))
+        (set-buffer buffer)
+        (if (geiser-con--is-debugging)
+            (geiser-con--request-deactivate req)
+          (geiser-log--info "<%s>: %s" (geiser-con--request-id req) str)
+          (comint-redirect-send-command (format "%s" str) rbuffer nil t))))))
 
 (defun geiser-con--process-completed-request (req)
   (let ((cont (geiser-con--request-continuation req))
         (id (geiser-con--request-id req))
         (rstr (geiser-con--request-string req))
-        (buffer (geiser-con--request-buffer req)))
+        (buffer (geiser-con--request-buffer req))
+        (con (geiser-con--request-connection req)))
     (if (not cont)
         (geiser-log--warn "<%s> Droping result for request %S (%s)"
                           id rstr req)
       (condition-case cerr
           (with-current-buffer (or buffer (current-buffer))
-            (funcall cont (geiser-con--comint-buffer-form))
+            (funcall cont (geiser-con--comint-buffer-form con))
             (geiser-log--info "<%s>: processed" id))
         (error (geiser-log--error
                 "<%s>: continuation failed %S \n\t%s" id rstr cerr))))))
@@ -263,7 +265,7 @@
   (save-current-buffer
     (let ((con (geiser-con--get-connection buffer/proc)))
       (unless con (error geiser-con--error-message))
-      (let ((req (geiser-con--make-request str cont sender-buffer)))
+      (let ((req (geiser-con--make-request con str cont sender-buffer)))
         (geiser-con--connection-add-request con req)
         (geiser-con--process-next con)
         req))))
