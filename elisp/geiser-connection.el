@@ -294,7 +294,7 @@
               (while (and (> time 0)
                           (geiser-con--connection-process con)
                           (not (geiser-con--connection-completed-p con id)))
-                (unless (accept-process-output nil waitsecs)
+                (unless (sit-for waitsecs)
                   (setq time (- time step))))
             (error (setq time 0)))
           (or (> time 0)
