@@ -206,11 +206,13 @@ module command as a string")
 (defsubst geiser-repl--port () (cdr geiser-repl--address))
 (defsubst geiser-repl--remote-p () geiser-repl--address)
 
-(defun geiser-repl--get-address ()
+(defun geiser-repl--get-address (&optional host port)
   (let ((defhost (or (geiser-repl--host) geiser-repl-default-host))
         (defport (or (geiser-repl--port) geiser-repl-default-port)))
-    (cons (read-string (format "Host (default %s): " defhost) nil nil defhost)
-          (read-number "Port: " defport))))
+    (cons (or host
+              (read-string (format "Host (default %s): " defhost)
+                           nil nil defhost))
+          (or port (read-number "Port: " defport)))))
 
 (defun geiser-repl--save-remote-data (remote address)
   (setq geiser-repl--address (and remote address))
@@ -219,10 +221,10 @@ module command as a string")
                                         (geiser-repl--host)
                                         (geiser-repl--port)))))
 
-(defun geiser-repl--start-repl (impl &optional remote)
+(defun geiser-repl--start-repl (impl &optional remote host port)
   (message "Starting Geiser REPL for %s ..." impl)
   (geiser-repl--to-repl-buffer impl)
-  (let ((program (if remote (geiser-repl--get-address)
+  (let ((program (if remote (geiser-repl--get-address host port)
                    (geiser-repl--binary impl)))
         (args (geiser-repl--arglist impl))
         (prompt-rx (geiser-repl--prompt-regexp impl))
@@ -289,7 +291,7 @@ module command as a string")
               "Start Geiser for scheme implementation: "))))
    (geiser-repl--start-repl impl))
 
-(defun geiser-connect (impl)
+(defun geiser-connect (impl &optional host port)
   "Start a new Geiser REPL connected to a remote Scheme process."
   (interactive
    (list (or (geiser-repl--only-impl-p)
@@ -297,7 +299,7 @@ module command as a string")
                   geiser-impl--implementation)
              (geiser-repl--read-impl
               "Scheme implementation: "))))
-  (geiser-repl--start-repl impl t))
+  (geiser-repl--start-repl impl t host port))
 
 (make-variable-buffer-local
  (defvar geiser-repl--last-scm-buffer nil))
@@ -343,7 +345,8 @@ If no REPL is running, execute `run-geiser' to start a fresh one."
   "Switch to running Geiser REPL and try to enter a given module."
   (interactive)
   (let* ((module (or module
-                     (geiser-completion--read-module "Switch to module: ")))
+                     (geiser-completion--read-module
+                      "Switch to module (default top-level): ")))
          (cmd (and module
                    (geiser-repl--enter-cmd geiser-impl--implementation
                                            module))))
