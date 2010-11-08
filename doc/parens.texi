@@ -484,8 +484,8 @@ backtick).
 
 There's also this little command, @code{geiser-squarify}, which will
 toggle the delimiters of the innermost list around point between round
-and square brackets. It is bound to @kbd{C-c C-e [}. With numeric a
-prefix (as in, say @kbd{M-2 C-c C-e [}), it will perform that many
+and square brackets. It is bound to @kbd{C-c C-e [}. With a numeric
+prefix (as in, say, @kbd{M-2 C-c C-e [}), it will perform that many
 toggles, forward for positive values and backward for negative ones.
 
 @c Local Variables:
