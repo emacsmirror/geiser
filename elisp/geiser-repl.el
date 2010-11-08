@@ -214,10 +214,10 @@ module command as a string")
 
 (defun geiser-repl--save-remote-data (remote address)
   (setq geiser-repl--address (and remote address))
-  (when remote
-    (setq header-line-format (format "Host: %s   Port: %s"
-                                     (geiser-repl--host)
-                                     (geiser-repl--port)))))
+  (setq header-line-format (and remote
+                                (format "Host: %s   Port: %s"
+                                        (geiser-repl--host)
+                                        (geiser-repl--port)))))
 
 (defun geiser-repl--start-repl (impl &optional remote)
   (message "Starting Geiser REPL for %s ..." impl)
