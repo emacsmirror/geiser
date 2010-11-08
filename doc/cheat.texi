@@ -31,6 +31,9 @@
 @item C-c C-e C-m
 @tab geiser-edit-module
 @tab Ask for a module and open its file
+@item C-c C-e C-[
+@tab geiser-squarify
+@tab Toggle between () and [] for current form
 @item @tab @tab
 @item C-M-x
 @tab geiser-eval-definition

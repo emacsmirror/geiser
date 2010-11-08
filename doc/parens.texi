@@ -482,6 +482,10 @@ try to find a module name that matches it. You can also request
 explicitly completion only over module names using @kbd{M-`} (that's a
 backtick).
 
+There's also this little command, @code{geiser-squarify}, which will
+toggle the delimiters of the innermost list around point between round
+and square brackets. It is bound to @key{C-c C-e [}.
+
 @c Local Variables:
 @c mode: texinfo
 @c TeX-master: "geiser"

@@ -111,6 +111,7 @@
     | M-.                 | Go to definition of identifier at point         |
     | M-,                 | Go back to where M-. was last invoked           |
     | C-c C-e m           | Ask for a module and open its file              |
+    | C-c C-e [           | Toggle between () and [] for current form       |
     |---------------------+-------------------------------------------------|
     | C-M-x               | Eval definition around point                    |
     | C-c M-e             | Eval definition around point and switch to REPL |
