@@ -97,7 +97,7 @@
     Geiser's completion will use it. Just require company-mode and,
     from then on, any new scheme buffer or REPL will use it. If you
     didn't know about Nikolaj Schumacher's awesome mode, check this
-    screencast: <http://goo.gl/yxLQ>.
+    screencast: http://goo.gl/yxLQ.
 
 * Quick key reference
 
