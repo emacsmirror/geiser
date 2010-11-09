@@ -159,15 +159,17 @@ By default, Geiser uses the prompt regexp.")
 (make-variable-buffer-local
  (defvar geiser-con--debugging-preamble-regexp nil))
 
-(defun geiser-con--is-debugging ()
-  (and geiser-con--debugging-prompt-regexp
-       geiser-con--debugging-inhibits-eval
-       comint-last-prompt-overlay
-       (string-match-p geiser-con--debugging-prompt-regexp
-                       (buffer-substring (overlay-start
-                                          comint-last-prompt-overlay)
-                                         (overlay-end
-                                          comint-last-prompt-overlay)))))
+(defun geiser-con--is-debugging (&optional con)
+  (with-current-buffer (or (and con (geiser-con--connection-buffer con))
+                           (current-buffer))
+    (and geiser-con--debugging-prompt-regexp
+         geiser-con--debugging-inhibits-eval
+         comint-last-prompt-overlay
+         (string-match-p geiser-con--debugging-prompt-regexp
+                         (buffer-substring (overlay-start
+                                            comint-last-prompt-overlay)
+                                           (overlay-end
+                                            comint-last-prompt-overlay))))))
 
 (defsubst geiser-con--has-entered-debugger (con)
   (with-current-buffer (geiser-con--connection-buffer con)
@@ -278,35 +280,24 @@ By default, Geiser uses the prompt regexp.")
 (defvar geiser-connection-timeout 30000
   "Time limit, in msecs, blocking on synchronous evaluation requests")
 
-(defun geiser-con--send-string/wait (buffer/proc str cont
-						 &optional timeout sbuf)
+(defun geiser-con--send-string/wait (b/p str cont &optional timeout sbuf)
   (save-current-buffer
-    (let* ((con (geiser-con--get-connection buffer/proc))
+    (let* ((con (geiser-con--get-connection b/p))
            (proc (and con (geiser-con--connection-process con))))
-      (unless proc
-        (error geiser-con--error-message))
-      (with-current-buffer (geiser-con--connection-buffer con)
-        (when (geiser-con--is-debugging)
-          (error "Geiser REPL is in debug mode")))
+      (unless proc (error geiser-con--error-message))
+      (when (geiser-con--is-debugging con) (error "REPL is in debug mode"))
       (let* ((req (geiser-con--make-request con str cont sbuf))
-             (id (and req (geiser-con--request-id req)))
-             (time (or timeout geiser-connection-timeout))
-             (step 100)
-             (waitsecs (/ step 1000.0)))
-        (when id
-          (geiser-con--connection-add-request con req)
-          (geiser-con--process-next con)
+             (id (geiser-con--request-id req))
+             (timeout (/ (or timeout geiser-connection-timeout) 1000.0))
+             (waitsecs 0.1))
+        (geiser-con--connection-add-request con req)
+        (with-timeout (timeout (geiser-con--request-deactivate req))
           (condition-case nil
-              (while (and (> time 0)
-                          (geiser-con--connection-process con)
+              (while (and (geiser-con--connection-process con)
                           (not (geiser-con--connection-completed-p con id)))
-                (unless (accept-process-output nil waitsecs nil nil)
-		  (geiser-con--process-next con)
-                  (setq time (- time step))))
-            (error (setq time 0)))
-          (or (> time 0)
-              (geiser-con--request-deactivate req)
-              nil))))))
+                (geiser-con--process-next con)
+                (accept-process-output proc waitsecs nil t))
+            (error (geiser-con--request-deactivate req))))))))
 
 
 (provide 'geiser-connection)

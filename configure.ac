@@ -25,6 +25,7 @@ elisp/Makefile
 elisp/geiser-version.el
 elisp/geiser-load.el
 scheme/Makefile
+bin/Makefile
 doc/Makefile
 ])
 

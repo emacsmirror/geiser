@@ -45,27 +45,49 @@ evaluation when they're complete, and will indent new lines properly
 until then. It will also keep track of your input, maintaining a history
 file that will be reloaded whenever you restart the REPL.
 
+@subsubheading Connecting to an external Scheme
 @cindex remote REPL
 @cindex connect to server
-If you use Guile, there's an alternative way of starting a Geiser REPL:
-you can connect to a remote Guile process, provided the latter is
-running a REPL server. For that to happen, you just need to start your
-Guile process (outside Emacs) passing to it the flag @code{--listen}.
-Then, come back to Emacs and execute @kbd{M-x connect-to-guile}. You'll
-be asked for a host and a port, with suitable default values (Guile's
-@code{--listen} flag accepts an optional port as argument (as in
-@code{--listen=1969}), if you don't want to use the default). And voila,
-you'll have a Geiser REPL that is served by the remote Guile process in
-a dedicated thread, meaning that your Guile can go on doing whatever it
-was doing while you tinker with it from Emacs. Note, however,
-that all Guile threads share the heap, so that you'll be able to
-interact with those other threads in the running scheme from Emacs in a
-variety of ways. For starters, all you (re)defintions will be visible
-everywhere. That's dangerous, but will come in handy when you need to
-debug your running webserver.
+There's an alternative way of starting a Geiser REPL: you can connect to
+an external Scheme process, provided it's running a REPL server at some
+known port. How to make that happen depends on the Scheme implementation.
 
-Nothing that fanciful this far, but there's more to Geiser's REPL. On
-to the next section!
+@cindex Guile's REPL server
+If you use Guile, you just need to start your Guile process (possibly
+outside Emacs) passing to it the flag @code{--listen}. This flag accepts
+an optional port as argument (as in @code{--listen=1969}), if you don't
+want to use the default.
+
+@cindex Racket's REPL server
+In Racket, you have to use the REPL server that comes with Geiser. To
+that end, put Geiser's Racket scheme directory in the Racket's
+collection search path and invoke @code{start-geiser} (a procedure in
+the module @code{geiser/server}) somewhere in your program, passing it
+the desired port. This procedure will start the REPL server in a
+separate thread. For an example of how to do that, see the script
+@file{bin/geiser-racket.sh} in the source distribution, or, if you've
+compiled Geiser, @file{bin/geiser-racket-noinst} in the build directory,
+or, if you've installed Geiser, @file{geiser-racket} in
+@file{<installation-prefix>/bin}. These scripts start a new interactive
+Racket that is also running a REPL server (they also load the errortrace
+library to provide better diagnostics, but that's not strictly needed).
+
+With your external Scheme process running and serving, come back to
+Emacs and execute @kbd{M-x geiser-connect}, @kbd{M-x connect-to-guile}
+or @kbd{M-x connect-to-racket}. You'll be asked for a host and a port,
+and, voila, you'll have a Geiser REPL that is served by the remote
+Scheme process in a dedicated thread, meaning that your external program
+can go on doing whatever it was doing while you tinker with it from
+Emacs. Note, however, that all Scheme threads share the heap, so that
+you'll be able to interact with those other threads in the running
+scheme from Emacs in a variety of ways. For starters, all your
+(re)defintions will be visible everywhere. That's dangerous, but will
+come in handy when you need to debug your running webserver.
+
+@cindex remote connections
+The connection between Emacs and the Scheme process goes over TCP, so it
+can be as remote as you need, perhaps with the intervention of an SSH
+tunnel.
 
 @node First aids, Switching context, Starting the REPL, The REPL
 @section First aids
