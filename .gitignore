@@ -30,3 +30,4 @@
 /doc/geiser.info
 /doc/texinfo.tex
 /autom4te.cache/
+/bin/Makefile.in

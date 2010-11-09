@@ -12,7 +12,7 @@
 * Introduction::
 * Installation::
 * The REPL::
-* Fun between the parens::
+* Between the parens::
 * Cheat sheet::
 * No hacker is an island::
 * Index::
@@ -34,7 +34,7 @@ list</a>&nbsp;
 @include intro.texi
 @include install.texi
 @include repl.texi
-@include fun.texi
+@include parens.texi
 @include cheat.texi
 @include thanks.texi
 @include index.texi

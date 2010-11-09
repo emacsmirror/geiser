@@ -19,7 +19,7 @@ at least one of the supported schemes, which right now are
 latest and greatest @uref{http://www.gnu.org/software/guile, Guile} 1.9
 directly compiled from a recent checkout of
 @uref{http://www.gnu.org/software/guile/repository.html, its Git
-@i{master} branch}. Since Geiser supports multiple @repl{}s, having both
+@i{master} branch}. Since Geiser supports multiple REPLs, having both
 of them will just add to the fun.
 
 @cindex use the source, Luke

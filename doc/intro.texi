@@ -26,14 +26,14 @@ bulk of the code.
 @cindex current module
 @anchor{current-module} While being as generic as possible, the
 Scheme-Elisp interface makes some assumptions about the capabilities and
-interaction mode of the corresponding @repl{}. In particular, Geiser
+interaction mode of the corresponding REPL. In particular, Geiser
 expects the latter to support namespaces in the form of a module system,
-and to provide a well defined way to establish the @repl{}'s current
+and to provide a well defined way to establish the REPL's current
 namespace (or module), as well as the current's file module (or
 namespace). Thus, all evaluations performed by Geiser either in the
-@repl{} or in a source code buffer happen in the context of the current
+REPL or in a source code buffer happen in the context of the current
 namespace. Every time you switch to a different file, you're switching
-namespaces automatically; at the @repl{}, you must request the switch
+namespaces automatically; at the REPL, you must request the switch
 explicitly (usually just using means provided by the Scheme
 implementation itself).
 
@@ -76,10 +76,10 @@ Listings of identifiers exported by a given module.
 @item
 Listings of callers/callees of procedures.
 @item
-Rudimentary support for debugging (when the @repl{} provides a
+Rudimentary support for debugging (when the REPL provides a
 debugging) and error navigation.
 @item
-Support for multiple, simultaneous @repl{}s.
+Support for multiple, simultaneous REPLs.
 @end itemize
 
 In the following pages, i'll try to explain what these features

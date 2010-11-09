@@ -1,4 +1,4 @@
-@node Cheat sheet, No hacker is an island, Fun between the parens, Top
+@node Cheat sheet, No hacker is an island, Between the parens, Top
 @chapter Cheat sheet
 
 @menu
@@ -31,6 +31,9 @@
 @item C-c C-e C-m
 @tab geiser-edit-module
 @tab Ask for a module and open its file
+@item C-c C-e C-[
+@tab geiser-squarify
+@tab Toggle between () and [] for current form
 @item @tab @tab
 @item C-M-x
 @tab geiser-eval-definition
@@ -106,11 +109,17 @@
 @tab Kill Scheme process
 @item C-c C-k
 @tab geiser-repl-nuke
-@tab Nuke REPL: use it if the REPL becomes unresponsive
+@tab Soft restart for unresponsive REPL
 @item M-.
 @tab geiser-edit-symbol-at-point
 @tab Edit identifier at point
-@item TAB, M-TAB
+@item TAB
+@tab geiser-completion--tab
+@tab Complete, indent or go to next error
+@item S-TAB (backtab)
+@tab geiser-completion--previous-error
+@tab Go to previous error in the REPL buffer
+@item M-TAB
 @tab geiser-completion--complete-symbol
 @tab Complete identifier at point
 @item M-`, C-.
@@ -171,8 +180,9 @@
 @tab Bury buffer
 @end multitable
 
-@flushright
-.
-@end flushright
-
+@ifhtml
+@html
+<hr>
+@end html
+@end ifhtml
 

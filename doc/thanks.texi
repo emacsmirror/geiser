@@ -1,6 +1,6 @@
 @node No hacker is an island, Index, Cheat sheet, Top
 @chapter No hacker is an island
-
+@cindex thanks
 Andy Wingo, Geiser's first user, has been a continuous source of
 encouragement and suggestions, and keeps improving Guile and heeding
 my feature requests.

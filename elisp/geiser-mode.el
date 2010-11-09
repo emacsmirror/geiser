@@ -176,6 +176,35 @@ With prefix, try to enter the current's buffer module."
     (goto-char (point-max))
     (pop-to-buffer b)))
 
+(defun geiser-squarify (n)
+  "Toggle between () and [] for current form.
+With numeric prefix, perform that many toggles, forward for
+positive values and backward for negative."
+  (interactive "p")
+  (let ((pared (and (boundp 'paredit-mode) paredit-mode))
+        (fwd (> n 0))
+        (steps (abs n)))
+    (when (and pared (fboundp 'paredit-mode)) (paredit-mode -1))
+    (unwind-protect
+        (save-excursion
+          (unless (looking-at-p "\\s(") (backward-up-list))
+          (while (> steps 0)
+            (let ((p (point))
+                  (round (looking-at-p "(")))
+              (forward-sexp)
+              (backward-delete-char 1)
+              (insert (if round "]" ")"))
+              (goto-char p)
+              (delete-char 1)
+              (insert (if round "[" "("))
+              (setq steps (1- steps))
+              (backward-char)
+              (condition-case nil
+                  (progn (when fwd (forward-sexp 2))
+                         (backward-sexp))
+                (error (setq steps 0))))))
+      (when (and pared (fboundp 'paredit-mode)) (paredit-mode 1)))))
+
 
 ;;; Geiser mode:
 
@@ -258,6 +287,7 @@ interacting with the Geiser REPL is at your disposal.
   ("Complete module name" ((kbd "M-`") (kbd "C-."))
    geiser-completion--complete-module)
   ("Edit module" ("\C-c\C-e\C-m" "\C-c\C-em") geiser-edit-module)
+  ("Toggle ()/[]" ("\C-c\C-e\C-[" "\C-c\C-e[") geiser-squarify)
   --
   ("Callers" ((kbd "C-c <")) geiser-xref-callers
    :enable (and (geiser-eval--supported-p 'callers) (symbol-at-point)))
