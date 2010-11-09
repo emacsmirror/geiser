@@ -184,7 +184,7 @@ positive values and backward for negative."
   (let ((pared (and (boundp 'paredit-mode) paredit-mode))
         (fwd (> n 0))
         (steps (abs n)))
-    (when pared (paredit-mode -1))
+    (when (and pared (fboundp 'paredit-mode)) (paredit-mode -1))
     (unwind-protect
         (save-excursion
           (unless (looking-at-p "\\s(") (backward-up-list))
@@ -203,7 +203,7 @@ positive values and backward for negative."
                   (progn (when fwd (forward-sexp 2))
                          (backward-sexp))
                 (error (setq steps 0))))))
-      (when pared (paredit-mode 1)))))
+      (when (and pared (fboundp 'paredit-mode)) (paredit-mode 1)))))
 
 
 ;;; Geiser mode:

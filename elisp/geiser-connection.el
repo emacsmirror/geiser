@@ -112,7 +112,7 @@ By default, Geiser uses the prompt regexp.")
   (cdr (assoc :reply c)))
 
 (defsubst geiser-con--connection-completed (c r)
-  (geiser-con--request-deactivate req)
+  (geiser-con--request-deactivate r)
   (puthash (geiser-con--request-id r) r (cdr (assoc :completed c))))
 
 (defun geiser-con--connection-clean-current-request (c)
