@@ -205,10 +205,12 @@ With prefix, asks for the symbol to edit."
                      (geiser-completion--read-symbol "Edit symbol: ")))
          (cmd `(:eval (:ge symbol-location ',symbol)))
          (marker (point-marker)))
-    (condition-case nil
+    (condition-case err
         (progn (geiser-edit--try-edit symbol (geiser-eval--send/wait cmd))
                (when marker (ring-insert find-tag-marker-ring marker)))
-      (error (geiser-edit-module-at-point)))))
+      (error (condition-case nil
+                 (geiser-edit-module-at-point)
+               (error (error (error-message-string err))))))))
 
 (defun geiser-pop-symbol-stack ()
   "Pop back to where \\[geiser-edit-symbol-at-point] was last invoked."
