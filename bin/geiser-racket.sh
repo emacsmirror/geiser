@@ -8,12 +8,12 @@ exec racket -i -S "$top/racket" -l errortrace -cu "$0" ${1+"$@"}
 
 (require (lib "cmdline.rkt"))
 
-(define port (make-parameter 1969))
+(define port (make-parameter 0))
 
 (command-line
  "run-racket.sh" (current-command-line-arguments)
  (once-each
   (("-p" "--port") p "Geiser server port" (port (string->number p)))))
 
-(and ((dynamic-require 'geiser/server 'start-geiser) (port))
-     (printf "Geiser server running at port ~a~%" (port)))
+(printf "Geiser server running at port ~a~%"
+        ((dynamic-require 'geiser/server 'start-geiser)))

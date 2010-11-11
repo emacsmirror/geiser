@@ -26,9 +26,10 @@ for this implementation.")
   "A function taking no arguments and returning a list of
 arguments to be used when invoking the scheme binary.")
 
-(geiser-impl--define-caller geiser-inf--prompt-regexp prompt-regexp ()
+(geiser-impl--define-caller geiser-inf--prompt-re inferior-prompt-regexp ()
   "A variable (or thunk returning a value) giving the regular
-expression for this implementation's scheme prompt.")
+expression for this implementation's inferior scheme prompt. By default,
+cmuscheme's prompt regexp will be used.")
 
 (geiser-impl--define-caller geiser-inf--init-server-cmd init-server-cmd ()
   "A variable (or thunk returning a value) giving the REPL server
@@ -55,28 +56,33 @@ list of the form (server PORT).")
     (inferior-scheme-mode)
     (current-buffer)))
 
+(defun geiser-inf--sentinel (proc evnt)
+  (let ((buff (process-buffer proc)))
+    (when (buffer-live-p buff) (kill-buffer buff))))
+
 
 ;; Starting an inferior REPL
 
 (defun geiser-inf--run-scheme (impl)
   (let ((bin (geiser-inf--binary impl))
         (args (geiser-inf--arglist impl))
-        (prompt-rx (geiser-inf--prompt-regexp impl)))
-    (unless (and bin args prompt-rx)
+        (prompt-rx (geiser-inf--prompt-re impl)))
+    (unless (and bin args)
       (error "Sorry, I don't know how to start %s" impl))
     (with-current-buffer (geiser-inf--make-buffer impl)
-      (setq comint-prompt-regexp prompt-rx)
+      (when prompt-rx comint-prompt-regexp prompt-rx)
       (condition-case err
           (apply 'make-comint-in-buffer
              `(,(buffer-name) ,(current-buffer) ,bin nil ,@args))
-        (error (error "Unable to start REPL: %s" (error-message-string err))))
+        (error (error "Error starting inferior %s REPL: %s"
+                      impl (error-message-string err))))
       (geiser-inf--wait-for-prompt 10000)
+      (set-process-sentinel (get-buffer-process (current-buffer))
+                            'geiser-inf--sentinel)
       (cons (current-buffer)
             (comint-redirect-results-list (geiser-inf--init-server-cmd impl)
-                                          "(server-port \\([0-9]\\)+)"
+                                          "(port \\([0-9]+\\))"
                                           1)))))
-
-
 
 
 (provide 'geiser-inf)

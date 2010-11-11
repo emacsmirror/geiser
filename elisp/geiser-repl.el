@@ -109,6 +109,10 @@ expression, if any."
 
 ;;; Implementation-dependent parameters
 
+(geiser-impl--define-caller geiser-repl--prompt-regexp prompt-regexp ()
+  "A variable (or thunk returning a value) giving the regular
+expression for this implementation's geiser scheme prompt.")
+
 (geiser-impl--define-caller
     geiser-repl--debugger-prompt-regexp debugger-prompt-regexp ()
   "A variable (or thunk returning a value) giving the regular
@@ -235,8 +239,9 @@ module command as a string")
 (defun geiser-repl--start-repl (impl host port remote)
   (message "Starting Geiser REPL for %s ..." impl)
   (geiser-repl--to-repl-buffer impl)
+  (goto-char (point-max))
   (let ((address (geiser-repl--get-address host port))
-        (prompt-rx (geiser-inf--prompt-regexp impl))
+        (prompt-rx (geiser-repl--prompt-regexp impl))
         (deb-prompt-rx (geiser-repl--debugger-prompt-regexp impl))
         (cname (geiser-repl--repl-name impl)))
     (unless prompt-rx
@@ -260,7 +265,7 @@ module command as a string")
     (add-to-list 'geiser-repl--repls (current-buffer))
     (geiser-repl--set-this-buffer-repl (current-buffer))
     (geiser-repl--startup impl)
-    (message "Geiser REPL up and running!")))
+    (message "%s up and running!" (geiser-repl--repl-name impl))))
 
 (defun geiser-repl--connection ()
   (let ((buffer (geiser-repl--set-up-repl geiser-impl--implementation)))
@@ -288,8 +293,8 @@ module command as a string")
 (defun geiser-repl--quit-inf ()
   (when (buffer-live-p geiser-repl--inferior-buffer)
     (with-current-buffer geiser-repl--inferior-buffer
-      (let ((geiser-repl-query-on-exit-p nil)) (geiser-repl-exit))
-      (kill-buffer))))
+      (let ((geiser-repl-query-on-exit-p nil))
+        (geiser-repl-exit)))))
 
 (defun geiser-repl--on-quit ()
   (comint-write-input-ring)
@@ -314,10 +319,10 @@ module command as a string")
               (comint-input-ring-file-name (geiser-repl--history-file)))
           (geiser-repl--on-quit)
           (push pb geiser-repl--closed-repls)
-          (when (buffer-name (current-buffer))
-            (comint-kill-region comint-last-input-start (point))
-            (insert "\nIt's been nice interacting with you!\n")
-            (insert "Press C-c C-z to bring me back.\n" )))))))
+          (goto-char (point-max))
+          (comint-kill-region comint-last-input-start (point))
+          (insert "\nIt's been nice interacting with you!\n")
+          (insert "Press C-c C-z to bring me back.\n" ))))))
 
 (defun geiser-repl--on-kill ()
   (geiser-repl--on-quit)
@@ -499,9 +504,16 @@ buffer."
   "Start a new Geiser REPL."
   (interactive
    (list (geiser-repl--get-impl "Start Geiser for scheme implementation: ")))
-  (let ((b/p (geiser-inf--run-scheme impl)))
-    (setq geiser-repl--inferior-buffer (car b/p))
-    (geiser-repl--start-repl impl "localhost" (cdr b/p) nil)))
+  (message "Starting Scheme process...")
+  (let* ((b/p (geiser-inf--run-scheme impl))
+         (inf-buff (car b/p))
+         (port (cadr b/p)))
+    (unless port
+      (when (bufferp inf-buff) (pop-to-buffer inf-buff))
+      (error "%s" "Couldn't connect to inferior scheme process"))
+    (geiser-repl--start-repl impl "localhost" port nil)
+    (setq geiser-repl--inferior-buffer inf-buff)
+    (with-current-buffer inf-buff (setq geiser-impl--implementation impl))))
 
 (defalias 'geiser 'run-geiser)
 
@@ -585,17 +597,25 @@ With a prefix argument, force exit by killing the scheme process."
     (dolist (repl geiser-repl--repls lst)
       (when (buffer-live-p repl)
         (with-current-buffer repl
-          (push geiser-impl--implementation lst))))))
+          (push (cons geiser-impl--implementation
+                      (when geiser-repl--remote-p
+                        (list geiser-repl--host geiser-repl--port)))
+                lst))))))
 
 (defun geiser-repl--restore (impls)
   (dolist (impl impls)
-    (when impl (run-geiser impl))))
+    (when impl
+      (if (cdr impl)
+          (geiser-connect (car impl) (cadr impl) (caddr impl))
+        (run-geiser (car impl))))))
 
 (defun geiser-repl-unload-function ()
   (dolist (repl geiser-repl--repls)
     (when (buffer-live-p repl)
-      (kill-buffer repl))))
+      (with-current-buffer repl
+        (let ((geiser-repl-query-on-exit-p nil)) (geiser-repl-exit))
+        (sit-for 0.05)
+        (kill-buffer)))))
 
 
 (provide 'geiser-repl)
-;;; geiser-repl.el ends here
