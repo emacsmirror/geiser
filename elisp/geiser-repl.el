@@ -193,6 +193,11 @@ module command as a string")
   (and (null (cdr geiser-active-implementations))
        (car geiser-active-implementations)))
 
+(defun geiser-repl--get-impl (prompt)
+  (or (geiser-repl--only-impl-p)
+      (and (eq major-mode 'geiser-repl-mode) geiser-impl--implementation)
+      (geiser-repl--read-impl prompt)))
+
 
 ;;; REPL connections
 
@@ -203,7 +208,10 @@ module command as a string")
  (defvar geiser-repl--connection nil))
 
 (make-variable-buffer-local
- (defvar geiser-remote-p nil))
+ (defvar geiser-repl--remote-p nil))
+
+(make-variable-buffer-local
+ (defvar geiser-repl--inferior-buffer nil))
 
 (defsubst geiser-repl--host () (car geiser-repl--address))
 (defsubst geiser-repl--port () (cdr geiser-repl--address))
@@ -218,7 +226,7 @@ module command as a string")
 
 (defun geiser-repl--save-remote-data (address remote)
   (setq geiser-repl--address address)
-  (setq geiser-remote-p remote)
+  (setq geiser-repl--remote-p remote)
   (setq header-line-format (and remote
                                 (format "Host: %s   Port: %s"
                                         (geiser-repl--host)
@@ -277,12 +285,19 @@ module command as a string")
 (defsubst geiser-repl--history-file ()
   (format "%s.%s" geiser-repl-history-filename geiser-impl--implementation))
 
+(defun geiser-repl--quit-inf ()
+  (when (buffer-live-p geiser-repl--inferior-buffer)
+    (with-current-buffer geiser-repl--inferior-buffer
+      (let ((geiser-repl-query-on-exit-p nil)) (geiser-repl-exit))
+      (kill-buffer))))
+
 (defun geiser-repl--on-quit ()
   (comint-write-input-ring)
   (let ((cb (current-buffer))
         (impl geiser-impl--implementation)
         (comint-prompt-read-only nil))
     (ignore-errors (geiser-con--connection-close geiser-repl--connection))
+    (geiser-repl--quit-inf)
     (setq geiser-repl--repls (remove cb geiser-repl--repls))
     (dolist (buffer (buffer-list))
       (when (buffer-live-p buffer)
@@ -483,24 +498,18 @@ buffer."
 (defun run-geiser (impl)
   "Start a new Geiser REPL."
   (interactive
-   (list (or (geiser-repl--only-impl-p)
-             (and (eq major-mode 'geiser-repl-mode)
-                  geiser-impl--implementation)
-             (geiser-repl--read-impl
-              "Start Geiser for scheme implementation: "))))
-  (geiser-repl--start-repl impl nil nil nil))
+   (list (geiser-repl--get-impl "Start Geiser for scheme implementation: ")))
+  (let ((b/p (geiser-inf--run-scheme impl)))
+    (setq geiser-repl--inferior-buffer (car b/p))
+    (geiser-repl--start-repl impl "localhost" (cdr b/p) nil)))
 
 (defalias 'geiser 'run-geiser)
 
 (defun geiser-connect (impl &optional host port)
   "Start a new Geiser REPL connected to a remote Scheme process."
   (interactive
-   (list (or (geiser-repl--only-impl-p)
-             (and (eq major-mode 'geiser-repl-mode)
-                  geiser-impl--implementation)
-             (geiser-repl--read-impl
-              "Scheme implementation: "))))
-  (geiser-repl--start-repl impl t host port t))
+   (list (geiser-repl--get-impl "Connect to Scheme implementation: ")))
+  (geiser-repl--start-repl impl host port t))
 
 (make-variable-buffer-local
  (defvar geiser-repl--last-scm-buffer nil))

@@ -72,7 +72,7 @@ list of the form (server PORT).")
         (error (error "Unable to start REPL: %s" (error-message-string err))))
       (geiser-inf--wait-for-prompt 10000)
       (cons (current-buffer)
-            (comint-redirect-results-list (geiser-inf--server-init-cmd impl)
+            (comint-redirect-results-list (geiser-inf--init-server-cmd impl)
                                           "(server-port \\([0-9]\\)+)"
                                           1)))))
 
