@@ -15,6 +15,7 @@ dist_lisp_LISP = \
    geiser-eval.el \
    geiser-guile.el \
    geiser-impl.el \
+   geiser-inf.el \
    geiser-log.el \
    geiser-menu.el \
    geiser-mode.el \

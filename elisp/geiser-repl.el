@@ -13,6 +13,7 @@
 (require 'geiser-autodoc)
 (require 'geiser-edit)
 (require 'geiser-completion)
+(require 'geiser-inf)
 (require 'geiser-impl)
 (require 'geiser-eval)
 (require 'geiser-connection)
@@ -106,6 +107,30 @@ expression, if any."
   :group 'geiser-repl)
 
 
+;;; Implementation-dependent parameters
+
+(geiser-impl--define-caller
+    geiser-repl--debugger-prompt-regexp debugger-prompt-regexp ()
+  "A variable (or thunk returning a value) giving the regular
+expression for this implementation's debugging prompt.")
+
+(geiser-impl--define-caller geiser-repl--startup startup ()
+  "Function taking no parameters that is called after the REPL
+has been initialised. All Geiser functionality is available to
+you at that point.")
+
+(geiser-impl--define-caller geiser-repl--enter-cmd enter-command (module)
+  "Function taking a module designator and returning a REPL enter
+module command as a string")
+
+(geiser-impl--define-caller geiser-repl--import-cmd import-command (module)
+  "Function taking a module designator and returning a REPL import
+module command as a string")
+
+(geiser-impl--define-caller geiser-repl--exit-cmd exit-command ()
+  "Function returning the REPL exit command as a string")
+
+
 ;;; Geiser REPL buffers and processes:
 
 (defvar geiser-repl--repls nil)
@@ -161,50 +186,27 @@ expression, if any."
         (geiser-repl-mode)
         (geiser-impl--set-buffer-implementation impl)))))
 
-(geiser-impl--define-caller geiser-repl--binary binary ()
-  "A variable or function returning the path to the scheme binary
-for this implementation.")
+(defun geiser-repl--read-impl (prompt &optional active)
+  (geiser-impl--read-impl prompt (and active (geiser-repl--active-impls))))
 
-(geiser-impl--define-caller geiser-repl--arglist arglist ()
-  "A function taking no arguments and returning a list of
-arguments to be used when invoking the scheme binary.")
+(defsubst geiser-repl--only-impl-p ()
+  (and (null (cdr geiser-active-implementations))
+       (car geiser-active-implementations)))
 
-(geiser-impl--define-caller geiser-repl--prompt-regexp prompt-regexp ()
-  "A variable (or thunk returning a value) giving the regular
-expression for this implementation's scheme prompt.")
-
-(geiser-impl--define-caller
-    geiser-repl--debugger-prompt-regexp debugger-prompt-regexp ()
-  "A variable (or thunk returning a value) giving the regular
-expression for this implementation's debugging prompt.")
-
-(geiser-impl--define-caller
-    geiser-repl--debugger-preamble-regexp debugger-preamble-regexp ()
-  "A variable (or thunk returning a value) used to determine whether
-the REPL has entered debugging mode.")
-
-(geiser-impl--define-caller geiser-repl--startup startup ()
-  "Function taking no parameters that is called after the REPL
-has been initialised. All Geiser functionality is available to
-you at that point.")
-
-(geiser-impl--define-caller geiser-repl--enter-cmd enter-command (module)
-  "Function taking a module designator and returning a REPL enter
-module command as a string")
-
-(geiser-impl--define-caller geiser-repl--import-cmd import-command (module)
-  "Function taking a module designator and returning a REPL import
-module command as a string")
-
-(geiser-impl--define-caller geiser-repl--exit-cmd exit-command ()
-  "Function returning the REPL exit command as a string")
+
+;;; REPL connections
 
 (make-variable-buffer-local
  (defvar geiser-repl--address nil))
 
+(make-variable-buffer-local
+ (defvar geiser-repl--connection nil))
+
+(make-variable-buffer-local
+ (defvar geiser-remote-p nil))
+
 (defsubst geiser-repl--host () (car geiser-repl--address))
 (defsubst geiser-repl--port () (cdr geiser-repl--address))
-(defsubst geiser-repl--remote-p () geiser-repl--address)
 
 (defun geiser-repl--get-address (&optional host port)
   (let ((defhost (or (geiser-repl--host) geiser-repl-default-host))
@@ -214,124 +216,52 @@ module command as a string")
                            nil nil defhost))
           (or port (read-number "Port: " defport)))))
 
-(defun geiser-repl--save-remote-data (remote address)
-  (setq geiser-repl--address (and remote address))
+(defun geiser-repl--save-remote-data (address remote)
+  (setq geiser-repl--address address)
+  (setq geiser-remote-p remote)
   (setq header-line-format (and remote
                                 (format "Host: %s   Port: %s"
                                         (geiser-repl--host)
                                         (geiser-repl--port)))))
 
-(defun geiser-repl--start-repl (impl &optional remote host port)
+(defun geiser-repl--start-repl (impl host port remote)
   (message "Starting Geiser REPL for %s ..." impl)
   (geiser-repl--to-repl-buffer impl)
-  (let ((program (if remote (geiser-repl--get-address host port)
-                   (geiser-repl--binary impl)))
-        (args (geiser-repl--arglist impl))
-        (prompt-rx (geiser-repl--prompt-regexp impl))
+  (let ((address (geiser-repl--get-address host port))
+        (prompt-rx (geiser-inf--prompt-regexp impl))
         (deb-prompt-rx (geiser-repl--debugger-prompt-regexp impl))
-        (deb-preamble-rx (geiser-repl--debugger-preamble-regexp impl))
         (cname (geiser-repl--repl-name impl)))
-    (unless (and program prompt-rx)
+    (unless prompt-rx
       (error "Sorry, I don't know how to start a REPL for %s" impl))
-    (set (make-local-variable 'comint-prompt-regexp) prompt-rx)
-    (geiser-repl--save-remote-data remote program)
+    (geiser-repl--save-remote-data address remote)
     (condition-case err
-        (apply 'make-comint-in-buffer
-               `(,cname ,(current-buffer) ,program nil ,@args))
+        (progn
+          (setq geiser-repl--connection
+                (geiser-con--open-connection (car address)
+                                             (cdr address)
+                                             prompt-rx
+                                             deb-prompt-rx))
+          (set (make-local-variable 'comint-prompt-regexp)
+               (geiser-con--connection-eot geiser-repl--connection))
+          (apply 'make-comint-in-buffer `(,cname ,(current-buffer) ,address)))
       (error (insert "Unable to start REPL:\n\n"
                      (error-message-string err) "\n")
              (error "Couldn't start Geiser")))
-    (geiser-repl--wait-for-prompt 10000)
+    (geiser-inf--wait-for-prompt 10000)
     (geiser-repl--history-setup)
-    (geiser-con--setup-connection (current-buffer)
-                                  prompt-rx
-                                  deb-prompt-rx
-                                  deb-preamble-rx)
     (add-to-list 'geiser-repl--repls (current-buffer))
     (geiser-repl--set-this-buffer-repl (current-buffer))
     (geiser-repl--startup impl)
     (message "Geiser REPL up and running!")))
 
-(defun geiser-repl--process ()
+(defun geiser-repl--connection ()
   (let ((buffer (geiser-repl--set-up-repl geiser-impl--implementation)))
-    (or (and (buffer-live-p buffer) (get-buffer-process buffer))
+    (or (and (buffer-live-p buffer)
+             (get-buffer-process buffer)
+             (with-current-buffer buffer geiser-repl--connection))
         (error "No Geiser REPL for this buffer (try M-x run-geiser)"))))
 
-(setq geiser-eval--default-proc-function 'geiser-repl--process)
-
-(defun geiser-repl--wait-for-prompt (timeout)
-  (let ((p (point)) (seen) (buffer (current-buffer)))
-    (while (and (not seen)
-                (> timeout 0)
-                (get-buffer-process buffer))
-      (sleep-for 0.1)
-      (setq timeout (- timeout 100))
-      (goto-char p)
-      (setq seen (re-search-forward comint-prompt-regexp nil t)))
-    (goto-char (point-max))
-    (unless seen (error "No prompt found!"))))
-
-
-;;; Interface: starting and interacting with geiser REPL:
-
-(defun geiser-repl--read-impl (prompt &optional active)
-  (geiser-impl--read-impl prompt (and active (geiser-repl--active-impls))))
-
-(defsubst geiser-repl--only-impl-p ()
-  (and (null (cdr geiser-active-implementations))
-       (car geiser-active-implementations)))
-
-(defun run-geiser (impl)
-  "Start a new Geiser REPL."
-  (interactive
-   (list (or (geiser-repl--only-impl-p)
-             (and (eq major-mode 'geiser-repl-mode)
-                  geiser-impl--implementation)
-             (geiser-repl--read-impl
-              "Start Geiser for scheme implementation: "))))
-   (geiser-repl--start-repl impl))
-
-(defun geiser-connect (impl &optional host port)
-  "Start a new Geiser REPL connected to a remote Scheme process."
-  (interactive
-   (list (or (geiser-repl--only-impl-p)
-             (and (eq major-mode 'geiser-repl-mode)
-                  geiser-impl--implementation)
-             (geiser-repl--read-impl
-              "Scheme implementation: "))))
-  (geiser-repl--start-repl impl t host port))
-
-(make-variable-buffer-local
- (defvar geiser-repl--last-scm-buffer nil))
-
-(defun switch-to-geiser (&optional ask impl buffer)
-  "Switch to running Geiser REPL.
-With prefix argument, ask for which one if more than one is running.
-If no REPL is running, execute `run-geiser' to start a fresh one."
-  (interactive "P")
-  (let* ((impl (or impl geiser-impl--implementation))
-         (in-repl (eq major-mode 'geiser-repl-mode))
-         (in-live-repl (and in-repl (get-buffer-process (current-buffer))))
-         (repl (cond ((and (not ask)
-                           (not impl)
-                           (not in-repl)
-                           (or geiser-repl--repl (car geiser-repl--repls))))
-                     ((and (not ask)
-                           (not in-repl)
-                           impl
-                           (geiser-repl--repl/impl impl)))))
-         (pop-up-windows geiser-repl-window-allow-split))
-    (cond ((or in-live-repl
-               (and (eq (current-buffer) repl) (not (eq repl buffer))))
-           (when (buffer-live-p geiser-repl--last-scm-buffer)
-             (pop-to-buffer geiser-repl--last-scm-buffer)))
-          (repl (pop-to-buffer repl))
-          ((geiser-repl--remote-p) (geiser-connect impl))
-          (t (run-geiser impl)))
-    (when (and buffer (eq major-mode 'geiser-repl-mode))
-      (setq geiser-repl--last-scm-buffer buffer))))
-
-(defalias 'geiser 'switch-to-geiser)
+(setq geiser-eval--default-connection-function 'geiser-repl--connection)
 
 (defun geiser-repl--send (cmd)
   (when (and cmd (eq major-mode 'geiser-repl-mode))
@@ -340,53 +270,6 @@ If no REPL is running, execute `run-geiser' to start a fresh one."
     (insert cmd)
     (let ((comint-input-filter (lambda (x) nil)))
       (comint-send-input nil t))))
-
-(defun switch-to-geiser-module (&optional module buffer)
-  "Switch to running Geiser REPL and try to enter a given module."
-  (interactive)
-  (let* ((module (or module
-                     (geiser-completion--read-module
-                      "Switch to module (default top-level): ")))
-         (cmd (and module
-                   (geiser-repl--enter-cmd geiser-impl--implementation
-                                           module))))
-    (unless (eq major-mode 'geiser-repl-mode)
-      (switch-to-geiser nil nil (or buffer (current-buffer))))
-    (geiser-repl--send cmd)))
-
-(defun geiser-repl-import-module (&optional module)
-  "Import a given module in the current namespace of the REPL."
-  (interactive)
-  (let* ((module (or module
-                     (geiser-completion--read-module "Import module: ")))
-         (cmd (and module
-                   (geiser-repl--import-cmd geiser-impl--implementation
-                                            module))))
-    (switch-to-geiser nil nil (current-buffer))
-    (geiser-repl--send cmd)))
-
-(defun geiser-repl-exit (&optional arg)
-  "Exit the current REPL.
-With a prefix argument, force exit by killing the scheme process."
-  (interactive "P")
-  (when (or (not geiser-repl-query-on-exit-p)
-            (y-or-n-p "Really quit this REPL? "))
-    (let ((cmd (and (not arg)
-                    (geiser-repl--exit-cmd geiser-impl--implementation))))
-      (if cmd
-          (when (stringp cmd) (geiser-repl--send cmd))
-        (comint-kill-subjob)))))
-
-(defun geiser-repl-nuke ()
-  "Try this command if the REPL becomes unresponsive."
-  (interactive)
-  (goto-char (point-max))
-  (comint-kill-region comint-last-input-start (point))
-  (comint-redirect-cleanup)
-  (geiser-con--setup-connection (current-buffer)
-                                comint-prompt-regexp
-                                geiser-con--debugging-prompt-regexp
-                                geiser-con--debugging-preamble-regexp))
 
 
 ;;; REPL history and clean-up:
@@ -399,6 +282,7 @@ With a prefix argument, force exit by killing the scheme process."
   (let ((cb (current-buffer))
         (impl geiser-impl--implementation)
         (comint-prompt-read-only nil))
+    (ignore-errors (geiser-con--connection-close geiser-repl--connection))
     (setq geiser-repl--repls (remove cb geiser-repl--repls))
     (dolist (buffer (buffer-list))
       (when (buffer-live-p buffer)
@@ -426,7 +310,7 @@ With a prefix argument, force exit by killing the scheme process."
         (remove (current-buffer) geiser-repl--closed-repls)))
 
 (defun geiser-repl--input-filter (str)
-  (not (or (geiser-con--is-debugging)
+  (not (or ;; (geiser-con--is-debugging)
            (string-match "^\\s *$" str)
            (string-match "^,quit *$" str))))
 
@@ -497,7 +381,8 @@ With a prefix argument, force exit by killing the scheme process."
          (intxt (and pmark (buffer-substring pmark (point)))))
     (when intxt
       (when (and geiser-repl-forget-old-errors-p
-                 (not (geiser-con--is-debugging)))
+;;;                 (not (geiser-con--is-debugging)))
+                 )
         (compilation-forget-errors))
       (comint-send-input)
       (when (string-match "^\\s-*$" intxt)
@@ -545,7 +430,6 @@ buffer."
   (setq geiser-eval--get-module-function 'geiser-repl--module-function)
   (when geiser-repl-autodoc-p
     (geiser--save-msg (geiser-autodoc-mode 1)))
-  (setq geiser-autodoc--inhibit-function 'geiser-con--is-debugging)
   (geiser-company--setup geiser-repl-company-p)
   ;; enabling compilation-shell-minor-mode without the annoying highlighter
   (compilation-setup t))
@@ -588,13 +472,101 @@ buffer."
   ("Kill Scheme interpreter" "\C-c\C-q" geiser-repl-exit
    :enable (geiser-repl--live-p))
   ("Restart" "\C-c\C-z" switch-to-geiser :enable (not (geiser-repl--live-p)))
-  ("Revive REPL" "\C-c\C-k" geiser-repl-nuke
-   "Use this command if the REPL becomes irresponsive"
-   :enable (geiser-repl--live-p))
   --
   (custom "REPL options" geiser-repl))
 
 (define-key geiser-repl-mode-map [menu-bar completion] 'undefined)
+
+
+;;; User commands
+
+(defun run-geiser (impl)
+  "Start a new Geiser REPL."
+  (interactive
+   (list (or (geiser-repl--only-impl-p)
+             (and (eq major-mode 'geiser-repl-mode)
+                  geiser-impl--implementation)
+             (geiser-repl--read-impl
+              "Start Geiser for scheme implementation: "))))
+  (geiser-repl--start-repl impl nil nil nil))
+
+(defalias 'geiser 'run-geiser)
+
+(defun geiser-connect (impl &optional host port)
+  "Start a new Geiser REPL connected to a remote Scheme process."
+  (interactive
+   (list (or (geiser-repl--only-impl-p)
+             (and (eq major-mode 'geiser-repl-mode)
+                  geiser-impl--implementation)
+             (geiser-repl--read-impl
+              "Scheme implementation: "))))
+  (geiser-repl--start-repl impl t host port t))
+
+(make-variable-buffer-local
+ (defvar geiser-repl--last-scm-buffer nil))
+
+(defun switch-to-geiser (&optional ask impl buffer)
+  "Switch to running Geiser REPL.
+With prefix argument, ask for which one if more than one is running.
+If no REPL is running, execute `run-geiser' to start a fresh one."
+  (interactive "P")
+  (let* ((impl (or impl geiser-impl--implementation))
+         (in-repl (eq major-mode 'geiser-repl-mode))
+         (in-live-repl (and in-repl (get-buffer-process (current-buffer))))
+         (repl (cond ((and (not ask)
+                           (not impl)
+                           (not in-repl)
+                           (or geiser-repl--repl (car geiser-repl--repls))))
+                     ((and (not ask)
+                           (not in-repl)
+                           impl
+                           (geiser-repl--repl/impl impl)))))
+         (pop-up-windows geiser-repl-window-allow-split))
+    (cond ((or in-live-repl
+               (and (eq (current-buffer) repl) (not (eq repl buffer))))
+           (when (buffer-live-p geiser-repl--last-scm-buffer)
+             (pop-to-buffer geiser-repl--last-scm-buffer)))
+          (repl (pop-to-buffer repl))
+          (geiser-repl--remote-p (geiser-connect impl))
+          (t (run-geiser impl)))
+    (when (and buffer (eq major-mode 'geiser-repl-mode))
+      (setq geiser-repl--last-scm-buffer buffer))))
+
+(defun switch-to-geiser-module (&optional module buffer)
+  "Switch to running Geiser REPL and try to enter a given module."
+  (interactive)
+  (let* ((module (or module
+                     (geiser-completion--read-module
+                      "Switch to module (default top-level): ")))
+         (cmd (and module
+                   (geiser-repl--enter-cmd geiser-impl--implementation
+                                           module))))
+    (unless (eq major-mode 'geiser-repl-mode)
+      (switch-to-geiser nil nil (or buffer (current-buffer))))
+    (geiser-repl--send cmd)))
+
+(defun geiser-repl-import-module (&optional module)
+  "Import a given module in the current namespace of the REPL."
+  (interactive)
+  (let* ((module (or module
+                     (geiser-completion--read-module "Import module: ")))
+         (cmd (and module
+                   (geiser-repl--import-cmd geiser-impl--implementation
+                                            module))))
+    (switch-to-geiser nil nil (current-buffer))
+    (geiser-repl--send cmd)))
+
+(defun geiser-repl-exit (&optional arg)
+  "Exit the current REPL.
+With a prefix argument, force exit by killing the scheme process."
+  (interactive "P")
+  (when (or (not geiser-repl-query-on-exit-p)
+            (y-or-n-p "Really quit this REPL? "))
+    (let ((cmd (and (not arg)
+                    (geiser-repl--exit-cmd geiser-impl--implementation))))
+      (if cmd
+          (when (stringp cmd) (geiser-repl--send cmd))
+        (comint-kill-subjob)))))
 
 
 ;;; Unload:

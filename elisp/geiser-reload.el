@@ -38,6 +38,7 @@
            geiser-connection
            geiser-syntax
            geiser-menu
+           geiser-inf
            geiser-impl
            geiser-custom
            geiser-log

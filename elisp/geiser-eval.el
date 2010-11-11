@@ -119,11 +119,11 @@ module-exports, autodoc, callers, callees and generic-methods.")
 
 ;;; Code sending:
 
-(defvar geiser-eval--default-proc-function nil)
+(defvar geiser-eval--default-connection-function nil)
 
-(defsubst geiser-eval--proc ()
-  (and geiser-eval--default-proc-function
-       (funcall geiser-eval--default-proc-function)))
+(defsubst geiser-eval--connection ()
+  (and geiser-eval--default-connection-function
+       (funcall geiser-eval--default-connection-function)))
 
 (defsubst geiser-eval--log (s)
   (geiser-log--info "RETORT: %S" s)
@@ -138,7 +138,7 @@ module-exports, autodoc, callers, callees and generic-methods.")
 
 (defun geiser-eval--send/wait (code &optional timeout buffer)
   (setq geiser-eval--sync-retort nil)
-  (geiser-con--send-string/wait (geiser-eval--proc)
+  (geiser-con--send-string/wait (geiser-eval--connection)
                                 (geiser-eval--code-str code)
                                 'geiser-eval--set-sync-retort
                                 timeout

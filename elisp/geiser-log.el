@@ -44,7 +44,6 @@
   "Simple mode for Geiser log messages buffer."
   (kill-all-local-variables)
   (buffer-disable-undo)
-  (set (make-local-variable 'comint-redirect-subvert-readonly) t)
   (add-hook 'after-change-functions
             '(lambda (b e len)
                (let ((inhibit-read-only t))
