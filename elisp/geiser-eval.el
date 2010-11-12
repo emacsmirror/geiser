@@ -112,9 +112,8 @@ module-exports, autodoc, callers, callees and generic-methods.")
                (t (concat "("
                           (mapconcat 'geiser-eval--scheme-str code " ")
                           ")"))))
-        ((symbolp code) (format "%s" code))
-        ((stringp code) (format "%S" (substring-no-properties code)))
-        (t (format "%S" code))))
+        ((symbolp code) (substring-no-properties (format "%s" code)))
+        (t (substring-no-properties (format "%S" code)))))
 
 
 ;;; Code sending:
