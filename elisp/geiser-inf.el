@@ -52,7 +52,7 @@ list of the form (server PORT).")
     (unless seen (error "%s" "No prompt found!"))))
 
 (defun geiser-inf--make-buffer (impl)
-  (with-current-buffer (generate-new-buffer (format "* inferior %s *" impl))
+  (with-current-buffer (generate-new-buffer (format " * inferior %s *" impl))
     (inferior-scheme-mode)
     (current-buffer)))
 
