@@ -16,4 +16,4 @@ exec racket -i -S "$top/racket" -l errortrace -cu "$0" ${1+"$@"}
   (("-p" "--port") p "Geiser server port" (port (string->number p)))))
 
 (printf "Geiser server running at port ~a~%"
-        ((dynamic-require 'geiser/server 'start-geiser)))
+        ((dynamic-require 'geiser/server 'start-geiser) (port)))

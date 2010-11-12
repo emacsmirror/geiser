@@ -31,7 +31,7 @@ arguments to be used when invoking the scheme binary.")
 expression for this implementation's inferior scheme prompt. By default,
 cmuscheme's prompt regexp will be used.")
 
-(geiser-impl--define-caller geiser-inf--init-server-cmd init-server-cmd ()
+(geiser-impl--define-caller geiser-inf--init-server-cmd init-server-command ()
   "A variable (or thunk returning a value) giving the REPL server
 initialization command for local processes. The command must return a
 list of the form (server PORT).")

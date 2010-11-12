@@ -136,22 +136,21 @@
   (let ((tq (geiser-con--connection-tq con)))
     (and tq (tq-close tq))))
 
-(defvar geiser-con--connection-sentinel nil)
-(defun geiser-con--connection-sentinel (p s)
-  (setq geiser-con--connection-sentinel
-        (concat geiser-con--connection-sentinel s)))
+(defvar geiser-con--startup-prompt nil)
+(defun geiser-con--startup-prompt (p s)
+  (setq geiser-con--startup-prompt
+        (concat geiser-con--startup-prompt s))
+  nil)
 
 (defun geiser-con--open-connection (host port prompt debug-prompt)
-  (setq geiser-con--connection-sentinel "")
-  (let ((proc (make-network-process :name "geiser-con"
-                                    :host host
-                                    :service port
-                                    :filter 'geiser-con--connection-sentinel
-                                    :noquery t)))
+  (setq geiser-con--startup-prompt "")
+  (let* ((name (format "geiser-con@%s:%s" host port))
+         (proc (open-network-stream name nil host port)))
+    (set-process-filter proc 'geiser-con--startup-prompt)
     (with-timeout (10
                    (error (format "Timeout connecting to %s:%s" host port)))
-      (while (not (string-match prompt geiser-con--connection-sentinel))
-        (accept-process-output proc 1)))
+      (while (not (string-match prompt geiser-con--startup-prompt))
+        (accept-process-output proc 0.05)))
     (geiser-con--make-connection proc prompt debug-prompt)))
 
 
@@ -193,7 +192,7 @@
               (geiser-con--connection-eot c)
               r
               'geiser-con--process-completed-request
-              t))
+              nil))
 
 
 ;;; Message sending interface:
