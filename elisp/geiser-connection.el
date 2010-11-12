@@ -73,11 +73,14 @@
 (defun geiser-con--combined-prompt (prompt debug)
   (format "\\(%s%s\\)" prompt (if debug (format "\\|%s" debug) "")))
 
+(defun geiser-con--connection-eot-re (prompt debug)
+  (geiser-con--combined-prompt (format "\0\n%s" prompt)
+                               (and debug (format "\n%s" debug))))
+
 (defun geiser-con--make-connection (proc prompt debug-prompt)
   (list :geiser-connection
         (cons :tq (tq-create proc))
-        (cons :eot (format "\0\n%s"
-                           (geiser-con--combined-prompt prompt debug-prompt)))
+        (cons :eot (geiser-con--connection-eot-re prompt debug-prompt))
         (cons :prompt prompt)
         (cons :debug-prompt debug-prompt)
         (cons :count 0)
@@ -86,14 +89,13 @@
 (defun geiser-con--connection-swap-proc (con proc)
   (let* ((this-proc (geiser-con--connection-process con))
          (this-filter (process-filter this-proc))
-         (this-buffer (process-buffer this-proc))
          (filter (process-filter proc))
          (buffer (process-buffer proc))
          (tq (geiser-con--connection-tq con)))
     (set-process-filter this-proc filter)
     (set-process-buffer this-proc buffer)
     (set-process-filter proc this-filter)
-    (set-process-buffer proc this-buffer)
+    (set-process-buffer proc nil)
     (setcdr tq (cons proc (tq-buffer tq)))
     this-proc))
 
@@ -187,8 +189,11 @@
     (geiser-con--connection-completed con req)))
 
 (defun geiser-con--connection-add-request (c r)
+  (geiser-log--info "REQUEST: <%s>: %s"
+                    (geiser-con--request-id r)
+                    (geiser-con--request-string r))
   (tq-enqueue (geiser-con--connection-tq c)
-              (geiser-con--request-string r)
+              (concat (geiser-con--request-string r) "\n")
               (geiser-con--connection-eot c)
               r
               'geiser-con--process-completed-request

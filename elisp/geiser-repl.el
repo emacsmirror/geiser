@@ -276,6 +276,14 @@ module command as a string")
 
 (setq geiser-eval--default-connection-function 'geiser-repl--connection)
 
+(defun geiser-repl--swap ()
+  (let ((p (get-buffer-process (current-buffer))))
+    (when (and p geiser-repl--connection)
+      (let ((p (geiser-con--connection-swap-proc geiser-repl--connection
+                                                 p)))
+        (goto-char (point-max))
+        (set-marker (process-mark p) (point))))))
+
 (defun geiser-repl--send (cmd)
   (when (and cmd (eq major-mode 'geiser-repl-mode))
     (goto-char (point-max))
