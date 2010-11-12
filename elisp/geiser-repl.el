@@ -255,7 +255,7 @@ module command as a string")
                                              prompt-rx
                                              deb-prompt-rx))
           (set (make-local-variable 'comint-prompt-regexp)
-               (geiser-con--connection-eot geiser-repl--connection))
+               (geiser-con--combined-prompt prompt-rx deb-prompt-rx))
           (apply 'make-comint-in-buffer `(,cname ,(current-buffer) ,address)))
       (error (insert "Unable to start REPL:\n\n"
                      (error-message-string err) "\n")
@@ -283,6 +283,9 @@ module command as a string")
     (insert cmd)
     (let ((comint-input-filter (lambda (x) nil)))
       (comint-send-input nil t))))
+
+(defun geiser-repl--send-silent (cmd)
+  (comint-redirect-results-list cmd ".+" 0))
 
 
 ;;; REPL history and clean-up:

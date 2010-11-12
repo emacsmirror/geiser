@@ -70,14 +70,14 @@
 
 ;;; Connection datatype:
 
+(defun geiser-con--combined-prompt (prompt debug)
+  (format "\\(%s%s\\)" prompt (if debug (format "\\|%s" debug) "")))
+
 (defun geiser-con--make-connection (proc prompt debug-prompt)
   (list :geiser-connection
         (cons :tq (tq-create proc))
-        (cons :eot (format "\\(%s%s\\)"
-                           prompt
-                           (if debug-prompt
-                               (format "\\|%s" debug-prompt)
-                             "")))
+        (cons :eot (format "\0\n%s"
+                           (geiser-con--combined-prompt prompt debug-prompt)))
         (cons :prompt prompt)
         (cons :debug-prompt debug-prompt)
         (cons :count 0)
