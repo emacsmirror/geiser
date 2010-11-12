@@ -118,7 +118,7 @@ expression for this implementation's geiser scheme prompt.")
   "A variable (or thunk returning a value) giving the regular
 expression for this implementation's debugging prompt.")
 
-(geiser-impl--define-caller geiser-repl--startup startup ()
+(geiser-impl--define-caller geiser-repl--startup repl-startup (remote)
   "Function taking no parameters that is called after the REPL
 has been initialised. All Geiser functionality is available to
 you at that point.")
@@ -264,7 +264,7 @@ module command as a string")
     (geiser-repl--history-setup)
     (add-to-list 'geiser-repl--repls (current-buffer))
     (geiser-repl--set-this-buffer-repl (current-buffer))
-    (geiser-repl--startup impl)
+    (geiser-repl--startup impl remote)
     (message "%s up and running!" (geiser-repl--repl-name impl))))
 
 (defun geiser-repl--connection ()
@@ -599,7 +599,7 @@ With a prefix argument, force exit by killing the scheme process."
         (with-current-buffer repl
           (push (cons geiser-impl--implementation
                       (when geiser-repl--remote-p
-                        (list geiser-repl--host geiser-repl--port)))
+                        (list (geiser-repl--host) (geiser-repl--port))))
                 lst))))))
 
 (defun geiser-repl--restore (impls)
