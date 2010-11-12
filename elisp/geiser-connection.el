@@ -74,36 +74,47 @@
   (format "\\(%s%s\\)" prompt (if debug (format "\\|%s" debug) "")))
 
 (defun geiser-con--connection-eot-re (prompt debug)
-  (geiser-con--combined-prompt (format "\0\n%s" prompt)
+  (geiser-con--combined-prompt (format "\n%s" prompt)
                                (and debug (format "\n%s" debug))))
 
 (defun geiser-con--make-connection (proc prompt debug-prompt)
-  (list :geiser-connection
+  (list t
+        (cons :filter (process-filter proc))
         (cons :tq (tq-create proc))
+        (cons :tq-filter (process-filter proc))
         (cons :eot (geiser-con--connection-eot-re prompt debug-prompt))
         (cons :prompt prompt)
         (cons :debug-prompt debug-prompt)
         (cons :count 0)
         (cons :completed (make-hash-table :weakness 'value))))
 
-(defun geiser-con--connection-swap-proc (con proc)
-  (let* ((this-proc (geiser-con--connection-process con))
-         (this-filter (process-filter this-proc))
-         (filter (process-filter proc))
-         (buffer (process-buffer proc))
-         (tq (geiser-con--connection-tq con)))
-    (set-process-filter this-proc filter)
-    (set-process-buffer this-proc buffer)
-    (set-process-filter proc this-filter)
-    (set-process-buffer proc nil)
-    (setcdr tq (cons proc (tq-buffer tq)))
-    this-proc))
+(defun geiser-con--connection-deactivate (c)
+  (when (car c)
+    (let* ((tq (geiser-con--connection-tq c))
+           (proc (geiser-con--connection-process c))
+           (proc-filter (geiser-con--connection-filter c)))
+      (while (not (tq-queue-empty tq))
+        (accept-process-output proc 0.1))
+      (set-process-filter proc proc-filter)
+      (setcar c nil))))
 
-(defsubst geiser-con--connection-p (c)
-  (and (listp c) (eq (car c) :geiser-connection)))
+(defun geiser-con--connection-activate (c)
+  (when (not (car c))
+    (let* ((tq (geiser-con--connection-tq c))
+           (proc (geiser-con--connection-process c))
+           (tq-filter (geiser-con--connection-tq-filter c)))
+      (while (accept-process-output proc 0.01))
+      (set-process-filter proc tq-filter)
+      (setcar c t))))
 
 (defsubst geiser-con--connection-process (c)
   (tq-process (cdr (assoc :tq c))))
+
+(defsubst geiser-con--connection-filter (c)
+  (cdr (assoc :filter c)))
+
+(defsubst geiser-con--connection-tq-filter (c)
+  (cdr (assoc :tq-filter c)))
 
 (defsubst geiser-con--connection-tq (c)
   (cdr (assoc :tq c)))
@@ -164,7 +175,8 @@
         `((error (key . geiser-debugger))
           (output . ,answer))
       (condition-case err
-          (car (read-from-string answer))
+          (let ((form (car (read-from-string answer))))
+            (and (listp form) form))
         (error `((error (key . geiser-con-error))
                  (output . ,(format "%s\n(%s)"
                                     answer
@@ -192,6 +204,7 @@
   (geiser-log--info "REQUEST: <%s>: %s"
                     (geiser-con--request-id r)
                     (geiser-con--request-string r))
+  (geiser-con--connection-activate c)
   (tq-enqueue (geiser-con--connection-tq c)
               (concat (geiser-con--request-string r) "\n")
               (geiser-con--connection-eot c)

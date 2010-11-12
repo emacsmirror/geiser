@@ -228,6 +228,10 @@ module command as a string")
                            nil nil defhost))
           (or port (read-number "Port: " defport)))))
 
+(defun geiser-repl--autodoc-mode (n)
+  (when (or geiser-repl-autodoc-p (< n 0))
+    (geiser--save-msg (geiser-autodoc-mode n))))
+
 (defun geiser-repl--save-remote-data (address remote)
   (setq geiser-repl--address address)
   (setq geiser-repl--remote-p remote)
@@ -240,6 +244,7 @@ module command as a string")
   (message "Starting Geiser REPL for %s ..." impl)
   (geiser-repl--to-repl-buffer impl)
   (goto-char (point-max))
+  (geiser-repl--autodoc-mode -1)
   (let ((address (geiser-repl--get-address host port))
         (prompt-rx (geiser-repl--prompt-regexp impl))
         (deb-prompt-rx (geiser-repl--debugger-prompt-regexp impl))
@@ -249,11 +254,6 @@ module command as a string")
     (geiser-repl--save-remote-data address remote)
     (condition-case err
         (progn
-          (setq geiser-repl--connection
-                (geiser-con--open-connection (car address)
-                                             (cdr address)
-                                             prompt-rx
-                                             deb-prompt-rx))
           (set (make-local-variable 'comint-prompt-regexp)
                (geiser-con--combined-prompt prompt-rx deb-prompt-rx))
           (apply 'make-comint-in-buffer `(,cname ,(current-buffer) ,address)))
@@ -264,7 +264,12 @@ module command as a string")
     (geiser-repl--history-setup)
     (add-to-list 'geiser-repl--repls (current-buffer))
     (geiser-repl--set-this-buffer-repl (current-buffer))
+    (setq geiser-repl--connection
+          (geiser-con--make-connection (get-buffer-process (current-buffer))
+                                       prompt-rx
+                                       deb-prompt-rx))
     (geiser-repl--startup impl remote)
+    (geiser-repl--autodoc-mode 1)
     (message "%s up and running!" (geiser-repl--repl-name impl))))
 
 (defun geiser-repl--connection ()
@@ -276,16 +281,12 @@ module command as a string")
 
 (setq geiser-eval--default-connection-function 'geiser-repl--connection)
 
-(defun geiser-repl--swap ()
-  (let ((p (get-buffer-process (current-buffer))))
-    (when (and p geiser-repl--connection)
-      (let ((p (geiser-con--connection-swap-proc geiser-repl--connection
-                                                 p)))
-        (goto-char (point-max))
-        (set-marker (process-mark p) (point))))))
+(defun geiser-repl--prepare-send ()
+  (geiser-con--connection-deactivate geiser-repl--connection))
 
 (defun geiser-repl--send (cmd)
   (when (and cmd (eq major-mode 'geiser-repl-mode))
+    (geiser-repl--prepare-send)
     (goto-char (point-max))
     (comint-kill-input)
     (insert cmd)
@@ -293,6 +294,7 @@ module command as a string")
       (comint-send-input nil t))))
 
 (defun geiser-repl--send-silent (cmd)
+  (geiser-repl--prepare-send)
   (comint-redirect-results-list cmd ".+" 0))
 
 
@@ -415,6 +417,7 @@ module command as a string")
 ;;;                 (not (geiser-con--is-debugging)))
                  )
         (compilation-forget-errors))
+      (geiser-repl--prepare-send)
       (comint-send-input)
       (when (string-match "^\\s-*$" intxt)
         (comint-send-string proc (geiser-eval--scheme-str '(:ge no-values)))
@@ -459,8 +462,6 @@ buffer."
   (set (make-local-variable 'comint-input-ignoredups)
        geiser-repl-history-no-dups-p)
   (setq geiser-eval--get-module-function 'geiser-repl--module-function)
-  (when geiser-repl-autodoc-p
-    (geiser--save-msg (geiser-autodoc-mode 1)))
   (geiser-company--setup geiser-repl-company-p)
   ;; enabling compilation-shell-minor-mode without the annoying highlighter
   (compilation-setup t))
