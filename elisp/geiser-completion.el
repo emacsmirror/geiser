@@ -93,7 +93,7 @@ terminates a current completion."
       (display-completion-list completions base)
       (let ((offset (- (point) 1 (length base))))
         (with-current-buffer standard-output
-          (setq completion-base-size offset)
+          (setq completion-base-position (list offset nil))
           (set-syntax-table scheme-mode-syntax-table))))
     (when savedp
       (setq geiser-completion--completions-window
@@ -283,8 +283,5 @@ and will try completing symbol at point otherwise."
   :group 'geiser-mode
   :keymap `((,(kbd "TAB") . geiser-completion--maybe-complete)))
 
-
-
 
 (provide 'geiser-completion)
-;;; geiser-completion.el ends here
