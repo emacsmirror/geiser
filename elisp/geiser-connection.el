@@ -36,15 +36,11 @@
 ;;; Request datatype:
 
 (defun geiser-con--make-request (con str cont &optional sender-buffer)
-  (list :geiser-connection-request
-        (cons :id (geiser-con--connection-inc-count con))
+  (list (cons :id (geiser-con--connection-inc-count con))
         (cons :string str)
         (cons :continuation cont)
         (cons :buffer (or sender-buffer (current-buffer)))
         (cons :connection con)))
-
-(defsubst geiser-con--request-p (req)
-  (and (listp req) (eq (car req) :geiser-connection-request)))
 
 (defsubst geiser-con--request-id (req)
   (cdr (assoc :id req)))

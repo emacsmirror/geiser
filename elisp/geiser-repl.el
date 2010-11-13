@@ -292,7 +292,6 @@ module command as a string")
       (goto-char p)
       (setq seen (re-search-forward comint-prompt-regexp nil t)))
     (goto-char (point-max))
-
     (unless seen (error "%s" "No prompt found!"))))
 
 (defun geiser-repl--is-debugging ()
