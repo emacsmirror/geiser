@@ -34,6 +34,12 @@
   "Mode enabling Geiser abilities in Scheme buffers &co.."
   :group 'geiser)
 
+(geiser-custom--defcustom geiser-mode-auto-p t
+  "Whether `geiser-mode' should be active by default in all
+scheme buffers."
+  :group 'geiser-mode
+  :type 'boolean)
+
 (geiser-custom--defcustom geiser-mode-autodoc-p t
   "Whether `geiser-autodoc-mode' gets enabled by default in Scheme buffers."
   :group 'geiser-mode
@@ -249,6 +255,9 @@ interacting with the Geiser REPL is at your disposal.
   "Disable `geiser-mode' (in a Scheme buffer)."
   (interactive)
   (geiser-mode -1))
+
+(defun geiser-mode--maybe-activate ()
+  (when geiser-mode-auto-p (turn-on-geiser-mode)))
 
 
 ;;; Keys:

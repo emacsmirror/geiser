@@ -67,6 +67,8 @@
 (autoload 'turn-off-geiser-mode "geiser-mode"
   "Disable Geiser's mode (useful in Scheme buffers)." t)
 
+(autoload 'geiser-mode--maybe-activate "geiser-mode")
+
 (mapc (lambda (group)
         (custom-add-load group (symbol-name group))
         (custom-add-load 'geiser (symbol-name group)))
@@ -85,7 +87,7 @@
 ;;; Setup:
 
 (eval-after-load "scheme"
-  '(add-hook 'scheme-mode-hook 'turn-on-geiser-mode))
+  '(add-hook 'scheme-mode-hook 'geiser-mode--maybe-activate))
 
 (add-to-list 'auto-mode-alist '("\\.rkt\\'" . scheme-mode))
 

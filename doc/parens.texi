@@ -58,12 +58,9 @@ Since @i{geiser-mode} is a minor mode, you can toggle it with
 @kbd{M-x geiser-mode}, and control its activation in hooks with the
 functions @code{turn-on-geiser-mode} and @code{turn-off-geiser-mode}.
 If, for some reason i cannot fathom, you prefer @i{geiser-mode} not
-to be active by default, the following elisp incantation will do the
-trick:
-@example
-(eval-after-load "geiser"
-  (remove-hook 'scheme-mode-hook 'turn-on-geiser-mode))
-@end example
+to be active by default, customizing @code{geiser-mode-auto-p} to
+@code{nil} will do the trick.
+
 @cindex scheme file extensions
 And if you happen to use a funky extension for your Scheme files that is
 not recognised as such by Emacs, just tell her about it with:
