@@ -21,6 +21,7 @@
 (require 'geiser-edit)
 (require 'geiser-autodoc)
 (require 'geiser-debug)
+(require 'geiser-syntax)
 (require 'geiser-impl)
 (require 'geiser-eval)
 (require 'geiser-popup)
@@ -244,7 +245,8 @@ interacting with the Geiser REPL is at your disposal.
   (when geiser-mode-autodoc-p
     (geiser-autodoc-mode (if geiser-mode 1 -1)))
   (when geiser-mode-smart-tab-p
-    (geiser-smart-tab-mode (if geiser-mode 1 -1))))
+    (geiser-smart-tab-mode (if geiser-mode 1 -1)))
+  (geiser-syntax--add-kws))
 
 (defun turn-on-geiser-mode ()
   "Enable `geiser-mode' (in a Scheme buffer)."

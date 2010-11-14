@@ -85,6 +85,22 @@
  (with-syntax 1))
 
 
+;;; Extra syntax keywords
+(defconst geiser-syntax--keywords
+  '(("\\[\\(else\\)\\>" . 1)
+    ("(\\(parameterize\\)\\>" . 1)))
+
+(font-lock-add-keywords 'scheme-mode geiser-syntax--keywords)
+
+(geiser-impl--define-caller geiser-syntax--impl-kws keywords ()
+  "A variable (or thunk returning a value) giving additional,
+implementation-specific entries for font-lock-keywords.")
+
+(defun geiser-syntax--add-kws ()
+  (let ((kw (geiser-syntax--impl-kws geiser-impl--implementation)))
+    (when kw (font-lock-add-keywords nil kw))))
+
+
 ;;; A simple scheme reader
 
 (defvar geiser-syntax--read/buffer-limit nil)
