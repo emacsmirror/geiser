@@ -84,25 +84,6 @@
         (cons :count 0)
         (cons :completed (make-hash-table :weakness 'value))))
 
-(defun geiser-con--connection-deactivate (c)
-  (when (car c)
-    (let* ((tq (geiser-con--connection-tq c))
-           (proc (geiser-con--connection-process c))
-           (proc-filter (geiser-con--connection-filter c)))
-      (while (not (tq-queue-empty tq))
-        (accept-process-output proc 0.1))
-      (set-process-filter proc proc-filter)
-      (setcar c nil))))
-
-(defun geiser-con--connection-activate (c)
-  (when (not (car c))
-    (let* ((tq (geiser-con--connection-tq c))
-           (proc (geiser-con--connection-process c))
-           (tq-filter (geiser-con--connection-tq-filter c)))
-      (while (accept-process-output proc 0.01))
-      (set-process-filter proc tq-filter)
-      (setcar c t))))
-
 (defsubst geiser-con--connection-process (c)
   (tq-process (cdr (assoc :tq c))))
 
@@ -151,16 +132,25 @@
         (concat geiser-con--startup-prompt s))
   nil)
 
-(defun geiser-con--open-connection (host port prompt debug-prompt)
-  (setq geiser-con--startup-prompt "")
-  (let* ((name (format "geiser-con@%s:%s" host port))
-         (proc (open-network-stream name nil host port)))
-    (set-process-filter proc 'geiser-con--startup-prompt)
-    (with-timeout (10
-                   (error (format "Timeout connecting to %s:%s" host port)))
-      (while (not (string-match prompt geiser-con--startup-prompt))
-        (accept-process-output proc 0.05)))
-    (geiser-con--make-connection proc prompt debug-prompt)))
+(defun geiser-con--connection-deactivate (c &optional no-wait)
+  (when (car c)
+    (let* ((tq (geiser-con--connection-tq c))
+           (proc (geiser-con--connection-process c))
+           (proc-filter (geiser-con--connection-filter c)))
+      (unless no-wait
+        (while (and (not (tq-queue-empty tq))
+                    (accept-process-output proc 0.1))))
+      (set-process-filter proc proc-filter)
+      (setcar c nil))))
+
+(defun geiser-con--connection-activate (c)
+  (when (not (car c))
+    (let* ((tq (geiser-con--connection-tq c))
+           (proc (geiser-con--connection-process c))
+           (tq-filter (geiser-con--connection-tq-filter c)))
+      (while (accept-process-output proc 0.01))
+      (set-process-filter proc tq-filter)
+      (setcar c t))))
 
 
 ;;; Requests handling:
