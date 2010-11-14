@@ -612,6 +612,7 @@ With a prefix argument, force exit by killing the scheme process."
   (interactive "P")
   (when (or (not geiser-repl-query-on-exit-p)
             (y-or-n-p "Really quit this REPL? "))
+    (geiser-con--connection-deactivate geiser-repl--connection t)
     (let ((cmd (and (not arg)
                     (geiser-repl--exit-cmd geiser-impl--implementation))))
       (if cmd
