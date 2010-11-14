@@ -14,6 +14,8 @@
 (require 'geiser-custom)
 (require 'geiser-base)
 
+(require 'help-fns)
+
 
 ;;; Customization:
 
@@ -91,26 +93,26 @@ determine its scheme flavour."
 (defun geiser-implementation-help ()
   "Shows a buffer with help on defining new supported Schemes."
   (interactive)
-  (with-current-buffer (get-buffer-create "* Geiser implementation help*")
-    (setq buffer-read-only nil)
-    (delete-region (point-min) (point-max))
-    (insert "Use `define-geiser-implementation' to define new implementations"
-            "\n\n(define-geiser-implementation NAME &rest METHODS)\n\n"
-            (documentation 'define-geiser-implementation)
-            "\n\nMethods used to define an implementation:\n\n")
-    (let ((ms (sort (copy-list geiser-impl--method-docs)
-                    (lambda (a b) (string< (symbol-name (car a))
-                                      (symbol-name (car b)))))))
-      (dolist (m ms)
-        (geiser--insert-with-face (format "%s: " (car m)) 'bold)
-        (insert (cdr m))
-        (fill-paragraph)
-        (insert "\n\n")))
-    (goto-char (point-min))
-    (unless (eq major-mode 'help-mode) (help-mode))
-    (help-make-xrefs)
-    (setq buffer-read-only t)
-    (pop-to-buffer (current-buffer))))
+  (help-setup-xref (list #'geiser-implementation-help) t)
+  (save-excursion
+    (with-help-window (help-buffer)
+      (princ "Geiser: supporting new Scheme implementations.\n\n")
+      (princ "Use `define-geiser-implementation' to define ")
+      (princ "new implementations")
+      (princ "\n\n  (define-geiser-implementation NAME &rest METHODS)\n\n")
+      (princ (documentation 'define-geiser-implementation))
+      (princ "\n\nMethods used to define an implementation:\n\n")
+      (let ((ms (sort (copy-list geiser-impl--method-docs)
+                      (lambda (a b) (string< (symbol-name (car a))
+                                        (symbol-name (car b)))))))
+        (dolist (m ms)
+          (let ((p (with-current-buffer (help-buffer) (point))))
+            (princ (format "%s: " (car m)))
+            (princ (cdr m))
+            (with-current-buffer (help-buffer)
+              (fill-region-as-paragraph p (point)))
+            (princ "\n\n"))))
+      (with-current-buffer standard-output (buffer-string)))))
 
 (defun geiser-impl--register-local-method (var-name method fallback doc)
   (add-to-list 'geiser-impl--local-methods (list var-name method fallback))
@@ -171,7 +173,7 @@ determine its scheme flavour."
 NAME can be either an unquoted symbol naming the implementation,
 or a two-element list (NAME PARENT), with PARENT naming another
 registered implementation from which to borrow methods not
-defined below.
+defined in METHODS.
 
 After NAME come the methods, each one a two element list of the
 form (METHOD-NAME FUN-OR-VAR), where METHOD-NAME is one of the
@@ -181,23 +183,23 @@ Omitted method names will return nil to their callers.
 
 Here's how a typical call to this macro looks like:
 
-(define-geiser-implementation guile
-  (binary geiser-guile--binary)
-  (arglist geiser-guile--parameters)
-  (repl-startup geiser-guile--startup)
-  (prompt-regexp geiser-guile--prompt-regexp)
-  (debugger-prompt-regexp geiser-guile--debugger-prompt-regexp)
-  (enter-debugger geiser-guile--enter-debugger)
-  (marshall-procedure geiser-guile--geiser-procedure)
-  (find-module geiser-guile--get-module)
-  (enter-command geiser-guile--enter-command)
-  (exit-command geiser-guile--exit-command)
-  (import-command geiser-guile--import-command)
-  (find-symbol-begin geiser-guile--symbol-begin)
-  (display-error geiser-guile--display-error)
-  (display-help)
-  (check-buffer geiser-guile--guess)
-  (keywords geiser-guile--keywords))
+  (define-geiser-implementation guile
+    (binary geiser-guile--binary)
+    (arglist geiser-guile--parameters)
+    (repl-startup geiser-guile--startup)
+    (prompt-regexp geiser-guile--prompt-regexp)
+    (debugger-prompt-regexp geiser-guile--debugger-prompt-regexp)
+    (enter-debugger geiser-guile--enter-debugger)
+    (marshall-procedure geiser-guile--geiser-procedure)
+    (find-module geiser-guile--get-module)
+    (enter-command geiser-guile--enter-command)
+    (exit-command geiser-guile--exit-command)
+    (import-command geiser-guile--import-command)
+    (find-symbol-begin geiser-guile--symbol-begin)
+    (display-error geiser-guile--display-error)
+    (display-help)
+    (check-buffer geiser-guile--guess)
+    (keywords geiser-guile--keywords))
 "
   (let ((name (if (listp name) (car name) name))
         (parent (and (listp name) (cadr name))))
