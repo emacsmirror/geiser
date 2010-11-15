@@ -200,7 +200,9 @@ Here's how a typical call to this macro looks like:
     (display-help)
     (check-buffer geiser-guile--guess)
     (keywords geiser-guile--keywords))
-"
+
+This macro also defines a runner function (run-NAME) and a
+switcher (switch-to-NAME), and provides geiser-NAME."
   (let ((name (if (listp name) (car name) name))
         (parent (and (listp name) (cadr name))))
     (unless (symbolp name)

@@ -255,6 +255,7 @@ module command as a string")
       (error "Sorry, I don't know how to start a REPL for %s" impl))
     (geiser-repl--save-remote-data address)
     (geiser-repl--start-scheme impl address prompt)
+    (geiser-repl--quit-setup)
     (geiser-repl--history-setup)
     (add-to-list 'geiser-repl--repls (current-buffer))
     (geiser-repl--set-this-buffer-repl (current-buffer))
@@ -330,13 +331,33 @@ module command as a string")
   (comint-redirect-results-list cmd ".+" 0))
 
 
-;;; REPL history and clean-up:
+;;; REPL history
+
+(defconst geiser-repl--history-separator "\n\0\n")
 
 (defsubst geiser-repl--history-file ()
   (format "%s.%s" geiser-repl-history-filename geiser-impl--implementation))
 
+(defun geiser-repl--read-input-ring ()
+  (let ((comint-input-ring-file-name (geiser-repl--history-file))
+        (comint-input-ring-separator geiser-repl--history-separator))
+    (comint-read-input-ring t)))
+
+(defun geiser-repl--write-input-ring ()
+  (let ((comint-input-ring-file-name (geiser-repl--history-file))
+        (comint-input-ring-separator geiser-repl--history-separator))
+    (comint-write-input-ring)))
+
+(defun geiser-repl--history-setup ()
+  (set (make-local-variable 'comint-input-ring-size) geiser-repl-history-size)
+  (set (make-local-variable 'comint-input-filter) 'geiser-repl--input-filter)
+  (geiser-repl--read-input-ring))
+
+
+;;; Cleaning up on quit
+
 (defun geiser-repl--on-quit ()
-  (comint-write-input-ring)
+  (geiser-repl--write-input-ring)
   (let ((cb (current-buffer))
         (impl geiser-impl--implementation)
         (comint-prompt-read-only nil))
@@ -355,7 +376,8 @@ module command as a string")
     (when (buffer-live-p pb)
       (with-current-buffer pb
         (let ((comint-prompt-read-only nil)
-              (comint-input-ring-file-name (geiser-repl--history-file)))
+              (comint-input-ring-file-name (geiser-repl--history-file))
+              (comint-input-ring-separator geiser-repl--history-separator))
           (geiser-repl--on-quit)
           (push pb geiser-repl--closed-repls)
           (goto-char (point-max))
@@ -379,14 +401,9 @@ module command as a string")
       (backward-sexp)
       (buffer-substring (point) end))))
 
-(defun geiser-repl--history-setup ()
-  (set (make-local-variable 'comint-input-ring-file-name)
-       (geiser-repl--history-file))
-  (set (make-local-variable 'comint-input-ring-size) geiser-repl-history-size)
-  (set (make-local-variable 'comint-input-filter) 'geiser-repl--input-filter)
+(defun geiser-repl--quit-setup ()
   (set (make-local-variable 'comint-get-old-input) 'geiser-repl--old-input)
   (add-hook 'kill-buffer-hook 'geiser-repl--on-kill nil t)
-  (comint-read-input-ring t)
   (set-process-sentinel (get-buffer-process (current-buffer))
                         'geiser-repl--sentinel))
 
