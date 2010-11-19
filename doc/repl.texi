@@ -210,10 +210,10 @@ If that identifier corresponds to a variable visible in the current
 namespace, you'll see the module it belongs to and its value. For
 procedures and macros, autodoc will display, instead of their value, the
 argument names (or an underscore if Geiser cannot determine the name
-used in the definition). Optional arguments are surrounded by square
-brackets, and, when the optional argument has a default value, it's
+used in the definition). Optional arguments are surrounded by
+parenthesis. When the optional argument has a default value, it's
 represented by a list made up of its name and that value. When the
-argument is a keyword argument, its name is preceded by a colon.
+argument is a keyword argument, its name has ``#:'' as a prefix.
 
 @cindex help on identifier
 If that's not enough documentation for you, @kbd{C-c C-d d} will open a

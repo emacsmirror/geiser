@@ -227,31 +227,32 @@ obscure reason, that it be inactive by default, just set
 @code{geiser-mode-autodoc-p} to @code{nil} in your customization files.
 
 @cindex autodoc explained
-@img{autodoc-req, right} The way autodoc displays information deserves
+@img{autodoc-scm, right} The way autodoc displays information deserves
 some explanation. It will first show the name of the module where the
 identifier at hand is defined, followed by a colon and the identifier
 itself. If the latter corresponds to a procedure or macro, it will be
 followed by a list of argument names, starting with the ones that are
-required. Then there comes a square-bracketed list of optional argument
-names, if any. When an optional argument has a default value (or a form
-defining its default value), instead of a plain name, autodoc will
-display a list with the name followed by its initialisation form. When
-the optional arguments are keywords, their names are prefixed with a
-colon. An ellipsis (@dots{}) servers as a marker of an indeterminated
-number of parameters, as is the case with @i{rest} arguments or when
-autodoc cannot fathom the exact number of arguments (this is often the
-case with macros defined using @code{syntax-case}). Another way in which
-autodoc displays its ignorance is by using and underscore to display
-parameters whose name is beyond its powers.
+required. Then there comes a list of optional arguments, if any,
+enclosed in parenthesis. When an optional argument has a default value
+(or a form defining its default value), autodoc will display it after
+the argument name. When the optional arguments are keywords, their names
+are prefixed with ``#:'' (i.e., their names @i{are} keywords). An
+ellipsis (@dots{}) serves as a marker of an indeterminated number of
+parameters, as is the case with @i{rest} arguments or when autodoc
+cannot fathom the exact number of arguments (this is often the case with
+macros defined using @code{syntax-case}). Another way in which autodoc
+displays its ignorance is by using and underscore to display parameters
+whose name is beyond its powers.
 
 @img{autodoc-multi, right} It can also be the case that a function or
 macro has more than one signature (e.g., functions defined using
 @code{case-lambda}, or some @code{syntax-rules} macros, for which Geiser
 has often the black magic necessary to retrieve their actual arities).
 In those cases, autodoc shows all known signatures (using the above
-rules for each one) separated by a vertical bar (|). As you have already
-noticed, the whole thing is enclosed in parenthesis. After all, we're
-talking about Scheme here.
+rules for each one) separated by a vertical bar (|).
+
+As you have already noticed, the whole autodoc message is enclosed in
+parenthesis. After all, we're talking about Scheme here.
 
 @cindex autodoc for variables
 @img{autodoc-var, right} Finally, life is much easier when your cursor

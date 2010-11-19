@@ -84,12 +84,20 @@ when `geiser-autodoc-display-module-p' is on."
   (cond ((null args) nil)
         ((listp args)
          (cons (car args) (geiser-autodoc--sanitize-args (cdr args))))
-        (t '(...))))
+        (t '...)))
+
+(defun geiser-autodoc--format-arg (a)
+  (if (and (listp a) (keywordp (car a)))
+      (if (and (cdr a) (listp (cdr a)))
+          (format "(#%s %s)" (car a) (cadr a))
+        (format "(#%s)" (car a)))
+    (format "%s" a)))
 
 (defun geiser-autodoc--insert-arg-group (args current &optional pos)
+  (when args (insert " "))
   (dolist (a (geiser-autodoc--sanitize-args args))
     (let ((p (point)))
-      (insert (format "%s" a))
+      (insert (geiser-autodoc--format-arg a))
       (when (or (and (numberp pos)
                      (numberp current)
                      (setq current (1+ current))
@@ -107,22 +115,16 @@ when `geiser-autodoc-display-module-p' is on."
 (defun geiser-autodoc--insert-args (args pos prev)
   (let ((cpos 1)
         (reqs (cdr (assoc 'required args)))
-        (opts (cdr (assoc 'optional args)))
+        (opts (mapcar (lambda (a)
+                        (if (and (symbolp a) (not (eq a '...))) (list a) a))
+                      (cdr (assoc 'optional args))))
         (keys (cdr (assoc 'key args))))
-    (when reqs
-      (insert " ")
-      (setq cpos
-            (geiser-autodoc--insert-arg-group reqs
-                                              cpos
-                                              (and (not (zerop pos)) pos))))
-    (when opts
-      (insert " [")
-      (setq cpos (geiser-autodoc--insert-arg-group opts cpos pos)))
-    (when keys
-      (insert " [")
-      (geiser-autodoc--insert-arg-group keys prev nil)
-      (insert "]"))
-    (when opts (insert "]"))))
+    (setq cpos
+          (geiser-autodoc--insert-arg-group reqs
+                                            cpos
+                                            (and (not (zerop pos)) pos)))
+    (setq cpos (geiser-autodoc--insert-arg-group opts cpos pos))
+    (geiser-autodoc--insert-arg-group keys prev nil)))
 
 (defsubst geiser-autodoc--id-name (proc module)
   (let ((str (if module
