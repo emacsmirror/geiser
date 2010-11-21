@@ -223,7 +223,7 @@ we're looking for a module name.")
   (buffer-substring-no-properties (geiser-completion--symbol-begin module)
                                   (point)))
 
-(defun geiser-completion--complete-symbol (&optional arg)
+(defun geiser-completion--complete-symbol (&optional arg previous)
   "Complete the symbol at point.
 Perform completion similar to Emacs' complete-symbol.
 With prefix, complete module name."
@@ -237,9 +237,14 @@ With prefix, complete module name."
          (partial (cdr result)))
     (cond ((null completions)
            (if (not arg)
-               (geiser-completion--complete-symbol t)
-             (geiser--respecting-message "Can't find completion for %S"
-                                         prefix)
+               (geiser-completion--complete-symbol t prefix)
+             (geiser--respecting-message "Can't find completion for %S%s"
+                                         prefix
+                                         (if (and previous
+                                                  (not (equalp previous
+                                                               prefix)))
+                                             (format " or %S" previous)
+                                           ""))
              (geiser-completion--restore-window-cfg)))
           (t (insert-and-inherit (substring partial (length prefix)))
              (cond ((= (length completions) 1)
