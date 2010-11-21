@@ -87,11 +87,18 @@ when `geiser-autodoc-display-module-p' is on."
         (t '...)))
 
 (defun geiser-autodoc--format-arg (a)
-  (if (and (listp a) (keywordp (car a)))
-      (if (and (cdr a) (listp (cdr a)))
-          (format "(#%s %s)" (car a) (cadr a))
-        (format "(#%s)" (car a)))
-    (format "%s" a)))
+  (cond ((null a) "()")
+        ((symbolp a) (format "%s" a))
+        ((stringp a) (format "%S" a))
+        ((and (listp a) (keywordp (car a)))
+         (if (and (cdr a) (listp (cdr a)))
+             (format "(#%s %s)" (car a) (geiser-autodoc--format-arg (cadr a)))
+           (format "(#%s)" (car a))))
+        ((and (listp a) (eq (car a) 'quote))
+         (format "'%s" (geiser-autodoc--format-arg (cadr a))))
+        ((listp a) (format "(%s)"
+                           (mapconcat 'geiser-autodoc--format-arg a " ")))
+        (t (format "%S" a))))
 
 (defun geiser-autodoc--insert-arg-group (args current &optional pos)
   (when args (insert " "))

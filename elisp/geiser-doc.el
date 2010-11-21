@@ -278,8 +278,8 @@ With prefix argument, ask for symbol (with completion)."
         (geiser-doc--insert-title (format "%s" module) t)
         (newline)
         (dolist (g '(("Procedures:" . procs)
-                     ("Variables:" . vars)
-                     ("Syntax:" . syntax)))
+                     ("Syntax:" . syntax)
+                     ("Variables:" . vars)))
           (geiser-doc--insert-list (car g)
                                    (cdr (assoc (cdr g) exports))
                                    module
