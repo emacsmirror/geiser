@@ -231,7 +231,9 @@ implementation-specific entries for font-lock-keywords.")
 ;;; Code parsing:
 
 (defsubst geiser-syntax--symbol-at-point ()
-  (and (not (nth 8 (syntax-ppss))) (symbol-at-point)))
+  (and (not (nth 8 (syntax-ppss)))
+       (let ((s (symbol-at-point)))
+         (and (not (eq s '.)) s))))
 
 (defsubst geiser-syntax--skip-comment/string ()
   (let ((pos (nth 8 (syntax-ppss))))
