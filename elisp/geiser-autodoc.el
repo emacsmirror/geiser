@@ -89,7 +89,7 @@ when `geiser-autodoc-display-module-p' is on."
 (defun geiser-autodoc--format-arg (a)
   (cond ((null a) "()")
         ((symbolp a) (format "%s" a))
-        ((equalp a "...") "...")
+        ((equal a "...") "...")
         ((stringp a) (format "%S" a))
         ((and (listp a) (keywordp (car a)))
          (if (and (cdr a) (listp (cdr a)))

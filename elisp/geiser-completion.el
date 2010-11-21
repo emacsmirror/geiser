@@ -240,8 +240,8 @@ With prefix, complete module name."
                (geiser-completion--complete-symbol t prefix)
              (geiser--respecting-message "Can't find completion for %s"
                                          (if (and previous
-                                                  (not (equalp previous
-                                                               prefix)))
+                                                  (not (equal previous
+                                                              prefix)))
                                              (format "%S or %S"
                                                      previous prefix)
                                            prefix))

@@ -44,11 +44,14 @@
 ;;; Documentation browser history:
 
 (defvar geiser-doc-history-size 50)
+(defvar geiser-doc--history nil)
 
 (defun geiser-doc--make-history ()
   (list nil                                   ; current
         (make-ring geiser-doc-history-size)   ; previous
         (make-ring geiser-doc-history-size))) ; next
+
+(setq geiser-doc--history (geiser-doc--make-history))
 
 (defsubst geiser-doc--history-current ()
   (car geiser-doc--history))
@@ -81,9 +84,6 @@
     (when (and (car geiser-doc--history) (not forget-current))
       (ring-insert (nth 2 geiser-doc--history) (car geiser-doc--history)))
     (setcar geiser-doc--history (ring-remove (nth 1 geiser-doc--history) 0))))
-
-(defvar geiser-doc--history nil)
-(setq geiser-doc--history (geiser-doc--make-history))
 
 
 ;;; Links
