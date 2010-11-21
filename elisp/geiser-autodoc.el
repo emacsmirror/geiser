@@ -84,7 +84,7 @@ when `geiser-autodoc-display-module-p' is on."
   (cond ((null args) nil)
         ((listp args)
          (cons (car args) (geiser-autodoc--sanitize-args (cdr args))))
-        (t '...)))
+        (t '("..."))))
 
 (defun geiser-autodoc--format-arg (a)
   (cond ((null a) "()")
@@ -98,7 +98,9 @@ when `geiser-autodoc-display-module-p' is on."
         ((and (listp a) (eq (car a) 'quote))
          (format "'%s" (geiser-autodoc--format-arg (cadr a))))
         ((listp a) (format "(%s)"
-                           (mapconcat 'geiser-autodoc--format-arg a " ")))
+                           (mapconcat 'geiser-autodoc--format-arg
+                                      (geiser-autodoc--sanitize-args a)
+                                      " ")))
         (t (format "%s" a))))
 
 (defun geiser-autodoc--insert-arg-group (args current &optional pos)
