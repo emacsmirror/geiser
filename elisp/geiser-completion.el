@@ -238,13 +238,13 @@ With prefix, complete module name."
     (cond ((null completions)
            (if (not arg)
                (geiser-completion--complete-symbol t prefix)
-             (geiser--respecting-message "Can't find completion for %S%s"
-                                         prefix
+             (geiser--respecting-message "Can't find completion for %s"
                                          (if (and previous
                                                   (not (equalp previous
                                                                prefix)))
-                                             (format " or %S" previous)
-                                           ""))
+                                             (format "%S or %S"
+                                                     previous prefix)
+                                           prefix))
              (geiser-completion--restore-window-cfg)))
           (t (insert-and-inherit (substring partial (length prefix)))
              (cond ((= (length completions) 1)
