@@ -122,19 +122,22 @@
 
 (define-button-type 'geiser-doc--button
   'action 'geiser-doc--button-action
-  'face 'geiser-font-lock-doc-link
   'follow-link t)
 
-(defun geiser-doc--insert-button (target module impl)
+(defun geiser-doc--insert-button (target module impl &optional sign)
   (let ((link (geiser-doc--make-link target module impl))
-        (text (format "%s" (or target module)))
+        (text (format "%s" (or (and sign (geiser-autodoc--str* sign))
+                               target
+                               module)))
         (help (format "%smodule %s"
                       (if target (format "%s in " target) "")
                       (or module "<unknown>"))))
-    (insert-text-button text
-                        :type 'geiser-doc--button
-                        'geiser-link link
-                        'help-echo help)))
+    (apply 'insert-text-button
+           `(,text
+             :type geiser-doc--button
+             ,@(and (not sign) (list 'face 'geiser-font-lock-doc-link))
+             geiser-link ,link
+             help-echo ,help))))
 
 (defun geiser-doc--xbutton-action (button)
   (when geiser-doc--buffer-link
@@ -183,7 +186,7 @@
         (insert (format "%s" title))
       (insert "(" (format "%s" (car title)))
       (dolist (a (cdr title))
-        (insert " " (if (eq a '\#:rest) "." (format "%s" a))))
+        (insert " " (if (eq a :rest) "." (format "%s" a))))
       (insert ")"))
     (put-text-property p (point) 'face 'geiser-font-lock-doc-title)
     (when top
@@ -199,11 +202,12 @@
     (geiser-doc--insert-title title)
     (newline)
     (dolist (w lst)
-      (let ((name (if (listp w) (car w) w))
-            (info (and (listp w) (cdr w))))
+      (let ((name (car w))
+            (signature (cdr (assoc 'signature w)))
+            (info (cdr (assoc 'info w))))
         (insert (format "\t- "))
         (if module
-            (geiser-doc--insert-button name module impl)
+            (geiser-doc--insert-button name module impl signature)
           (geiser-doc--insert-button nil name impl))
         (when info (insert (format "  %s" info)))
         (newline)))
@@ -262,7 +266,10 @@ With prefix argument, ask for symbol (with completion)."
   "Display information about a given module."
   (interactive)
   (let* ((module (or module (geiser-completion--read-module)))
-         (exports (geiser-doc--get-module-exports module))
+         (msg (format "Retrieving documentation for %s ..." module))
+         (exports (progn
+                    (message "%s" msg)
+                    (geiser-doc--get-module-exports module)))
          (impl (or impl geiser-impl--implementation)))
     (if (not exports)
         (message "No information available for %s" module)
@@ -286,6 +293,7 @@ With prefix argument, ask for symbol (with completion)."
                (geiser-doc--make-link nil module impl)))
         (geiser-doc--insert-footer)
         (goto-char (point-min)))
+      (message "%s done" msg)
       (geiser-doc--pop-to-buffer))))
 
 (defun geiser-doc-next (&optional forget-current)
