@@ -150,13 +150,20 @@
 
 @multitable @columnfractions .20 .4 .4
 @headitem Key @tab Command @tab Description
-@item n, f
+@item TAB, n
+@tab forward-button
+@tab Next link
+@item S-TAB, p
+@tab backwards-button
+@tab Previous link
+@item N
+@tab geiser-doc-next-section @tab Next section
+@item P
+@tab geiser-doc-previous-section @tab Previous section
+@item f
 @tab geiser-doc-next @tab Next page
-@item p, b
+@item b
 @tab geiser-doc-previous @tab Previous page
-@item TAB, S-TAB
-@tab forward-button, backwards-button
-@tab Next/previous link
 @item k
 @tab geiser-doc-kill-page
 @tab Kill current page and go to previous or next

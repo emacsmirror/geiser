@@ -262,6 +262,14 @@ With prefix argument, ask for symbol (with completion)."
                                                     (symbol-at-point)))))
     (when symbol (geiser-doc-symbol symbol))))
 
+(defconst geiser-doc--sections '(("Procedures:" procs)
+                                 ("Syntax:" syntax)
+                                 ("Variables:" vars)
+                                 ("Submodules:" modules t)))
+
+(defconst geiser-doc--sections-re
+  (format "^%s\n" (regexp-opt (mapcar 'car geiser-doc--sections))))
+
 (defun geiser-doc-module (&optional module impl)
   "Display information about a given module."
   (interactive)
@@ -277,17 +285,11 @@ With prefix argument, ask for symbol (with completion)."
         (erase-buffer)
         (geiser-doc--insert-title (format "%s" module) t)
         (newline)
-        (dolist (g '(("Procedures:" . procs)
-                     ("Syntax:" . syntax)
-                     ("Variables:" . vars)))
+        (dolist (g geiser-doc--sections)
           (geiser-doc--insert-list (car g)
-                                   (cdr (assoc (cdr g) exports))
-                                   module
+                                   (cdr (assoc (cadr g) exports))
+                                   (and (not (cddr g)) module)
                                    impl))
-        (geiser-doc--insert-list "Submodules:"
-                                 (cdr (assoc 'modules exports))
-                                 nil
-                                 impl)
         (setq geiser-doc--buffer-link
               (geiser-doc--history-push
                (geiser-doc--make-link nil module impl)))
@@ -295,6 +297,18 @@ With prefix argument, ask for symbol (with completion)."
         (goto-char (point-min)))
       (message "%s done" msg)
       (geiser-doc--pop-to-buffer))))
+
+(defun geiser-doc-next-section ()
+  "Move to next section in this page."
+  (interactive)
+  (next-line)
+  (re-search-forward geiser-doc--sections-re nil t)
+  (previous-line))
+
+(defun geiser-doc-previous-section ()
+  "Move to previous section in this page."
+  (interactive)
+  (re-search-backward geiser-doc--sections-re nil t))
 
 (defun geiser-doc-next (&optional forget-current)
   "Go to next page in documentation browser.
@@ -365,12 +379,16 @@ With prefix, the current page is deleted from history."
   (switch-to-geiser nil nil (current-buffer)))
 
 (geiser-menu--defmenu doc geiser-doc-mode-map
-  ("Next page" ("n" "f") geiser-doc-next "Next item"
+  ("Next link" ("n") forward-button)
+  ("Previous link" ("p") backward-button)
+  ("Next section" ("N") geiser-doc-next-section)
+  ("Previous section" ("P") geiser-doc-previous-section)
+  --
+  ("Next page" ("f") geiser-doc-next "Next item"
    :enable (geiser-doc--history-next-p))
-  ("Previous page" ("p" "b") geiser-doc-previous "Previous item"
+  ("Previous page" ("b") geiser-doc-previous "Previous item"
    :enable (geiser-doc--history-previous-p))
-  ("Next link" nil forward-button)
-  ("Previous link" nil backward-button)
+  --
   ("Go to REPL" ("z" "\C-cz" "\C-c\C-z") geiser-doc-switch-to-repl)
   ("Refresh" ("g" "r") geiser-doc-refresh "Refresh current page")
   --

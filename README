@@ -160,20 +160,24 @@
 
 *** In the documentation browser:
 
-    |------------+----------------------------------------------|
-    | n, f       | Next page                                    |
-    | p, b       | Previous page                                |
-    | TAB, S-TAB | Next/previous link                           |
-    |------------+----------------------------------------------|
-    | k          | Kill current page and go to previous or next |
-    | g, r       | Refresh page                                 |
-    | c          | Clear browsing history                       |
-    |------------+----------------------------------------------|
-    | ., M-.     | Edit identifier at point                     |
-    | z          | Switch to REPL                               |
-    |------------+----------------------------------------------|
-    | q          | Bury buffer                                  |
-    |------------+----------------------------------------------|
+    |----------+----------------------------------------------|
+    | f        | Next page                                    |
+    | b        | Previous page                                |
+    |----------+----------------------------------------------|
+    | TAB, n   | Next link                                    |
+    | S-TAB, p | Previous link                                |
+    | N        | Next section                                 |
+    | P        | Previous section                             |
+    |----------+----------------------------------------------|
+    | k        | Kill current page and go to previous or next |
+    | g, r     | Refresh page                                 |
+    | c        | Clear browsing history                       |
+    |----------+----------------------------------------------|
+    | ., M-.   | Edit identifier at point                     |
+    | z        | Switch to REPL                               |
+    |----------+----------------------------------------------|
+    | q        | Bury buffer                                  |
+    |----------+----------------------------------------------|
 
 *** In backtrace (evaluation/compile result) buffers:
 
