@@ -269,8 +269,9 @@ With prefix, complete module name."
   "Indent if at beginning of line or after a white space or
 closing parenthesis, try completion otherwise."
   (interactive)
-  (let ((indent (or (bolp) (memq (syntax-class (syntax-after (1- (point))))
-                                 '(0 5)))))
+  (let ((indent (or (bolp)
+                    (not (memq (syntax-class (syntax-after (1- (point))))
+                               '(2 3))))))
     (if indent (indent-according-to-mode)
       (geiser-completion--complete-symbol))))
 
