@@ -126,6 +126,7 @@
     | C-c C-k             | Compile and load current file                   |
     |---------------------+-------------------------------------------------|
     | C-c C-d d           | See documentation for identifier at point       |
+    | C-c C-d i           | Look up manual for identifier at point          |
     | C-c C-d m           | See a list of a module's exported identifiers   |
     | C-c C-d a           | Toggle autodoc mode                             |
     |---------------------+-------------------------------------------------|

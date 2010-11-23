@@ -319,7 +319,7 @@ be performed in the texinfo manual.
 
 @cindex opening manual pages
 You can also jump directly to the manual page for the symbol at point
-with the command @code{geiser-doc-lookup-manual}, bound to @kbd{C-c C-d
+with the command @code{geiser-doc-look-up-manual}, bound to @kbd{C-c C-d
 i}.
 
 See also our @xref{Documentation browser,,cheat-sheet} for a list of

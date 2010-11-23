@@ -284,8 +284,8 @@ With prefix argument, ask for symbol (with completion)."
                                                     (symbol-at-point)))))
     (when symbol (geiser-doc-symbol symbol))))
 
-(defun geiser-doc-lookup-manual (&optional arg)
-  "Lookup manual for symbol at point.
+(defun geiser-doc-look-up-manual (&optional arg)
+  "Look up manual for symbol at point.
 With prefix argument, ask for the lookup symbol (with completion)."
   (interactive "P")
   (unless (geiser-doc--manual-available-p)
