@@ -23,19 +23,23 @@
 
 ;;; Plug-able functions:
 
-(defvar geiser-eval--get-module-function nil)
+(make-variable-buffer-local
+ (defvar geiser-eval--get-module-function nil))
+(set-default 'geiser-eval--get-module-function nil)
 
+(defvar geiser-eval--get-impl-module)
 (geiser-impl--register-local-method
- 'geiser-eval--get-module-function 'find-module '(lambda (&rest) nil)
+ 'geiser-eval--get-impl-module 'find-module '(lambda (&rest) nil)
  "Function used to obtain the module for current buffer. It takes
 an optional argument, for cases where we want to force its
 value.")
 
-(defsubst geiser-eval--get-module (&optional module)
-  (and geiser-eval--get-module-function
-       (funcall geiser-eval--get-module-function module)))
+(defun geiser-eval--get-module (&optional module)
+  (if geiser-eval--get-module-function
+      (funcall geiser-eval--get-module-function module)
+    (funcall geiser-eval--get-impl-module module)))
 
-(defvar geiser-eval--geiser-procedure-function nil)
+(defvar geiser-eval--geiser-procedure-function)
 (geiser-impl--register-local-method
  'geiser-eval--geiser-procedure-function 'marshall-procedure 'identity
  "Function to translate a bare procedure symbol to one executable
@@ -86,9 +90,9 @@ module-exports, autodoc, callers, callees and generic-methods.")
 (defsubst geiser-eval--module (code)
   (geiser-eval--scheme-str
    (cond ((or (null code) (eq code :t) (eq code :buffer))
-          (funcall geiser-eval--get-module-function))
+          (geiser-eval--get-module))
          ((or (eq code :repl) (eq code :f)) :f)
-         (t (funcall geiser-eval--get-module-function code)))))
+         (t (geiser-eval--get-module code)))))
 
 (defsubst geiser-eval--ge (proc args)
   (apply 'geiser-eval--form (cons proc

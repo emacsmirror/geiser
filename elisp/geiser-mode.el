@@ -282,6 +282,8 @@ interacting with the Geiser REPL is at your disposal.
   ("Symbol documentation" ("\C-c\C-d\C-d" "\C-c\C-dd")
    geiser-doc-symbol-at-point :enable (symbol-at-point))
   ("Module documentation" ("\C-c\C-d\C-m" "\C-c\C-dm") geiser-doc-module)
+  ("Symbol manual lookup" ("\C-c\C-d\C-i" "\C-c\C-di")
+   geiser-doc-lookup-manual :enable (geiser-doc--manual-available-p))
   (mode "Autodoc mode" ("\C-c\C-d\C-a" "\C-c\C-da") geiser-autodoc-mode)
   --
   ("Compile buffer" "\C-c\C-k" geiser-compile-current-buffer)

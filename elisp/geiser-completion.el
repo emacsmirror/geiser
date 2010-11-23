@@ -175,11 +175,12 @@ terminates a current completion."
 
 (defun geiser-completion--read-symbol (prompt &optional default history)
   (let ((minibuffer-local-completion-map geiser-completion--minibuffer-map))
-    (completing-read prompt
-                     geiser-completion--symbol-list-func
-                     nil nil nil
-                     (or history geiser-completion--symbol-history)
-                     (or default (symbol-at-point)))))
+    (make-symbol (completing-read prompt
+                                  geiser-completion--symbol-list-func
+                                  nil nil nil
+                                  (or history
+                                      geiser-completion--symbol-history)
+                                  (or default (symbol-at-point))))))
 
 (defvar geiser-completion--module-history nil)
 

@@ -278,10 +278,10 @@ controls how the current argument position is highlighted.
 
 @subsubheading Other documentation commands
 
-Sometimes, autodoc won't provide enough information for you to
-understand what a function does. In those cases, you can ask Geiser to
-ask the running Scheme for further information on a given identifier or
-module.
+@anchor{doc-browser}Sometimes, autodoc won't provide enough information
+for you to understand what a function does. In those cases, you can ask
+Geiser to ask the running Scheme for further information on a given
+identifier or module.
 
 @cindex documentation for symbol
 @cindex docstrings, maybe
@@ -301,14 +301,29 @@ navigation commands available in that buffer, which you can discover by
 means of its menu or via the good old @kbd{C-h m} command.
 
 For Racket, which does not support docstrings out of the box, this
-command will invoke Racket's @code{help} procedure, thereby opening your
-configured web browser with the corresponding manual page for you to
-peruse.
+command will provide less information, but the documentation browser
+will display the corresponding contract when it's available.
 
 You can also ask Geiser to display information about a module, in the
 form of a list of its exported identifiers, using @kbd{C-c C-d C-m},
-exactly as you would do @ref{repl-mod,,in the REPL}. This commands works
-with all supported Schemes, no strings attached.
+exactly as you would do @ref{repl-mod,,in the REPL}.
+
+In both cases, the documentation browser will show a couple of buttons
+giving you access to further documentation. First, you'll see a button
+named @i{source}: pressing it you'll jump to the symbol's definition.
+The second button, dubbed @i{manual}, will open the scheme
+implementation's manual page for the symbol at hand. For Racket, that
+will open your web browser displaying the corresponding reference's page
+(using Emacs' @code{browser-url} command), while in Guile a lookup will
+be performed in the texinfo manual.
+
+@cindex opening manual pages
+You can also jump directly to the manual page for the symbol at point
+with the command @code{geiser-doc-lookup-manual}, bound to @kbd{C-c C-d
+i}.
+
+See also our @xref{Documentation browser,,cheat-sheet} for a list of
+navigation commands available in the documentation browser.
 
 @node To eval or not to eval, To err perchance to debug, Documentation helpers, Between the parens
 @section To eval or not to eval

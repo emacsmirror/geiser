@@ -217,11 +217,26 @@ argument is a keyword argument, its name has ``#:'' as a prefix.
 
 @cindex help on identifier
 If that's not enough documentation for you, @kbd{C-c C-d d} will open a
-separate documentation buffer with help on the symbol at point. For some
-implementations (e.g. Racket), this separate buffer will actually be a
-web page displaying the corresponding page in the manual, while for
-implementations supporting docstrings (e.g. (you guessed it) Guile)
-it'll be a real Emacs buffer displaying that information.
+separate documentation buffer with help on the symbol at point. This
+buffer will contain implementation-specific information about the
+identifier (e.g., its docstring for Guile, or its contract, if any, for
+Racket), and a handy button to open the corresponding manual entry for
+the symbol, which will open an HTML page (for Racket) or the texinfo
+manual (for Guile).
+
+@cindex module exports
+@anchor{repl-mod} Geiser can also produce for you a list, classified by
+kind, of the identifiers exported by a given module: all you need to do
+is press @kbd{C-c C-d m}, and type or complete the desired module's
+name.
+
+@imgc{repl-mod}
+
+The list of exported bindings is shown, again, in a buffer belonging to
+Geiser's documentation browser, where you have at your disposal a bunch
+of navigation commands listed in @xref{Documentation browser,,our
+cheat-sheet}. We'll have a bit more to say about the documentation
+browser in @xref{doc-browser,,a later section}.
 
 @cindex jump, at the REPL
 If that's still not enough, Geiser can jump, via @kbd{M-.}, to the
@@ -231,21 +246,6 @@ done inspecting, @kbd{M-,} will bring you back to where you were. As we
 will see, these commands are also available in scheme buffers. @kbd{M-.}
 also works for modules: if your point is on an unambiguous module name,
 the file where it's defined will be opened for you.
-
-@cindex module exports
-@anchor{repl-mod}
-Finally, Geiser can produce for you a list, classified by kind, of the
-identifiers exported by a given module: all you need to do is press
-@kbd{C-c C-d m}, and type or complete the desired module's name.
-
-@imgc{repl-mod}
-
-The list of exported bindings is shown in a buffer belonging to Geiser's
-documentation browser, of which more details are given in forthcoming
-sections (but just perusing its associated key bindings, by any of the
-methods we've already mentioned, will give you enough information to use
-it). Racketeers will be pleased (i hope) to note that contracts are part
-of the information displayed.
 
 @node Customization and tips,  , Autodoc and friends, The REPL
 @section Customization and tips

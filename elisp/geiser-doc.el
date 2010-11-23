@@ -41,6 +41,15 @@
   'button geiser-doc "buttons in documentation buffers")
 
 
+;;; Implementation
+(geiser-impl--define-caller geiser-doc--external-help external-help
+                            (symbol module)
+  "By default, Geiser will display help about an identifier in a
+help buffer, after collecting the associated signature and
+docstring. You can provide an alternative function for displaying
+help (e.g. browse an HTML page) implementing this method.")
+
+
 ;;; Documentation browser history:
 
 (defvar geiser-doc-history-size 50)
@@ -108,7 +117,8 @@
       (with--geiser-implementation impl
         (if (null target)
             (geiser-doc-module module impl)
-          (geiser-doc-symbol target module impl))))))
+          (let ((geiser-eval--get-module-function (lambda (x) module)))
+            (geiser-doc-symbol target module impl)))))))
 
 (make-variable-buffer-local
  (defvar geiser-doc--buffer-link nil))
@@ -146,9 +156,13 @@
           (module (geiser-doc--link-module geiser-doc--buffer-link))
           (impl (geiser-doc--link-impl geiser-doc--buffer-link)))
       (with--geiser-implementation impl
-        (if (eq kind 'source)
-            (if target (geiser-edit-symbol target nil (point-marker))
-              (geiser-edit-module module)))))))
+        (cond ((eq kind 'source)
+               (if target (geiser-edit-symbol target nil (point-marker))
+                 (geiser-edit-module module)))
+              ((eq kind 'manual)
+               (geiser-doc--external-help impl
+                                          (or target module)
+                                          module)))))))
 
 (define-button-type 'geiser-doc--xbutton
   'action 'geiser-doc--xbutton-action
@@ -160,27 +174,25 @@
                       :type 'geiser-doc--xbutton
                       'x-kind (if manual 'manual 'source)))
 
-(defun geiser-doc--insert-xbuttons ()
+(defun geiser-doc--insert-xbuttons (impl)
+  (when (geiser-impl--method 'external-help impl)
+    (geiser-doc--insert-xbutton t)
+    (insert " "))
   (geiser-doc--insert-xbutton))
-
-(defun geiser-doc--insert-footer ()
-  (newline 3)
-  (when (geiser-doc--history-previous-p)
-    (insert-text-button "[back]"
-                        'action '(lambda (b) (geiser-doc-previous))
-                        'face 'geiser-font-lock-doc-button
-                        'follow-link t)
-    (insert "  "))
-  (when (geiser-doc--history-next-p)
-    (insert-text-button "[forward]"
-                        'action '(lambda (b) (geiser-doc-next))
-                        'face 'geiser-font-lock-doc-button
-                        'follow-link t)))
 
 
 ;;; Auxiliary functions:
 
-(defun geiser-doc--insert-title (title &optional top)
+(defun geiser-doc--manual-available-p ()
+  (geiser-impl--method 'external-help geiser-impl--implementation))
+
+(defun geiser-doc--module (&optional mod impl)
+  (let* ((impl (or (geiser-doc--link-impl geiser-doc--buffer-link)))
+	 (method (geiser-impl--method 'find-module impl))
+	 (mod (or mod (geiser-doc--link-module geiser-doc--buffer-link))))
+    (funcall method mod)))
+
+(defun geiser-doc--insert-title (title)
   (let ((p (point)))
     (if (not (listp title))
         (insert (format "%s" title))
@@ -189,12 +201,6 @@
         (insert " " (if (eq a :rest) "." (format "%s" a))))
       (insert ")"))
     (put-text-property p (point) 'face 'geiser-font-lock-doc-title)
-    (when top
-      (let ((len (max 1 (- (window-width)
-                           (- (point) (line-beginning-position))
-                           10))))
-        (insert (make-string len ?\ ))
-        (geiser-doc--insert-xbuttons)))
     (newline)))
 
 (defun geiser-doc--insert-list (title lst module impl)
@@ -213,15 +219,31 @@
         (newline)))
     (newline)))
 
+(defun geiser-doc--insert-footer (impl)
+  (newline 2)
+  (geiser-doc--insert-xbuttons impl)
+  (let* ((prev (and (geiser-doc--history-previous-p) 8))
+         (nxt (and (geiser-doc--history-next-p) 10))
+         (len (max 1 (- (window-width)
+                        (- (point) (line-beginning-position))
+                        (or prev 0)
+                        (or nxt 0)))))
+    (when (or prev nxt)
+      (insert (make-string len ?\ )))
+    (when (geiser-doc--history-previous-p)
+      (insert-text-button "[back]"
+                          'action '(lambda (b) (geiser-doc-previous))
+                          'face 'geiser-font-lock-doc-button
+                          'follow-link t)
+      (insert " "))
+    (when (geiser-doc--history-next-p)
+      (insert-text-button "[forward]"
+                          'action '(lambda (b) (geiser-doc-next))
+                          'face 'geiser-font-lock-doc-button
+                          'follow-link t))))
+
 
 ;;; Commands:
-
-(geiser-impl--define-caller geiser-doc--external-help display-help
-  (symbol module)
-  "By default, Geiser will display help about an identifier in a
-help buffer, after collecting the associated signature and
-docstring. You can provide an alternative function for displaying
-help (e.g. browse an HTML page) implementing this method.")
 
 (defun geiser-doc--get-docstring (symbol module)
   (geiser-eval--send/result
@@ -229,29 +251,29 @@ help (e.g. browse an HTML page) implementing this method.")
 
 (defun geiser-doc--get-module-exports (module)
   (geiser-eval--send/result
-   `(:eval (:ge module-exports '(:module ,module)))))
+   `(:eval (:ge module-exports '(:module ,module)) :f)))
 
 (defun geiser-doc-symbol (symbol &optional module impl)
-  (let ((module (or module (geiser-eval--get-module)))
-        (impl (or impl geiser-impl--implementation)))
-    (unless (geiser-doc--external-help impl symbol module)
-      (let ((ds (geiser-doc--get-docstring symbol module)))
-        (if (or (not ds) (not (listp ds)))
-            (message "No documentation available for '%s'" symbol)
-          (geiser-doc--with-buffer
-            (erase-buffer)
-            (geiser-doc--insert-title
-             (geiser-autodoc--str (list (symbol-name symbol) 0)
-                                  (cdr (assoc 'signature ds)))
-             t)
-            (newline)
-            (insert (or (cdr (assoc 'docstring ds)) ""))
-            (setq geiser-doc--buffer-link
-                  (geiser-doc--history-push
-                   (geiser-doc--make-link symbol module impl)))
-            (geiser-doc--insert-footer)
-            (goto-char (point-min)))
-          (geiser-doc--pop-to-buffer))))))
+  (let* ((impl (or impl geiser-impl--implementation))
+         (module (geiser-doc--module (or module (geiser-eval--get-module))
+                                     impl)))
+    (let ((ds (geiser-doc--get-docstring symbol module)))
+      (if (or (not ds) (not (listp ds)))
+          (message "No documentation available for '%s'" symbol)
+        (geiser-doc--with-buffer
+          (erase-buffer)
+          (geiser-doc--insert-title
+           (geiser-autodoc--str (list (symbol-name symbol) 0)
+                                (cdr (assoc 'signature ds))))
+          (newline)
+          (insert (or (cdr (assoc 'docstring ds)) ""))
+          (setq geiser-doc--buffer-link
+                (geiser-doc--history-push (geiser-doc--make-link symbol
+                                                                 module
+                                                                 impl)))
+          (geiser-doc--insert-footer impl)
+          (goto-char (point-min)))
+        (geiser-doc--pop-to-buffer)))))
 
 (defun geiser-doc-symbol-at-point (&optional arg)
   "Get docstring for symbol at point.
@@ -261,6 +283,18 @@ With prefix argument, ask for symbol (with completion)."
                     (geiser-completion--read-symbol "Symbol: "
                                                     (symbol-at-point)))))
     (when symbol (geiser-doc-symbol symbol))))
+
+(defun geiser-doc-lookup-manual (&optional arg)
+  "Lookup manual for symbol at point.
+With prefix argument, ask for the lookup symbol (with completion)."
+  (interactive "P")
+  (unless (geiser-doc--manual-available-p)
+    (error "No manual available"))
+  (let ((symbol (or (and (not arg) (symbol-at-point))
+                    (geiser-completion--read-symbol "Symbol: "))))
+    (geiser-doc--external-help geiser-impl--implementation
+                               symbol
+                               (geiser-eval--get-module))))
 
 (defconst geiser-doc--sections '(("Procedures:" procs)
                                  ("Syntax:" syntax)
@@ -273,17 +307,19 @@ With prefix argument, ask for symbol (with completion)."
 (defun geiser-doc-module (&optional module impl)
   "Display information about a given module."
   (interactive)
-  (let* ((module (or module (geiser-completion--read-module)))
+  (let* ((impl (or impl geiser-impl--implementation))
+         (module (geiser-doc--module (or module
+                                         (geiser-completion--read-module))
+                                     impl))
          (msg (format "Retrieving documentation for %s ..." module))
          (exports (progn
                     (message "%s" msg)
-                    (geiser-doc--get-module-exports module)))
-         (impl (or impl geiser-impl--implementation)))
+                    (geiser-doc--get-module-exports module))))
     (if (not exports)
         (message "No information available for %s" module)
       (geiser-doc--with-buffer
         (erase-buffer)
-        (geiser-doc--insert-title (format "%s" module) t)
+        (geiser-doc--insert-title (format "%s" module))
         (newline)
         (dolist (g geiser-doc--sections)
           (geiser-doc--insert-list (car g)
@@ -293,7 +329,7 @@ With prefix argument, ask for symbol (with completion)."
         (setq geiser-doc--buffer-link
               (geiser-doc--history-push
                (geiser-doc--make-link nil module impl)))
-        (geiser-doc--insert-footer)
+        (geiser-doc--insert-footer impl)
         (goto-char (point-min)))
       (message "%s done" msg)
       (geiser-doc--pop-to-buffer))))
@@ -301,9 +337,9 @@ With prefix argument, ask for symbol (with completion)."
 (defun geiser-doc-next-section ()
   "Move to next section in this page."
   (interactive)
-  (next-line)
+  (forward-line)
   (re-search-forward geiser-doc--sections-re nil t)
-  (previous-line))
+  (forward-line -1))
 
 (defun geiser-doc-previous-section ()
   "Move to previous section in this page."
@@ -350,12 +386,6 @@ With prefix, the current page is deleted from history."
 
 ;;; Documentation browser and mode:
 
-(defsubst geiser-doc--module ()
-  (geiser-impl--call-method
-   'find-module
-   (geiser-doc--implementation)
-   (geiser-doc--link-module geiser-doc--buffer-link)))
-
 (defun geiser-doc-edit-symbol-at-point ()
   "Open definition of symbol at point."
   (interactive)
@@ -364,8 +394,7 @@ With prefix, the current page is deleted from history."
     (unless (and impl module)
       (error "I don't know what module this buffer refers to."))
     (with--geiser-implementation impl
-      (let ((geiser-eval--get-module-function (lambda (&rest x) module)))
-        (geiser-edit-symbol-at-point)))))
+      (geiser-edit-symbol-at-point))))
 
 (defvar geiser-doc-mode-map nil)
 (setq geiser-doc-mode-map
@@ -413,6 +442,7 @@ With prefix, the current page is deleted from history."
   (set-syntax-table scheme-mode-syntax-table)
   (setq mode-name "Geiser Doc")
   (setq major-mode 'geiser-doc-mode)
+  (setq geiser-eval--get-module-function 'geiser-doc--module)
   (setq buffer-read-only t))
 
 (geiser-popup--define doc "*Geiser documentation*" geiser-doc-mode)
