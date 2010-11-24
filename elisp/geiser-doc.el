@@ -65,6 +65,12 @@ help (e.g. browse an HTML page) implementing this method.")
 (defsubst geiser-doc--history-current ()
   (car geiser-doc--history))
 
+(defsubst geiser-doc--history-previous-link ()
+  (ring-ref (cadr geiser-doc--history) 0))
+
+(defsubst geiser-doc--history-next-link ()
+  (ring-ref (caddr geiser-doc--history) 0))
+
 (defun geiser-doc--history-push (link)
   (unless (or (null link) (equal link (geiser-doc--history-current)))
     (when (not (null (geiser-doc--history-current)))
@@ -183,6 +189,19 @@ help (e.g. browse an HTML page) implementing this method.")
     (insert " "))
   (geiser-doc--insert-xbutton))
 
+(defun geiser-doc--insert-nav-button (next)
+  (let* ((lnk (if next (geiser-doc--history-next-link)
+                (geiser-doc--history-previous-link)))
+         (what (geiser-doc--link-target lnk))
+         (what (or what (geiser-doc--link-module lnk)))
+         (action (if next '(lambda (b) (geiser-doc-next))
+                   '(lambda (b) (geiser-doc-previous)))))
+    (insert-text-button (if next "[forward]" "[back]")
+                        'action action
+                        'help-echo (format "Previous help item (%s)" what)
+                        'face 'geiser-font-lock-doc-button
+                        'follow-link t)))
+
 
 ;;; Auxiliary functions:
 
@@ -234,18 +253,10 @@ help (e.g. browse an HTML page) implementing this method.")
     (when (or prev nxt)
       (insert (make-string len ?\ )))
     (when prev
-      (insert-text-button "[back]"
-                          'action '(lambda (b) (geiser-doc-previous))
-                          'help-echo "Previous help item"
-                          'face 'geiser-font-lock-doc-button
-                          'follow-link t)
+      (geiser-doc--insert-nav-button nil)
       (insert " "))
     (when nxt
-      (insert-text-button "[forward]"
-                          'action '(lambda (b) (geiser-doc-next))
-                          'help-echo "Next help item"
-                          'face 'geiser-font-lock-doc-button
-                          'follow-link t))))
+      (geiser-doc--insert-nav-button t))))
 
 
 ;;; Commands:
