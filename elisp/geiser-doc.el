@@ -170,9 +170,12 @@ help (e.g. browse an HTML page) implementing this method.")
   'follow-link t)
 
 (defun geiser-doc--insert-xbutton (&optional manual)
-  (insert-text-button (if manual "[manual]" "[source]")
+  (let ((label (if manual "[manual]" "[source]"))
+        (help (if manual "Look up in Scheme manual" "Go to definition")))
+  (insert-text-button label
                       :type 'geiser-doc--xbutton
-                      'x-kind (if manual 'manual 'source)))
+                      'help-echo help
+                      'x-kind (if manual 'manual 'source))))
 
 (defun geiser-doc--insert-xbuttons (impl)
   (when (geiser-impl--method 'external-help impl)
@@ -230,15 +233,17 @@ help (e.g. browse an HTML page) implementing this method.")
                         (or nxt 0)))))
     (when (or prev nxt)
       (insert (make-string len ?\ )))
-    (when (geiser-doc--history-previous-p)
+    (when prev
       (insert-text-button "[back]"
                           'action '(lambda (b) (geiser-doc-previous))
+                          'help-echo "Previous help item"
                           'face 'geiser-font-lock-doc-button
                           'follow-link t)
       (insert " "))
-    (when (geiser-doc--history-next-p)
+    (when nxt
       (insert-text-button "[forward]"
                           'action '(lambda (b) (geiser-doc-next))
+                          'help-echo "Next help item"
                           'face 'geiser-font-lock-doc-button
                           'follow-link t))))
 
