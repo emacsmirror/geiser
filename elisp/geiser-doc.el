@@ -140,6 +140,14 @@ help (e.g. browse an HTML page) implementing this method.")
   'action 'geiser-doc--button-action
   'follow-link t)
 
+(defun geiser-doc--make-module-button (beg end module impl)
+  (let ((link (geiser-doc--make-link nil module impl))
+        (help (format "Help for module %s" module)))
+    (make-text-button beg end :type 'geiser-doc--button
+                      'face 'geiser-font-lock-doc-link
+                      'geiser-link link
+                      'help-echo help)))
+
 (defun geiser-doc--insert-button (target module impl &optional sign)
   (let ((link (geiser-doc--make-link target module impl))
         (text (format "%s" (or (and sign (geiser-autodoc--str* sign))
@@ -267,6 +275,16 @@ help (e.g. browse an HTML page) implementing this method.")
   (geiser-eval--send/result
    `(:eval (:ge module-exports '(:module ,module)) :f)))
 
+(defun geiser-doc--buttonize-module (impl)
+  (save-excursion
+    (goto-char (point-min))
+    (when (re-search-forward "in module \\([^.\n]+\\)\\." nil t)
+      (geiser-doc--make-module-button (match-beginning 1)
+                                      (match-end 1)
+                                      (geiser-doc--module (match-string 1)
+                                                          impl)
+                                      impl))))
+
 (defun geiser-doc-symbol (symbol &optional module impl)
   (let* ((impl (or impl geiser-impl--implementation))
          (module (geiser-doc--module (or module (geiser-eval--get-module))
@@ -281,6 +299,7 @@ help (e.g. browse an HTML page) implementing this method.")
                                 (cdr (assoc 'signature ds))))
           (newline)
           (insert (or (cdr (assoc 'docstring ds)) ""))
+          (geiser-doc--buttonize-module impl)
           (setq geiser-doc--buffer-link
                 (geiser-doc--history-push (geiser-doc--make-link symbol
                                                                  module
