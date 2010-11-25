@@ -327,10 +327,6 @@ module command as a string")
     (let ((comint-input-filter (lambda (x) nil)))
       (comint-send-input nil t))))
 
-(defun geiser-repl--send-silent (cmd)
-  (geiser-repl--prepare-send)
-  (comint-redirect-results-list cmd ".+" 0))
-
 
 ;;; REPL history
 
