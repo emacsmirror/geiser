@@ -161,7 +161,7 @@ Which brings me to the next group of REPL commands.
 @node Completion and error handling, Autodoc and friends, Switching context, The REPL
 @section Completion and error handling
 
-@cindex completion, module name
+@cindex completion, at the REPL
 We've already seen Geiser completion of module names in action at the
 mini-buffer. You won't be surprised to know that it's also available at
 the REPL buffer itself. There, you can use either @kbd{C-.} or
