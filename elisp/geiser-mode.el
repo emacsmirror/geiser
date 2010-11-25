@@ -242,6 +242,7 @@ interacting with the Geiser REPL is at your disposal.
   (setq geiser-autodoc-mode-string "/A")
   (setq geiser-smart-tab-mode-string "/T")
   (geiser-company--setup (and geiser-mode geiser-mode-company-p))
+  (geiser-completion--setup geiser-mode)
   (when geiser-mode-autodoc-p
     (geiser-autodoc-mode (if geiser-mode 1 -1)))
   (when geiser-mode-smart-tab-p
@@ -295,7 +296,7 @@ interacting with the Geiser REPL is at your disposal.
   ("Edit symbol at point" "\M-." geiser-edit-symbol-at-point
    :enable (symbol-at-point))
   ("Go to previous definition" "\M-," geiser-pop-symbol-stack)
-  ("Complete symbol" ((kbd "M-TAB")) geiser-completion--complete-symbol
+  ("Complete symbol" ((kbd "M-TAB")) completion-at-point
    :enable (symbol-at-point))
   ("Complete module name" ((kbd "M-`") (kbd "C-."))
    geiser-completion--complete-module)

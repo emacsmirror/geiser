@@ -148,12 +148,11 @@ we're looking for a module name.")
 (defun geiser-completion--for-module (&optional predicate)
   (geiser-completion--thing-at-point t predicate))
 
-(defun geiser-completion--complete-symbol ()
-  "Complete the symbol at point."
-  (interactive)
-  (let ((completion-at-point-functions '(geiser-completion--for-symbol
-                                         geiser-completion--for-module)))
-    (call-interactively 'completion-at-point)))
+(defun geiser-completion--setup (enable)
+  (set (make-local-variable 'completion-at-point-functions)
+       (if enable
+           '(geiser-completion--for-symbol geiser-completion--for-module)
+         (default-value 'completion-at-point-functions))))
 
 (defun geiser-completion--complete-module ()
   "Complete module name at point."
@@ -168,16 +167,6 @@ we're looking for a module name.")
  (defvar geiser-smart-tab-mode-string " SmartTab"
    "Modeline indicator for geiser-smart-tab-mode"))
 
-(defun geiser-completion--maybe-complete ()
-  "Indent if at beginning of line or after a white space or
-closing parenthesis, try completion otherwise."
-  (interactive)
-  (let ((indent (or (bolp)
-                    (not (memq (syntax-class (syntax-after (1- (point))))
-                               '(2 3))))))
-    (if indent (indent-according-to-mode)
-      (geiser-completion--complete-symbol))))
-
 (define-minor-mode geiser-smart-tab-mode
   "Toggle smart tab mode.
 With no argument, this command toggles the mode.
@@ -190,7 +179,10 @@ and will try completing symbol at point otherwise."
   :init-value nil
   :lighter geiser-smart-tab-mode-string
   :group 'geiser-mode
-  :keymap `((,(kbd "TAB") . geiser-completion--maybe-complete)))
+  (set (make-local-variable 'tab-always-indent)
+       (if geiser-smart-tab-mode
+           'complete
+         (default-value 'tab-always-indent))))
 
 
 (provide 'geiser-completion)

@@ -480,7 +480,7 @@ there's no symbol at point). Otherwise, go to next error in the REPL
 buffer."
   (interactive "p")
   (if (> (point) (geiser-repl--last-prompt-end))
-      (geiser-completion--maybe-complete)
+      (completion-at-point)
     (compilation-next-error n)))
 
 (defun geiser-repl--previous-error (n)
@@ -501,6 +501,9 @@ buffer."
   (set (make-local-variable 'comint-input-ignoredups)
        geiser-repl-history-no-dups-p)
   (setq geiser-eval--get-module-function 'geiser-repl--module-function)
+  (geiser-completion--setup t)
+  (setq geiser-smart-tab-mode-string "")
+  (geiser-smart-tab-mode t)
   (geiser-company--setup geiser-repl-company-p)
   ;; enabling compilation-shell-minor-mode without the annoying highlighter
   (compilation-setup t))
