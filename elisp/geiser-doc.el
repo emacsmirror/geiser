@@ -217,10 +217,9 @@ help (e.g. browse an HTML page) implementing this method.")
   (geiser-impl--method 'external-help geiser-impl--implementation))
 
 (defun geiser-doc--module (&optional mod impl)
-  (let* ((impl (or (geiser-doc--link-impl geiser-doc--buffer-link)))
-	 (method (geiser-impl--method 'find-module impl))
-	 (mod (or mod (geiser-doc--link-module geiser-doc--buffer-link))))
-    (funcall method mod)))
+  (let ((impl (or impl (geiser-doc--link-impl geiser-doc--buffer-link)))
+        (mod (or mod (geiser-doc--link-module geiser-doc--buffer-link))))
+    (geiser-impl--call-method 'find-module impl mod)))
 
 (defun geiser-doc--insert-title (title)
   (let ((p (point)))
