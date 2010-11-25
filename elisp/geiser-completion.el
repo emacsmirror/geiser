@@ -17,103 +17,7 @@
 (require 'geiser-syntax)
 (require 'geiser-base)
 
-
-;;; Completions window handling, heavily inspired in slime's:
-
-(defvar geiser-completion--comp-buffer "*Geiser Completions*")
-
-(make-variable-buffer-local
- (defvar geiser-completion--window-cfg nil
-   "Window configuration before we show the *Completions* buffer.
-This is buffer local in the buffer where the completion is
-performed."))
-
-(make-variable-buffer-local
- (defvar geiser-completion--completions-window nil
-   "The window displaying *Completions* after saving window configuration.
-If this window is no longer active or displaying the completions
-buffer then we can ignore `geiser-completion--window-cfg'."))
-
-(defun geiser-completion--save-window-cfg ()
-  "Maybe save the current window configuration.
-Return true if the configuration was saved."
-  (unless (or geiser-completion--window-cfg
-              (get-buffer-window geiser-completion--comp-buffer))
-    (setq geiser-completion--window-cfg
-          (current-window-configuration))
-    t))
-
-(defun geiser-completion--delay-restoration ()
-  (add-hook 'pre-command-hook
-            'geiser-completion--maybe-restore-window-cfg
-            nil t))
-
-(defun geiser-completion--forget-window-cfg ()
-  (setq geiser-completion--window-cfg nil)
-  (setq geiser-completion--completions-window nil))
-
-(defun geiser-completion--restore-window-cfg ()
-  "Restore the window config if available."
-  (remove-hook 'pre-command-hook
-               'geiser-completion--maybe-restore-window-cfg)
-  (when (and geiser-completion--window-cfg
-             (geiser-completion--window-active-p))
-    (save-excursion
-      (set-window-configuration geiser-completion--window-cfg))
-    (setq geiser-completion--window-cfg nil)
-    (when (buffer-live-p geiser-completion--comp-buffer)
-      (kill-buffer geiser-completion--comp-buffer))))
-
-(defun geiser-completion--maybe-restore-window-cfg ()
-  "Restore the window configuration, if the following command
-terminates a current completion."
-  (remove-hook 'pre-command-hook
-               'geiser-completion--maybe-restore-window-cfg)
-  (condition-case err
-      (cond ((memq last-command-event '(?( ?) ?\" ?' ?` ?, ?# ? ?\r ?\n ?:))
-             (geiser-completion--restore-window-cfg))
-            ((not (geiser-completion--window-active-p))
-             (geiser-completion--forget-window-cfg))
-            (t (geiser-completion--delay-restoration)))
-    (error
-     ;; Because this is called on the pre-command-hook, we mustn't let
-     ;; errors propagate.
-     (message "Error in geiser-completion--restore-window-cfg: %S" err))))
-
-(defun geiser-completion--window-active-p ()
-  "Is the completion window currently active?"
-  (and (window-live-p geiser-completion--completions-window)
-       (equal (buffer-name
-               (window-buffer geiser-completion--completions-window))
-              geiser-completion--comp-buffer)))
-
-(defun geiser-completion--display-comp-list (completions base)
-  (let ((savedp (geiser-completion--save-window-cfg)))
-    (with-output-to-temp-buffer geiser-completion--comp-buffer
-      (display-completion-list completions base)
-      (let ((offset (- (point) 1 (length base))))
-        (with-current-buffer standard-output
-          (setq completion-base-position (list offset nil))
-          (set-syntax-table scheme-mode-syntax-table))))
-    (when savedp
-      (setq geiser-completion--completions-window
-            (get-buffer-window geiser-completion--comp-buffer)))))
-
-(defun geiser-completion--display-or-scroll (completions base)
-  (if (and (eq last-command this-command)
-           (geiser-completion--window-active-p))
-      (geiser-completion--scroll-completions)
-    (geiser-completion--display-comp-list completions base))
-  (geiser-completion--delay-restoration))
-
-(defun geiser-completion--scroll-completions ()
-  (let ((window geiser-completion--completions-window))
-    (with-current-buffer (window-buffer window)
-      (if (pos-visible-in-window-p (point-max) window)
-          (set-window-start window (point-min))
-        (save-selected-window
-          (select-window window)
-          (scroll-up))))))
+(require 'minibuffer)
 
 
 ;;; Minibuffer maps:
@@ -165,11 +69,8 @@ terminates a current completion."
   (completion-table-dynamic 'geiser-completion--module-list))
 
 (defun geiser-completion--complete (prefix modules)
-  (let* ((completions (if modules (geiser-completion--module-list prefix)
-                        (geiser-completion--symbol-list prefix)))
-         (partial (try-completion prefix completions))
-         (partial (if (eq partial t) prefix partial)))
-    (cons completions partial)))
+  (if modules (geiser-completion--module-list prefix)
+    (geiser-completion--symbol-list prefix)))
 
 (defvar geiser-completion--symbol-history nil)
 
@@ -193,16 +94,9 @@ terminates a current completion."
                      (or history geiser-completion--module-history)
                      default)))
 
-(defun geiser--respecting-message (format &rest format-args)
-  "Display TEXT as a message, without hiding any minibuffer contents."
-  (let ((text (format " [%s]" (apply #'format format format-args))))
-    (if (minibuffer-window-active-p (minibuffer-window))
-        (minibuffer-message text)
-      (message "%s" text))))
-
 (defvar geiser-completion--symbol-begin-function nil)
 
-(defsubst geiser-completion--def-symbol-begin (module)
+(defun geiser-completion--def-symbol-begin (module)
   (save-excursion (skip-syntax-backward "^-()>") (point)))
 
 (geiser-impl--register-local-method
@@ -212,7 +106,7 @@ terminates a current completion."
 the identifier around point. Takes a boolean, indicating whether
 we're looking for a module name.")
 
-(defsubst geiser-completion--symbol-begin (module)
+(defun geiser-completion--symbol-begin (module)
   (funcall geiser-completion--symbol-begin-function module))
 
 (defun geiser-completion--module-at-point ()
@@ -224,40 +118,48 @@ we're looking for a module name.")
   (buffer-substring-no-properties (geiser-completion--symbol-begin module)
                                   (point)))
 
-(defun geiser-completion--complete-symbol (&optional arg previous)
-  "Complete the symbol at point.
-Perform completion similar to Emacs' complete-symbol.
-With prefix, complete module name."
-  (interactive "P")
-  (unless (geiser-syntax--symbol-at-point)
-    (error "No symbol at point"))
-  (geiser--respecting-message "Retrieving completions...")
-  (let* ((prefix (geiser-completion--prefix arg))
-         (result (and prefix (geiser-completion--complete prefix arg)))
-         (completions (car result))
-         (partial (cdr result)))
-    (cond ((null completions)
-           (if (not arg)
-               (geiser-completion--complete-symbol t prefix)
-             (geiser--respecting-message "Can't find completion for %s"
-                                         (if (and previous
-                                                  (not (equal previous
-                                                              prefix)))
-                                             (format "%S or %S"
-                                                     previous prefix)
-                                           prefix))
-             (geiser-completion--restore-window-cfg)))
-          (t (insert-and-inherit (substring partial (length prefix)))
-             (cond ((= (length completions) 1)
-                    (geiser--respecting-message "Sole completion")
-                    (geiser-completion--restore-window-cfg))
-                   (t (geiser--respecting-message "Complete but not unique")
-                      (geiser-completion--display-or-scroll completions
-                                                            partial)))))))
+(defsubst geiser-completion--prefix-end (beg)
+  (unless (or (eq beg (point-max))
+              (member (char-syntax (char-after beg)) '(?\" ?\( ?\))))
+    (let ((pos (point)))
+      (condition-case nil
+          (save-excursion
+            (goto-char beg)
+            (forward-sexp 1)
+            (when (>= (point) pos)
+              (point)))
+        (scan-error pos)))))
+
+(defun geiser-completion--thing-at-point (module &optional predicate)
+  (with-syntax-table scheme-mode-syntax-table
+    (let* ((beg (geiser-completion--symbol-begin module))
+           (end (or (geiser-completion--prefix-end beg) beg))
+           (prefix (and (> end beg) (buffer-substring-no-properties beg end)))
+           (prefix (and prefix
+                        (if (string-match "\\([^-]+\\)-" prefix)
+                            (match-string 1 prefix)
+                          prefix)))
+           (cmps (and prefix (geiser-completion--complete prefix module))))
+      (and cmps (list beg end cmps)))))
+
+(defun geiser-completion--for-symbol (&optional predicate)
+  (geiser-completion--thing-at-point nil predicate))
+
+(defun geiser-completion--for-module (&optional predicate)
+  (geiser-completion--thing-at-point t predicate))
+
+(defun geiser-completion--complete-symbol ()
+  "Complete the symbol at point."
+  (interactive)
+  (let ((completion-at-point-functions '(geiser-completion--for-symbol
+                                         geiser-completion--for-module)))
+    (call-interactively 'completion-at-point)))
 
 (defun geiser-completion--complete-module ()
+  "Complete module name at point."
   (interactive)
-  (geiser-completion--complete-symbol t))
+  (let ((completion-at-point-functions '(geiser-completion--for-module)))
+    (call-interactively 'completion-at-point)))
 
 
 ;;; Smart tab mode:

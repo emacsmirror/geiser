@@ -26,7 +26,7 @@
  (defvar geiser-company--autodoc-flag nil))
 
 (defsubst geiser-company--candidates (prefix module)
-  (car (geiser-completion--complete prefix module)))
+  (geiser-completion--complete prefix module))
 
 (defsubst geiser-company--doc (id module)
   (ignore-errors
