@@ -208,8 +208,8 @@ switcher (switch-to-NAME), and provides geiser-NAME."
         (parent (and (listp name) (cadr name))))
     (unless (symbolp name)
       (error "Malformed implementation name: %s" name))
-    (let ((runner (make-symbol (format "run-%s" name)))
-          (switcher (make-symbol (format "switch-to-%s" name)))
+    (let ((runner (intern (format "run-%s" name)))
+          (switcher (intern (format "switch-to-%s" name)))
           (runner-doc (format "Start a new %s REPL." name))
           (switcher-doc (format "Switch to a running %s REPL, or start one."
                                 name))
