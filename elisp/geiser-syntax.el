@@ -257,7 +257,7 @@ implementation-specific entries for font-lock-keywords.")
             (when (<= (point) boundary)
               (forward-sexp)
               (let ((s (symbol-at-point)))
-                (when (not (eq s '.)) (push (symbol-at-point) elems))))))
+                (when (not (eq s '.)) (push s elems))))))
         (nreverse elems)))))
 
 (defun geiser-syntax--scan-sexps (&optional begin)
