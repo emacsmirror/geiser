@@ -150,18 +150,18 @@ help (e.g. browse an HTML page) implementing this method.")
 
 (defun geiser-doc--insert-button (target module impl &optional sign)
   (let ((link (geiser-doc--make-link target module impl))
-        (text (format "%s" (or (and sign (geiser-autodoc--str* sign))
+        (text (format "%s" (or (and sign
+                                    (geiser-autodoc--str* sign))
                                target
                                module)))
         (help (format "%smodule %s"
                       (if target (format "%s in " target) "")
                       (or module "<unknown>"))))
-    (apply 'insert-text-button
-           `(,text
-             :type geiser-doc--button
-             ,@(and (not sign) (list 'face 'geiser-font-lock-doc-link))
-             geiser-link ,link
-             help-echo ,help))))
+    (insert-text-button text
+                        :type 'geiser-doc--button
+                        'face 'geiser-font-lock-doc-link
+                        'geiser-link link
+                        'help-echo help)))
 
 (defun geiser-doc--xbutton-action (button)
   (when geiser-doc--buffer-link
@@ -238,7 +238,7 @@ help (e.g. browse an HTML page) implementing this method.")
       (let ((name (car w))
             (signature (cdr (assoc 'signature w)))
             (info (cdr (assoc 'info w))))
-        (insert (format "\t- "))
+        (insert "\t- ")
         (if module
             (geiser-doc--insert-button name module impl signature)
           (geiser-doc--insert-button nil name impl))
@@ -294,8 +294,7 @@ help (e.g. browse an HTML page) implementing this method.")
         (geiser-doc--with-buffer
           (erase-buffer)
           (geiser-doc--insert-title
-           (geiser-autodoc--str (list (symbol-name symbol) 0)
-                                (cdr (assoc 'signature ds))))
+           (geiser-autodoc--str* (cdr (assoc 'signature ds))))
           (newline)
           (insert (or (cdr (assoc 'docstring ds)) ""))
           (geiser-doc--buttonize-modules impl)

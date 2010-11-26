@@ -143,7 +143,8 @@ when `geiser-autodoc-display-module-p' is on."
     (propertize str 'face 'geiser-font-lock-autodoc-identifier)))
 
 (defun geiser-autodoc--str* (full-signature)
-  (geiser-autodoc--str (list (car full-signature)) full-signature))
+  (let ((geiser-font-lock-autodoc-current-arg 'default))
+    (geiser-autodoc--str (list (car full-signature)) full-signature)))
 
 (defsubst geiser-autodoc--value-str (proc module value)
   (let ((name (geiser-autodoc--id-name proc module)))
@@ -167,7 +168,7 @@ when `geiser-autodoc-display-module-p' is on."
               (insert " |"))))
         (delete-char -2)
         (insert ")")
-        (buffer-string)))))
+        (buffer-substring (point-min) (point))))))
 
 (defun geiser-autodoc--autodoc (path &optional keep-cached)
   (let ((signs (geiser-autodoc--get-signatures (mapcar 'car path)
