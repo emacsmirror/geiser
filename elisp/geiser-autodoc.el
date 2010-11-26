@@ -59,7 +59,7 @@ when `geiser-autodoc-display-module-p' is on."
 
 (defun geiser-autodoc--get-signatures (funs &optional keep-cached)
   (when funs
-    (let ((fs (assq (car funs) geiser-autodoc--cached-signatures)))
+    (let ((fs (assoc (car funs) geiser-autodoc--cached-signatures)))
       (unless fs
         (let ((missing) (cached))
           (if (not geiser-autodoc--cached-signatures)
@@ -127,11 +127,11 @@ when `geiser-autodoc-display-module-p' is on."
 
 (defun geiser-autodoc--insert-args (args pos prev)
   (let ((cpos 1)
-        (reqs (cdr (assoc 'required args)))
+        (reqs (cdr (assoc "required" args)))
         (opts (mapcar (lambda (a)
                         (if (and (symbolp a) (not (eq a '...))) (list a) a))
-                      (cdr (assoc 'optional args))))
-        (keys (cdr (assoc 'key args))))
+                      (cdr (assoc "optional" args))))
+        (keys (cdr (assoc "key" args))))
     (setq cpos
           (geiser-autodoc--insert-arg-group reqs
                                             cpos
@@ -155,10 +155,10 @@ when `geiser-autodoc-display-module-p' is on."
 
 (defun geiser-autodoc--str (desc signature)
   (let ((proc (car desc))
-        (args (cdr (assoc 'args signature)))
-        (module (cdr (assoc 'module signature))))
+        (args (cdr (assoc "args" signature)))
+        (module (cdr (assoc "module" signature))))
     (if (not args)
-      (geiser-autodoc--value-str proc module (cdr (assoc 'value signature)))
+      (geiser-autodoc--value-str proc module (cdr (assoc "value" signature)))
       (save-current-buffer
         (set-buffer (geiser-syntax--font-lock-buffer))
         (erase-buffer)

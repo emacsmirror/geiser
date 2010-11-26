@@ -236,8 +236,8 @@ help (e.g. browse an HTML page) implementing this method.")
     (newline)
     (dolist (w lst)
       (let ((name (car w))
-            (signature (cdr (assoc 'signature w)))
-            (info (cdr (assoc 'info w))))
+            (signature (cdr (assoc "signature" w)))
+            (info (cdr (assoc "info" w))))
         (insert "\t- ")
         (if module
             (geiser-doc--insert-button name module impl signature)
@@ -294,9 +294,9 @@ help (e.g. browse an HTML page) implementing this method.")
         (geiser-doc--with-buffer
           (erase-buffer)
           (geiser-doc--insert-title
-           (geiser-autodoc--str* (cdr (assoc 'signature ds))))
+           (geiser-autodoc--str* (cdr (assoc "signature" ds))))
           (newline)
-          (insert (or (cdr (assoc 'docstring ds)) ""))
+          (insert (or (cdr (assoc "docstring" ds)) ""))
           (geiser-doc--buttonize-modules impl)
           (setq geiser-doc--buffer-link
                 (geiser-doc--history-push (geiser-doc--make-link symbol
@@ -327,10 +327,10 @@ With prefix argument, ask for the lookup symbol (with completion)."
                                symbol
                                (geiser-eval--get-module))))
 
-(defconst geiser-doc--sections '(("Procedures:" procs)
-                                 ("Syntax:" syntax)
-                                 ("Variables:" vars)
-                                 ("Submodules:" modules t)))
+(defconst geiser-doc--sections '(("Procedures:" "procs")
+                                 ("Syntax:" "syntax")
+                                 ("Variables:" "vars")
+                                 ("Submodules:" "modules" t)))
 
 (defconst geiser-doc--sections-re
   (format "^%s\n" (regexp-opt (mapcar 'car geiser-doc--sections))))
