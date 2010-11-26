@@ -281,7 +281,7 @@ interacting with the Geiser REPL is at your disposal.
         ("Definition" ("\C-c\C-m\C-x" "\C-c\C-mx") geiser-expand-definition))
   --
   ("Symbol documentation" ("\C-c\C-d\C-d" "\C-c\C-dd")
-   geiser-doc-symbol-at-point :enable (symbol-at-point))
+   geiser-doc-symbol-at-point :enable (geiser--symbol-at-point))
   ("Module documentation" ("\C-c\C-d\C-m" "\C-c\C-dm") geiser-doc-module)
   ("Symbol manual lookup" ("\C-c\C-d\C-i" "\C-c\C-di")
    geiser-doc-look-up-manual :enable (geiser-doc--manual-available-p))
@@ -294,19 +294,21 @@ interacting with the Geiser REPL is at your disposal.
   ("Set Scheme..." "\C-c\C-s" geiser-set-scheme)
   --
   ("Edit symbol at point" "\M-." geiser-edit-symbol-at-point
-   :enable (symbol-at-point))
+   :enable (geiser--symbol-at-point))
   ("Go to previous definition" "\M-," geiser-pop-symbol-stack)
   ("Complete symbol" ((kbd "M-TAB")) completion-at-point
-   :enable (symbol-at-point))
+   :enable (geiser--symbol-at-point))
   ("Complete module name" ((kbd "M-`") (kbd "C-."))
    geiser-completion--complete-module)
   ("Edit module" ("\C-c\C-e\C-m" "\C-c\C-em") geiser-edit-module)
   ("Toggle ()/[]" ("\C-c\C-e\C-[" "\C-c\C-e[") geiser-squarify)
   --
   ("Callers" ((kbd "C-c <")) geiser-xref-callers
-   :enable (and (geiser-eval--supported-p 'callers) (symbol-at-point)))
+   :enable (and (geiser-eval--supported-p 'callers)
+                (geiser--symbol-at-point)))
   ("Callees" ((kbd "C-c >")) geiser-xref-callees
-   :enable (and (geiser-eval--supported-p 'callees) (symbol-at-point)))
+   :enable (and (geiser-eval--supported-p 'callees)
+                (geiser--symbol-at-point)))
   --
   (mode "Smart TAB mode" nil geiser-smart-tab-mode)
   --

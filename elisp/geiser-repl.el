@@ -520,11 +520,11 @@ buffer."
 
 (geiser-menu--defmenu repl geiser-repl-mode-map
   ("Complete symbol" ((kbd "M-TAB"))
-   geiser-repl--tab :enable (symbol-at-point))
+   geiser-repl--tab :enable (geiser--symbol-at-point))
   ("Complete module name" ((kbd "C-.") (kbd "M-`"))
-   geiser-completion--complete-module :enable (symbol-at-point))
+   geiser-completion--complete-module :enable (geiser--symbol-at-point))
   ("Edit symbol" "\M-." geiser-edit-symbol-at-point
-   :enable (symbol-at-point))
+   :enable (geiser--symbol-at-point))
   --
   ("Switch to module..." "\C-c\C-m" switch-to-geiser-module)
   ("Import module..." "\C-c\C-i" geiser-repl-import-module)
@@ -539,9 +539,9 @@ buffer."
   (mode "Autodoc mode" ("\C-c\C-da" "\C-c\C-d\C-a") geiser-autodoc-mode)
   ("Symbol documentation" ("\C-c\C-dd" "\C-c\C-d\C-d")
    geiser-doc-symbol-at-point
-   "Documentation for symbol at point" :enable (symbol-at-point))
+   "Documentation for symbol at point" :enable (geiser--symbol-at-point))
   ("Module documentation" ("\C-c\C-dm" "\C-c\C-d\C-m") geiser-repl--doc-module
-   "Documentation for module at point" :enable (symbol-at-point))
+   "Documentation for module at point" :enable (geiser--symbol-at-point))
   --
   ("Kill Scheme interpreter" "\C-c\C-q" geiser-repl-exit
    :enable (geiser-repl--live-p))

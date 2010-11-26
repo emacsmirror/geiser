@@ -310,9 +310,9 @@ help (e.g. browse an HTML page) implementing this method.")
   "Get docstring for symbol at point.
 With prefix argument, ask for symbol (with completion)."
   (interactive "P")
-  (let ((symbol (or (and (not arg) (symbol-at-point))
-                    (geiser-completion--read-symbol "Symbol: "
-                                                    (symbol-at-point)))))
+  (let ((symbol (or (and (not arg) (geiser--symbol-at-point))
+                    (geiser-completion--read-symbol
+                     "Symbol: " (geiser--symbol-at-point)))))
     (when symbol (geiser-doc-symbol symbol))))
 
 (defun geiser-doc-look-up-manual (&optional arg)
@@ -321,7 +321,7 @@ With prefix argument, ask for the lookup symbol (with completion)."
   (interactive "P")
   (unless (geiser-doc--manual-available-p)
     (error "No manual available"))
-  (let ((symbol (or (and (not arg) (symbol-at-point))
+  (let ((symbol (or (and (not arg) (geiser--symbol-at-point))
                     (geiser-completion--read-symbol "Symbol: "))))
     (geiser-doc--external-help geiser-impl--implementation
                                symbol
@@ -453,7 +453,7 @@ With prefix, the current page is deleted from history."
   ("Refresh" ("g" "r") geiser-doc-refresh "Refresh current page")
   --
   ("Edit symbol" ("." "\M-.") geiser-doc-edit-symbol-at-point
-   :enable (symbol-at-point))
+   :enable (geiser--symbol-at-point))
   --
   ("Kill item" "k" geiser-doc-kill-page "Kill this page")
   ("Clear history" "c" geiser-doc-clean-history)

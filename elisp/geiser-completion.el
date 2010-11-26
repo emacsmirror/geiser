@@ -81,7 +81,7 @@
                                   nil nil nil
                                   (or history
                                       geiser-completion--symbol-history)
-                                  (or default (symbol-at-point))))))
+                                  (or default (geiser--symbol-at-point))))))
 
 (defvar geiser-completion--module-history nil)
 

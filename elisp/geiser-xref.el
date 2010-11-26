@@ -104,8 +104,8 @@
   (goto-char (point-min)))
 
 (defun geiser-xref--read-name (ask prompt)
-  (let ((name (or (and (not ask) (symbol-at-point))
-                  (read-string prompt nil nil (symbol-at-point)))))
+  (let ((name (or (and (not ask) (geiser--symbol-at-point))
+                  (read-string prompt nil nil (geiser--symbol-at-point)))))
     (and name (format "%s" name))))
 
 (defun geiser-xref--fetch-xrefs (ask kind rkind proc)

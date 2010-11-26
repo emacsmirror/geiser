@@ -70,6 +70,10 @@
     (dolist (e lst (nreverse result))
       (unless (member e result) (push e result)))))
 
+(defsubst geiser--symbol-at-point ()
+  (let ((thing (thing-at-point 'symbol)))
+    (and thing (make-symbol thing))))
+
 
 (provide 'geiser-base)
 ;;; geiser-base.el ends here

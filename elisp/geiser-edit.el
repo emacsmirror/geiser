@@ -201,7 +201,7 @@ or following links in error buffers.")
   "Opens a new window visiting the definition of the symbol at point.
 With prefix, asks for the symbol to edit."
   (interactive "P")
-  (let* ((symbol (or (and (not arg) (symbol-at-point))
+  (let* ((symbol (or (and (not arg) (geiser--symbol-at-point))
                      (geiser-completion--read-symbol "Edit symbol: ")))
          (cmd `(:eval (:ge symbol-location ',symbol)))
          (marker (point-marker)))
