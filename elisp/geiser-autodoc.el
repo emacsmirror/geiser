@@ -65,19 +65,22 @@ when `geiser-autodoc-display-module-p' is on."
           (if (not geiser-autodoc--cached-signatures)
               (setq missing funs)
             (dolist (f funs)
-              (let ((cf (assq f geiser-autodoc--cached-signatures)))
+              (let ((cf (assoc f geiser-autodoc--cached-signatures)))
                 (if cf (push cf cached)
                   (push f missing)))))
           (unless (or cached keep-cached) (geiser-autodoc--clean-cache))
           (when missing
-            (let ((res (geiser-eval--send/result `(:eval (:ge autodoc
-                                                          (quote ,missing)))
-                                                 500)))
+            (let* ((missing (mapcar 'make-symbol missing))
+                   (res (geiser-eval--send/result
+                         `(:eval (:ge autodoc (quote ,missing))) 500)))
               (when res
                 (setq geiser-autodoc--cached-signatures
-                      (append res (if keep-cached
-                                      geiser-autodoc--cached-signatures
-                                    cached))))))))
+                      (append (mapcar (lambda (s)
+                                        (cons (format "%s" (car s)) (cdr s)))
+                                      res)
+                              (if keep-cached
+                                  geiser-autodoc--cached-signatures
+                                cached))))))))
       geiser-autodoc--cached-signatures)))
 
 (defun geiser-autodoc--sanitize-args (args)
@@ -176,7 +179,7 @@ when `geiser-autodoc-display-module-p' is on."
         (p (car path))
         (s))
     (while (and p (not s))
-      (unless (setq s (cdr (assq (car p) signs)))
+      (unless (setq s (cdr (assoc (car p) signs)))
         (setq p (car path))
         (setq path (cdr path))))
     (when s (geiser-autodoc--str p s))))
