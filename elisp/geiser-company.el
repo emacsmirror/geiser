@@ -32,7 +32,7 @@
   (ignore-errors
     (if module
 	(format "%s [module]" id)
-      (or (geiser-autodoc--autodoc (list (list (intern id) 0)) t)
+      (or (geiser-autodoc--autodoc (list (list (format "%s" id) 0)) t)
           (format "%s [local id]" id)))))
 
 (defsubst geiser-company--doc-buffer (id module)
@@ -40,7 +40,7 @@
 
 (defun geiser-company--location (id module)
   (ignore-errors
-    (let ((id (intern id)))
+    (let ((id (make-symbol id)))
       (save-excursion
         (if module
             (geiser-edit-module id 'noselect)
