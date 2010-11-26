@@ -274,10 +274,10 @@ help (e.g. browse an HTML page) implementing this method.")
   (geiser-eval--send/result
    `(:eval (:ge module-exports '(:module ,module)) :f)))
 
-(defun geiser-doc--buttonize-module (impl)
+(defun geiser-doc--buttonize-modules (impl)
   (save-excursion
     (goto-char (point-min))
-    (when (re-search-forward "in module \\([^.\n]+\\)\\." nil t)
+    (while (re-search-forward "in module \\([^.\n]+\\)\\b" nil t)
       (geiser-doc--make-module-button (match-beginning 1)
                                       (match-end 1)
                                       (geiser-doc--module (match-string 1)
@@ -298,7 +298,7 @@ help (e.g. browse an HTML page) implementing this method.")
                                 (cdr (assoc 'signature ds))))
           (newline)
           (insert (or (cdr (assoc 'docstring ds)) ""))
-          (geiser-doc--buttonize-module impl)
+          (geiser-doc--buttonize-modules impl)
           (setq geiser-doc--buffer-link
                 (geiser-doc--history-push (geiser-doc--make-link symbol
                                                                  module
