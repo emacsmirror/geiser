@@ -72,4 +72,3 @@
 
 
 (provide 'geiser-base)
-;;; geiser-base.el ends here
