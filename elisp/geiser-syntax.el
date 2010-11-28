@@ -235,6 +235,31 @@ implementation-specific entries for font-lock-keywords.")
   (let ((geiser-syntax--read/buffer-limit (and (numberp boundary) boundary)))
     (save-excursion (values (geiser-syntax--read) (point)))))
 
+(defun geiser-syntax--mapconcat (fun lst sep)
+  (cond ((null lst) "")
+        ((not (listp lst)) (format ".%s%s" sep (funcall fun lst)))
+        ((null (cdr lst)) (format "%s" (funcall fun (car lst))))
+        (t (format "%s%s%s"
+                   (funcall fun (car lst))
+                   sep
+                   (geiser-syntax--mapconcat fun (cdr lst) sep)))))
+
+(defun geiser-syntax--display (a)
+  (cond ((null a) "()")
+        ((eq a :t) "#t")
+        ((eq a :f) "#f")
+        ((geiser-syntax--keywordp a) (format "#%s" a))
+        ((symbolp a) (format "%s" a))
+        ((equal a "...") "...")
+        ((stringp a) (format "%S" a))
+        ((and (listp a) (symbolp (car a))
+              (equal (symbol-name (car a)) "quote"))
+         (format "'%s" (geiser-syntax--display (cadr a))))
+        ((listp a)
+         (format "(%s)"
+                 (geiser-syntax--mapconcat 'geiser-syntax--display a " ")))
+        (t (format "%s" a))))
+
 
 ;;; Code parsing:
 
