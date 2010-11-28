@@ -277,7 +277,7 @@ help (e.g. browse an HTML page) implementing this method.")
 (defun geiser-doc--buttonize-modules (impl)
   (save-excursion
     (goto-char (point-min))
-    (while (re-search-forward "in module \\([^.\n]+\\)\\b" nil t)
+    (while (re-search-forward "in module \\([^.\n]+\\)[.\n ]" nil t)
       (geiser-doc--make-module-button (match-beginning 1)
                                       (match-end 1)
                                       (geiser-doc--module (match-string 1)
