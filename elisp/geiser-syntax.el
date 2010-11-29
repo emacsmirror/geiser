@@ -327,14 +327,15 @@ implementation-specific entries for font-lock-keywords.")
        (let ((f (symbol-name f)))
          (or (member f '("define" "define*" "define-syntax"
                          "syntax-rules" "lambda" "case-lambda"
-                         "let" "let*" "letrec" "parameterize"))
+                         "let" "let*" "let-values" "let*-values"
+                         "letrec" "letrec*" "parameterize"))
              (member f bfs)
              (member f sbfs)))))
 
 (defsubst geiser-syntax--binding-form*-p (sbfs f)
   (and (symbolp f)
        (let ((f (symbol-name f)))
-         (or (member f '("let*"))
+         (or (member f '("let*" "let*-values" "letrec" "letrec*"))
              (member f sbfs)))))
 
 (defsubst geiser-syntax--if-symbol (x) (and (symbolp x) x))
@@ -351,13 +352,13 @@ implementation-specific entries for font-lock-keywords.")
 	((null form) nil)
 	(t (cons (car form) (geiser-syntax--linearize (cdr form))))))
 
-(defun geiser-syntax--scan-locals (bfs sbfs form partial nesting locals)
+(defun geiser-syntax--scan-locals (bfs sbfs form nesting locals)
   (if (or (null form) (not (listp form)))
       (geiser-syntax--normalize locals)
     (if (not (geiser-syntax--binding-form-p bfs sbfs (car form)))
 	(geiser-syntax--scan-locals bfs sbfs
 				    (car (last form))
-                                    partial (1- nesting) locals)
+                                    (1- nesting) locals)
       (let* ((head (car form))
 	     (name (geiser-syntax--if-symbol (cadr form)))
 	     (names (if name (geiser-syntax--if-list (caddr form))
@@ -366,22 +367,23 @@ implementation-specific entries for font-lock-keywords.")
                        (geiser-syntax--binding-form-p bfs sbfs (car names))))
 	     (rest (if (and name (not bns)) (cdddr form) (cddr form)))
 	     (use-names (and (or rest
-                                 (not partial)
+                                 (< nesting 1)
                                  (geiser-syntax--binding-form*-p sbfs head))
                              (not bns))))
 	(when name (push name locals))
         (when (geiser-syntax--symbol-eq head 'case-lambda)
           (dolist (n (and (> nesting 0) (caar (last form))))
             (when n (push n locals)))
-          (setq rest (and partial (cdr form)))
+          (setq rest (and (> nesting 0) (cdr form)))
           (setq use-names nil))
         (when (geiser-syntax--symbol-eq head 'syntax-rules)
           (dolist (n (and (> nesting 0) (cdaar (last form))))
             (when n (push n locals)))
-          (setq rest (and partial (cdr form))))
+          (setq rest (and (> nesting 0) (cdr form))))
 	(when use-names
 	  (dolist (n (geiser-syntax--linearize names))
-	    (when n (push n locals))))
+            (let ((xs (if (and (listp n) (listp (car n))) (car n) (list n))))
+              (dolist (x xs) (when x (push x locals))))))
 	(dolist (f (butlast rest))
 	  (when (and (listp f)
                      (geiser-syntax--symbol-eq (car f) 'define)
@@ -389,7 +391,6 @@ implementation-specific entries for font-lock-keywords.")
 	    (push (cadr f) locals)))
 	(geiser-syntax--scan-locals bfs sbfs
 				    (car (last (or rest names)))
-				    partial
                                     (1- nesting)
 				    locals)))))
 
@@ -409,7 +410,6 @@ implementation-specific entries for font-lock-keywords.")
                     (geiser-syntax--scan-locals bfs
                                                 sbfs
                                                 form
-                                                (> end boundary)
                                                 (1- nesting)
                                                 '()))))))))
 
