@@ -125,7 +125,7 @@ implementation-specific entries for font-lock-keywords.")
 (defun geiser-syntax--read/symbol ()
   (with-syntax-table scheme-mode-syntax-table
     (when (re-search-forward "\\(\\sw\\|\\s_\\)+" nil t)
-      (make-symbol (match-string 0)))))
+      (make-symbol (match-string-no-properties 0)))))
 
 (defun geiser-syntax--read/matching (open close)
   (let ((count 1)
@@ -323,64 +323,95 @@ implementation-specific entries for font-lock-keywords.")
             (nreverse path))))
 
 (defsubst geiser-syntax--binding-form-p (bfs sbfs f)
-  (or (memq f '(define define* define-syntax define-syntax-rule
-                lambda let let* letrec parameterize))
-      (memq f bfs)
-      (memq f sbfs)))
+  (and (symbolp f)
+       (let ((f (symbol-name f)))
+         (or (member f '("define" "define*" "define-syntax"
+                         "syntax-rules" "lambda" "case-lambda"
+                         "let" "let*" "letrec" "parameterize"))
+             (member f bfs)
+             (member f sbfs)))))
 
 (defsubst geiser-syntax--binding-form*-p (sbfs f)
-  (or (eq 'let* f) (memq f sbfs)))
+  (and (symbolp f)
+       (let ((f (symbol-name f)))
+         (or (member f '("let*"))
+             (member f sbfs)))))
 
 (defsubst geiser-syntax--if-symbol (x) (and (symbolp x) x))
 (defsubst geiser-syntax--if-list (x) (and (listp x) x))
+
 (defsubst geiser-syntax--normalize (vars)
-  (mapcar (lambda (i) (if (listp i) (car i) i)) vars))
+  (mapcar (lambda (i)
+            (let ((i (if (listp i) (car i) i)))
+              (and (symbolp i) (symbol-name i))))
+          vars))
 
 (defun geiser-syntax--linearize (form)
   (cond ((not (listp form)) (list form))
 	((null form) nil)
 	(t (cons (car form) (geiser-syntax--linearize (cdr form))))))
 
-(defun geiser-syntax--scan-locals (bfs sbfs form partial locals)
+(defun geiser-syntax--scan-locals (bfs sbfs form partial nesting locals)
   (if (or (null form) (not (listp form)))
       (geiser-syntax--normalize locals)
     (if (not (geiser-syntax--binding-form-p bfs sbfs (car form)))
 	(geiser-syntax--scan-locals bfs sbfs
-				    (car (last form)) partial locals)
+				    (car (last form))
+                                    partial (1- nesting) locals)
       (let* ((head (car form))
 	     (name (geiser-syntax--if-symbol (cadr form)))
 	     (names (if name (geiser-syntax--if-list (caddr form))
 		      (geiser-syntax--if-list (cadr form))))
-	     (rest (if name (cdddr form) (cddr form)))
-	     (use-names (or rest
-			    (not partial)
-			    (geiser-syntax--binding-form*-p sbfs
-							    head))))
+             (bns (and name
+                       (geiser-syntax--binding-form-p bfs sbfs (car names))))
+	     (rest (if (and name (not bns)) (cdddr form) (cddr form)))
+	     (use-names (and (or rest
+                                 (not partial)
+                                 (geiser-syntax--binding-form*-p sbfs head))
+                             (not bns))))
 	(when name (push name locals))
+        (when (geiser-syntax--symbol-eq head 'case-lambda)
+          (dolist (n (and (> nesting 0) (caar (last form))))
+            (when n (push n locals)))
+          (setq rest (and partial (cdr form)))
+          (setq use-names nil))
+        (when (geiser-syntax--symbol-eq head 'syntax-rules)
+          (dolist (n (and (> nesting 0) (cdaar (last form))))
+            (when n (push n locals)))
+          (setq rest (and partial (cdr form))))
 	(when use-names
 	  (dolist (n (geiser-syntax--linearize names))
-	    (push n locals)))
+	    (when n (push n locals))))
 	(dolist (f (butlast rest))
-	  (when (and (listp f) (eq (car f) 'define))
+	  (when (and (listp f)
+                     (geiser-syntax--symbol-eq (car f) 'define)
+                     (cadr f))
 	    (push (cadr f) locals)))
 	(geiser-syntax--scan-locals bfs sbfs
 				    (car (last (or rest names)))
 				    partial
+                                    (1- nesting)
 				    locals)))))
 
 (defun geiser-syntax--locals-around-point (bfs sbfs)
   (when (eq major-mode 'scheme-mode)
     (save-excursion
-      (let* ((sym (unless (geiser-syntax--skip-comment/string)
-		    (symbol-at-point)))
-	     (boundary (point)))
-        (while (not (zerop (geiser-syntax--nesting-level)))
-          (backward-up-list))
-        (multiple-value-bind (form end)
-            (geiser-syntax--form-after-point boundary)
-          (delq sym
-		(geiser-syntax--scan-locals bfs sbfs form
-					    (> end boundary) '())))))))
+      (let ((sym (unless (geiser-syntax--skip-comment/string)
+                   (thing-at-point 'symbol))))
+        (skip-syntax-forward "->")
+        (let ((boundary (point))
+              (nesting (geiser-syntax--nesting-level)))
+          (while (not (zerop (geiser-syntax--nesting-level)))
+            (backward-up-list))
+          (multiple-value-bind (form end)
+              (geiser-syntax--form-after-point boundary)
+            (delete sym
+                    (geiser-syntax--scan-locals bfs
+                                                sbfs
+                                                form
+                                                (> end boundary)
+                                                (1- nesting)
+                                                '()))))))))
 
 
 ;;; Fontify strings as Scheme code:
