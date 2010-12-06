@@ -24,10 +24,12 @@
    (http://www.nongnu.org/geiser/) contains a nicer manual, also
    included in Geiser tarballs as a texinfo file (doc/geiser.info).
 
-* Supported scheme implementations
+* Requirements
 
-    - Guile 2.0 (not released yet: use the latest git master branch).
-    - PLT Racket 5.0.1 or better.
+    Geiser needs Emacs 23.2 or better, and at least one of the
+    supported scheme implementations:
+      - Guile 2.0 (not released yet: use the latest git master branch).
+      - PLT Racket 5.0.1 or better.
 
 * Installation
   Geiser can be used either directly from its uninstalled source tree
