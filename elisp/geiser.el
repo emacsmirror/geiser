@@ -76,6 +76,7 @@
         geiser-repl
         geiser-autodoc
         geiser-doc
+        geiser-debug
         geiser-faces
         geiser-mode
         geiser-guile

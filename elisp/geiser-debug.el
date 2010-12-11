@@ -20,6 +20,29 @@
 (require 'geiser-base)
 
 
+;;; Customization:
+
+(defgroup geiser-debug nil
+  "Debugging and error display options."
+  :group 'geiser)
+
+(geiser-custom--defcustom geiser-debug-always-display-sexp-after-p nil
+  "Whether to always display the sexp whose evaluation caused an
+error after the error message in the debug pop-up. If nil,
+expressions shorter than `geiser-debug-long-sexp-lines` lines are
+show before the error message."
+  :group 'geiser-debug
+  :type 'boolean)
+
+(geiser-custom--defcustom geiser-debug-long-sexp-lines 6
+  "Length of an expression in order to be relegated to the bottom
+of the debug pop-up (after the error message). If
+`geiser-debug-always-display-sexp-after-p` is t, this variable
+has no effect."
+  :group 'geiser-debug
+  :type 'int)
+
+
 ;;; Debug buffer mode:
 
 (defvar geiser-debug-mode-map
@@ -72,6 +95,13 @@ non-null value.")
   "This method is called upon entering the debugger, in the REPL
 buffer.")
 
+(defun geiser-debug--display-after (what)
+  (or geiser-debug-always-display-sexp-after-p
+      (>= (with-temp-buffer
+            (insert what)
+            (count-lines (point-min) (point-max)))
+          geiser-debug-long-sexp-lines)))
+
 (defun geiser-debug--display-retort (what ret &optional res)
   (let* ((err (geiser-eval--retort-error ret))
          (key (geiser-eval--error-key err))
@@ -82,10 +112,7 @@ buffer.")
          (dir default-directory)
          (buffer (current-buffer))
          (debug (eq key 'geiser-debugger))
-         (lines (with-temp-buffer
-                  (insert what)
-                  (count-lines (point-min) (point-max))))
-         (after (> lines 5)))
+         (after (geiser-debug--display-after what)))
     (when debug
       (switch-to-geiser nil nil buffer)
       (geiser-debug--enter-debugger impl))
