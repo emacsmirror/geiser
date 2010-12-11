@@ -81,19 +81,25 @@ buffer.")
          (jump nil)
          (dir default-directory)
          (buffer (current-buffer))
-         (debug (eq key 'geiser-debugger)))
+         (debug (eq key 'geiser-debugger))
+         (lines (with-temp-buffer
+                  (insert what)
+                  (count-lines (point-min) (point-max))))
+         (after (> lines 5)))
     (when debug
       (switch-to-geiser nil nil buffer)
       (geiser-debug--enter-debugger impl))
     (geiser-debug--with-buffer
       (erase-buffer)
       (when dir (setq default-directory dir))
-      (insert what)
-      (newline 2)
+      (unless after
+        (insert what)
+        (newline 2))
       (when (and res (not err))
         (insert res)
         (newline 2))
       (setq jump (geiser-debug--display-error impl module key output))
+      (when after (insert "\nExpression evaluated was:\n\n" what))
       (goto-char (point-min)))
     (when jump (geiser-debug--pop-to-buffer))))
 
