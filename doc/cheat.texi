@@ -77,6 +77,9 @@
 @item C-c C-d C-m
 @tab geiser-doc-module
 @tab See a list of a module's exported identifiers
+@item C-c C-d C-i
+@tab geiser-doc-look-up-manual
+@tab Look up manual for symbol at point
 @item C-c C-d C-a
 @tab geiser-autodoc-mode
 @tab Toggle autodoc mode
