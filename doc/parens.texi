@@ -298,11 +298,16 @@ that they're used everywhere).
 Pressing @kbd{q} in the documentation buffer will bring you back,
 enlightened, to where you were. There's also a handful of other
 navigation commands available in that buffer, which you can discover by
-means of its menu or via the good old @kbd{C-h m} command.
+means of its menu or via the good old @kbd{C-h m} command. And feel free
+to use the navigation buttons and hyperlinks that justify my calling
+this buffer a documentation browser.
 
 For Racket, which does not support docstrings out of the box, this
 command will provide less information, but the documentation browser
-will display the corresponding contract when it's available.
+will display the corresponding contract when it's available, as well as
+some other tidbits for re-exported identifiers.
+
+@imgc{docstring-racket}
 
 You can also ask Geiser to display information about a module, in the
 form of a list of its exported identifiers, using @kbd{C-c C-d C-m},
@@ -322,7 +327,7 @@ You can also jump directly to the manual page for the symbol at point
 with the command @code{geiser-doc-look-up-manual}, bound to @kbd{C-c C-d
 i}.
 
-See also our @xref{Documentation browser,,cheat-sheet} for a list of
+See also our @ref{Documentation browser,,cheat-sheet} for a list of
 navigation commands available in the documentation browser.
 
 @node To eval or not to eval, To err perchance to debug, Documentation helpers, Between the parens
