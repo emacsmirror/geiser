@@ -42,7 +42,6 @@
 
 (define-derived-mode geiser-messages-mode fundamental-mode "Geiser Messages"
   "Simple mode for Geiser log messages buffer."
-  (kill-all-local-variables)
   (buffer-disable-undo)
   (add-hook 'after-change-functions
             '(lambda (b e len)
@@ -89,6 +88,21 @@ With prefix, activates all logging levels."
   "Clean all logs."
   (interactive)
   (geiser-log--with-buffer (delete-region (point-min) (point-max))))
+
+(defun geiser-log-toggle-verbose ()
+  "Toggle verbose logs"
+  (interactive)
+  (setq geiser-log-verbose-p (not geiser-log-verbose-p))
+  (message "Geiser verbose logs %s"
+           (if geiser-log-verbose-p "enabled" "disabled")))
+
+(defun geiser-log--deactivate ()
+  (interactive)
+  (setq geiser-log-verbose-p nil)
+  (when (eq (current-buffer) (geiser-log--buffer)) (View-quit)))
+
+(define-key geiser-messages-mode-map "c" 'geiser-log-clear)
+(define-key geiser-messages-mode-map "Q" 'geiser-log--deactivate)
 
 
 (provide 'geiser-log)
