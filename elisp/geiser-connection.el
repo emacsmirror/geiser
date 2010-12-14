@@ -66,6 +66,21 @@
 
 ;;; Connection datatype:
 
+(defun geiser-con--tq-create (process)
+  (let ((tq (tq-create process)))
+    (set-process-filter process
+			`(lambda (p s) (geiser-con--tq-filter ',tq s)))
+    tq))
+
+(defun geiser-con--tq-filter (tq in)
+  (if (tq-queue-empty tq)
+      (let ((buffer (tq-buffer tq)))
+        (geiser-log--error "Unexpected queue input:\n %s" in)
+        (when (buffer-live-p buffer)
+          (with-current-buffer buffer
+            (delete-region (point-min) (point-max)))))
+    (tq-filter tq in)))
+
 (defun geiser-con--combined-prompt (prompt debug)
   (format "\\(%s%s\\)" prompt (if debug (format "\\|%s" debug) "")))
 
@@ -76,7 +91,7 @@
 (defun geiser-con--make-connection (proc prompt debug-prompt)
   (list t
         (cons :filter (process-filter proc))
-        (cons :tq (tq-create proc))
+        (cons :tq (geiser-con--tq-create proc))
         (cons :tq-filter (process-filter proc))
         (cons :eot (geiser-con--connection-eot-re prompt debug-prompt))
         (cons :prompt prompt)
