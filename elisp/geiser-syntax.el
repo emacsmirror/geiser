@@ -97,8 +97,9 @@
 implementation-specific entries for font-lock-keywords.")
 
 (defun geiser-syntax--add-kws ()
-  (let ((kw (geiser-syntax--impl-kws geiser-impl--implementation)))
-    (when kw (font-lock-add-keywords nil kw))))
+  (when (not (and (boundp 'quack-mode) quack-mode))
+    (let ((kw (geiser-syntax--impl-kws geiser-impl--implementation)))
+      (when kw (font-lock-add-keywords nil kw)))))
 
 
 ;;; A simple scheme reader
