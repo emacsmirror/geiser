@@ -58,6 +58,9 @@
 (autoload 'switch-to-racket "geiser-racket"
   "Start a Geiser Racket REPL, or switch to a running one." t)
 
+(autoload 'connect-to-racket "geiser-racket"
+  "Connect to a remote Geiser Racket REPL." t)
+
 (autoload 'geiser-mode "geiser-mode"
   "Minor mode adding Geiser REPL interaction to Scheme buffers." t)
 
