@@ -58,9 +58,9 @@ its moral equivalents):
 @noindent
 or simply evaluate that form inside Emacs (you wouldn't kill a friend
 just to start using Geiser, would you?). That's it: you're ready to
-@ref{quick-start,,go}. You can even continue to read this fine manual
-inside Emacs by opening @file{doc/geiser.info} using @kbd{C-u C-h
-i}.
+@ref{quick-start,,go}. If you obtained the Geiser source tree from a
+release tarball, you can even continue to read this fine manual inside
+Emacs by opening @file{doc/geiser.info} using @kbd{C-u C-h i}.
 
 @cindex byte-compilation
 What? You still here? I promise the above is all that's needed to start
