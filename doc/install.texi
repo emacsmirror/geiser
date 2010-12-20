@@ -33,7 +33,7 @@ to the fun.
 
 @cindex use the source, Luke
 You'll also need Geiser itself. The latest release tarball can be
-found @uref{http://download.savannah.gnu.org/releases/geiser/@value{VERSION}/,
+found @uref{http://download.savannah.nongnu.org/releases/geiser/@value{VERSION}/,
 here}, while older versions are
 @uref{http://download.savannah.nongnu.org/releases/geiser/, here}. Just
 download
