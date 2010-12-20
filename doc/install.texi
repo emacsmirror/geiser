@@ -35,13 +35,13 @@ to the fun.
 You'll also need Geiser itself. The latest release tarball can be
 found @uref{http://download.savannah.gnu.org/releases/geiser/@value{VERSION}/,
 here}, while older versions are
-@uref{http://download.savannah.gnu.org/releases/geiser/, here}. Just
+@uref{http://download.savannah.nongnu.org/releases/geiser/, here}. Just
 download
-@uref{http://download.savannah.gnu.org/releases/geiser/@value{VERSION}/geiser-@value{VERSION}.tar.gz,
+@uref{http://download.savannah.nongnu.org/releases/geiser/@value{VERSION}/geiser-@value{VERSION}.tar.gz,
 geiser-@value{VERSION}.tar.gz} and untar it in a directory of your choice.
 
 If you feel like living on the bleeding edge, just grab Geiser from its
-Git repository @uref{http://git.savannah.gnu.org/cgit/geiser.git/, over
+Git repository @uref{http://git.savannah.nongnu.org/cgit/geiser.git/, over
 at Savannah}, either with the following incantation:
 @example
 git clone git://git.sv.gnu.org/geiser.git
