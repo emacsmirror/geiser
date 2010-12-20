@@ -10,7 +10,6 @@
 
 # SUBDIRS = img
 SUFFIXES = .html
-EXTRA_DIST = geiser.css site.conf web.texi
 
 info_TEXINFOS = geiser.texi
 geiser_TEXINFOS = \

@@ -13,21 +13,36 @@
 @cindex supported versions
 @cindex versions supported
 If Geiser came with any guarantees, you'd break all of them by not using
-GNU Emacs 23.2 (or better, if there actually @i{is} anything better) and
-at least one of the supported schemes, which right now are
-@uref{http://www.racket-lang.org, Racket} 5.0.1 (or better) and the
-latest and greatest @uref{http://www.gnu.org/software/guile, Guile} 1.9
-directly compiled from a recent checkout of
+GNU Emacs 23.2 (or better: i regularly use it with a recent Emacs
+snapshot) and at least one of the supported schemes, namely:
+
+@itemize @bullet
+@item
+@uref{http://www.racket-lang.org, Racket} 5.0.1 or better
+@item
+@uref{http://www.gnu.org/software/guile, Guile} 1.9.14, directly
+compiled from a recent checkout of
 @uref{http://www.gnu.org/software/guile/repository.html, its Git
-@i{master} branch}. Since Geiser supports multiple REPLs, having both
-of them will just add to the fun.
+@i{master} branch}.
+@end itemize
+
+Since Geiser supports multiple REPLs, having both of them will just add
+to the fun.
+
+@subsubheading Downloading Geiser
 
 @cindex use the source, Luke
-You'll also need Geiser itself. Until version 0.1 is out (which will
-happen shortly after i finish writing a decent manual), your best bet is
-grabbing Geiser from its Git repository over at
-@uref{http://git.savannah.gnu.org/cgit/geiser.git/, Savannah}, either
-with the following incantation:
+You'll also need Geiser itself. The latest release tarball can be
+found @uref{http://download.savannah.gnu.org/releases/geiser/@value{VERSION}/,
+here}, while older versions are
+@uref{http://download.savannah.gnu.org/releases/geiser/, here}. Just
+download
+@uref{http://download.savannah.gnu.org/releases/geiser/@value{VERSION}/geiser-@value{VERSION}.tar.gz,
+geiser-@value{VERSION}.tar.gz} and untar it in a directory of your choice.
+
+If you feel like living on the bleeding edge, just grab Geiser from its
+Git repository @uref{http://git.savannah.gnu.org/cgit/geiser.git/, over
+at Savannah}, either with the following incantation:
 @example
 git clone git://git.sv.gnu.org/geiser.git
 @end example
@@ -36,13 +51,15 @@ git clone git://git.sv.gnu.org/geiser.git
 git clone http://git.sv.gnu.org/r/geiser.git
 @end example
 @noindent
-If you don't want to install Git, you can instead grab a tarball from
-Geiser's @uref{http://gitorious.org/geiser/mainline/commits/master,
-Gitorious mirror}, where you'll find a
-@uref{http://gitorious.org/geiser/mainline/archive-tarball/master, link}
-generating said tarball for you. Either way, you'll now be in possession
-of a copy of Geiser's libre code. I'll follow you into its directory and
-the next section.
+
+You can also follow Geiser's development in
+@uref{https://github.com/jaor/geiser, one}
+@uref{http://repo.or.cz/w/geiser.git, or}
+@uref{http://gitorious.org/geiser, three} mirrors that
+are kept synchronized with the one at Savannah.
+
+Either way, you'll now be in possession of a copy of Geiser's libre
+code. I'll follow you into its directory and the next section.
 
 @node Setting it up, Friends, Must needs, Installation
 @section Setting it up
