@@ -1,4 +1,6 @@
 @set VERSION 0.1.1
+@set STABLE_VERSION 0.1
+@set DOWN_BASE http://download.savannah.nongnu.org/releases/geiser
 
 @macro img{FILE, ALIGN}
 @ifhtml
@@ -16,3 +18,6 @@
 @end ifhtml
 @end macro
 
+@macro downfile{FILE, CAPT}
+@uref{@value{DOWN_BASE}/@value{STABLE_VERSION}/\FILE\, \CAPT\}
+@end macro

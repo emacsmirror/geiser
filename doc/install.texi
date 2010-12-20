@@ -32,13 +32,11 @@ to the fun.
 @subsubheading Downloading Geiser
 
 @cindex use the source, Luke
-You'll also need Geiser itself. The latest release tarball can be
-found @uref{http://download.savannah.nongnu.org/releases/geiser/@value{VERSION}/,
-here}, while older versions are
-@uref{http://download.savannah.nongnu.org/releases/geiser/, here}. Just
-download
-@uref{http://download.savannah.nongnu.org/releases/geiser/@value{VERSION}/geiser-@value{VERSION}.tar.gz,
-geiser-@value{VERSION}.tar.gz} and untar it in a directory of your choice.
+You'll also need Geiser itself. The latest release tarball can be found
+@downfile{, here}, while older versions are @uref{@value{DOWN_BASE}/,
+here}. Just download @downfile{geiser-@value{STABLE_VERSION}.tar.gz,
+geiser-@value{STABLE_VERSION}.tar.gz} and untar it in a directory of
+your choice.
 
 If you feel like living on the bleeding edge, just grab Geiser from its
 Git repository @uref{http://git.savannah.nongnu.org/cgit/geiser.git/, over
@@ -77,7 +75,9 @@ or simply evaluate that form inside Emacs (you wouldn't kill a friend
 just to start using Geiser, would you?). That's it: you're ready to
 @ref{quick-start,,go}. If you obtained the Geiser source tree from a
 release tarball, you can even continue to read this fine manual inside
-Emacs by opening @file{doc/geiser.info} using @kbd{C-u C-h i}.
+Emacs by opening @file{doc/geiser.info} using @kbd{C-u C-h i}. The
+manual is also available in PDF format
+@downfile{geiser-manual-@value{STABLE_VERSION}.pdf, here}.
 
 @cindex byte-compilation
 What? You still here? I promise the above is all that's needed to start
@@ -105,7 +105,8 @@ bytecode from here, add this line to your initialisation file:
 @example
 (load "~/lisp/geiser/build/elisp/geiser-load")
 @end example
-and eval that form or (gasp!) restart Emacs and you're done. Yes, that's
+and eval that form and you're done (you could also restart Emacs, but
+killing your friends is widely considered bad form). Yes, that's
 @code{load} and @file{geiser-load} instead of @code{load-file} and
 @file{geiser.el}.
 
