@@ -91,6 +91,14 @@ div.navigation {
     /* border-color: rgb(200, 200, 200); */
 }
 
+div.version {
+    background-color: #efebe7;
+    line-height: 100%;
+    padding: 3px;
+    top-margin: 5px;
+    font-size: smaller;
+}
+
 .navlink {
     text-decoration: none;
     /* color: white; */

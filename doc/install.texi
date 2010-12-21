@@ -34,9 +34,8 @@ to the fun.
 @cindex use the source, Luke
 You'll also need Geiser itself. The latest release tarball can be found
 @downfile{, here}, while older versions are @uref{@value{DOWN_BASE}/,
-here}. Just download @downfile{geiser-@value{STABLE_VERSION}.tar.gz,
-geiser-@value{STABLE_VERSION}.tar.gz} and untar it in a directory of
-your choice.
+here}. Just download @downfile{@value{TARBALL}, @value{TARBALL}}
+and untar it in a directory of your choice.
 
 If you feel like living on the bleeding edge, just grab Geiser from its
 Git repository @uref{http://git.savannah.nongnu.org/cgit/geiser.git/, over

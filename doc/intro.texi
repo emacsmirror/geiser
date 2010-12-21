@@ -77,7 +77,7 @@ Listings of identifiers exported by a given module.
 Listings of callers/callees of procedures.
 @item
 Rudimentary support for debugging (when the REPL provides a
-debugging) and error navigation.
+debugger) and error navigation.
 @item
 Support for multiple, simultaneous REPLs.
 @end itemize
