@@ -54,8 +54,15 @@ when `geiser-autodoc-display-module-p' is on."
 (make-variable-buffer-local
  (defvar geiser-autodoc--cached-signatures nil))
 
-(defsubst geiser-autodoc--clean-cache ()
-  (setq geiser-autodoc--cached-signatures nil))
+(defun geiser-autodoc--clean-cache (&optional whole)
+  (if whole
+      (setq geiser-autodoc--cached-signatures nil)
+    (let ((s (car (last (geiser-syntax--locals-around-point nil nil))))
+          (cache))
+      (when s
+        (dolist (item geiser-autodoc--cached-signatures)
+          (unless (string-equal s (car item)) (push item cache)))
+        (setq geiser-autodoc--cached-signatures (nreverse cache))))))
 
 (defun geiser-autodoc--save-signatures (ret)
   (let ((res (geiser-eval--retort-result ret)))

@@ -39,7 +39,7 @@
          (path (cdr b/p))
          (msg (format "%s %s ..." msg path)))
     (message msg)
-    (geiser-autodoc--clean-cache)
+    (geiser-autodoc--clean-cache t)
     (geiser-compile--display-result
      msg (geiser-eval--send/wait
           `(,(if compile-p :comp-file :load-file) ,path)))))
