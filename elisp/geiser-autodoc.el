@@ -54,39 +54,27 @@ when `geiser-autodoc-display-module-p' is on."
 (make-variable-buffer-local
  (defvar geiser-autodoc--cached-signatures nil))
 
-(defun geiser-autodoc--clean-cache (&optional whole)
-  (if whole
-      (setq geiser-autodoc--cached-signatures nil)
-    (let ((s (car (last (geiser-syntax--locals-around-point nil nil))))
-          (cache))
-      (when s
-        (dolist (item geiser-autodoc--cached-signatures)
-          (unless (string-equal s (car item)) (push item cache)))
-        (setq geiser-autodoc--cached-signatures (nreverse cache))))))
+(defsubst geiser-autodoc--clean-cache ()
+  (setq geiser-autodoc--cached-signatures nil))
 
-(defun geiser-autodoc--save-signatures (ret)
-  (let ((res (geiser-eval--retort-result ret)))
+(defun geiser-autodoc--show-signatures (ret)
+  (let ((res (geiser-eval--retort-result ret))
+        (signs))
     (when res
       (dolist (item res)
-        (push (cons (format "%s" (car item)) (cdr item))
-              geiser-autodoc--cached-signatures))
-      (let ((str (geiser-autodoc--autodoc (geiser-syntax--scan-sexps)
-                                          geiser-autodoc--cached-signatures)))
-        (when str (eldoc-message str))))))
+        (push (cons (format "%s" (car item)) (cdr item)) signs))
+      (let ((str (geiser-autodoc--autodoc (geiser-syntax--scan-sexps) signs)))
+        (when str (eldoc-message str)))
+      (setq geiser-autodoc--cached-signatures signs))))
 
 (defun geiser-autodoc--get-signatures (funs)
   (when funs
-    (let ((missing) (cached))
-      (if (not geiser-autodoc--cached-signatures)
-          (setq missing funs)
-        (dolist (f funs)
-          (let ((cf (assoc f geiser-autodoc--cached-signatures)))
-            (if cf (push cf cached) (push f missing)))))
-      (when missing
-        (let ((m (format "'(%s)" (mapconcat 'identity missing " "))))
-          (geiser-eval--send `(:eval (:ge autodoc (:scm ,m)))
-                             'geiser-autodoc--save-signatures)))
-      cached)))
+    (let ((m (format "'(%s)" (mapconcat 'identity funs " "))))
+      (geiser-eval--send `(:eval (:ge autodoc (:scm ,m)))
+                         'geiser-autodoc--show-signatures)))
+  (and (or (assoc (car funs) geiser-autodoc--cached-signatures)
+           (assoc (cadr funs) geiser-autodoc--cached-signatures))
+       geiser-autodoc--cached-signatures))
 
 (defun geiser-autodoc--sanitize-args (args)
   (cond ((null args) nil)
