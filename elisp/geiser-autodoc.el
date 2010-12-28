@@ -60,14 +60,12 @@ when `geiser-autodoc-display-module-p' is on."
 (defun geiser-autodoc--save-signatures (ret)
   (let ((res (geiser-eval--retort-result ret)))
     (when res
-      (setq geiser-autodoc--cached-signatures
-            (append (mapcar (lambda (s)
-                              (cons (format "%s" (car s)) (cdr s)))
-                            res)
-                    geiser-autodoc--cached-signatures))))
-  (let ((str (geiser-autodoc--autodoc (geiser-syntax--scan-sexps)
-                                      geiser-autodoc--cached-signatures)))
-    (when str (eldoc-message str))))
+      (dolist (item res)
+        (push (cons (format "%s" (car item)) (cdr item))
+              geiser-autodoc--cached-signatures))
+      (let ((str (geiser-autodoc--autodoc (geiser-syntax--scan-sexps)
+                                          geiser-autodoc--cached-signatures)))
+        (when str (eldoc-message str))))))
 
 (defun geiser-autodoc--get-signatures (funs)
   (when funs
