@@ -216,6 +216,17 @@ displayed in the minibuffer."
   (eldoc-mode geiser-autodoc-mode)
   (message "Geiser Autodoc %s" (if geiser-autodoc-mode "enabled" "disabled")))
 
+(defadvice eldoc-display-message-no-interference-p
+  (after geiser-autodoc--message-ok-p)
+  (when geiser-autodoc-mode
+    (setq ad-return-value
+          (and ad-return-value
+               ;; Display arglist only when the minibuffer is
+               ;; inactive, e.g. not on `C-x C-f'. Lifted from slime.
+               (not (active-minibuffer-window)))))
+  ad-return-value)
+
+
 
 (provide 'geiser-autodoc)
 ;;; geiser-autodoc.el ends here
