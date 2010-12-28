@@ -320,7 +320,7 @@ implementation-specific entries for font-lock-keywords.")
                      (prev (and (geiser-syntax--keywordp prev)
                                 (list prev))))
                 (push `(,(car form) ,pos ,@prev) path)))))))
-    (mapcar (lambda (e) (cons (format "%S" (car e)) (cdr e)))
+    (mapcar (lambda (e) (cons (format "%s" (car e)) (cdr e)))
             (nreverse path))))
 
 (defsubst geiser-syntax--binding-form-p (bfs sbfs f)
