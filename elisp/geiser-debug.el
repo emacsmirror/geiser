@@ -126,7 +126,9 @@ buffer.")
         (insert res)
         (newline 2))
       (setq jump (geiser-debug--display-error impl module key output))
-      (when after (insert "\nExpression evaluated was:\n\n" what))
+      (when after
+        (goto-char (point-max))
+        (insert "\nExpression evaluated was:\n\n" what))
       (goto-char (point-min)))
     (when jump (geiser-debug--pop-to-buffer))))
 
