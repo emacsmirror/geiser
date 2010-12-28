@@ -57,31 +57,31 @@ when `geiser-autodoc-display-module-p' is on."
 (defsubst geiser-autodoc--clean-cache ()
   (setq geiser-autodoc--cached-signatures nil))
 
-(defun geiser-autodoc--get-signatures (funs &optional keep-cached)
+(defun geiser-autodoc--save-signatures (ret)
+  (let ((res (geiser-eval--retort-result ret)))
+    (when res
+      (setq geiser-autodoc--cached-signatures
+            (append (mapcar (lambda (s)
+                              (cons (format "%s" (car s)) (cdr s)))
+                            res)
+                    geiser-autodoc--cached-signatures))))
+  (let ((str (geiser-autodoc--autodoc (geiser-syntax--scan-sexps)
+                                      geiser-autodoc--cached-signatures)))
+    (when str (eldoc-message str))))
+
+(defun geiser-autodoc--get-signatures (funs)
   (when funs
-    (let ((fs (assoc (car funs) geiser-autodoc--cached-signatures)))
-      (unless fs
-        (let ((missing) (cached))
-          (if (not geiser-autodoc--cached-signatures)
-              (setq missing funs)
-            (dolist (f funs)
-              (let ((cf (assoc f geiser-autodoc--cached-signatures)))
-                (if cf (push cf cached)
-                  (push f missing)))))
-          (unless (or cached keep-cached) (geiser-autodoc--clean-cache))
-          (when missing
-            (let* ((missing (mapcar 'make-symbol missing))
-                   (res (geiser-eval--send/result
-                         `(:eval (:ge autodoc (quote ,missing))) 500)))
-              (when res
-                (setq geiser-autodoc--cached-signatures
-                      (append (mapcar (lambda (s)
-                                        (cons (format "%s" (car s)) (cdr s)))
-                                      res)
-                              (if keep-cached
-                                  geiser-autodoc--cached-signatures
-                                cached))))))))
-      geiser-autodoc--cached-signatures)))
+    (let ((missing) (cached))
+      (if (not geiser-autodoc--cached-signatures)
+          (setq missing funs)
+        (dolist (f funs)
+          (let ((cf (assoc f geiser-autodoc--cached-signatures)))
+            (if cf (push cf cached) (push f missing)))))
+      (when missing
+        (let ((m (format "'(%s)" (mapconcat 'identity missing " "))))
+          (geiser-eval--send `(:eval (:ge autodoc (:scm ,m)))
+                             'geiser-autodoc--save-signatures)))
+      cached)))
 
 (defun geiser-autodoc--sanitize-args (args)
   (cond ((null args) nil)
@@ -166,9 +166,8 @@ when `geiser-autodoc-display-module-p' is on."
         (insert ")")
         (buffer-substring (point-min) (point))))))
 
-(defun geiser-autodoc--autodoc (path &optional keep-cached)
-  (let ((signs (geiser-autodoc--get-signatures (mapcar 'car path)
-                                               keep-cached))
+(defun geiser-autodoc--autodoc (path &optional signs)
+  (let ((signs (or signs (geiser-autodoc--get-signatures (mapcar 'car path))))
         (p (car path))
         (s))
     (while (and p (not s))

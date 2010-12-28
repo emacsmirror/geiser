@@ -135,6 +135,12 @@ module-exports, autodoc, callers, callees and generic-methods.")
 (defsubst geiser-eval--code-str (code)
   (if (stringp code) code (geiser-eval--scheme-str code)))
 
+(defsubst geiser-eval--send (code cont &optional buffer)
+  (geiser-con--send-string (geiser-eval--connection)
+                           (geiser-eval--code-str code)
+                           cont
+                           buffer))
+
 (defvar geiser-eval--sync-retort nil)
 (defun geiser-eval--set-sync-retort (s)
   (setq geiser-eval--sync-retort (geiser-eval--log s)))

@@ -32,7 +32,7 @@
   (ignore-errors
     (if module
 	(format "%s [module]" id)
-      (or (geiser-autodoc--autodoc (list (list (format "%s" id) 0)) t)
+      (or (geiser-autodoc--autodoc (list (list (format "%s" id) 0)))
           (format "%s [local id]" id)))))
 
 (defsubst geiser-company--doc-buffer (id module)
