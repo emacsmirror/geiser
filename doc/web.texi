@@ -4,15 +4,16 @@
 
 @contents
 
-@html
-<div class="version" align="right"><a class="navlink"
-href="http://download.savannah.nongnu.org/releases/geiser/0.1/geiser-0.1.tar.gz">Version 0.1 Dec 2010, Guile 1.9.14 and Racket 5.0.x&nbsp;&nbsp;</a>
-</div>
-@end html
-
 @node Top, Introduction, (dir), (dir)
 
 @include top.texi
+@html
+<div class="version" align="right"><a class="navlink"
+href="http://download.savannah.nongnu.org/releases/geiser/0.1/geiser-0.1.tar.gz">
+Version 0.1, Dec 2010, Guile 1.9.14 and Racket 5.0.x
+</a>
+</div>
+@end html
 
 @menu
 * Introduction::

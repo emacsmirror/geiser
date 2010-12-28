@@ -92,11 +92,13 @@ div.navigation {
 }
 
 div.version {
-    background-color: #efebe7;
+    /* background-color: #efebe7; */
     line-height: 100%;
     padding: 3px;
-    top-margin: 5px;
+    margin-right: 3px;
     font-size: smaller;
+    float: right;
+    font-style: italic;
 }
 
 .navlink {
