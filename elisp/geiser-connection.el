@@ -211,7 +211,7 @@
               (geiser-con--connection-eot c)
               r
               'geiser-con--process-completed-request
-              nil))
+              t))
 
 
 ;;; Message sending interface:
