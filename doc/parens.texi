@@ -225,6 +225,9 @@ keyboard shortcut, @kbd{C-c C-d a}. That @t{/A} indicator in the
 mode-line is telling you that autodoc is active. If you prefer, for some
 obscure reason, that it be inactive by default, just set
 @code{geiser-mode-autodoc-p} to @code{nil} in your customization files.
+Even when autodoc mode is off, you can use @code{geiser-autodoc-show},
+bound by default to @kbd{C-c C-d s}, to show the autodoc string for the
+symbol at point.
 
 @cindex autodoc explained
 @img{autodoc-scm, right} The way autodoc displays information deserves
@@ -327,7 +330,7 @@ You can also jump directly to the manual page for the symbol at point
 with the command @code{geiser-doc-look-up-manual}, bound to @kbd{C-c C-d
 i}.
 
-See also our @ref{Documentation browser,,cheat-sheet} for a list of
+See our @ref{Documentation browser,,cheat-sheet} for a list of all
 navigation commands available in the documentation browser.
 
 @node To eval or not to eval, To err perchance to debug, Documentation helpers, Between the parens

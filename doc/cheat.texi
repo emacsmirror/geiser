@@ -1,6 +1,11 @@
 @node Cheat sheet, No hacker is an island, Between the parens, Top
 @chapter Cheat sheet
 
+In the tables below, triple chords always accept a variant with the
+third key not modified by @key{Control}; e.g.,
+@code{geiser-autodoc-show} is bound both to @kbd{C-c C-d C-s} and
+@kbd{C-c C-d s}.
+
 @menu
 * Scheme buffers::
 * REPL::
@@ -74,6 +79,9 @@
 @item C-c C-d C-d
 @tab geiser-doc-symbol-at-point
 @tab See documentation for identifier at point
+@item C-c C-d C-s
+@tab geiser-autodoc-show
+@tab Show signature or value for identifier at point in echo area
 @item C-c C-d C-m
 @tab geiser-doc-module
 @tab See a list of a module's exported identifiers

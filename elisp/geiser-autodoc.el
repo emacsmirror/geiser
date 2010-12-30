@@ -171,7 +171,7 @@ when `geiser-autodoc-display-module-p' is on."
     (when s (geiser-autodoc--str p s))))
 
 
-;;; Autodoc function:
+;;; Autodoc functions:
 
 (make-variable-buffer-local
  (defvar geiser-autodoc--inhibit-function nil))
@@ -180,11 +180,18 @@ when `geiser-autodoc-display-module-p' is on."
   (and geiser-autodoc--inhibit-function
        (funcall geiser-autodoc--inhibit-function)))
 
+(defsubst geiser-autodoc--autodoc-at-point ()
+  (geiser-autodoc--autodoc (geiser-syntax--scan-sexps)))
+
 (defun geiser-autodoc--eldoc-function ()
   (condition-case e
-      (and (not (geiser-autodoc--inhibit))
-           (geiser-autodoc--autodoc (geiser-syntax--scan-sexps)))
+      (and (not (geiser-autodoc--inhibit)) (geiser-autodoc--autodoc-at-point))
     (error (format "Autodoc not available (%s)" (error-message-string e)))))
+
+(defun geiser-autodoc-show ()
+  "Show the signature or value of the symbol at point in the echo area."
+  (interactive)
+  (message (geiser-autodoc--autodoc-at-point)))
 
 
 ;;; Autodoc mode:
