@@ -219,11 +219,13 @@ in @ref{To eval or not to eval}) their signatures will start appearing
 in the echo area.
 
 @cindex disabling autodoc
+@cindex manual autodoc
 Autodoc activation is controlled by a minor mode, @code{geiser-autodoc},
 which you can toggle with @kbd{M-x geiser-autodoc}, or its associated
 keyboard shortcut, @kbd{C-c C-d a}. That @t{/A} indicator in the
-mode-line is telling you that autodoc is active. If you prefer, for some
-obscure reason, that it be inactive by default, just set
+mode-line is telling you that autodoc is active. If you prefer that it
+be inactive by default (e.g., because you're connecting to a really
+remote scheme and want to minimize network exchanges), just set
 @code{geiser-mode-autodoc-p} to @code{nil} in your customization files.
 Even when autodoc mode is off, you can use @code{geiser-autodoc-show},
 bound by default to @kbd{C-c C-d s}, to show the autodoc string for the
