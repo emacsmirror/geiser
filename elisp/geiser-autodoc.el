@@ -64,7 +64,8 @@ when `geiser-autodoc-display-module-p' is on."
       (dolist (item res)
         (push (cons (format "%s" (car item)) (cdr item)) signs))
       (let ((str (geiser-autodoc--autodoc (geiser-syntax--scan-sexps) signs)))
-        (when str (eldoc-message str)))
+        (when (not (string-equal str eldoc-last-message))
+          (eldoc-message str)))
       (setq geiser-autodoc--cached-signatures signs))))
 
 (defun geiser-autodoc--get-signatures (funs)
