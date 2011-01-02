@@ -294,6 +294,7 @@ implementation-specific entries for font-lock-keywords.")
               (forward-sexp)
               (let ((s (thing-at-point 'symbol)))
                 (cond ((not s) (push s elems))
+                      ((member s '("#" "`" "'")) (push nil elems))
                       ((not (equal "." s)) (push (make-symbol s) elems)))))))
         (nreverse elems)))))
 
