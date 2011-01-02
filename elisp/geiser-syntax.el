@@ -169,7 +169,7 @@ implementation-specific entries for font-lock-keywords.")
              (t (let ((tok (geiser-syntax--read/symbol)))
                   (cond ((equal (symbol-name tok) "t") '(boolean . :t))
                         ((equal (symbol-name tok) "f") '(boolean . :f))
-                        (tok (cons 'atom (make-symbol (format "#%s" tok))))
+                        (tok (cons 'atom tok))
                         (t (geiser-syntax--read/next-token)))))))
       (?\' (geiser-syntax--read/token '(quote . quote)))
       (?\` (geiser-syntax--read/token
@@ -266,11 +266,7 @@ implementation-specific entries for font-lock-keywords.")
 
 (defsubst geiser-syntax--symbol-at-point ()
   (and (not (nth 8 (syntax-ppss)))
-       (let ((s (thing-at-point 'symbol)))
-         (and s
-              (not (equal s "."))
-              (not (string-match "^#[^:]" s)) ;; quack modifies thing-at-point
-              (make-symbol (substring-no-properties s))))))
+       (car (geiser-syntax--read-from-string (thing-at-point 'symbol)))))
 
 (defsubst geiser-syntax--skip-comment/string ()
   (let ((pos (nth 8 (syntax-ppss))))
@@ -294,10 +290,8 @@ implementation-specific entries for font-lock-keywords.")
             (when (<= (point) boundary)
               (forward-sexp)
               (let ((s (thing-at-point 'symbol)))
-                (cond ((not s) (push s elems))
-                      ((member s '("#" "`" "'")) (push nil elems))
-                      ((string-match "^#[^:]" s) (push nil elems)) ;; quack
-                      ((not (equal "." s)) (push (make-symbol s) elems)))))))
+                (unless (equal "." s)
+                  (push (car (geiser-syntax--read-from-string s)) elems))))))
         (nreverse elems)))))
 
 (defsubst geiser-syntax--keywordp (s)
