@@ -269,6 +269,7 @@ implementation-specific entries for font-lock-keywords.")
        (let ((s (thing-at-point 'symbol)))
          (and s
               (not (equal s "."))
+              (not (string-match "^#[^:]" s)) ;; quack modifies thing-at-point
               (make-symbol (substring-no-properties s))))))
 
 (defsubst geiser-syntax--skip-comment/string ()
@@ -295,6 +296,7 @@ implementation-specific entries for font-lock-keywords.")
               (let ((s (thing-at-point 'symbol)))
                 (cond ((not s) (push s elems))
                       ((member s '("#" "`" "'")) (push nil elems))
+                      ((string-match "^#[^:]" s) (push nil elems)) ;; quack
                       ((not (equal "." s)) (push (make-symbol s) elems)))))))
         (nreverse elems)))))
 
