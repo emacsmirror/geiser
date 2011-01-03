@@ -73,13 +73,21 @@
     tq))
 
 (defun geiser-con--tq-filter (tq in)
-  (if (tq-queue-empty tq)
-      (let ((buffer (tq-buffer tq)))
-        (geiser-log--error "Unexpected queue input:\n %s" in)
-        (when (buffer-live-p buffer)
-          (with-current-buffer buffer
-            (delete-region (point-min) (point-max)))))
-    (tq-filter tq in)))
+  (when (buffer-live-p (tq-buffer tq))
+    (with-current-buffer (tq-buffer tq)
+      (if (tq-queue-empty tq)
+          (progn (geiser-log--error "Unexpected queue input:\n %s" in)
+                 (delete-region (point-min) (point-max)))
+        (goto-char (point-max))
+        (insert in)
+        (goto-char (point-min))
+        (when (re-search-forward (tq-queue-head-regexp tq) nil t)
+          (unwind-protect
+              (funcall (tq-queue-head-fn tq)
+                       (tq-queue-head-closure tq)
+                       (buffer-substring (point-min) (point)))
+            (delete-region (point-min) (point-max))
+            (tq-queue-pop tq)))))))
 
 (defun geiser-con--combined-prompt (prompt debug)
   (format "\\(%s%s\\)" prompt (if debug (format "\\|%s" debug) "")))
