@@ -519,7 +519,7 @@ buffer."
 
 (geiser-menu--defmenu repl geiser-repl-mode-map
   ("Complete symbol" ((kbd "M-TAB"))
-   geiser-repl--tab :enable (geiser--symbol-at-point))
+   completion-at-point :enable (geiser--symbol-at-point))
   ("Complete module name" ((kbd "C-.") (kbd "M-`"))
    geiser-completion--complete-module :enable (geiser--symbol-at-point))
   ("Edit symbol" "\M-." geiser-edit-symbol-at-point
