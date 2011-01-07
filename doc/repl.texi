@@ -329,7 +329,7 @@ When using @code{connect-to-guile} or @code{geiser-connect}, you'll be
 prompted for a host and a port, defaulting to ``localhost'' and 37146.
 You can change those defaults customizing
 @code{geiser-repl-default-host} and @code{geiser-repl-default-port},
-respectfully.
+respectively.
 
 @c Local Variables:
 @c mode: texinfo
