@@ -1,6 +1,6 @@
 ;;; geiser-repl.el --- Geiser's REPL
 
-;; Copyright (C) 2009, 2010 Jose Antonio Ortega Ruiz
+;; Copyright (C) 2009, 2010, 2011 Jose Antonio Ortega Ruiz
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the Modified BSD License. You should
@@ -399,7 +399,6 @@ module command as a string")
       (buffer-substring (point) end))))
 
 (defun geiser-repl--quit-setup ()
-  (set (make-local-variable 'comint-get-old-input) 'geiser-repl--old-input)
   (add-hook 'kill-buffer-hook 'geiser-repl--on-kill nil t)
   (set-process-sentinel (get-buffer-process (current-buffer))
                         'geiser-repl--sentinel))
@@ -493,7 +492,7 @@ buffer."
 \\{geiser-repl-mode-map}"
   (scheme-mode-variables)
   (set (make-local-variable 'mode-line-process) nil)
-  (set (make-local-variable 'comint-use-prompt-regexp) nil)
+  (set (make-local-variable 'comint-use-prompt-regexp) t)
   (set (make-local-variable 'comint-prompt-read-only)
        geiser-repl-read-only-prompt-p)
   (set (make-local-variable 'beginning-of-defun-function)
