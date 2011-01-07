@@ -14,7 +14,7 @@
 @cindex versions supported
 If Geiser came with any guarantees, you'd break all of them by not using
 GNU Emacs 23.2 (or better: i regularly use it with a recent Emacs
-snapshot) and at least one of the supported schemes, namely:
+snapshot) and at least one of the supported Schemes, namely:
 
 @itemize @bullet
 @item
@@ -100,7 +100,7 @@ $ make all
 @end example
 Now you have two options: loading the byte-compiled Geiser from the
 @file{elisp} subdirectory, or installing it system-wide. To load the
-bytecode from here, add this line to your initialisation file:
+byte-code from here, add this line to your initialisation file:
 @example
 (load "~/lisp/geiser/build/elisp/geiser-load")
 @end example

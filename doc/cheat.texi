@@ -92,10 +92,10 @@ third key not modified by @key{Control}; e.g.,
 @tab geiser-autodoc-mode
 @tab Toggle autodoc mode
 @item @tab @tab
-@item C-c<
+@item C-c <
 @tab geiser-xref-callers
 @tab Show callers of procedure at point
-@item C-c>
+@item C-c >
 @tab geiser-xref-callees
 @tab Show callees of procedure at point
 @item @tab @tab
@@ -168,7 +168,7 @@ third key not modified by @key{Control}; e.g.,
 @tab forward-button
 @tab Next link
 @item S-TAB, p
-@tab backwards-button
+@tab backward-button
 @tab Previous link
 @item N
 @tab geiser-doc-next-section @tab Next section

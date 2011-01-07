@@ -28,8 +28,8 @@ bulk of the code.
 Scheme-Elisp interface makes some assumptions about the capabilities and
 interaction mode of the corresponding REPL. In particular, Geiser
 expects the latter to support namespaces in the form of a module system,
-and to provide a well defined way to establish the REPL's current
-namespace (or module), as well as the current's file module (or
+and to provide a well-defined way to establish the REPL's current
+namespace (or module), as well as the current file's module (or
 namespace). Thus, all evaluations performed by Geiser either in the
 REPL or in a source code buffer happen in the context of the current
 namespace. Every time you switch to a different file, you're switching
@@ -37,15 +37,15 @@ namespaces automatically; at the REPL, you must request the switch
 explicitly (usually just using means provided by the Scheme
 implementation itself).
 
-If your favourite scheme supports the above modus operandi, it has all
+If your favourite Scheme supports the above modus operandi, it has all
 that's needed for a bare-bones Geiser mode. But Geiser can, and will,
 use any metadata available: procedure arities and argument lists to
 display interactive help, documentation strings, location information to
 jump to definitions, export lists to provide completion, and so on and
 so forth. Although this is not an all-or-none proposition (Geiser can
-operate with just part of that functionality available), i've
-concentrated initially in supporting those Schemes with the richest (to
-my knowledge) introspection capabilities, namely, Guile and Racket.
+operate with just part of that functionality available), i've initially
+concentrated in supporting those Schemes with the richest (to my
+knowledge) introspection capabilities, namely, Guile and Racket.
 
 @node Showing off,  , Modus operandi, Introduction
 @section Showing off

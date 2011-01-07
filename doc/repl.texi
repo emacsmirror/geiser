@@ -18,7 +18,7 @@ ready, just come back here and proceed to the following sections.
 @section Starting the REPL
 
 @cindex REPL
-To start a Scheme REPL (meaning, a scheme process offering you a
+To start a Scheme REPL (meaning, a Scheme process offering you a
 Read-Eval-Print Loop), Geiser provides the generic interactive command
 @command{run-geiser}. If you run it (via, as is customary in Emacs,
 @kbd{M-x run-geiser}, you'll be saluted by a prompt asking which one of
@@ -60,7 +60,7 @@ want to use the default.
 
 @cindex Racket's REPL server
 In Racket, you have to use the REPL server that comes with Geiser. To
-that end, put Geiser's Racket scheme directory in the Racket's
+that end, put Geiser's Racket @file{scheme} directory in Racket's
 collection search path and invoke @code{start-geiser} (a procedure in
 the module @code{geiser/server}) somewhere in your program, passing it
 the desired port. This procedure will start the REPL server in a
@@ -80,9 +80,9 @@ Scheme process in a dedicated thread, meaning that your external program
 can go on doing whatever it was doing while you tinker with it from
 Emacs. Note, however, that all Scheme threads share the heap, so that
 you'll be able to interact with those other threads in the running
-scheme from Emacs in a variety of ways. For starters, all your
-(re)defintions will be visible everywhere. That's dangerous, but will
-come in handy when you need to debug your running webserver.
+Scheme from Emacs in a variety of ways. For starters, all your
+(re)definitions will be visible everywhere. That's dangerous, but will
+come in handy when you need to debug your running web server.
 
 @cindex remote connections
 The connection between Emacs and the Scheme process goes over TCP, so it
@@ -111,7 +111,7 @@ is, they'll find the previous or next sexp that starts with the current
 input prefix (defined as the text between the end of the prompt and your
 current position, a.k.a. @dfn{point}, in the buffer). For going up and
 down the list unconditionally, just use @kbd{C-c M-p} and @kbd{C-c M-n}.
-In addition, navigation is sexp- rather than line-based.
+In addition, navigation is sexp-based rather than line-based.
 
 There are also a few commands to twiddle with the Scheme process.
 @kbd{C-c C-q} will gently ask it to quit, while @kbd{C-u C-c C-q} will
@@ -142,7 +142,7 @@ will be happy to oblige.
 
 @cindex current module, change
 Once you enter a new module, only those bindings visible in its
-namespace will be available to your evaluations. All schemes supported
+namespace will be available to your evaluations. All Schemes supported
 by Geiser provide a way to import new modules in the current namespace.
 Again, there's a Geiser command, @command{geiser-repl-import-module}, to
 invoke such functionality, bound this time to @kbd{C-c C-i}. And, again,
@@ -243,7 +243,7 @@ If that's still not enough, Geiser can jump, via @kbd{M-.}, to the
 symbol's definition. A buffer with the corresponding file will pop up,
 with its point resting upon the identifier's defining form. When you're
 done inspecting, @kbd{M-,} will bring you back to where you were. As we
-will see, these commands are also available in scheme buffers. @kbd{M-.}
+will see, these commands are also available in Scheme buffers. @kbd{M-.}
 also works for modules: if your point is on an unambiguous module name,
 the file where it's defined will be opened for you.
 
@@ -255,7 +255,7 @@ The looks and ways of the REPL can be fine-tuned via a bunch of
 customization variables. You can see and modify them all in the
 corresponding customization group (by using the menu entry or the good
 old @kbd{M-x customize-group geiser-repl}), or by setting them in your
-Emacs initialization files (as a rule, all knobs in Geiser are turnable
+Emacs initialisation files (as a rule, all knobs in Geiser are tunable
 this way: you don't need to use customization buffers if you don't like
 them).
 
@@ -292,7 +292,7 @@ full path to the requisite binary.
 You can also specify a couple more initialisation parameters. For Guile,
 @code{geiser-guile-load-path} is a list of paths to add to its load path
 when it's started, while @code{geiser-guile-init-file} is the path to an
-initialisation file to be loaded on startup. The equivalent variables
+initialisation file to be loaded on start-up. The equivalent variables
 for Racket are @code{geiser-racket-collects} and
 @code{geiser-racket-init-file}.
 
@@ -326,9 +326,10 @@ back, on a per REPL basis, using @kbd{C-c C-a}.
 @cindex port, default
 @cindex host, default
 When using @code{connect-to-guile} or @code{geiser-connect}, you'll be
-prompted for a host and a port, defaulting to localhost and 37146. You
-can change those defaults customizing @code{geiser-repl-default-host}
-and @code{geiser-repl-default-port}, respectfully.
+prompted for a host and a port, defaulting to ``localhost'' and 37146.
+You can change those defaults customizing
+@code{geiser-repl-default-host} and @code{geiser-repl-default-port},
+respectfully.
 
 @c Local Variables:
 @c mode: texinfo

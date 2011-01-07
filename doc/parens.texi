@@ -6,7 +6,7 @@ hacking environment. Well, perhaps a bit more than a half; but, at any
 rate, one surely needs also a pleasant way of editing source code. Don't
 pay attention to naysayers: Emacs comes with an excellent editor
 included for about any language on Earth, and just the best one when
-that language is sexpy (specially if you use @ref{paredit,,Paredit}).
+that language is sexpy (especially if you use @ref{paredit,,Paredit}).
 Geiser's support for writing Scheme code adds to Emacs'
 @code{scheme-mode}, rather than supplanting it; and it does so by means
 of a minor mode (unimaginatively dubbed @code{geiser-mode}) that defines
@@ -43,16 +43,16 @@ perfect world; otherwise, don't despair and keep on reading: i'll tell
 you how to fix that in a moment.
 
 @cindex geiser-mode commands
-The menu provides a good synopsis of everthing Geiser brings to the
+The menu provides a good synopsis of everything Geiser brings to the
 party, including those keyboard shortcuts we Emacsers love. If you're
 seeing the name of your favourite Scheme implementation in the
-mode-line, have a running REPL and are comfortable with Emacs, you
-can stop reading now and, instead, discover Geiser's joys by yourself.
-I've tried to make Geiser as self-documenting as any self-respecting
-Emacs package should be. If you follow this route, make sure to take a
-look at Geiser's customization buffers (@kbd{M-x customize-group
-@key{RET} geiser}): there's lot of fine tunning available there. You
-might also want to take a glance at the @ref{Cheat sheet}.
+mode-line, have a running REPL and are comfortable with Emacs, you can
+stop reading now and, instead, discover Geiser's joys by yourself. I've
+tried to make Geiser as self-documenting as any self-respecting Emacs
+package should be. If you follow this route, make sure to take a look at
+Geiser's customization buffers (@kbd{M-x customize-group @key{RET}
+geiser}): there's lot of fine-tuning available there. You might also
+want to take a glance at the @ref{Cheat sheet}.
 
 Since @i{geiser-mode} is a minor mode, you can toggle it with
 @kbd{M-x geiser-mode}, and control its activation in hooks with the
@@ -125,7 +125,7 @@ If we haven't been lucky this far and you have customized
 @code{geiser-default-implementation} to the name of a supported
 implementation, we'll follow your lead.
 @item
-See? That's the problem of being a smart alec: one's always outsmarted
+See? That's the problem of being a smart aleck: one's always outsmarted
 by people around. At this point, @i{geiser-mode} will humbly give up and
 ask you to explicitly choose the Scheme implementation.
 @end enumerate
@@ -191,7 +191,7 @@ As explained before (@pxref{Modus operandi}), all Geiser activities take
 place in the context of the @i{current namespace}, which, for Scheme
 buffers, corresponds to the module that the Scheme implementation
 associates to the source file at hand (for instance, in Racket, there's
-a one to one correspondence between paths and modules, while Guile
+a one-to-one correspondence between paths and modules, while Guile
 relies on explicit @code{define-module} forms in the source file).
 
 Now that we have @code{geiser-mode} happily alive in our Scheme buffers
@@ -242,11 +242,11 @@ enclosed in parenthesis. When an optional argument has a default value
 (or a form defining its default value), autodoc will display it after
 the argument name. When the optional arguments are keywords, their names
 are prefixed with ``#:'' (i.e., their names @i{are} keywords). An
-ellipsis (@dots{}) serves as a marker of an indeterminated number of
+ellipsis (@dots{}) serves as a marker of an indeterminate number of
 parameters, as is the case with @i{rest} arguments or when autodoc
 cannot fathom the exact number of arguments (this is often the case with
 macros defined using @code{syntax-case}). Another way in which autodoc
-displays its ignorance is by using and underscore to display parameters
+displays its ignorance is by using an underscore to display parameters
 whose name is beyond its powers.
 
 @img{autodoc-multi, right} It can also be the case that a function or
@@ -291,7 +291,7 @@ identifier or module.
 @cindex documentation for symbol
 @cindex docstrings, maybe
 For symbols, the incantation is @kbd{M-x geiser-doc-symbol-at-point}, or
-@kbd{C-c C-d C-d} for short. If the associated scheme supports
+@kbd{C-c C-d C-d} for short. If the associated Scheme supports
 docstrings (as, for instance, Guile does), you'll be teleported to a new
 Emacs buffer displaying Geiser's documentation browser, filled with
 information about the identifier, including its docstring (if any;
@@ -321,7 +321,7 @@ exactly as you would do @ref{repl-mod,,in the REPL}.
 In both cases, the documentation browser will show a couple of buttons
 giving you access to further documentation. First, you'll see a button
 named @i{source}: pressing it you'll jump to the symbol's definition.
-The second button, dubbed @i{manual}, will open the scheme
+The second button, dubbed @i{manual}, will open the Scheme
 implementation's manual page for the symbol at hand. For Racket, that
 will open your web browser displaying the corresponding reference's page
 (using Emacs' @code{browser-url} command), while in Guile a lookup will
@@ -345,7 +345,7 @@ might have noticed that i've made a big fuss of Geiser's ability to
 recognize context, by being aware of the namespace where its operations
 happen.
 
-That awareness is specially important when evaluating code in your
+That awareness is especially important when evaluating code in your
 scheme buffers, using the commands described below. They allow you to
 send code to the running Scheme with a granularity ranging from whole
 files to single s-expressions. That code will be evaluated in the module
@@ -388,15 +388,15 @@ For all the commands above, the result of the evaluation is displayed in
 the minibuffer, unless it causes a (scheme-side) error (@pxref{To err
 perchance to debug}).
 
-At the risk of repeating myself, i'll remember you that all these
+At the risk of repeating myself, i'll remind you that all these
 evaluations will take place in the namespace of the module corresponding
 to the Scheme file from which you're sending your code, which, in
-general, will be different from the REPL's current module. And, if
-all goes according to plan, (re)defined variables and procedures should
-be immediately visible inside and, if exported, outside their module.
+general, will be different from the REPL's current module. And, if all
+goes according to plan, (re)defined variables and procedures should be
+immediately visible inside and, if exported, outside their module.
 
 Besides evaluating expressions, definitions and regions, you can also
-macro-expand them. The corresponding keybindings start with the prefix
+macro-expand them. The corresponding key bindings start with the prefix
 @kbd{C-c C-m} and end, respectively, with @kbd{C-e}, @kbd{C-x} and
 @kbd{C-r}. The result of the macro expansion always appears in a pop up
 buffer.
@@ -411,7 +411,7 @@ the capabilities of the underlying Scheme REPL.
 
 @cindex error buffer
 In Racket, you'll be presented with a backtrace, in a new buffer where
-file paths locating the origin of the error are clickable (you can
+file paths locating the origin of the error are click-able (you can
 navigate them using the @key{TAB} key, and use @key{RET} or the mouse to
 jump to the offending spot; or invoke Emacs' stock commands
 @code{next-error} and @code{previous-error}, bound to @kbd{M-g n} and
@@ -420,7 +420,7 @@ jump to the offending spot; or invoke Emacs' stock commands
 @imgc{eval-error}
 
 The Racket backtrace also highlights the exception type, making it
-clickable. Following the link will open the documentation corresponding
+click-able. Following the link will open the documentation corresponding
 to said exception type. Both the error and exception link faces are
 customizable (@code{geiser-font-lock-error-link} and
 @code{geiser-font-lock-doc-link}).
@@ -428,7 +428,7 @@ customizable (@code{geiser-font-lock-error-link} and
 On the other hand, Guile's reaction to evaluation errors is different:
 it enters the debugger in its REPL. Accordingly, the REPL buffer will
 pop up if your evaluation fails in a Guile file, and the error message
-and backtrace will be displayed in there, again clickable and all. But
+and backtrace will be displayed in there, again click-able and all. But
 there you have the debugger at your disposal, with the REPL's current
 module set to that of the offender, and a host of special debugging
 commands that are described in Guile's fine documentation.
@@ -442,9 +442,9 @@ Racket. You can control how picky Guile is reporting warnings by
 customizing the variable @code{geiser-guile-warning-level}, whose
 detailed docstring (which see, using, e.g. @kbd{C-h v}) allows me to
 offer no further explanation here. The customization group
-@i{geiser-guile} is also worth a glance, for a couple of options to fine
-tune how Geiser interacts with Guile's debugger (and more). Same thing
-for racketeers and @i{geiser-racket}.
+@i{geiser-guile} is also worth a glance, for a couple of options to
+fine-tune how Geiser interacts with Guile's debugger (and more). Same
+thing for racketeers and @i{geiser-racket}.
 
 @node Jumping around, Geiser writes for you, To err perchance to debug, Between the parens
 @section Jumping around
