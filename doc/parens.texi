@@ -275,7 +275,7 @@ you would write something like
 @example
 (setq geiser-autodoc-identifier-format "%s ~ %s")
 @end example
-in your Emacs initialization files. There's also a face
+in your Emacs initialisation files. There's also a face
 (@code{geiser-font-lock-autodoc-identifier}) that you can customize (for
 instance, with @kbd{M-x customize-face}) to change the appearance of the
 text. And another one (@code{geiser-font-lock-autodoc-current-arg}) that
