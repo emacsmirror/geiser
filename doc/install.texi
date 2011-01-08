@@ -40,16 +40,18 @@ and untar it in a directory of your choice.
 If you feel like living on the bleeding edge, just grab Geiser from its
 Git repository @uref{http://git.savannah.nongnu.org/cgit/geiser.git/, over
 at Savannah}, either with the following incantation:
+
 @example
 git clone git://git.sv.gnu.org/geiser.git
 @end example
+
 @noindent or, if you happen to live under a firewall, with the alternative:
+
 @example
 git clone http://git.sv.gnu.org/r/geiser.git
 @end example
-@noindent
 
-You can also follow Geiser's development in
+@noindent You can also follow Geiser's development in
 @uref{https://github.com/jaor/geiser, one}
 @uref{http://repo.or.cz/w/geiser.git, or}
 @uref{http://gitorious.org/geiser, three} mirrors that
@@ -66,9 +68,11 @@ sake of concreteness, let's assume you put its source in the directory
 @file{~/lisp/geiser}.  All you need to do is to add the following
 line to your Emacs initialisation file (be it @file{~/.emacs} or any of
 its moral equivalents):
+
 @example
 (load-file "~/lisp/geiser/elisp/geiser.el")
 @end example
+
 @noindent
 or simply evaluate that form inside Emacs (you wouldn't kill a friend
 just to start using Geiser, would you?).  That's it: you're ready to
@@ -85,12 +89,15 @@ install} routine, by all means, you can go through those motions to byte
 compile and install Geiser too.  That is, you enter the source directory
 and (since we grabbed the development tree) run the customary
 @i{autogen} script:
+
 @example
 $ cd ~/lisp/geiser
 $ ./autogen.sh
 @end example
+
 @noindent
 I recommend that you compile Geiser in a separate directory:
+
 @example
 $ mkdir build && cd build
 $ ../configure
@@ -98,28 +105,36 @@ $ ../configure
 $ make all
 <more of the above>
 @end example
+
 Now you have two options: loading the byte-compiled Geiser from the
 @file{elisp} subdirectory, or installing it system-wide.  To load the
 byte-code from here, add this line to your initialisation file:
+
 @example
 (load "~/lisp/geiser/build/elisp/geiser-load")
 @end example
+
+@noindent
 and eval that form and you're done (you could also restart Emacs, but
 killing your friends is widely considered bad form).  Yes, that's
 @code{load} and @file{geiser-load} instead of @code{load-file} and
 @file{geiser.el}.
 
 If you prefer a system-wide installation, just type:
+
 @example
 $ sudo make install
 @end example
+
 With the above spell, Geiser will be compiled and installed in a safe
 place inside Emacs load path.  To load it into Emacs you'll need,
 @i{instead} of the @code{load-file} form above, the following line in
 your initialisation file:
+
 @example
 (require 'geiser-install)
 @end example
+
 @noindent
 Please note that we're requiring @code{geiser-install}, and @i{not}
 @code{geiser}, and that there's no @code{load-file} to be seen this
@@ -160,6 +175,7 @@ key bindings, which i'm sure you'll manage to tackle just fine.  It's
 also probably a good idea to require @code{quack} @i{after} loading
 @file{geiser.el} (or requiring a compiled version).
 @end itemize
+
 You just need to install and setup them as usual, for every package's
 definition of usual.  Geiser will notice their presence and react
 accordingly.

@@ -64,6 +64,7 @@ to be active by default, customizing @code{geiser-mode-auto-p} to
 @cindex scheme file extensions
 And if you happen to use a funky extension for your Scheme files that is
 not recognised as such by Emacs, just tell her about it with:
+
 @example
 (add-to-list 'auto-mode-alist '("\\.funky-extension\\'" . scheme-mode))
 @end example
@@ -103,9 +104,11 @@ If the file-local variable @code{geiser-scheme-implementation} is
 defined, its value is used.  A common way of setting buffer-local
 variables is to put them in a comment near the beginning of the file,
 surrounded by @code{-*-} marks, as in:
+
 @example
 ;; -*- geiser-scheme-implementation: guile -*-
 @end example
+
 @item
 If you've customized @code{geiser-active-implementations} so that it's a
 single-element list (as explained @ref{choosing-impl,,here}), that
@@ -135,25 +138,30 @@ most impoverishing) is probably limiting the active implementations to a
 single one, while customizing @code{geiser-implementations-alist} is the
 most flexible (and, unsurprisingly, also the most complex).  Here's the
 default value for the latter variable:
+
 @example
 (((regexp "\\.scm$") guile)
  ((regexp "\\.ss$") racket)
  ((regexp "\\.rkt$") racket))
 @end example
-which describes the simple heuristic that files with @file{.scm} as
-extension are by default associated to a Guile REPL while those
-ending in @file{.ss} or @file{.rkt} correspond to Racket's
-implementation (with the caveat that these rules are applied only if the
-previous heuristics have failed to detect the correct implementation,
-and that they'll match only if the corresponding implementation is
-active).  You can add rules to @code{geiser-implementations-alist} (or
-replace all of them) by customizing it.  Besides regular expressions, you
-can also use a directory name; for instance, the following snippet:
+
+@noindent which describes the simple heuristic that files with @file{.scm} as
+extension are by default associated to a Guile REPL while those ending
+in @file{.ss} or @file{.rkt} correspond to Racket's implementation (with
+the caveat that these rules are applied only if the previous heuristics
+have failed to detect the correct implementation, and that they'll match
+only if the corresponding implementation is active).  You can add rules
+to @code{geiser-implementations-alist} (or replace all of them) by
+customizing it.  Besides regular expressions, you can also use a
+directory name; for instance, the following snippet:
+
 @example
 (eval-after-load "geiser-impl"
   '(add-to-list 'geiser-implementations-alist
                 '((dir "/home/jao/prj/frob") guile)))
 @end example
+
+@noindent
 will add a new rule that says that any file inside my
 @file{/home/jao/prj/frob} directory (or, recursively, any of its
 children) is to be assigned to Guile.  Since rules are first matched,
@@ -272,9 +280,12 @@ You can change the way Geiser displays the module/identifier combo by
 customizing @code{geiser-autodoc-identifier-format}.  For example, if you
 wanted a tilde surrounded by spaces instead of a colon as a separator,
 you would write something like
+
 @example
 (setq geiser-autodoc-identifier-format "%s ~ %s")
 @end example
+
+@noindent
 in your Emacs initialisation files.  There's also a face
 (@code{geiser-font-lock-autodoc-identifier}) that you can customize (for
 instance, with @kbd{M-x customize-face}) to change the appearance of the
@@ -487,6 +498,7 @@ you're at the end of the following partial expression:
   (frob def
 @end example
 
+@noindent
 and press @kbd{M-@key{TAB}}, one of the possible completions will be
 @code{default}.
 
