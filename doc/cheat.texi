@@ -123,7 +123,7 @@ third key not modified by @key{Control}; e.g.,
 @tab Edit identifier at point
 @item TAB
 @tab @code{geiser-repl--tab}
-@tab Complete, indent or go to next error
+@tab Complete, indent, or go to next error
 @item S-TAB (backtab)
 @tab @code{geiser-repl--previous-error}
 @tab Go to previous error in the REPL buffer

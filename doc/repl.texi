@@ -2,7 +2,7 @@
 @chapter The REPL
 @anchor{quick-start}
 If you've followed the indications in @ref{Setting it up}, your Emacs is
-now ready to start playing. Otherwise, i'll wait for you: when you're
+now ready to start playing.  Otherwise, i'll wait for you: when you're
 ready, just come back here and proceed to the following sections.
 
 @menu
@@ -20,11 +20,11 @@ ready, just come back here and proceed to the following sections.
 @cindex REPL
 To start a Scheme REPL (meaning, a Scheme process offering you a
 Read-Eval-Print Loop), Geiser provides the generic interactive command
-@command{run-geiser}. If you run it (via, as is customary in Emacs,
+@command{run-geiser}.  If you run it (via, as is customary in Emacs,
 @kbd{M-x run-geiser}, you'll be saluted by a prompt asking which one of
 the supported implementations you want to launch (yes, you can stop the
-asking: see @ref{active-implementations,,below}). Tabbing for completion
-will offer you, as of this writing, @code{guile} and @code{racket}. Just
+asking: see @ref{active-implementations,,below}).  Tabbing for completion
+will offer you, as of this writing, @code{guile} and @code{racket}.  Just
 choose your poison, and a new REPL buffer will pop-up.
 
 @imgc{repls}
@@ -32,17 +32,17 @@ choose your poison, and a new REPL buffer will pop-up.
 If all went according to plan, you'll be facing an
 implementation-dependent banner, followed by an interactive prompt.
 Going according to plan includes having the executable of the Scheme you
-chose in your path. If that's not the case, you can tell Emacs where it
-is, as described @ref{impl-binary,, below}. Returning to our REPL,
+chose in your path.  If that's not the case, you can tell Emacs where it
+is, as described @ref{impl-binary,, below}.  Returning to our REPL,
 the first thing to notice is that the funny prompt is telling you your
 current module: its name is the part just after the @@ sign (in Guile,
 that means @code{guile-user}, while Racket's top namespace doesn't have
-a name; cf. @ref{Switching context} below). Other than that, this is
+a name; cf. @ref{Switching context} below).  Other than that, this is
 pretty much equivalent to having a command-line interpreter in a
-terminal, with a bunch of add-ons that we'll be reviewing below. You can
+terminal, with a bunch of add-ons that we'll be reviewing below.  You can
 start typing sexps right there: Geiser will only dispatch them for
 evaluation when they're complete, and will indent new lines properly
-until then. It will also keep track of your input, maintaining a history
+until then.  It will also keep track of your input, maintaining a history
 file that will be reloaded whenever you restart the REPL.
 
 @subsubheading Connecting to an external Scheme
@@ -50,38 +50,38 @@ file that will be reloaded whenever you restart the REPL.
 @cindex connect to server
 There's an alternative way of starting a Geiser REPL: you can connect to
 an external Scheme process, provided it's running a REPL server at some
-known port. How to make that happen depends on the Scheme implementation.
+known port.  How to make that happen depends on the Scheme implementation.
 
 @cindex Guile's REPL server
 If you use Guile, you just need to start your Guile process (possibly
-outside Emacs) passing to it the flag @code{--listen}. This flag accepts
+outside Emacs) passing to it the flag @code{--listen}.  This flag accepts
 an optional port as argument (as in @code{--listen=1969}), if you don't
 want to use the default.
 
 @cindex Racket's REPL server
-In Racket, you have to use the REPL server that comes with Geiser. To
+In Racket, you have to use the REPL server that comes with Geiser.  To
 that end, put Geiser's Racket @file{scheme} directory in Racket's
 collection search path and invoke @code{start-geiser} (a procedure in
 the module @code{geiser/server}) somewhere in your program, passing it
-the desired port. This procedure will start the REPL server in a
-separate thread. For an example of how to do that, see the script
+the desired port.  This procedure will start the REPL server in a
+separate thread.  For an example of how to do that, see the script
 @file{bin/geiser-racket.sh} in the source distribution, or, if you've
 compiled Geiser, @file{bin/geiser-racket-noinst} in the build directory,
 or, if you've installed Geiser, @file{geiser-racket} in
-@file{<installation-prefix>/bin}. These scripts start a new interactive
+@file{<installation-prefix>/bin}.  These scripts start a new interactive
 Racket that is also running a REPL server (they also load the errortrace
 library to provide better diagnostics, but that's not strictly needed).
 
 With your external Scheme process running and serving, come back to
 Emacs and execute @kbd{M-x geiser-connect}, @kbd{M-x connect-to-guile}
-or @kbd{M-x connect-to-racket}. You'll be asked for a host and a port,
+or @kbd{M-x connect-to-racket}.  You'll be asked for a host and a port,
 and, voila, you'll have a Geiser REPL that is served by the remote
 Scheme process in a dedicated thread, meaning that your external program
 can go on doing whatever it was doing while you tinker with it from
-Emacs. Note, however, that all Scheme threads share the heap, so that
+Emacs.  Note, however, that all Scheme threads share the heap, so that
 you'll be able to interact with those other threads in the running
-Scheme from Emacs in a variety of ways. For starters, all your
-(re)definitions will be visible everywhere. That's dangerous, but will
+Scheme from Emacs in a variety of ways.  For starters, all your
+(re)definitions will be visible everywhere.  That's dangerous, but will
 come in handy when you need to debug your running web server.
 
 @cindex remote connections
@@ -95,9 +95,9 @@ tunnel.
 @img{repl-menu, right}
 @cindex REPL commands
 A quick way of seeing what else Geiser's REPL can do for you, is to
-display the corresponding entry up there in your menu bar. No, i don't
+display the corresponding entry up there in your menu bar.  No, i don't
 normally use menus either; but they can come in handy until you've
-memorized Geiser's commands, as a learning device. And yes, i usually
+memorized Geiser's commands, as a learning device.  And yes, i usually
 run Emacs inside a terminal, but one can always use
 @uref{http://www.emacswiki.org/emacs/LaCarte, La Carte} to access the
 menus in a convenient enough fashion.
@@ -105,20 +105,20 @@ menus in a convenient enough fashion.
 Or just press @kbd{C-h m} and be done with that.
 
 Among the commands at your disposal, we find the familiar input
-navigation keys, with a couple twists. By default, @kbd{M-p} and
-@kbd{M-n} are bound to @i{matching} items in your input history. That
+navigation keys, with a couple twists.  By default, @kbd{M-p} and
+@kbd{M-n} are bound to @i{matching} items in your input history.  That
 is, they'll find the previous or next sexp that starts with the current
 input prefix (defined as the text between the end of the prompt and your
-current position, a.k.a. @dfn{point}, in the buffer). For going up and
+current position, a.k.a.  @dfn{point}, in the buffer).  For going up and
 down the list unconditionally, just use @kbd{C-c M-p} and @kbd{C-c M-n}.
 In addition, navigation is sexp-based rather than line-based.
 
 There are also a few commands to twiddle with the Scheme process.
 @kbd{C-c C-q} will gently ask it to quit, while @kbd{C-u C-c C-q} will
 mercilessly kill the process (but not before stowing your history in the
-file system). Unless you're using a remote REPL, that is, in which case
+file system).  Unless you're using a remote REPL, that is, in which case
 both commands will just sever the connection and leave the remote
-process alone. If worse comes to worst and the process is dead, @kbd{C-c
+process alone.  If worse comes to worst and the process is dead, @kbd{C-c
 C-z} will restart it (but the same shortcut, issued when the REPL is
 alive, will bring you back to the buffer you came from, as explained
 @ref{switching-repl-buff,,here}).
@@ -130,28 +130,28 @@ The remaining commands are meatier, and deserve sections of their own.
 
 @cindex current module, in REPL
 In tune with Geiser's @ref{current-module,,modus operandi}, evaluations
-in the REPL take place in the namespace of the current module. As
+in the REPL take place in the namespace of the current module.  As
 noted above, the REPL's prompt tells you the name of the current
-module. To switch to a different one, you can use the command
-@command{switch-to-geiser-module}, bound to @kbd{C-c C-m}. You'll notice
+module.  To switch to a different one, you can use the command
+@command{switch-to-geiser-module}, bound to @kbd{C-c C-m}.  You'll notice
 that Geiser simply uses a couple of meta-commands provided by the Scheme
 REPL (the stock @command{,m} in Guile and @command{,enter} in
-Racket), and that it doesn't even try to hide that fact. That means that
+Racket), and that it doesn't even try to hide that fact.  That means that
 you can freely use said native ways directly at the REPL, and Geiser
 will be happy to oblige.
 
 @cindex current module, change
 Once you enter a new module, only those bindings visible in its
-namespace will be available to your evaluations. All Schemes supported
+namespace will be available to your evaluations.  All Schemes supported
 by Geiser provide a way to import new modules in the current namespace.
 Again, there's a Geiser command, @command{geiser-repl-import-module}, to
-invoke such functionality, bound this time to @kbd{C-c C-i}. And, again,
+invoke such functionality, bound this time to @kbd{C-c C-i}.  And, again,
 you'll see Geiser just introducing the native incantation for you, and
 you're free to use such incantations by hand whenever you want.
 
 One convenience provided by these two Geiser commands is that completion
 is available when introducing the new module name, using the
-@kbd{@key{TAB}} key. Pressing it at the command's prompt will offer you
+@kbd{@key{TAB}} key.  Pressing it at the command's prompt will offer you
 a prefix-aware list of available module names.
 
 @imgc{mod-completion}
@@ -163,26 +163,26 @@ Which brings me to the next group of REPL commands.
 
 @cindex completion, at the REPL
 We've already seen Geiser completion of module names in action at the
-mini-buffer. You won't be surprised to know that it's also available at
-the REPL buffer itself. There, you can use either @kbd{C-.} or
+mini-buffer.  You won't be surprised to know that it's also available at
+the REPL buffer itself.  There, you can use either @kbd{C-.} or
 @kbd{M-`} to complete module names, and @kbd{@key{TAB}} or
-@kbd{M-@key{TAB}} to complete identifiers. Geiser will know what
+@kbd{M-@key{TAB}} to complete identifiers.  Geiser will know what
 identifiers are bound in the current module and show you a list of those
-starting with the prefix at point. Needless to say, this is not a static
+starting with the prefix at point.  Needless to say, this is not a static
 list, and it will grow as you define or import new bindings in the
-namespace at hand. If no completion is found, @kbd{@key{TAB}} will try
+namespace at hand.  If no completion is found, @kbd{@key{TAB}} will try
 to complete the prefix after point as a module name.
 
 REPL buffers use Emacs' compilation mode to highlight errors reported by
 the Scheme interpreter, and you can use the @command{next-error} command
-(@kbd{M-g n}) to jump to their location. By default, every time you
+(@kbd{M-g n}) to jump to their location.  By default, every time you
 enter a new expression for evaluation old error messages are forgotten,
 so that @kbd{M-g n} will always jump to errors related to the last
-evaluation request, if any. If you prefer a not so forgetful REPL, set
+evaluation request, if any.  If you prefer a not so forgetful REPL, set
 the customization variable @code{geiser-repl-forget-old-errors-p} to
-@code{nil}. Note, however, that even when that variable is left as
+@code{nil}.  Note, however, that even when that variable is left as
 @kbd{t}, you can always jump to an old error by moving to its line at
-the REPL and pressing @kbd{RET}. When your cursor is away from the last
+the REPL and pressing @kbd{RET}.  When your cursor is away from the last
 prompt, @kbd{TAB} will move to the next error in the buffer, and you can
 use @kbd{BACKTAB} everywhere to go to the previous one.
 
@@ -190,16 +190,16 @@ use @kbd{BACKTAB} everywhere to go to the previous one.
 @section Autodoc and friends
 
 Oftentimes, there's more you'll want to know about an identifier
-besides its name: what module does it belong to? is it a procedure and,
-if so, what arguments does it take? Geiser tries to help you answering
+besides its name: what module does it belong to?  is it a procedure and,
+if so, what arguments does it take?  Geiser tries to help you answering
 those questions too.
 
 @cindex autodoc, in the REPL
 Actually, if you've been playing with the REPL as you read, you might
 have notice some frantic activity taking place in the minibuffer every
-now and then. That was Geiser trying to be helpful (while, hopefully,
+now and then.  That was Geiser trying to be helpful (while, hopefully,
 not being clippy), or, more concretely, what i call, for want of a
-better name, its @dfn{autodoc} mode. Whenever it's active (did you
+better name, its @dfn{autodoc} mode.  Whenever it's active (did you
 notice that @i{A} in the mode-line?), Geiser's gerbils will be scanning
 what you type and showing (unless you silent them with @kbd{C-c C-a})
 information about the identifier nearest to point.
@@ -207,17 +207,17 @@ information about the identifier nearest to point.
 @imgc{repl-autodoc}
 
 If that identifier corresponds to a variable visible in the current
-namespace, you'll see the module it belongs to and its value. For
+namespace, you'll see the module it belongs to and its value.  For
 procedures and macros, autodoc will display, instead of their value, the
 argument names (or an underscore if Geiser cannot determine the name
-used in the definition). Optional arguments are surrounded by
-parenthesis. When the optional argument has a default value, it's
-represented by a list made up of its name and that value. When the
+used in the definition).  Optional arguments are surrounded by
+parenthesis.  When the optional argument has a default value, it's
+represented by a list made up of its name and that value.  When the
 argument is a keyword argument, its name has ``#:'' as a prefix.
 
 @cindex help on identifier
 If that's not enough documentation for you, @kbd{C-c C-d d} will open a
-separate documentation buffer with help on the symbol at point. This
+separate documentation buffer with help on the symbol at point.  This
 buffer will contain implementation-specific information about the
 identifier (e.g., its docstring for Guile, or its contract, if any, for
 Racket), and a handy button to open the corresponding manual entry for
@@ -235,15 +235,15 @@ name.
 The list of exported bindings is shown, again, in a buffer belonging to
 Geiser's documentation browser, where you have at your disposal a bunch
 of navigation commands listed in @xref{Documentation browser,,our
-cheat-sheet}. We'll have a bit more to say about the documentation
+cheat-sheet}.  We'll have a bit more to say about the documentation
 browser in @xref{doc-browser,,a later section}.
 
 @cindex jump, at the REPL
 If that's still not enough, Geiser can jump, via @kbd{M-.}, to the
-symbol's definition. A buffer with the corresponding file will pop up,
-with its point resting upon the identifier's defining form. When you're
-done inspecting, @kbd{M-,} will bring you back to where you were. As we
-will see, these commands are also available in Scheme buffers. @kbd{M-.}
+symbol's definition.  A buffer with the corresponding file will pop up,
+with its point resting upon the identifier's defining form.  When you're
+done inspecting, @kbd{M-,} will bring you back to where you were.  As we
+will see, these commands are also available in Scheme buffers.  @kbd{M-.}
 also works for modules: if your point is on an unambiguous module name,
 the file where it's defined will be opened for you.
 
@@ -252,7 +252,7 @@ the file where it's defined will be opened for you.
 
 @cindex REPL customization
 The looks and ways of the REPL can be fine-tuned via a bunch of
-customization variables. You can see and modify them all in the
+customization variables.  You can see and modify them all in the
 corresponding customization group (by using the menu entry or the good
 old @kbd{M-x customize-group geiser-repl}), or by setting them in your
 Emacs initialisation files (as a rule, all knobs in Geiser are tunable
@@ -267,9 +267,9 @@ some related tips.
 @anchor{choosing-impl}
 Instead of using the generic @command{run-geiser} command, you can start
 directly your Scheme of choice via @command{run-racket} or
-@command{run-guile}. @anchor{active-implementations} In addition, the
+@command{run-guile}.  @anchor{active-implementations} In addition, the
 variable @code{geiser-active-implementations} contains a list of those
-Schemes Geiser should be aware of. Thus, if you happen to be, say, a
+Schemes Geiser should be aware of.  Thus, if you happen to be, say, a
 racketeer not to be beguiled by other schemes, you can tell Geiser to
 forget about the richness of the Scheme ecosystem with something like
 @example
@@ -280,7 +280,7 @@ forget about the richness of the Scheme ecosystem with something like
 @cindex scheme binary
 @cindex scheme executable path
 @anchor{impl-binary} When starting a new REPL, Geiser assumes, by
-default, that the corresponding Scheme binary is in your path. If that's
+default, that the corresponding Scheme binary is in your path.  If that's
 not the case, the variables to tweak are @code{geiser-guile-binary} and
 @code{geiser-racket-binary}, which should be set to a string with the
 full path to the requisite binary.
@@ -289,20 +289,20 @@ full path to the requisite binary.
 @cindex scheme init file
 @cindex GUILE_LOAD_PATH
 @cindex PLTCOLLECTS
-You can also specify a couple more initialisation parameters. For Guile,
+You can also specify a couple more initialisation parameters.  For Guile,
 @code{geiser-guile-load-path} is a list of paths to add to its load path
 when it's started, while @code{geiser-guile-init-file} is the path to an
-initialisation file to be loaded on start-up. The equivalent variables
+initialisation file to be loaded on start-up.  The equivalent variables
 for Racket are @code{geiser-racket-collects} and
 @code{geiser-racket-init-file}.
 
 @subsubheading History
 
-By default, Geiser won't record duplicates in your input history. If you
+By default, Geiser won't record duplicates in your input history.  If you
 prefer it did, just set @code{geiser-repl-history-no-dups-p} to
-@code{nil}. History entries are persistent across REPL sessions:
+@code{nil}.  History entries are persistent across REPL sessions:
 they're saved in implementation-specific files whose location is
-controlled by the variable @code{geiser-repl-history-filename}. For
+controlled by the variable @code{geiser-repl-history-filename}.  For
 example, my Geiser configuration includes the following line:
 @example
 (setq geiser-repl-history-filename "~/.emacs.d/geiser-history")
@@ -318,7 +318,7 @@ directory.
 If you happen to love peace and quiet and prefer to keep your REPL's
 echo area free from autodoc's noise, @code{geiser-repl-autodoc-p} is the
 customization variable for you: set it to @code{nil} and autodoc will be
-disabled by default in new REPLs. You can always bring the fairies
+disabled by default in new REPLs.  You can always bring the fairies
 back, on a per REPL basis, using @kbd{C-c C-a}.
 
 @subsubheading Remote connections

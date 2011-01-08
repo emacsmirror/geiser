@@ -2,8 +2,8 @@
 @chapter Between the parens
 
 A good REPL is a must, but just about half the story of a good Scheme
-hacking environment. Well, perhaps a bit more than a half; but, at any
-rate, one surely needs also a pleasant way of editing source code. Don't
+hacking environment.  Well, perhaps a bit more than a half; but, at any
+rate, one surely needs also a pleasant way of editing source code.  Don't
 pay attention to naysayers: Emacs comes with an excellent editor
 included for about any language on Earth, and just the best one when
 that language is sexpy (especially if you use @ref{paredit,,Paredit}).
@@ -29,7 +29,7 @@ process giving you the REPL, make those Scheme buffers come to life.
 @cindex geiser-mode
 @img{geiser-mode, right} With Geiser installed following any of the
 procedures described in @ref{Setting it up}, Emacs will automatically
-activate @i{geiser-mode} when opening a Scheme buffer. Geiser also
+activate @i{geiser-mode} when opening a Scheme buffer.  Geiser also
 instructs Emacs to consider files with the extension @file{rkt} part of
 the family, so that, in principle, there's nothing you need to do to
 ensure that Geiser's extensions will be available, out of the box, when
@@ -37,21 +37,21 @@ you start editing Scheme code.
 
 Indications that everything is working according to plan include the
 'Geiser' minor mode indicator in your mode-line and the appearance of a
-new entry for Geiser in the menu bar. If, moreover, the mode-line
+new entry for Geiser in the menu bar.  If, moreover, the mode-line
 indicator is the name of a Scheme implementation, you're indeed in a
 perfect world; otherwise, don't despair and keep on reading: i'll tell
 you how to fix that in a moment.
 
 @cindex geiser-mode commands
 The menu provides a good synopsis of everything Geiser brings to the
-party, including those keyboard shortcuts we Emacsers love. If you're
+party, including those keyboard shortcuts we Emacsers love.  If you're
 seeing the name of your favourite Scheme implementation in the
 mode-line, have a running REPL and are comfortable with Emacs, you can
-stop reading now and, instead, discover Geiser's joys by yourself. I've
+stop reading now and, instead, discover Geiser's joys by yourself.  I've
 tried to make Geiser as self-documenting as any self-respecting Emacs
-package should be. If you follow this route, make sure to take a look at
+package should be.  If you follow this route, make sure to take a look at
 Geiser's customization buffers (@kbd{M-x customize-group @key{RET}
-geiser}): there's lot of fine-tuning available there. You might also
+geiser}): there's lot of fine-tuning available there.  You might also
 want to take a glance at the @ref{Cheat sheet}.
 
 Since @i{geiser-mode} is a minor mode, you can toggle it with
@@ -70,26 +70,26 @@ not recognised as such by Emacs, just tell her about it with:
 
 @cindex useless wretch
 Now, @i{geiser-mode} is just a useless wretch unless there's a running
-Scheme process backing it up. Meaning that virtually all the commands it
+Scheme process backing it up.  Meaning that virtually all the commands it
 provides require a REPL up and running, preferably corresponding to
-the correct Scheme implementation. In the following section, we'll see
+the correct Scheme implementation.  In the following section, we'll see
 how to make sure that that's actually the case.
 
 @node The source and the REPL, Documentation helpers, Activating Geiser, Between the parens
 @section The source and the REPL
 
 As i've already mentioned a couple of times, @i{geiser-mode} needs a
-running REPL to be operative. Thus, a common usage pattern will be
+running REPL to be operative.  Thus, a common usage pattern will be
 for you to first call @code{run-geiser} (or one of its variants, see
 them described @ref{choosing-impl,,here}), and then open Scheme files;
 but there's nothing wrong in first opening a couple Scheme buffers and
 then starting the REPL (you can even find it more convenient, since
 pressing @kbd{C-c C-z} in a Scheme buffer will start the REPL for
-you). Since Geiser supports more than one Scheme implementation, though,
+you).  Since Geiser supports more than one Scheme implementation, though,
 there's the problem of knowing which of them is to be associated with
-each Scheme source file. Serviceable as it is, @i{geiser-mode} will try
+each Scheme source file.  Serviceable as it is, @i{geiser-mode} will try
 to guess the correct implementation for you, according to the algorithm
-described below. If you find that Geiser is already guessing right the
+described below.  If you find that Geiser is already guessing right the
 Scheme implementation, feel free to skip to the
 @ref{switching-repl-buff,,next subsection}.
 
@@ -100,7 +100,7 @@ file, Geiser uses the following algorithm:
 @enumerate
 @item
 If the file-local variable @code{geiser-scheme-implementation} is
-defined, its value is used. A common way of setting buffer-local
+defined, its value is used.  A common way of setting buffer-local
 variables is to put them in a comment near the beginning of the file,
 surrounded by @code{-*-} marks, as in:
 @example
@@ -112,12 +112,12 @@ single-element list (as explained @ref{choosing-impl,,here}), that
 element is used as the chosen implementation.
 @item
 The contents of the file is scanned for hints on its associated
-implementation. For instance, files that contain a @code{#lang}
+implementation.  For instance, files that contain a @code{#lang}
 directive will be considered Racket source code, while those with a
 @code{define-module} form in them will be assigned to a Guile REPL.
 @item
 The current buffer's file name is checked against the rules given in
-@code{geiser-implementations-alist}, and the first match is applied. You
+@code{geiser-implementations-alist}, and the first match is applied.  You
 can provide your own rules by customizing this variable, as explained
 below.
 @item
@@ -125,15 +125,15 @@ If we haven't been lucky this far and you have customized
 @code{geiser-default-implementation} to the name of a supported
 implementation, we'll follow your lead.
 @item
-See? That's the problem of being a smart aleck: one's always outsmarted
-by people around. At this point, @i{geiser-mode} will humbly give up and
+See?  That's the problem of being a smart aleck: one's always outsmarted
+by people around.  At this point, @i{geiser-mode} will humbly give up and
 ask you to explicitly choose the Scheme implementation.
 @end enumerate
 As you can see in the list above, there are several ways to influence
-Geiser's guessing by mean customizable variables. The most direct (and
+Geiser's guessing by mean customizable variables.  The most direct (and
 most impoverishing) is probably limiting the active implementations to a
 single one, while customizing @code{geiser-implementations-alist} is the
-most flexible (and, unsurprisingly, also the most complex). Here's the
+most flexible (and, unsurprisingly, also the most complex).  Here's the
 default value for the latter variable:
 @example
 (((regexp "\\.scm$") guile)
@@ -146,8 +146,8 @@ ending in @file{.ss} or @file{.rkt} correspond to Racket's
 implementation (with the caveat that these rules are applied only if the
 previous heuristics have failed to detect the correct implementation,
 and that they'll match only if the corresponding implementation is
-active). You can add rules to @code{geiser-implementations-alist} (or
-replace all of them) by customizing it. Besides regular expressions, you
+active).  You can add rules to @code{geiser-implementations-alist} (or
+replace all of them) by customizing it.  Besides regular expressions, you
 can also use a directory name; for instance, the following snippet:
 @example
 (eval-after-load "geiser-impl"
@@ -156,7 +156,7 @@ can also use a directory name; for instance, the following snippet:
 @end example
 will add a new rule that says that any file inside my
 @file{/home/jao/prj/frob} directory (or, recursively, any of its
-children) is to be assigned to Guile. Since rules are first matched,
+children) is to be assigned to Guile.  Since rules are first matched,
 first served, this new rule will take precedence over the default ones.
 
 @subsubheading Switching between source files and the REPL
@@ -164,7 +164,7 @@ first served, this new rule will take precedence over the default ones.
 @cindex switching to source
 @anchor{switching-repl-buff} Once you have a working @i{geiser-mode},
 you can switch from Scheme source buffers to the REPL or @kbd{C-c
-C-z}. Those shortcuts map to the interactive command
+C-z}.  Those shortcuts map to the interactive command
 @code{switch-to-geiser}.
 
 @cindex switching to module
@@ -176,7 +176,7 @@ This command is also bound to @kbd{C-c C-Z}, with a capital zed.
 
 Once you're in the REPL, the same @kbd{C-c C-z} shortcut will bring
 you back to the buffer you jumped from, provided you don't kill the
-Scheme process in between. This is why the command is called
+Scheme process in between.  This is why the command is called
 @i{switch-to-geiser} instead of @i{switch-to-repl}, and what makes it
 really handy, if you ask me.
 
@@ -206,14 +206,14 @@ can do for us, besides jumping to and fro.
 @cindex autodoc, in scheme buffers
 The first thing you will notice by moving around Scheme source is that,
 every now and then, the echo area lightens up with the same autodoc
-messages we know and love from our REPL forays. This happens every
+messages we know and love from our REPL forays.  This happens every
 time the Scheme process is able to recognise an identifier in the
 buffer, and provide information either on its value (for variables) or
 on its arity and the name of its formal arguments (for procedures and
-macros). That information will only be available if the module the
-identifier belongs to has been loaded in the running Scheme image. So it
+macros).  That information will only be available if the module the
+identifier belongs to has been loaded in the running Scheme image.  So it
 can be the case that, at first, no autodoc is shown for identifiers
-defined in the file you're editing. But as soon as you evaluate them
+defined in the file you're editing.  But as soon as you evaluate them
 (either individually or collectively using any of the devices described
 in @ref{To eval or not to eval}) their signatures will start appearing
 in the echo area.
@@ -222,8 +222,8 @@ in the echo area.
 @cindex manual autodoc
 Autodoc activation is controlled by a minor mode, @code{geiser-autodoc},
 which you can toggle with @kbd{M-x geiser-autodoc}, or its associated
-keyboard shortcut, @kbd{C-c C-d a}. That @t{/A} indicator in the
-mode-line is telling you that autodoc is active. If you prefer that it
+keyboard shortcut, @kbd{C-c C-d a}.  That @t{/A} indicator in the
+mode-line is telling you that autodoc is active.  If you prefer that it
 be inactive by default (e.g., because you're connecting to a really
 remote scheme and want to minimize network exchanges), just set
 @code{geiser-mode-autodoc-p} to @code{nil} in your customization files.
@@ -233,19 +233,19 @@ symbol at point.
 
 @cindex autodoc explained
 @img{autodoc-scm, right} The way autodoc displays information deserves
-some explanation. It will first show the name of the module where the
+some explanation.  It will first show the name of the module where the
 identifier at hand is defined, followed by a colon and the identifier
-itself. If the latter corresponds to a procedure or macro, it will be
+itself.  If the latter corresponds to a procedure or macro, it will be
 followed by a list of argument names, starting with the ones that are
-required. Then there comes a list of optional arguments, if any,
-enclosed in parenthesis. When an optional argument has a default value
+required.  Then there comes a list of optional arguments, if any,
+enclosed in parenthesis.  When an optional argument has a default value
 (or a form defining its default value), autodoc will display it after
-the argument name. When the optional arguments are keywords, their names
-are prefixed with ``#:'' (i.e., their names @i{are} keywords). An
+the argument name.  When the optional arguments are keywords, their names
+are prefixed with ``#:'' (i.e., their names @i{are} keywords).  An
 ellipsis (@dots{}) serves as a marker of an indeterminate number of
 parameters, as is the case with @i{rest} arguments or when autodoc
 cannot fathom the exact number of arguments (this is often the case with
-macros defined using @code{syntax-case}). Another way in which autodoc
+macros defined using @code{syntax-case}).  Another way in which autodoc
 displays its ignorance is by using an underscore to display parameters
 whose name is beyond its powers.
 
@@ -257,41 +257,41 @@ In those cases, autodoc shows all known signatures (using the above
 rules for each one) separated by a vertical bar (|).
 
 As you have already noticed, the whole autodoc message is enclosed in
-parenthesis. After all, we're talking about Scheme here.
+parenthesis.  After all, we're talking about Scheme here.
 
 @cindex autodoc for variables
 @img{autodoc-var, right} Finally, life is much easier when your cursor
 is on a symbol corresponding to a plain variable: you'll see in the echo
 area its name, preceded by the module where it's defined, and followed
-by its value, with an intervening arrow for greater effect. This time,
+by its value, with an intervening arrow for greater effect.  This time,
 there are no enclosing parenthesis (i hope you see the logic in my
 madness).
 
 @cindex autodoc customized
 You can change the way Geiser displays the module/identifier combo by
-customizing @code{geiser-autodoc-identifier-format}. For example, if you
+customizing @code{geiser-autodoc-identifier-format}.  For example, if you
 wanted a tilde surrounded by spaces instead of a colon as a separator,
 you would write something like
 @example
 (setq geiser-autodoc-identifier-format "%s ~ %s")
 @end example
-in your Emacs initialisation files. There's also a face
+in your Emacs initialisation files.  There's also a face
 (@code{geiser-font-lock-autodoc-identifier}) that you can customize (for
 instance, with @kbd{M-x customize-face}) to change the appearance of the
-text. And another one (@code{geiser-font-lock-autodoc-current-arg}) that
+text.  And another one (@code{geiser-font-lock-autodoc-current-arg}) that
 controls how the current argument position is highlighted.
 
 @subsubheading Other documentation commands
 
 @anchor{doc-browser}Sometimes, autodoc won't provide enough information
-for you to understand what a function does. In those cases, you can ask
+for you to understand what a function does.  In those cases, you can ask
 Geiser to ask the running Scheme for further information on a given
 identifier or module.
 
 @cindex documentation for symbol
 @cindex docstrings, maybe
 For symbols, the incantation is @kbd{M-x geiser-doc-symbol-at-point}, or
-@kbd{C-c C-d C-d} for short. If the associated Scheme supports
+@kbd{C-c C-d C-d} for short.  If the associated Scheme supports
 docstrings (as, for instance, Guile does), you'll be teleported to a new
 Emacs buffer displaying Geiser's documentation browser, filled with
 information about the identifier, including its docstring (if any;
@@ -301,9 +301,9 @@ that they're used everywhere).
 @imgc{docstring}
 
 Pressing @kbd{q} in the documentation buffer will bring you back,
-enlightened, to where you were. There's also a handful of other
+enlightened, to where you were.  There's also a handful of other
 navigation commands available in that buffer, which you can discover by
-means of its menu or via the good old @kbd{C-h m} command. And feel free
+means of its menu or via the good old @kbd{C-h m} command.  And feel free
 to use the navigation buttons and hyperlinks that justify my calling
 this buffer a documentation browser.
 
@@ -319,10 +319,10 @@ form of a list of its exported identifiers, using @kbd{C-c C-d C-m},
 exactly as you would do @ref{repl-mod,,in the REPL}.
 
 In both cases, the documentation browser will show a couple of buttons
-giving you access to further documentation. First, you'll see a button
+giving you access to further documentation.  First, you'll see a button
 named @i{source}: pressing it you'll jump to the symbol's definition.
 The second button, dubbed @i{manual}, will open the Scheme
-implementation's manual page for the symbol at hand. For Racket, that
+implementation's manual page for the symbol at hand.  For Racket, that
 will open your web browser displaying the corresponding reference's page
 (using Emacs' @code{browser-url} command), while in Guile a lookup will
 be performed in the texinfo manual.
@@ -340,28 +340,28 @@ navigation commands available in the documentation browser.
 
 @cindex philosophy
 @cindex incremental development
-One of Geiser's main goals is to facilitate incremental development. You
+One of Geiser's main goals is to facilitate incremental development.  You
 might have noticed that i've made a big fuss of Geiser's ability to
 recognize context, by being aware of the namespace where its operations
 happen.
 
 That awareness is especially important when evaluating code in your
-scheme buffers, using the commands described below. They allow you to
+scheme buffers, using the commands described below.  They allow you to
 send code to the running Scheme with a granularity ranging from whole
-files to single s-expressions. That code will be evaluated in the module
+files to single s-expressions.  That code will be evaluated in the module
 associated with the file you're editing, allowing you to redefine values
 and procedures to your heart's (and other modules') content.
 
 @cindex incremental development, evil
 Macros are, of course, another kettle of fish: one needs to re-evaluate
-uses of a macro after redefining it. That's not a limitation imposed by
+uses of a macro after redefining it.  That's not a limitation imposed by
 Geiser, but a consequence of how macros work in Scheme (and other
-Lisps). There's also the risk that you lose track of what's actually
-defined and what's not during a given session. But,
+Lisps).  There's also the risk that you lose track of what's actually
+defined and what's not during a given session.  But,
 @uref{http://programming-musings.org/2009/03/29/from-my-cold-prying-hands/,in
 my opinion}, those are limitations we lispers are aware of, and they
 don't force us to throw the baby with the bathwater and ditch
-incremental evaluation. Some people disagree; if you happen to find
+incremental evaluation.  Some people disagree; if you happen to find
 @uref{http://blog.racket-lang.org/2009/03/drscheme-repl-isnt-lisp.html,
 their arguments} convincing, you don't have to throw away Geiser
 together with the baby: @kbd{M-x geiser-restart-repl} will let you
@@ -376,12 +376,12 @@ commands performing incremental evaluation in Geiser.
 s-expression just before point.
 
 @code{geiser-eval-definition}, bound to @kbd{C-M-x}, finds the topmost
-definition containing point and sends it for evaluation. The variant
+definition containing point and sends it for evaluation.  The variant
 @code{geiser-eval-definition-and-go} (@kbd{C-c M-e}) works in the same
 way, but it also teleports you to REPL after the evaluation.
 
 @code{geiser-eval-region}, bound to @kbd{C-c C-r}, evals the current
-region. Again, there's an @i{and go} version available,
+region.  Again, there's an @i{and go} version available,
 @code{geiser-eval-region-and-go}, bound to @kbd{C-c M-r}.
 
 For all the commands above, the result of the evaluation is displayed in
@@ -391,14 +391,14 @@ perchance to debug}).
 At the risk of repeating myself, i'll remind you that all these
 evaluations will take place in the namespace of the module corresponding
 to the Scheme file from which you're sending your code, which, in
-general, will be different from the REPL's current module. And, if all
+general, will be different from the REPL's current module.  And, if all
 goes according to plan, (re)defined variables and procedures should be
 immediately visible inside and, if exported, outside their module.
 
 Besides evaluating expressions, definitions and regions, you can also
-macro-expand them. The corresponding key bindings start with the prefix
+macro-expand them.  The corresponding key bindings start with the prefix
 @kbd{C-c C-m} and end, respectively, with @kbd{C-e}, @kbd{C-x} and
-@kbd{C-r}. The result of the macro expansion always appears in a pop up
+@kbd{C-r}.  The result of the macro expansion always appears in a pop up
 buffer.
 
 @node To err perchance to debug, Jumping around, To eval or not to eval, Between the parens
@@ -420,15 +420,15 @@ jump to the offending spot; or invoke Emacs' stock commands
 @imgc{eval-error}
 
 The Racket backtrace also highlights the exception type, making it
-click-able. Following the link will open the documentation corresponding
-to said exception type. Both the error and exception link faces are
+click-able.  Following the link will open the documentation corresponding
+to said exception type.  Both the error and exception link faces are
 customizable (@code{geiser-font-lock-error-link} and
 @code{geiser-font-lock-doc-link}).
 
 On the other hand, Guile's reaction to evaluation errors is different:
-it enters the debugger in its REPL. Accordingly, the REPL buffer will
+it enters the debugger in its REPL.  Accordingly, the REPL buffer will
 pop up if your evaluation fails in a Guile file, and the error message
-and backtrace will be displayed in there, again click-able and all. But
+and backtrace will be displayed in there, again click-able and all.  But
 there you have the debugger at your disposal, with the REPL's current
 module set to that of the offender, and a host of special debugging
 commands that are described in Guile's fine documentation.
@@ -436,14 +436,14 @@ commands that are described in Guile's fine documentation.
 @imgc{guile-eval-error}
 
 In addition, Guile will sometimes report warnings for otherwise
-successful evaluations. In those cases, it won't enter the debugger, and
+successful evaluations.  In those cases, it won't enter the debugger, and
 Geiser will report the warnings in a debug buffer, as it does for
-Racket. You can control how picky Guile is reporting warnings by
+Racket.  You can control how picky Guile is reporting warnings by
 customizing the variable @code{geiser-guile-warning-level}, whose
 detailed docstring (which see, using, e.g. @kbd{C-h v}) allows me to
-offer no further explanation here. The customization group
+offer no further explanation here.  The customization group
 @i{geiser-guile} is also worth a glance, for a couple of options to
-fine-tune how Geiser interacts with Guile's debugger (and more). Same
+fine-tune how Geiser interacts with Guile's debugger (and more).  Same
 thing for racketeers and @i{geiser-racket}.
 
 @node Jumping around, Geiser writes for you, To err perchance to debug, Between the parens
@@ -453,15 +453,15 @@ thing for racketeers and @i{geiser-racket}.
 This one feature is as sweet as easy to explain: @kbd{M-.}
 (@code{geiser-edit-symbol-at-point}) will open the file where the
 identifier around point is defined and land your point on its
-definition. To return to where you were, press @kbd{M-,}
-(@code{geiser-pop-symbol-stack}). This command works also for module
+definition.  To return to where you were, press @kbd{M-,}
+(@code{geiser-pop-symbol-stack}).  This command works also for module
 names: Geiser first tries to locate a definition for the identifier at
 point and, if that fails, a module with that name; if the latter
 succeeds, the file where the module is defined will pop up.
 
 Sometimes, the underlying Scheme will tell Geiser only the file where
 the symbol is defined, but Geiser will use some heuristics (read,
-regular expressions) to locate the exact line and bring you there. Thus,
+regular expressions) to locate the exact line and bring you there.  Thus,
 if you find Geiser systematically missing your definitions, send a
 message to the mailing list and we'll try to make the algorithm smarter.
 
@@ -476,10 +476,10 @@ or @code{'frame} (in a new frame).
 
 @cindex completion in scheme buffers
 No self-respecting programming mode would be complete without
-completion. In geiser-mode, identifier completion is bound to
+completion.  In geiser-mode, identifier completion is bound to
 @kbd{M-@key{TAB}}, and will offer all visible identifiers starting with
-the prefix before point. Visible here means all symbols imported or
-defined in the current namespace plus locally bound ones. E.g., if
+the prefix before point.  Visible here means all symbols imported or
+defined in the current namespace plus locally bound ones.  E.g., if
 you're at the end of the following partial expression:
 
 @example
@@ -492,10 +492,10 @@ and press @kbd{M-@key{TAB}}, one of the possible completions will be
 
 @cindex partial completion
 After obtaining the list of completions from the running Scheme, Geiser
-uses the standard Emacs completion machinery to display them. That
+uses the standard Emacs completion machinery to display them.  That
 means, among other things, that partial completion is available: just
 try to complete @code{d-s} or @code{w-o-t-s} to see why this is a good
-thing. Partial completion won't work if you have disabled it globally in
+thing.  Partial completion won't work if you have disabled it globally in
 your Emacs configuration: if you don't know what i'm talking about,
 never mind: Geiser's partial completion will work for you out of the
 box.
@@ -504,21 +504,21 @@ box.
 If you find the @kbd{M} modifier annoying, you always have the option to
 activate @code{geiser-smart-tab-mode}, which will make the @key{TAB} key
 double duty as the regular Emacs indentation command (when the cursor is
-not near a symbol) and Geiser's completion function. If you want this
+not near a symbol) and Geiser's completion function.  If you want this
 smarty pants mode always on in Scheme buffers, customize
 @code{geiser-mode-smart-tab-p} to @code{t}.
 
 @cindex completion for module names
 Geiser also knows how to complete module names: if no completion for the
 prefix at point is found among the currently visible bindings, it will
-try to find a module name that matches it. You can also request
+try to find a module name that matches it.  You can also request
 explicitly completion only over module names using @kbd{M-`} (that's a
 backtick).
 
 Besides completion, there's also this little command,
 @code{geiser-squarify}, which will toggle the delimiters of the
-innermost list around point between round and square brackets. It is
-bound to @kbd{C-c C-e [}. With a numeric prefix (as in, say, @kbd{M-2
+innermost list around point between round and square brackets.  It is
+bound to @kbd{C-c C-e [}.  With a numeric prefix (as in, say, @kbd{M-2
 C-c C-e [}), it will perform that many toggles, forward for positive
 values and backward for negative ones.
 

@@ -25,7 +25,7 @@ answer my inquiries, but provided almost instant fixes to the few
 issues i found.
 
 Thanks also to the PLT and Guile communities, for showing me that
-Geiser was not only possible, but a pleasure to hack on. And to the
+Geiser was not only possible, but a pleasure to hack on.  And to the
 Slime hackers, who led the way.
 
 

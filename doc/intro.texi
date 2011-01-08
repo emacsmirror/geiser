@@ -1,7 +1,7 @@
 @node Introduction, Installation, Top, Top
 @chapter Introduction
 
-Geiser is an Emacs environment to hack and have fun in Scheme. If that's
+Geiser is an Emacs environment to hack and have fun in Scheme.  If that's
 enough for you, see @ref{Installation} to get it running and
 @ref{The REPL} for the fun part.
 
@@ -15,7 +15,7 @@ enough for you, see @ref{Installation} to get it running and
 
 @cindex modus operandi
 As already mentioned, Geiser relies on a running Scheme process to
-obtain the information it makes accessible to the programmer. There's
+obtain the information it makes accessible to the programmer.  There's
 little effort, on the Elisp side, to understand, say, the module system
 used by the Scheme implementation at hand; instead, a generic interface
 between the two worlds is defined, and each supported Scheme includes a
@@ -26,23 +26,23 @@ bulk of the code.
 @cindex current module
 @anchor{current-module} While being as generic as possible, the
 Scheme-Elisp interface makes some assumptions about the capabilities and
-interaction mode of the corresponding REPL. In particular, Geiser
+interaction mode of the corresponding REPL.  In particular, Geiser
 expects the latter to support namespaces in the form of a module system,
 and to provide a well-defined way to establish the REPL's current
 namespace (or module), as well as the current file's module (or
-namespace). Thus, all evaluations performed by Geiser either in the
+namespace).  Thus, all evaluations performed by Geiser either in the
 REPL or in a source code buffer happen in the context of the current
-namespace. Every time you switch to a different file, you're switching
+namespace.  Every time you switch to a different file, you're switching
 namespaces automatically; at the REPL, you must request the switch
 explicitly (usually just using means provided by the Scheme
 implementation itself).
 
 If your favourite Scheme supports the above modus operandi, it has all
-that's needed for a bare-bones Geiser mode. But Geiser can, and will,
+that's needed for a bare-bones Geiser mode.  But Geiser can, and will,
 use any metadata available: procedure arities and argument lists to
 display interactive help, documentation strings, location information to
 jump to definitions, export lists to provide completion, and so on and
-so forth. Although this is not an all-or-none proposition (Geiser can
+so forth.  Although this is not an all-or-none proposition (Geiser can
 operate with just part of that functionality available), i've initially
 concentrated in supporting those Schemes with the richest (to my
 knowledge) introspection capabilities, namely, Guile and Racket.
@@ -84,7 +84,7 @@ Support for multiple, simultaneous REPLs.
 
 In the following pages, i'll try to explain what these features
 actually are (i'm just swanking here), and how to use them for your
-profit. But, before that, let's see how to install Geiser.
+profit.  But, before that, let's see how to install Geiser.
 
 @c Local Variables:
 @c mode: texinfo

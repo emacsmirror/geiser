@@ -32,9 +32,9 @@ to the fun.
 @subsubheading Downloading Geiser
 
 @cindex use the source, Luke
-You'll also need Geiser itself. The latest release tarball can be found
+You'll also need Geiser itself.  The latest release tarball can be found
 @downfile{, here}, while older versions are @uref{@value{DOWN_BASE}/,
-here}. Just download @downfile{@value{TARBALL}, @value{TARBALL}}
+here}.  Just download @downfile{@value{TARBALL}, @value{TARBALL}}
 and untar it in a directory of your choice.
 
 If you feel like living on the bleeding edge, just grab Geiser from its
@@ -56,14 +56,14 @@ You can also follow Geiser's development in
 are kept synchronized with the one at Savannah.
 
 Either way, you'll now be in possession of a copy of Geiser's libre
-code. I'll follow you into its directory and the next section.
+code.  I'll follow you into its directory and the next section.
 
 @node Setting it up, Friends, Must needs, Installation
 @section Setting it up
 
-Geiser is ready to be used out of the box without much more ado. For the
+Geiser is ready to be used out of the box without much more ado.  For the
 sake of concreteness, let's assume you put its source in the directory
-@file{~/lisp/geiser}. All you need to do is to add the following
+@file{~/lisp/geiser}.  All you need to do is to add the following
 line to your Emacs initialisation file (be it @file{~/.emacs} or any of
 its moral equivalents):
 @example
@@ -71,18 +71,18 @@ its moral equivalents):
 @end example
 @noindent
 or simply evaluate that form inside Emacs (you wouldn't kill a friend
-just to start using Geiser, would you?). That's it: you're ready to
-@ref{quick-start,,go}. If you obtained the Geiser source tree from a
+just to start using Geiser, would you?).  That's it: you're ready to
+@ref{quick-start,,go}.  If you obtained the Geiser source tree from a
 release tarball, you can even continue to read this fine manual inside
-Emacs by opening @file{doc/geiser.info} using @kbd{C-u C-h i}. The
+Emacs by opening @file{doc/geiser.info} using @kbd{C-u C-h i}.  The
 manual is also available in PDF format
 @downfile{geiser-manual-@value{STABLE_VERSION}.pdf, here}.
 
 @cindex byte-compilation
-What? You still here? I promise the above is all that's needed to start
-using Geiser. But, in case you are missing your @t{configure/make all
+What?  You still here?  I promise the above is all that's needed to start
+using Geiser.  But, in case you are missing your @t{configure/make all
 install} routine, by all means, you can go through those motions to byte
-compile and install Geiser too. That is, you enter the source directory
+compile and install Geiser too.  That is, you enter the source directory
 and (since we grabbed the development tree) run the customary
 @i{autogen} script:
 @example
@@ -99,13 +99,13 @@ $ make all
 <more of the above>
 @end example
 Now you have two options: loading the byte-compiled Geiser from the
-@file{elisp} subdirectory, or installing it system-wide. To load the
+@file{elisp} subdirectory, or installing it system-wide.  To load the
 byte-code from here, add this line to your initialisation file:
 @example
 (load "~/lisp/geiser/build/elisp/geiser-load")
 @end example
 and eval that form and you're done (you could also restart Emacs, but
-killing your friends is widely considered bad form). Yes, that's
+killing your friends is widely considered bad form).  Yes, that's
 @code{load} and @file{geiser-load} instead of @code{load-file} and
 @file{geiser.el}.
 
@@ -114,7 +114,7 @@ If you prefer a system-wide installation, just type:
 $ sudo make install
 @end example
 With the above spell, Geiser will be compiled and installed in a safe
-place inside Emacs load path. To load it into Emacs you'll need,
+place inside Emacs load path.  To load it into Emacs you'll need,
 @i{instead} of the @code{load-file} form above, the following line in
 your initialisation file:
 @example
@@ -123,12 +123,12 @@ your initialisation file:
 @noindent
 Please note that we're requiring @code{geiser-install}, and @i{not}
 @code{geiser}, and that there's no @code{load-file} to be seen this
-time. There are some ways of fine-tuning this process, mainly by
+time.  There are some ways of fine-tuning this process, mainly by
 providing additional arguments in the call to @t{configure}: you'll find
 those gory details in the file called @file{INSTALL}, right at the root
-of the source tree. The installation will also take care of placing this
+of the source tree.  The installation will also take care of placing this
 manual, in Info format, where Emacs can find it, so you can continue to
-learn about Geiser inside its natural habitat. See you there and into
+learn about Geiser inside its natural habitat.  See you there and into
 the next chapter!
 
 @node Friends,  , Setting it up, Installation
@@ -148,7 +148,7 @@ in any Lisp dialect without the aid of Taylor Campbell's structured
 editing mode.
 @item @uref{http://nschum.de/src/emacs/company-mode/, Company}.
 Nikolaj Schumacher's @code{company-mode} provides a generic front-end
-for completion engines (such as Geiser's). Very nice if you like that
+for completion engines (such as Geiser's).  Very nice if you like that
 kind of thing: judge by yourself with the help of
 @uref{http://www.screentoaster.com/watch/stU0lSRERIR1pYRFVdXVlRVFFV/company_mode_for_gnu_emacs,
 this screencast}.
@@ -156,12 +156,12 @@ this screencast}.
 You can still use the many goodies provided by Neil van Dyke's
 @code{quack-mode}, since most of them are not (yet) available in Geiser.
 The only caveat might be a conflict between Quack's and Geiser's default
-key bindings, which i'm sure you'll manage to tackle just fine. It's
+key bindings, which i'm sure you'll manage to tackle just fine.  It's
 also probably a good idea to require @code{quack} @i{after} loading
 @file{geiser.el} (or requiring a compiled version).
 @end itemize
 You just need to install and setup them as usual, for every package's
-definition of usual. Geiser will notice their presence and react
+definition of usual.  Geiser will notice their presence and react
 accordingly.
 
 @c Local Variables:

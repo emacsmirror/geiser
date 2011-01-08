@@ -8,14 +8,14 @@ to make Scheme hacking inside Emacs (even more) fun.
 @cindex corpses
 @cindex philosophy
 Or, to be precise, what @uref{http://hacks-galore.org/jao, i} consider
-fun. Geiser is thus my humble contribution to the dynamic school of
+fun.  Geiser is thus my humble contribution to the dynamic school of
 expression, and a reaction against what i perceive as a derailment, in
-modern times, of standard Scheme towards the static camp. Because i
+modern times, of standard Scheme towards the static camp.  Because i
 prefer growing and healing to poking at corpses, the continuously
-running Scheme interpreter takes the center of the stage in Geiser. A
+running Scheme interpreter takes the center of the stage in Geiser.  A
 bundle of Elisp shims orchestrates the dialog between the Scheme
 interpreter, Emacs and, ultimately, the schemer, giving her access to
-live metadata. Here's how.
+live metadata.  Here's how.
 
 @c Local Variables:
 @c mode: texinfo
