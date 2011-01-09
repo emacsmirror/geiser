@@ -1,7 +1,31 @@
 @set VERSION 0.1.1
-@set STABLE_VERSION 0.1
 @set DOWN_BASE http://download.savannah.nongnu.org/releases/geiser
-@set TARBALL geiser-@value{STABLE_VERSION}.tar.gz
+@set TARBALL geiser-@value{VERSION}.tar.gz
+
+@macro downfile{FILE, CAPT}
+@uref{@value{DOWN_BASE}/@value{VERSION}/\FILE\, \CAPT\}
+@end macro
+
+@macro alt{HTML, NOHTML}
+@ifhtml
+\HTML\
+@end ifhtml
+@ifnothtml
+\NOHTML\
+@end ifnothtml
+@end macro
+
+@macro altr{LINK, TXT, TLINK}
+@ifhtml
+@ref{\LINK\,,\TXT\}
+@end ifhtml
+@ifinfo
+@pxref{\LINK\,\TXT\}
+@end ifinfo
+@iftex
+@ref{\TLINK\}
+@end iftex
+@end macro
 
 @macro img{FILE, ALIGN}
 @ifhtml
@@ -17,8 +41,4 @@
 <img src="img/\FILE\.png"/>
 @end html
 @end ifhtml
-@end macro
-
-@macro downfile{FILE, CAPT}
-@uref{@value{DOWN_BASE}/@value{STABLE_VERSION}/\FILE\, \CAPT\}
 @end macro

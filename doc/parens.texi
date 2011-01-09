@@ -6,7 +6,7 @@ hacking environment.  Well, perhaps a bit more than a half; but, at any
 rate, one surely needs also a pleasant way of editing source code.  Don't
 pay attention to naysayers: Emacs comes with an excellent editor
 included for about any language on Earth, and just the best one when
-that language is sexpy (especially if you use @ref{paredit,,Paredit}).
+that language is sexpy (especially if you use @alt{@ref{paredit,,Paredit}).,Paredit).}
 Geiser's support for writing Scheme code adds to Emacs'
 @code{scheme-mode}, rather than supplanting it; and it does so by means
 of a minor mode (unimaginatively dubbed @code{geiser-mode}) that defines
@@ -52,7 +52,8 @@ tried to make Geiser as self-documenting as any self-respecting Emacs
 package should be.  If you follow this route, make sure to take a look at
 Geiser's customization buffers (@kbd{M-x customize-group @key{RET}
 geiser}): there's lot of fine-tuning available there.  You might also
-want to take a glance at the @ref{Cheat sheet}.
+want to take a glance at @alt{@ref{Cheat sheet}., the tables in
+@pxref{Cheat sheet, the cheat sheet}.}
 
 Since @i{geiser-mode} is a minor mode, you can toggle it with
 @kbd{M-x geiser-mode}, and control its activation in hooks with the
@@ -81,8 +82,9 @@ how to make sure that that's actually the case.
 
 As i've already mentioned a couple of times, @i{geiser-mode} needs a
 running REPL to be operative.  Thus, a common usage pattern will be
-for you to first call @code{run-geiser} (or one of its variants, see
-them described @ref{choosing-impl,,here}), and then open Scheme files;
+for you to first call @code{run-geiser} or one of its variants
+(@pxref{choosing-impl,choosing implementations}), and then open
+some Scheme files;
 but there's nothing wrong in first opening a couple Scheme buffers and
 then starting the REPL (you can even find it more convenient, since
 pressing @kbd{C-c C-z} in a Scheme buffer will start the REPL for
@@ -90,9 +92,12 @@ you).  Since Geiser supports more than one Scheme implementation, though,
 there's the problem of knowing which of them is to be associated with
 each Scheme source file.  Serviceable as it is, @i{geiser-mode} will try
 to guess the correct implementation for you, according to the algorithm
-described below.  If you find that Geiser is already guessing right the
-Scheme implementation, feel free to skip to the
-@ref{switching-repl-buff,,next subsection}.
+described below.
+@ifhtml
+If you find that Geiser is already guessing right the Scheme
+implementation, feel free to skip to the @ref{switching-repl-buff,,next
+subsection}.
+@end ifhtml
 
 @subsubheading How Geiser associates a REPL to your Scheme buffer
 @cindex scheme implementation, choosing
@@ -177,10 +182,11 @@ C-z}.  Those shortcuts map to the interactive command
 
 @cindex switching to module
 If you use a numeric prefix, as in @kbd{C-u C-c C-z}, besides being
-teleported to the REPL, the latter will switch to the namespace of
-the Scheme source file (as if you had used @kbd{C-c C-m} in the REPL,
-with the source file's module as argument; cf. @ref{Switching context}).
-This command is also bound to @kbd{C-c C-Z}, with a capital zed.
+teleported to the REPL, the latter will switch to the namespace of the
+Scheme source file (as if you had used @kbd{C-c C-m} in the REPL, with
+the source file's module as argument; cf. discussion in
+@altr{Switching context,,Switching context}).  This command is also
+bound to @kbd{C-c C-Z}, with a capital zed.
 
 Once you're in the REPL, the same @kbd{C-c C-z} shortcut will bring
 you back to the buffer you jumped from, provided you don't kill the
@@ -191,8 +197,9 @@ really handy, if you ask me.
 @cindex switching schemes
 If for some reason you're not happy with the Scheme implementation that
 Geiser has assigned to your file, you can change it with @kbd{C-c C-s},
-and probably take a look at @ref{switching-repl-buff,,the previous
-subsection} to make sure that Geiser doesn't get confused again.
+and probably take a look at @alt{@ref{switching-repl-buff,,the previous
+subsection}, the previous subsection} to make sure that Geiser doesn't
+get confused again.
 
 @subsubheading A note about context
 As explained before (@pxref{Modus operandi}), all Geiser activities take
@@ -327,7 +334,7 @@ some other tidbits for re-exported identifiers.
 
 You can also ask Geiser to display information about a module, in the
 form of a list of its exported identifiers, using @kbd{C-c C-d C-m},
-exactly as you would do @ref{repl-mod,,in the REPL}.
+exactly as you would do in @altr{repl-mod,the REPL,The REPL}.
 
 In both cases, the documentation browser will show a couple of buttons
 giving you access to further documentation.  First, you'll see a button
@@ -343,8 +350,9 @@ You can also jump directly to the manual page for the symbol at point
 with the command @code{geiser-doc-look-up-manual}, bound to @kbd{C-c C-d
 i}.
 
-See our @ref{Documentation browser,,cheat-sheet} for a list of all
-navigation commands available in the documentation browser.
+A list of all navigation commands in the documentation browser is
+available in
+@altr{Documentation browser,our cheat-sheet,Documentation browser}.
 
 @node To eval or not to eval, To err perchance to debug, Documentation helpers, Between the parens
 @section To eval or not to eval

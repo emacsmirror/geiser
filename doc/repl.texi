@@ -22,22 +22,25 @@ To start a Scheme REPL (meaning, a Scheme process offering you a
 Read-Eval-Print Loop), Geiser provides the generic interactive command
 @command{run-geiser}.  If you run it (via, as is customary in Emacs,
 @kbd{M-x run-geiser}, you'll be saluted by a prompt asking which one of
-the supported implementations you want to launch (yes, you can stop the
-asking: see @ref{active-implementations,,below}).  Tabbing for completion
-will offer you, as of this writing, @code{guile} and @code{racket}.  Just
-choose your poison, and a new REPL buffer will pop-up.
+the supported implementations you want to launch---yes, you can stop the
+asking, see @altr{active-implementations,below,Customization and tips}.
+Tabbing for completion will offer you, as of this writing, @code{guile}
+and @code{racket}.  Just choose your poison, and a new REPL buffer will
+pop-up.
 
 @imgc{repls}
 
 If all went according to plan, you'll be facing an
 implementation-dependent banner, followed by an interactive prompt.
 Going according to plan includes having the executable of the Scheme you
-chose in your path.  If that's not the case, you can tell Emacs where it
-is, as described @ref{impl-binary,, below}.  Returning to our REPL,
+chose in your path. If that's not the case, you can tell Emacs where it
+is, as described in @altr{impl-binary,a moment,Customization and tips}.
+Returning to our REPL,
 the first thing to notice is that the funny prompt is telling you your
 current module: its name is the part just after the @@ sign (in Guile,
 that means @code{guile-user}, while Racket's top namespace doesn't have
-a name; cf. @ref{Switching context} below).  Other than that, this is
+a name; cf. discussion in @altr{Switching context,,Switching context}).
+Other than that, this is
 pretty much equivalent to having a command-line interpreter in a
 terminal, with a bunch of add-ons that we'll be reviewing below.  You can
 start typing sexps right there: Geiser will only dispatch them for
@@ -119,9 +122,9 @@ mercilessly kill the process (but not before stowing your history in the
 file system).  Unless you're using a remote REPL, that is, in which case
 both commands will just sever the connection and leave the remote
 process alone.  If worse comes to worst and the process is dead, @kbd{C-c
-C-z} will restart it (but the same shortcut, issued when the REPL is
+C-z} will restart it.  However, the same shortcut, issued when the REPL is
 alive, will bring you back to the buffer you came from, as explained
-@ref{switching-repl-buff,,here}).
+in @altr{switching-repl-buff,this section,The source and the REPL}.
 
 The remaining commands are meatier, and deserve sections of their own.
 
@@ -129,7 +132,8 @@ The remaining commands are meatier, and deserve sections of their own.
 @section Switching context
 
 @cindex current module, in REPL
-In tune with Geiser's @ref{current-module,,modus operandi}, evaluations
+In tune with Geiser's @alt{@ref{current-module,,modus operandi},modus
+operandi}, evaluations
 in the REPL take place in the namespace of the current module.  As
 noted above, the REPL's prompt tells you the name of the current
 module.  To switch to a different one, you can use the command
@@ -234,9 +238,10 @@ name.
 
 The list of exported bindings is shown, again, in a buffer belonging to
 Geiser's documentation browser, where you have at your disposal a bunch
-of navigation commands listed in @xref{Documentation browser,,our
-cheat-sheet}.  We'll have a bit more to say about the documentation
-browser in @xref{doc-browser,,a later section}.
+of navigation commands listed in @altr{Documentation browser,our
+cheat-sheet,Documentation browser}.  We'll have a bit more to say about
+the documentation browser in
+@altr{doc-browser,a later section,Documentation helpers}.
 
 @cindex jump, at the REPL
 If that's still not enough, Geiser can jump, via @kbd{M-.}, to the

@@ -45,17 +45,17 @@ at Savannah}, either with the following incantation:
 git clone git://git.sv.gnu.org/geiser.git
 @end example
 
-@noindent or, if you happen to live under a firewall, with the alternative:
+@noindent or, if you happen to live behind a firewall, with the alternative:
 
 @example
 git clone http://git.sv.gnu.org/r/geiser.git
 @end example
 
-@noindent You can also follow Geiser's development in
+You can also follow Geiser's development in
 @uref{https://github.com/jaor/geiser, one}
 @uref{http://repo.or.cz/w/geiser.git, or}
-@uref{http://gitorious.org/geiser, three} mirrors that
-are kept synchronized with the one at Savannah.
+@uref{http://gitorious.org/geiser, three} mirrors that are kept
+synchronized with the one at Savannah.
 
 Either way, you'll now be in possession of a copy of Geiser's libre
 code.  I'll follow you into its directory and the next section.
@@ -76,11 +76,15 @@ its moral equivalents):
 @noindent
 or simply evaluate that form inside Emacs (you wouldn't kill a friend
 just to start using Geiser, would you?).  That's it: you're ready to
-@ref{quick-start,,go}.  If you obtained the Geiser source tree from a
-release tarball, you can even continue to read this fine manual inside
-Emacs by opening @file{doc/geiser.info} using @kbd{C-u C-h i}.  The
-manual is also available in PDF format
-@downfile{geiser-manual-@value{STABLE_VERSION}.pdf, here}.
+@alt{@ref{quick-start,,go}., go (@pxref{The REPL}).}
+
+@ifnotinfo
+If you obtained the Geiser source tree from a release tarball, you can
+even continue to read this fine manual inside Emacs by opening
+@file{doc/geiser.info} using @kbd{C-u C-h i}.  The manual is also
+available in PDF format @downfile{geiser-manual-@value{VERSION}.pdf,
+here}.
+@end ifnotinfo
 
 @cindex byte-compilation
 What?  You still here?  I promise the above is all that's needed to start
