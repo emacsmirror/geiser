@@ -133,16 +133,21 @@ The remaining commands are meatier, and deserve sections of their own.
 
 @cindex current module, in REPL
 In tune with Geiser's @alt{@ref{current-module,,modus operandi},modus
-operandi}, evaluations
-in the REPL take place in the namespace of the current module.  As
-noted above, the REPL's prompt tells you the name of the current
-module.  To switch to a different one, you can use the command
-@command{switch-to-geiser-module}, bound to @kbd{C-c C-m}.  You'll notice
-that Geiser simply uses a couple of meta-commands provided by the Scheme
-REPL (the stock @command{,m} in Guile and @command{,enter} in
-Racket), and that it doesn't even try to hide that fact.  That means that
-you can freely use said native ways directly at the REPL, and Geiser
-will be happy to oblige.
+operandi}, evaluations in the REPL take place in the namespace of the
+current module.  As noted above, the REPL's prompt tells you the name of
+the current module.  To switch to a different one, you can use the
+command @command{switch-to-geiser-module}, bound to @kbd{C-c C-m}.
+You'll notice that Geiser simply uses a couple of meta-commands provided
+by the Scheme REPL (the stock @command{,m} in Guile and the
+(geiser-defined) @command{,enter} in Racket), and that it doesn't even
+try to hide that fact.  That means that you can freely use said native
+ways directly at the REPL, and Geiser will be happy to oblige.  In
+Racket, @command{,enter} works like Racket's standard @code{enter!}
+form, but you can also provide a path string as its argument (e.g.,
+@command{,enter "/tmp/foo.rkt"} is equivalent to @command{,enter (file
+"/tmp/foo.rkt")}).  Like @code{enter!}, @command{,enter} accepts also
+module names (as in, say, @command{,enter geiser/main}).  As mentioned,
+Guile's @command{,m} is used @i{as is}.
 
 @cindex current module, change
 Once you enter a new module, only those bindings visible in its
