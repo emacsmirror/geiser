@@ -128,12 +128,13 @@
     | C-c C-k             | Compile and load current file                   |
     |---------------------+-------------------------------------------------|
     | C-c C-d d           | See documentation for identifier at point       |
+    | C-c C-d s           | See short documentation for identifier at point |
     | C-c C-d i           | Look up manual for identifier at point          |
     | C-c C-d m           | See a list of a module's exported identifiers   |
     | C-c C-d a           | Toggle autodoc mode                             |
     |---------------------+-------------------------------------------------|
-    | C-c<                | Show callers of procedure at point              |
-    | C-c>                | Show callees of procedure at point              |
+    | C-c <               | Show callers of procedure at point              |
+    | C-c >               | Show callees of procedure at point              |
     |---------------------+-------------------------------------------------|
     | M-TAB               | Complete identifier at point                    |
     | M-`, C-.            | Complete module name at point                   |
