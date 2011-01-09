@@ -101,6 +101,10 @@ div.version {
     font-style: italic;
 }
 
+div.version a {
+    text-decoration: none;
+}
+
 .navlink {
     text-decoration: none;
     /* color: white; */

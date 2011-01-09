@@ -1,9 +1,27 @@
 @set VERSION 0.1.1
+@set GUILE_VERSION 1.9.14
+@set RACKET_VERSION 5.0.1
+@set EMACS_VERSION 23.2
 @set DOWN_BASE http://download.savannah.nongnu.org/releases/geiser
 @set TARBALL geiser-@value{VERSION}.tar.gz
 
 @macro downfile{FILE, CAPT}
 @uref{@value{DOWN_BASE}/@value{VERSION}/\FILE\, \CAPT\}
+@end macro
+
+@macro vblurb{GVERS, RVERS, DATE}
+@html
+<div class="version" align="right">
+@end html
+@downfile{@value{TARBALL},
+          Version @value{VERSION} (\DATE\) Guile \GVERS\+ and Racket \RVERS\+}
+@html
+</div>
+@end html
+@end macro
+
+@macro dvblurb{DATE}
+@vblurb{@value{GUILE_VERSION}, @value{RACKET_VERSION}, \DATE\}
 @end macro
 
 @macro alt{HTML, NOHTML}

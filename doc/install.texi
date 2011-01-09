@@ -13,15 +13,16 @@
 @cindex supported versions
 @cindex versions supported
 If Geiser came with any guarantees, you'd break all of them by not using
-GNU Emacs 23.2 (or better: i regularly use it with a recent Emacs
-snapshot) and at least one of the supported Schemes, namely:
+GNU Emacs @value{EMACS_VERSION} (or better: i regularly use it with a
+recent Emacs snapshot) and at least one of the supported Schemes,
+namely:
 
 @itemize @bullet
 @item
-@uref{http://www.racket-lang.org, Racket} 5.0.1 or better
+@uref{http://www.racket-lang.org, Racket} @value{RACKET_VERSION} or better
 @item
-@uref{http://www.gnu.org/software/guile, Guile} 1.9.14, directly
-compiled from a recent checkout of
+@uref{http://www.gnu.org/software/guile, Guile} @value{GUILE_VERSION},
+directly compiled from a recent checkout of
 @uref{http://www.gnu.org/software/guile/repository.html, its Git
 @i{master} branch}.
 @end itemize
