@@ -1,4 +1,21 @@
+* Version 0.1.1
+
+  New features:
+
+    - "Manual autodoc" command; C-c C-d s
+    - Autodoc retrieval is now asynchronous, for better behaviour in
+      remote connections.
+    - Documentation typos, and grammar and layout fixes.
+
+
+  Bug fixes:
+
+    - REPL: fixed problem with input history navigation in Racket
+    - Autodoc no longer skips non-alphanumeric identifiers
+    - Autodoc messages no longer interfere with active minibuffer
+    - Quack compatibility: avoiding problems with #f &c.
+    - Avoiding *spurious* buffers in case of communication errors
 
 * Version 0.1 (Dec 20, 2010)
 
-  - Initial release.
+  Initial release.
