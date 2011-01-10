@@ -1,8 +1,8 @@
-@c This is part of Geiser's user manual., , No hacker is an island, Top
-@c Copyright (C) 2010 Jose Antonio Ortega Ruiz
+@c This is part of Geiser's user manual.
+@c Copyright (C) 2010, 2011 Jose Antonio Ortega Ruiz
 @c See the file geiser.texi for copying conditions.
 
-@node Index
+@node Index, , No hacker is an island, Top
 @unnumbered Index
 @cindex recursion
 @printindex cp
