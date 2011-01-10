@@ -2,19 +2,21 @@
 
   New features:
 
-    - "Manual autodoc" command; C-c C-d s
+    - "Manual autodoc" command; C-c C-d s.
     - Autodoc retrieval is now asynchronous, for better behaviour in
       remote connections.
+    - Racket: ',enter "foo"' as a synonym of ',enter (file "foo")'.
     - Documentation typos, and grammar and layout fixes.
 
 
   Bug fixes:
 
-    - REPL: fixed problem with input history navigation in Racket
-    - Autodoc no longer skips non-alphanumeric identifiers
-    - Autodoc messages no longer interfere with active minibuffer
+    - REPL: fixed problem with input history navigation in Racket.
+    - Autodoc no longer skips non-alphanumeric identifiers.
+    - Autodoc messages no longer interfere with active minibuffer.
     - Quack compatibility: avoiding problems with #f &c.
-    - Avoiding *spurious* buffers in case of communication errors
+    - Avoiding *spurious* buffers in case of communication errors.
+
 
 * Version 0.1 (Dec 20, 2010)
 
