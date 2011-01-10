@@ -200,9 +200,9 @@ really handy, if you ask me.
 @cindex switching schemes
 If for some reason you're not happy with the Scheme implementation that
 Geiser has assigned to your file, you can change it with @kbd{C-c C-s},
-and probably take a look at @alt{@ref{repl-association,,the previous
-subsection}, the previous subsection} to make sure that Geiser doesn't
-get confused again.
+and you probably should take a look at @alt{@ref{repl-association,,the
+previous subsection}, the previous subsection} to make sure that Geiser
+doesn't get confused again.
 
 @subsubheading A note about context
 As explained before (@pxref{Modus operandi}), all Geiser activities take

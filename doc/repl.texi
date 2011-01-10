@@ -336,7 +336,7 @@ If you happen to love peace and quiet and prefer to keep your REPL's
 echo area free from autodoc's noise, @code{geiser-repl-autodoc-p} is the
 customization variable for you: set it to @code{nil} and autodoc will be
 disabled by default in new REPLs.  You can always bring the fairies
-back, on a per REPL basis, using @kbd{C-c C-a}.
+back, on a per-REPL basis, using @kbd{C-c C-d C-a}.
 
 @subsubheading Remote connections
 
