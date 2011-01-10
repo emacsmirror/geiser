@@ -173,7 +173,7 @@ Which brings me to the next group of REPL commands.
 
 @cindex completion, at the REPL
 We've already seen Geiser completion of module names in action at the
-mini-buffer.  You won't be surprised to know that it's also available at
+minibuffer.  You won't be surprised to know that it's also available at
 the REPL buffer itself.  There, you can use either @kbd{C-.} or
 @kbd{M-`} to complete module names, and @kbd{@key{TAB}} or
 @kbd{M-@key{TAB}} to complete identifiers.  Geiser will know what
@@ -188,7 +188,7 @@ the Scheme interpreter, and you can use the @command{next-error} command
 (@kbd{M-g n}) to jump to their location.  By default, every time you
 enter a new expression for evaluation old error messages are forgotten,
 so that @kbd{M-g n} will always jump to errors related to the last
-evaluation request, if any.  If you prefer a not so forgetful REPL, set
+evaluation request, if any.  If you prefer a not-so-forgetful REPL, set
 the customization variable @code{geiser-repl-forget-old-errors-p} to
 @code{nil}.  Note, however, that even when that variable is left as
 @kbd{t}, you can always jump to an old error by moving to its line at
@@ -200,18 +200,18 @@ use @kbd{BACKTAB} everywhere to go to the previous one.
 @section Autodoc and friends
 
 Oftentimes, there's more you'll want to know about an identifier
-besides its name: what module does it belong to?  is it a procedure and,
+besides its name: What module does it belong to?  Is it a procedure and,
 if so, what arguments does it take?  Geiser tries to help you answering
 those questions too.
 
 @cindex autodoc, in the REPL
 Actually, if you've been playing with the REPL as you read, you might
-have notice some frantic activity taking place in the minibuffer every
+have notice some frantic activity taking place in the echo area every
 now and then.  That was Geiser trying to be helpful (while, hopefully,
 not being clippy), or, more concretely, what i call, for want of a
 better name, its @dfn{autodoc} mode.  Whenever it's active (did you
 notice that @i{A} in the mode-line?), Geiser's gerbils will be scanning
-what you type and showing (unless you silent them with @kbd{C-c C-d C-a})
+what you type and showing (unless you silence them with @kbd{C-c C-d C-a})
 information about the identifier nearest to point.
 
 @imgc{repl-autodoc}
@@ -221,7 +221,7 @@ namespace, you'll see the module it belongs to and its value.  For
 procedures and macros, autodoc will display, instead of their value, the
 argument names (or an underscore if Geiser cannot determine the name
 used in the definition).  Optional arguments are surrounded by
-parenthesis.  When the optional argument has a default value, it's
+parentheses.  When the optional argument has a default value, it's
 represented by a list made up of its name and that value.  When the
 argument is a keyword argument, its name has ``#:'' as a prefix.
 

@@ -101,8 +101,8 @@ subsection}.
 
 @subsubheading How Geiser associates a REPL to your Scheme buffer
 @cindex scheme implementation, choosing
-To determine what Scheme implementation corresponds to a given source
-file, Geiser uses the following algorithm:
+@anchor{repl-association} To determine what Scheme implementation
+corresponds to a given source file, Geiser uses the following algorithm:
 
 @enumerate
 @item
@@ -140,7 +140,7 @@ ask you to explicitly choose the Scheme implementation.
 @end enumerate
 
 As you can see in the list above, there are several ways to influence
-Geiser's guessing by mean customizable variables.  The most direct (and
+Geiser's guessing by means of customizable variables.  The most direct (and
 most impoverishing) is probably limiting the active implementations to a
 single one, while customizing @code{geiser-implementations-alist} is the
 most flexible (and, unsurprisingly, also the most complex).  Here's the
@@ -200,7 +200,7 @@ really handy, if you ask me.
 @cindex switching schemes
 If for some reason you're not happy with the Scheme implementation that
 Geiser has assigned to your file, you can change it with @kbd{C-c C-s},
-and probably take a look at @alt{@ref{switching-repl-buff,,the previous
+and probably take a look at @alt{@ref{repl-association,,the previous
 subsection}, the previous subsection} to make sure that Geiser doesn't
 get confused again.
 
@@ -223,7 +223,7 @@ can do for us, besides jumping to and fro.
 
 @cindex autodoc, in scheme buffers
 The first thing you will notice by moving around Scheme source is that,
-every now and then, the echo area lightens up with the same autodoc
+every now and then, the echo area lights up with the same autodoc
 messages we know and love from our REPL forays.  This happens every
 time the Scheme process is able to recognise an identifier in the
 buffer, and provide information either on its value (for variables) or
@@ -239,7 +239,7 @@ in the echo area.
 @cindex disabling autodoc
 @cindex manual autodoc
 Autodoc activation is controlled by a minor mode, @code{geiser-autodoc},
-which you can toggle with @kbd{M-x geiser-autodoc}, or its associated
+which you can toggle with @kbd{M-x geiser-autodoc-mode}, or its associated
 keyboard shortcut, @kbd{C-c C-d a}.  That @t{/A} indicator in the
 mode-line is telling you that autodoc is active.  If you prefer that it
 be inactive by default (e.g., because you're connecting to a really
@@ -256,7 +256,7 @@ identifier at hand is defined, followed by a colon and the identifier
 itself.  If the latter corresponds to a procedure or macro, it will be
 followed by a list of argument names, starting with the ones that are
 required.  Then there comes a list of optional arguments, if any,
-enclosed in parenthesis.  When an optional argument has a default value
+enclosed in parentheses.  When an optional argument has a default value
 (or a form defining its default value), autodoc will display it after
 the argument name.  When the optional arguments are keywords, their names
 are prefixed with ``#:'' (i.e., their names @i{are} keywords).  An
@@ -275,14 +275,14 @@ In those cases, autodoc shows all known signatures (using the above
 rules for each one) separated by a vertical bar (|).
 
 As you have already noticed, the whole autodoc message is enclosed in
-parenthesis.  After all, we're talking about Scheme here.
+parentheses.  After all, we're talking about Scheme here.
 
 @cindex autodoc for variables
 @img{autodoc-var, right} Finally, life is much easier when your cursor
 is on a symbol corresponding to a plain variable: you'll see in the echo
 area its name, preceded by the module where it's defined, and followed
 by its value, with an intervening arrow for greater effect.  This time,
-there are no enclosing parenthesis (i hope you see the logic in my
+there are no enclosing parentheses (i hope you see the logic in my
 madness).
 
 @cindex autodoc customized
@@ -403,11 +403,11 @@ definition containing point and sends it for evaluation.  The variant
 way, but it also teleports you to REPL after the evaluation.
 
 @code{geiser-eval-region}, bound to @kbd{C-c C-r}, evals the current
-region.  Again, there's an @i{and go} version available,
+region.  Again, there's an @i{and-go} version available,
 @code{geiser-eval-region-and-go}, bound to @kbd{C-c M-r}.
 
 For all the commands above, the result of the evaluation is displayed in
-the minibuffer, unless it causes a (scheme-side) error (@pxref{To err
+the minibuffer, unless it causes a (Scheme-side) error (@pxref{To err
 perchance to debug}).
 
 At the risk of repeating myself, i'll remind you that all these
@@ -472,7 +472,7 @@ thing for racketeers and @i{geiser-racket}.
 @section Jumping around
 
 @cindex jumping in scheme buffers
-This one feature is as sweet as easy to explain: @kbd{M-.}
+This one feature is as sweet as it is easy to explain: @kbd{M-.}
 (@code{geiser-edit-symbol-at-point}) will open the file where the
 identifier around point is defined and land your point on its
 definition.  To return to where you were, press @kbd{M-,}
@@ -485,7 +485,8 @@ Sometimes, the underlying Scheme will tell Geiser only the file where
 the symbol is defined, but Geiser will use some heuristics (read,
 regular expressions) to locate the exact line and bring you there.  Thus,
 if you find Geiser systematically missing your definitions, send a
-message to the mailing list and we'll try to make the algorithm smarter.
+message to the @email{geiser-users@@nongnu.org, mailing list}, and we'll
+try to make the algorithm smarter.
 
 @cindex jumping customized
 You can control how the destination buffer pops up by setting
