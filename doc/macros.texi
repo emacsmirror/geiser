@@ -33,15 +33,15 @@
 @end ifnothtml
 @end macro
 
-@macro altr{LINK, TXT, TLINK}
+@macro altr{LINK, TXT, TLINK, TRAIL}
 @ifhtml
-@ref{\LINK\,,\TXT\}
+@ref{\LINK\,,\TXT\}\TRAIL\
 @end ifhtml
 @ifinfo
-@pxref{\LINK\,\TXT\}
+@pxref{\LINK\,\TXT\}\TRAIL\
 @end ifinfo
 @iftex
-@ref{\TLINK\}
+@ref{\TLINK\}\TRAIL\
 @end iftex
 @end macro
 

@@ -188,7 +188,7 @@ If you use a numeric prefix, as in @kbd{C-u C-c C-z}, besides being
 teleported to the REPL, the latter will switch to the namespace of the
 Scheme source file (as if you had used @kbd{C-c C-m} in the REPL, with
 the source file's module as argument; cf. discussion in
-@altr{Switching context,,Switching context}).  This command is also
+@altr{Switching context,,Switching context,)}.  This command is also
 bound to @kbd{C-c C-Z}, with a capital zed.
 
 Once you're in the REPL, the same @kbd{C-c C-z} shortcut will bring
@@ -337,7 +337,7 @@ some other tidbits for re-exported identifiers.
 
 You can also ask Geiser to display information about a module, in the
 form of a list of its exported identifiers, using @kbd{C-c C-d C-m},
-exactly as you would do in @altr{repl-mod,the REPL,The REPL}.
+exactly as you would do in @altr{repl-mod,the REPL,The REPL,.}
 
 In both cases, the documentation browser will show a couple of buttons
 giving you access to further documentation.  First, you'll see a button
@@ -355,7 +355,7 @@ i}.
 
 A list of all navigation commands in the documentation browser is
 available in
-@altr{Documentation browser,our cheat-sheet,Documentation browser}.
+@altr{Documentation browser,our cheat-sheet,Documentation browser,.}
 
 @node To eval or not to eval, To err perchance to debug, Documentation helpers, Between the parens
 @section To eval or not to eval
