@@ -103,6 +103,7 @@ subsection}.
 @cindex scheme implementation, choosing
 To determine what Scheme implementation corresponds to a given source
 file, Geiser uses the following algorithm:
+
 @enumerate
 @item
 If the file-local variable @code{geiser-scheme-implementation} is
@@ -137,6 +138,7 @@ See?  That's the problem of being a smart aleck: one's always outsmarted
 by people around.  At this point, @i{geiser-mode} will humbly give up and
 ask you to explicitly choose the Scheme implementation.
 @end enumerate
+
 As you can see in the list above, there are several ways to influence
 Geiser's guessing by mean customizable variables.  The most direct (and
 most impoverishing) is probably limiting the active implementations to a
@@ -150,7 +152,8 @@ default value for the latter variable:
  ((regexp "\\.rkt$") racket))
 @end example
 
-@noindent which describes the simple heuristic that files with @file{.scm} as
+@noindent
+which describes the simple heuristic that files with @file{.scm} as
 extension are by default associated to a Guile REPL while those ending
 in @file{.ss} or @file{.rkt} correspond to Racket's implementation (with
 the caveat that these rules are applied only if the previous heuristics
@@ -286,7 +289,7 @@ madness).
 You can change the way Geiser displays the module/identifier combo by
 customizing @code{geiser-autodoc-identifier-format}.  For example, if you
 wanted a tilde surrounded by spaces instead of a colon as a separator,
-you would write something like
+you would write something like:
 
 @example
 (setq geiser-autodoc-identifier-format "%s ~ %s")

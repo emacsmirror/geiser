@@ -282,13 +282,14 @@ directly your Scheme of choice via @command{run-racket} or
 variable @code{geiser-active-implementations} contains a list of those
 Schemes Geiser should be aware of.  Thus, if you happen to be, say, a
 racketeer not to be beguiled by other schemes, you can tell Geiser to
-forget about the richness of the Scheme ecosystem with something like
+forget about the richness of the Scheme ecosystem with something like:
 
 @example
 (setq geiser-active-implementations '(racket))
 @end example
 
-@noindent in your initialisation files.
+@noindent
+in your initialisation files.
 
 @cindex scheme binary
 @cindex scheme executable path
@@ -322,7 +323,8 @@ example, my Geiser configuration includes the following line:
 (setq geiser-repl-history-filename "~/.emacs.d/geiser-history")
 @end example
 
-@noindent which makes the files @file{geiser-history.guile} and
+@noindent
+which makes the files @file{geiser-history.guile} and
 @file{geiser-history.racket} to live inside my home's @file{.emacs.d}
 directory.
 

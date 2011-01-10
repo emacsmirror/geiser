@@ -52,6 +52,7 @@ git clone git://git.sv.gnu.org/geiser.git
 git clone http://git.sv.gnu.org/r/geiser.git
 @end example
 
+@noindent
 You can also follow Geiser's development in
 @uref{https://github.com/jaor/geiser, one}
 @uref{http://repo.or.cz/w/geiser.git, or}
@@ -181,6 +182,7 @@ also probably a good idea to require @code{quack} @i{after} loading
 @file{geiser.el} (or requiring a compiled version).
 @end itemize
 
+@noindent
 You just need to install and setup them as usual, for every package's
 definition of usual.  Geiser will notice their presence and react
 accordingly.
