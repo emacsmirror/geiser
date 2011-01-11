@@ -20,8 +20,8 @@ third key not modified by @key{Control}; e.g.,
 @item C-c C-z
 @tab @code{geiser-mode-switch-to-repl}
 @tab Switch to REPL
-@item C-u C-c C-z
-@tab @code{geiser-mode-switch-to-repl}
+@item C-c C-a, C-u C-c C-z
+@tab @code{geiser-mode-switch-to-repl-and-enter}
 @tab Switch to REPL and current module
 @item C-c C-s
 @tab @code{geiser-set-scheme}

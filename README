@@ -107,7 +107,7 @@
 
     |---------------------+-------------------------------------------------|
     | C-c C-z             | Switch to REPL                                  |
-    | C-u C-c C-z         | Switch to REPL and current module               |
+    | C-c C-a             | Switch to REPL and current module               |
     | C-c C-s             | Specify Scheme implementation for buffer        |
     |---------------------+-------------------------------------------------|
     | M-.                 | Go to definition of identifier at point         |
