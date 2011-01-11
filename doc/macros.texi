@@ -24,15 +24,6 @@
 @vblurb{@value{GUILE_VERSION}, @value{RACKET_VERSION}, \DATE\}
 @end macro
 
-@macro alt{HTML, NOHTML}
-@ifhtml
-\HTML\
-@end ifhtml
-@ifnothtml
-\NOHTML\
-@end ifnothtml
-@end macro
-
 @macro altr{LINK, TXT, TLINK, TRAIL}
 @ifhtml
 @ref{\LINK\,,\TXT\}\TRAIL\

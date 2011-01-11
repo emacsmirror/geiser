@@ -1,7 +1,7 @@
 @node The REPL, Between the parens, Installation, Top
 @chapter The REPL
 @anchor{quick-start}
-If you've followed the indications in @ref{Setting it up}, your Emacs is
+If you've followed the instructions in @ref{Setting it up}, your Emacs is
 now ready to start playing.  Otherwise, i'll wait for you: when you're
 ready, just come back here and proceed to the following sections.
 
@@ -133,8 +133,14 @@ The remaining commands are meatier, and deserve sections of their own.
 
 @cindex current module, in REPL
 @cindex ,enter vs. enter!
-In tune with Geiser's @alt{@ref{current-module,,modus operandi},modus
-operandi}, evaluations in the REPL take place in the namespace of the
+In tune with Geiser's
+@ifhtml
+@ref{current-module,,modus operandi},
+@end ifhtml
+@ifnothtml
+@i{modus operandi},
+@end ifnothtml
+evaluations in the REPL take place in the namespace of the
 current module.  As noted above, the REPL's prompt tells you the name of
 the current module.  To switch to a different one, you can use the
 command @command{switch-to-geiser-module}, bound to @kbd{C-c C-m}.
@@ -245,8 +251,9 @@ name.
 The list of exported bindings is shown, again, in a buffer belonging to
 Geiser's documentation browser, where you have at your disposal a bunch
 of navigation commands listed in @altr{Documentation browser,our
-cheat-sheet,Documentation browser,.}  We'll have a bit more to say about
-the documentation browser in
+cheat-sheet,Documentation browser,.}
+
+We'll have a bit more to say about the documentation browser in
 @altr{doc-browser,a later section,Documentation helpers,.}
 
 @cindex jump, at the REPL

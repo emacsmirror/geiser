@@ -78,7 +78,12 @@ its moral equivalents):
 @noindent
 or simply evaluate that form inside Emacs (you wouldn't kill a friend
 just to start using Geiser, would you?).  That's it: you're ready to
-@alt{@ref{quick-start,,go}., go (@pxref{The REPL}).}
+@ifhtml
+@ref{quick-start,,go}.
+@end ifhtml
+@ifnothtml
+go (@pxref{The REPL}).
+@end ifnothtml
 
 @ifnotinfo
 If you obtained the Geiser source tree from a release tarball, you can

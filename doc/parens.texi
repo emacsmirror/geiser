@@ -6,8 +6,14 @@ hacking environment.  Well, perhaps a bit more than a half; but, at any
 rate, one surely needs also a pleasant way of editing source code.  Don't
 pay attention to naysayers: Emacs comes with an excellent editor
 included for about any language on Earth, and just the best one when
-that language is sexpy (especially if you use @alt{@ref{paredit,,Paredit}).,Paredit).}
-Geiser's support for writing Scheme code adds to Emacs'
+that language is sexpy (especially if you use
+@ifhtml
+@ref{paredit,,Paredit}).
+@end ifhtml
+@ifnothtml
+Paredit).
+@end ifnothtml
+ Geiser's support for writing Scheme code adds to Emacs'
 @code{scheme-mode}, rather than supplanting it; and it does so by means
 of a minor mode (unimaginatively dubbed @code{geiser-mode}) that defines
 a bunch of new commands to try and, with the help of the same Scheme
@@ -52,8 +58,13 @@ tried to make Geiser as self-documenting as any self-respecting Emacs
 package should be.  If you follow this route, make sure to take a look at
 Geiser's customization buffers (@kbd{M-x customize-group @key{RET}
 geiser}): there's lot of fine-tuning available there.  You might also
-want to take a glance at @alt{@ref{Cheat sheet}., the tables in
-@pxref{Cheat sheet, the cheat sheet}.}
+want to take a glance at
+@ifhtml
+our @ref{Cheat sheet,,cheat sheet}.
+@end ifhtml
+@ifnothtml
+the tables in @pxref{Cheat sheet, our cheat sheet}.
+@end ifnothtml
 
 Since @i{geiser-mode} is a minor mode, you can toggle it with
 @kbd{M-x geiser-mode}, and control its activation in hooks with the
@@ -82,9 +93,14 @@ how to make sure that that's actually the case.
 
 As i've already mentioned a couple of times, @i{geiser-mode} needs a
 running REPL to be operative.  Thus, a common usage pattern will be
-for you to first call @code{run-geiser} or one of its variants
-(@pxref{choosing-impl,choosing implementations}), and then open
-some Scheme files;
+for you to first call @code{run-geiser}
+@ifhtml
+(or @ref{choosing-impl,,one of its variants}),
+@end ifhtml
+@ifnothtml
+(or one of its variants, e.g. @code{run-guile}),
+@end ifnothtml
+and then open some Scheme files;
 but there's nothing wrong in first opening a couple Scheme buffers and
 then starting the REPL (you can even find it more convenient, since
 pressing @kbd{C-c C-z} in a Scheme buffer will start the REPL for
@@ -117,8 +133,14 @@ surrounded by @code{-*-} marks, as in:
 
 @item
 If you've customized @code{geiser-active-implementations} so that it's a
-single-element list (as explained @ref{choosing-impl,,here}), that
-element is used as the chosen implementation.
+single-element
+@ifnotinfo
+list (as explained in @ref{choosing-impl,,here}),
+@end ifnotinfo
+@ifinfo
+list,
+@end ifinfo
+that element is used as the chosen implementation.
 @item
 The contents of the file is scanned for hints on its associated
 implementation.  For instance, files that contain a @code{#lang}
@@ -188,7 +210,7 @@ If you use a numeric prefix, as in @kbd{C-u C-c C-z}, besides being
 teleported to the REPL, the latter will switch to the namespace of the
 Scheme source file (as if you had used @kbd{C-c C-m} in the REPL, with
 the source file's module as argument; cf. discussion in
-@altr{Switching context,,Switching context,)}.  This command is also
+@altr{Switching context,,Switching context,).}This command is also
 bound to @kbd{C-c C-Z}, with a capital zed.
 
 Once you're in the REPL, the same @kbd{C-c C-z} shortcut will bring
@@ -200,8 +222,14 @@ really handy, if you ask me.
 @cindex switching schemes
 If for some reason you're not happy with the Scheme implementation that
 Geiser has assigned to your file, you can change it with @kbd{C-c C-s},
-and you probably should take a look at @alt{@ref{repl-association,,the
-previous subsection}, the previous subsection} to make sure that Geiser
+and you probably should take a look at
+@ifhtml
+@ref{repl-association,,the previous subsection}
+@end ifhtml
+@ifnothtml
+the previous subsection
+@end ifnothtml
+to make sure that Geiser
 doesn't get confused again.
 
 @subsubheading A note about context
