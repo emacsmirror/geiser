@@ -291,7 +291,7 @@ interacting with the Geiser REPL is at your disposal.
   --
   ("Compile buffer" "\C-c\C-k" geiser-compile-current-buffer)
   ("Switch to REPL" "\C-c\C-z" geiser-mode-switch-to-repl)
-  ("Switch to REPL and enter module" "\C-c\C-Z"
+  ("Switch to REPL and enter module" "\C-c\C-a"
    geiser-mode-switch-to-repl-and-enter)
   ("Set Scheme..." "\C-c\C-s" geiser-set-scheme)
   --
