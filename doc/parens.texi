@@ -134,12 +134,12 @@ surrounded by @code{-*-} marks, as in:
 @item
 If you've customized @code{geiser-active-implementations} so that it's a
 single-element
-@ifnotinfo
+@ifhtml
 list (as explained in @ref{choosing-impl,,here}),
-@end ifnotinfo
-@ifinfo
+@end ifhtml
+@ifnothtml
 list,
-@end ifinfo
+@end ifnothtml
 that element is used as the chosen implementation.
 @item
 The contents of the file is scanned for hints on its associated
