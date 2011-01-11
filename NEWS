@@ -6,6 +6,7 @@
     - Autodoc retrieval is now asynchronous, for better behaviour in
       remote connections.
     - Racket: ',enter "foo"' as a synonym of ',enter (file "foo")'.
+    - New C-c C-a to switch to REPL and enter module (C-c C-Z was broken).
     - Documentation typos, and grammar and layout fixes.
 
 
