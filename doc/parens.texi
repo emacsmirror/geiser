@@ -13,7 +13,7 @@ that language is sexpy (especially if you use
 @ifnothtml
 Paredit).
 @end ifnothtml
- Geiser's support for writing Scheme code adds to Emacs'
+Geiser's support for writing Scheme code adds to Emacs'
 @code{scheme-mode}, rather than supplanting it; and it does so by means
 of a minor mode (unimaginatively dubbed @code{geiser-mode}) that defines
 a bunch of new commands to try and, with the help of the same Scheme
