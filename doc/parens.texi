@@ -208,10 +208,10 @@ C-z}.  Those shortcuts map to the interactive command
 @cindex switching to module
 If you use a numeric prefix, as in @kbd{C-u C-c C-z}, besides being
 teleported to the REPL, the latter will switch to the namespace of the
-Scheme source file (as if you had used @kbd{C-c C-m} in the REPL, with
-the source file's module as argument; cf. discussion in
-@altr{Switching context,,Switching context,).}This command is also
-bound to @kbd{C-c C-a}.
+Scheme source file, as if you had used @kbd{C-c C-m} in the REPL, with
+the source file's module as argument;
+cf. discussion in @altr{Switching context,,Switching context,. This}
+command is also bound to @kbd{C-c C-a}.
 
 Once you're in the REPL, the same @kbd{C-c C-z} shortcut will bring
 you back to the buffer you jumped from, provided you don't kill the

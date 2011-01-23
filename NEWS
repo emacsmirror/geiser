@@ -1,4 +1,4 @@
-* Version 0.1.1
+* Version 0.1.1 (Jan 24, 2011)
 
   New features:
 
@@ -12,11 +12,12 @@
 
   Bug fixes:
 
+    - Avoiding *spurious* buffers in case of communication errors.
     - REPL: fixed problem with input history navigation in Racket.
     - Autodoc no longer skips non-alphanumeric identifiers.
     - Autodoc messages no longer interfere with active minibuffer.
+    - Fix for module name completion in Guile.
     - Quack compatibility: avoiding problems with #f &c.
-    - Avoiding *spurious* buffers in case of communication errors.
 
 
 * Version 0.1 (Dec 20, 2010)
