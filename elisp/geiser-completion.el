@@ -1,6 +1,6 @@
 ;;; geiser-completion.el -- tab completion
 
-;; Copyright (C) 2009, 2010 Jose Antonio Ortega Ruiz
+;; Copyright (C) 2009, 2010, 2011 Jose Antonio Ortega Ruiz
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the Modified BSD License. You should
@@ -116,9 +116,10 @@ we're looking for a module name.")
   (buffer-substring-no-properties (geiser-completion--symbol-begin module)
                                   (point)))
 
-(defsubst geiser-completion--prefix-end (beg)
+(defsubst geiser-completion--prefix-end (beg mod)
   (unless (or (eq beg (point-max))
-              (member (char-syntax (char-after beg)) '(?\" ?\( ?\))))
+              (member (char-syntax (char-after beg))
+                      (if mod '(?\" ?\)) '(?\" ?\( ?\)))))
     (let ((pos (point)))
       (condition-case nil
           (save-excursion
@@ -131,7 +132,7 @@ we're looking for a module name.")
 (defun geiser-completion--thing-at-point (module &optional predicate)
   (with-syntax-table scheme-mode-syntax-table
     (let* ((beg (geiser-completion--symbol-begin module))
-           (end (or (geiser-completion--prefix-end beg) beg))
+           (end (or (geiser-completion--prefix-end beg module) beg))
            (prefix (and (> end beg) (buffer-substring-no-properties beg end)))
            (prefix (and prefix
                         (if (string-match "\\([^-]+\\)-" prefix)
