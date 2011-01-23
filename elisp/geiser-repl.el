@@ -473,7 +473,7 @@ module command as a string")
                  (geiser-repl--newline-and-indent)
                (insert "\n"))))))
 
-(defun geiser-repl--tab (n)
+(defun geiser-repl-tab-dwim (n)
   "If we're after the last prompt, complete symbol or indent (if
 there's no symbol at point). Otherwise, go to next error in the REPL
 buffer."
@@ -511,7 +511,7 @@ buffer."
 (define-key geiser-repl-mode-map "\C-m" 'geiser-repl--maybe-send)
 (define-key geiser-repl-mode-map [return] 'geiser-repl--maybe-send)
 (define-key geiser-repl-mode-map "\C-j" 'geiser-repl--newline-and-indent)
-(define-key geiser-repl-mode-map (kbd "TAB") 'geiser-repl--tab)
+(define-key geiser-repl-mode-map (kbd "TAB") 'geiser-repl-tab-dwim)
 (define-key geiser-repl-mode-map [backtab] 'geiser-repl--previous-error)
 
 (define-key geiser-repl-mode-map "\C-a" 'geiser-repl--bol)

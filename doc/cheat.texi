@@ -122,7 +122,7 @@ third key not modified by @key{Control}; e.g.,
 @tab @code{geiser-edit-symbol-at-point}
 @tab Edit identifier at point
 @item TAB
-@tab @code{geiser-repl--tab}
+@tab @code{geiser-repl-tab-dwim}
 @tab Complete, indent, or go to next error
 @item S-TAB (backtab)
 @tab @code{geiser-repl--previous-error}
