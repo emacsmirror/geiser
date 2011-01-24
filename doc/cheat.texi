@@ -20,9 +20,9 @@ third key not modified by @key{Control}; e.g.,
 @item C-c C-z
 @tab @code{geiser-mode-switch-to-repl}
 @tab Switch to REPL
-@item C-c C-a, C-u C-c C-z
+@item C-c C-a
 @tab @code{geiser-mode-switch-to-repl-and-enter}
-@tab Switch to REPL and current module
+@tab Switch to REPL and current module (also @kbd{C-u C-c C-z})
 @item C-c C-s
 @tab @code{geiser-set-scheme}
 @tab Specify Scheme implementation for buffer

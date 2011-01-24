@@ -198,9 +198,10 @@ evaluation request, if any.  If you prefer a not-so-forgetful REPL, set
 the customization variable @code{geiser-repl-forget-old-errors-p} to
 @code{nil}.  Note, however, that even when that variable is left as
 @kbd{t}, you can always jump to an old error by moving to its line at
-the REPL and pressing @kbd{RET}.  When your cursor is away from the last
-prompt, @kbd{TAB} will move to the next error in the buffer, and you can
-use @kbd{BACKTAB} everywhere to go to the previous one.
+the REPL and pressing @kbd{@key{RET}}.  When your cursor is away from
+the last prompt, @kbd{@key{TAB}} will move to the next error in the
+buffer, and you can use @kbd{@key{BACKTAB}} everywhere to go to the
+previous one.
 
 @node Autodoc and friends, Customization and tips, Completion and error handling, The REPL
 @section Autodoc and friends
