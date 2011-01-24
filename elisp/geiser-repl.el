@@ -266,6 +266,7 @@ module command as a string")
                                        deb-prompt-rx))
     (geiser-repl--startup impl address)
     (geiser-repl--autodoc-mode 1)
+    (geiser-company--setup geiser-repl-company-p)
     (message "%s up and running!" (geiser-repl--repl-name impl))))
 
 (defun geiser-repl--start-scheme (impl address prompt)
@@ -503,7 +504,6 @@ buffer."
   (geiser-completion--setup t)
   (setq geiser-smart-tab-mode-string "")
   (geiser-smart-tab-mode t)
-  (geiser-company--setup geiser-repl-company-p)
   ;; enabling compilation-shell-minor-mode without the annoying highlighter
   (compilation-setup t))
 

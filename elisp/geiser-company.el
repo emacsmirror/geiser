@@ -1,6 +1,6 @@
 ;; geiser-company.el -- integration with company-mode
 
-;; Copyright (C) 2009, 2010 Jose Antonio Ortega Ruiz
+;; Copyright (C) 2009, 2010, 2011 Jose Antonio Ortega Ruiz
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the Modified BSD License. You should
@@ -91,11 +91,10 @@
      (defun geiser-company--setup-company (enable)
        (set (make-local-variable 'company-default-lighter) "/C")
        (set (make-local-variable 'company-echo-delay) 0.01)
-       (company-mode nil)
-       (when enable (company-mode enable)))
+       (setq company-backends (list geiser-company--backend))
+       (company-mode (if enable 1 -1)))
      (geiser-company--make-backend company-geiser-ids nil)
      (geiser-company--make-backend company-geiser-modules t)
-     (add-to-list 'company-backends geiser-company--backend)
      (add-hook 'company-completion-finished-hook
                'geiser-company--restore-autodoc)
      (add-hook 'company-completion-cancelled-hook
