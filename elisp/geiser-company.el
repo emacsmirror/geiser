@@ -25,33 +25,43 @@
 (make-variable-buffer-local
  (defvar geiser-company--autodoc-flag nil))
 
-(defsubst geiser-company--candidates (prefix module)
-  (geiser-completion--complete prefix module))
+(make-variable-buffer-local
+ (defvar geiser-company--completions nil))
 
-(defsubst geiser-company--doc (id module)
+(defun geiser-company--candidates (prefix)
+  (and (equal prefix (car geiser-company--completions))
+       (cdr geiser-company--completions)))
+
+(defun geiser-company--doc (id)
   (ignore-errors
-    (if module
-	(format "%s [module]" id)
-      (or (geiser-autodoc--autodoc (list (list (format "%s" id) 0)))
-          (format "%s [local id]" id)))))
+    (let ((help (geiser-autodoc--autodoc `((,id 0)))))
+      (and help (substring-no-properties help)))))
 
-(defsubst geiser-company--doc-buffer (id module)
-  nil)
+(defsubst geiser-company--doc-buffer (id) nil)
 
-(defun geiser-company--location (id module)
+(defun geiser-company--location (id)
   (ignore-errors
     (let ((id (make-symbol id)))
-      (save-excursion
-        (if module
-            (geiser-edit-module id 'noselect)
-          (geiser-edit-symbol id 'noselect))))))
+      (condition-case nil
+          (geiser-edit-module id 'noselect)
+        (error (geiser-edit-symbol id 'noselect))))))
 
-(defun geiser-company--prefix-at-point (module)
+(defun geiser-company--prefix-at-point ()
   (when geiser-company--enabled-flag
-    (cond ((nth 8 (syntax-ppss)) 'stop)
-          ((looking-at-p "\\_>") (geiser-completion--prefix module))
-          (module 'stop)
-          (t nil))))
+    (if (nth 8 (syntax-ppss)) 'stop
+      (let* ((prefix (and (looking-at-p "\\_>")
+                          (geiser-completion--prefix nil)))
+             (cmps1 (and prefix
+                         (geiser-completion--complete prefix nil)))
+             (cmps2 (and prefix
+                         (geiser-completion--complete prefix t)))
+             (mprefix (and (not cmps1) (not cmps2)
+                           (geiser-completion--prefix t)))
+             (cmps3 (and mprefix (geiser-completion--complete mprefix t)))
+             (cmps (or cmps3 (append cmps1 cmps2)))
+             (prefix (or mprefix prefix)))
+        (setq geiser-company--completions (cons prefix cmps))
+        prefix))))
 
 
 ;;; Activation
@@ -70,44 +80,39 @@
     (geiser-autodoc-mode 1)))
 
 
-;;; Backends:
-(defmacro geiser-company--make-backend (name mod)
-  `(defun ,name (command &optional arg &rest ignored)
-     "A `company-mode' completion back-end for `geiser-mode'."
-     (interactive (list 'interactive))
-     (case command
-       ('interactive (company-begin-backend ',name))
-       ('prefix (geiser-company--prefix-at-point ,mod))
-       ('candidates (geiser-company--candidates arg ,mod))
-       ('meta (geiser-company--doc arg ,mod))
-       ('doc-buffer (geiser-company--doc-buffer arg ,mod))
-       ('location (geiser-company--location arg ,mod))
-       ('sorted t))))
-
-(defvar geiser-company--backend '(company-geiser-ids company-geiser-modules))
+;;; Company activation
 
 (eval-after-load "company"
   '(progn
+     (defun geiser-company-backend (command &optional arg &rest ignored)
+       "A `company-mode' completion back-end for `geiser-mode'."
+       (interactive (list 'interactive))
+       (case command
+         ('interactive (company-begin-backend 'geiser-company-backend))
+         ('prefix (geiser-company--prefix-at-point))
+         ('candidates (geiser-company--candidates arg))
+         ('meta (geiser-company--doc arg))
+         ('doc-buffer (geiser-company--doc-buffer arg))
+         ('location (geiser-company--location arg))
+         ('sorted t)))
      (defun geiser-company--setup-company (enable)
        (set (make-local-variable 'company-default-lighter) "/C")
        (set (make-local-variable 'company-echo-delay) 0.01)
-       (setq company-backends (list geiser-company--backend))
+       (set (make-local-variable 'company-backends)
+            (and enable '(geiser-company-backend)))
        (company-mode (if enable 1 -1)))
-     (geiser-company--make-backend company-geiser-ids nil)
-     (geiser-company--make-backend company-geiser-modules t)
      (add-hook 'company-completion-finished-hook
                'geiser-company--restore-autodoc)
      (add-hook 'company-completion-cancelled-hook
                'geiser-company--restore-autodoc)
      (add-hook 'company-completion-started-hook
-               'geiser-company--inhibit-autodoc)))
+               'geiser-company--inhibit-autodoc)
+     (define-key company-active-map (kbd "M-`")
+       (lambda ()
+         (interactive)
+         (company-cancel)
+         (call-interactively 'geiser-completion--complete-module)))))
 
-
-;;; Reload support:
-
-(defun geiser-company-unload-function ()
-  (when (boundp 'company-backends)
-    (setq company-backends (remove geiser-company--backend company-backends))))
 
 
 (provide 'geiser-company)
