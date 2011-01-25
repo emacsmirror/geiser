@@ -1,3 +1,9 @@
+* Version 0.1.2
+
+  Bug fixes:
+
+    - Company mode integration fixes (including #32231)
+
 * Version 0.1.1 (Jan 24, 2011)
 
   New features:
