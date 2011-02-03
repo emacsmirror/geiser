@@ -1,6 +1,6 @@
 ;; geiser-mode.el -- minor mode for scheme buffers
 
-;; Copyright (C) 2009, 2010 Jose Antonio Ortega Ruiz
+;; Copyright (C) 2009, 2010, 2011 Jose Antonio Ortega Ruiz
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the Modified BSD License. You should
@@ -303,6 +303,7 @@ interacting with the Geiser REPL is at your disposal.
   ("Complete module name" ((kbd "M-`") (kbd "C-."))
    geiser-completion--complete-module)
   ("Edit module" ("\C-c\C-e\C-m" "\C-c\C-em") geiser-edit-module)
+  ("Add to load path..." ("\C-c\C-e\C-l" "\C-c\C-el") geiser-add-to-load-path)
   ("Toggle ()/[]" ("\C-c\C-e\C-[" "\C-c\C-e[") geiser-squarify)
   --
   ("Callers" ((kbd "C-c <")) geiser-xref-callers

@@ -527,6 +527,7 @@ buffer."
   --
   ("Switch to module..." "\C-c\C-m" switch-to-geiser-module)
   ("Import module..." "\C-c\C-i" geiser-repl-import-module)
+  ("Add to load path..." "\C-c\C-r" geiser-add-to-load-path)
   --
   ("Previous matching input" "\M-p" comint-previous-matching-input-from-input
    "Previous input matching current")

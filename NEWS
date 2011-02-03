@@ -1,5 +1,10 @@
 * Version 0.1.2
 
+  New features:
+
+    - New C-c C-e C-l (or C-c C-r in REPL) to add a directory to
+      Scheme's load path.
+
   Bug fixes:
 
     - Company mode integration fixes (including #32231)
@@ -11,8 +16,8 @@
     - "Manual autodoc" command; C-c C-d s.
     - Autodoc retrieval is now asynchronous, for better behaviour in
       remote connections.
-    - Racket: ',enter "foo"' as a synonym of ',enter (file "foo")'.
     - New C-c C-a to switch to REPL and enter module (C-c C-Z was broken).
+    - Racket: ',enter "foo"' as a synonym of ',enter (file "foo")'.
     - Documentation typos, and grammar and layout fixes.
 
 
