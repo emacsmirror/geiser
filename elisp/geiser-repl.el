@@ -479,7 +479,7 @@ module command as a string")
 there's no symbol at point). Otherwise, go to next error in the REPL
 buffer."
   (interactive "p")
-  (if (> (point) (geiser-repl--last-prompt-end))
+  (if (>= (point) (geiser-repl--last-prompt-end))
       (completion-at-point)
     (compilation-next-error n)))
 
