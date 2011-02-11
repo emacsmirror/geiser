@@ -418,7 +418,10 @@ module command as a string")
     (let ((beginning-of-defun-function nil))
       (beginning-of-defun))))
 
-(defun geiser-repl--module-function (&optional ignore) :f)
+(defun geiser-repl--module-function (&optional module)
+  (if module
+      (funcall geiser-eval--get-impl-module module)
+      :f))
 
 (defun geiser-repl--doc-module ()
   (interactive)
