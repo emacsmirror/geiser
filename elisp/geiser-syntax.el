@@ -1,6 +1,6 @@
 ;;; geiser-syntax.el -- utilities for parsing scheme syntax
 
-;; Copyright (C) 2009, 2010 Jose Antonio Ortega Ruiz
+;; Copyright (C) 2009, 2010, 2011 Jose Antonio Ortega Ruiz
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the Modified BSD License. You should
@@ -82,6 +82,7 @@
  (with-handlers 1)
  (with-handlers: 1)
  (with-method 1)
+ (with-error-to-port 1)
  (with-syntax 1))
 
 
