@@ -199,8 +199,8 @@
       (condition-case err
           (let* ((start (string-match "((\\(?:result\\|error\\) " answer))
                  (form (or (and start (car (read-from-string answer start)))
-                           `((error (key . retort-syntax)
-                                    (output . ,answer))))))
+                           `((error (key . retort-syntax))
+                             (output . ,answer)))))
             form)
         (error `((error (key . geiser-con-error))
                  (output . ,(format "%s\n(%s)"
