@@ -243,6 +243,9 @@ module command as a string")
                                         (geiser-repl--host)
                                         (geiser-repl--port)))))
 
+(defun geiser-repl--update-debugging (txt)
+  (geiser-con--connection-update-debugging geiser-repl--connection txt))
+
 (defun geiser-repl--start-repl (impl address)
   (message "Starting Geiser REPL for %s ..." impl)
   (geiser-repl--to-repl-buffer impl)
@@ -267,6 +270,10 @@ module command as a string")
     (geiser-repl--startup impl address)
     (geiser-repl--autodoc-mode 1)
     (geiser-company--setup geiser-repl-company-p)
+    (add-hook 'comint-output-filter-functions
+              'geiser-repl--update-debugging
+              nil
+              t)
     (message "%s up and running!" (geiser-repl--repl-name impl))))
 
 (defun geiser-repl--start-scheme (impl address prompt)

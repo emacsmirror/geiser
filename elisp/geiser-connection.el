@@ -104,6 +104,7 @@
         (cons :eot (geiser-con--connection-eot-re prompt debug-prompt))
         (cons :prompt prompt)
         (cons :debug-prompt debug-prompt)
+        (cons :is-debugging nil)
         (cons :count 0)
         (cons :completed (make-hash-table :weakness 'value))))
 
@@ -128,6 +129,18 @@
 (defsubst geiser-con--connection-debug-prompt (c)
   (cdr (assoc :debug-prompt c)))
 
+(defsubst geiser-con--connection-is-debugging (c)
+  (cdr (assoc :is-debugging c)))
+
+(defsubst geiser-con--connection-set-debugging (c d)
+  (setcdr (assoc :is-debugging c) d))
+
+(defun geiser-con--connection-update-debugging (c txt)
+  (let* ((dp (geiser-con--connection-debug-prompt c))
+         (is-d (and (stringp dp) (string-match dp txt))))
+    (geiser-con--connection-set-debugging c is-d)
+    is-d))
+
 (defsubst geiser-con--connection-completed (c r)
   (geiser-con--request-deactivate r)
   (puthash (geiser-con--request-id r) r (cdr (assoc :completed c))))
@@ -142,8 +155,8 @@
     new))
 
 (defun geiser-con--has-entered-debugger (con answer)
-  (let ((dp (geiser-con--connection-debug-prompt con)))
-    (and (stringp dp) (string-match dp answer))))
+  (and (not (geiser-con--connection-is-debugging con))
+       (geiser-con--connection-update-debugging con answer)))
 
 (defun geiser-con--connection-close (con)
   (let ((tq (geiser-con--connection-tq con)))
@@ -184,10 +197,10 @@
         `((error (key . geiser-debugger))
           (output . ,answer))
       (condition-case err
-          (let* ((start (and (string-match "((\\(?:result\\|error\\)" answer)
-                             (match-beginning 0)))
-                 (form (car (read-from-string answer start))))
-            (and (listp form) form))
+          (let* ((start (string-match "((\\(?:result\\|error\\) " answer))
+                 (form (or (and start (car (read-from-string answer start)))
+                           `((error . retort-syntax) (output . ,answer)))))
+            form)
         (error `((error (key . geiser-con-error))
                  (output . ,(format "%s\n(%s)"
                                     answer
