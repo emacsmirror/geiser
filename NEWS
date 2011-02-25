@@ -4,11 +4,14 @@
 
     - New C-c C-e C-l (or C-c C-r in REPL) to add a directory to
       Scheme's load path.
+    - Updates to play nice with Guile 2.0
 
   Bug fixes:
 
-    - Company mode integration fixes (including #32231)
-    - M-x geiser-edit-module in REPL buffers fixed
+    - Company mode integration fixes (including #32231).
+    - M-x geiser-edit-module in REPL buffers fixed.
+    - Interaction with Guile's debugger fixed.
+    - We now respect customized geiser-implementations-alist.
 
 * Version 0.1.1 (Jan 24, 2011)
 
