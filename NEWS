@@ -4,7 +4,7 @@
 
     - New C-c C-e C-l (or C-c C-r in REPL) to add a directory to
       Scheme's load path.
-    - Updates to play nice with Guile 2.0
+    - Updates to play nice with Guile 2.0.
 
   Bug fixes:
 
