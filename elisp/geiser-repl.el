@@ -183,6 +183,13 @@ module command as a string")
 (defsubst geiser-repl--repl-name (impl)
   (format "%s REPL" (geiser-impl--impl-str impl)))
 
+(defun geiser-repl--switch-to-buffer (buffer)
+  (unless (eq buffer (current-buffer))
+    (let ((pop-up-windows geiser-repl-window-allow-split))
+      (if geiser-repl-use-other-window
+          (switch-to-buffer-other-window buffer)
+        (switch-to-buffer buffer)))))
+
 (defun geiser-repl--to-repl-buffer (impl)
   (unless (and (eq major-mode 'geiser-repl-mode)
                (not (get-buffer-process (current-buffer))))
@@ -190,7 +197,7 @@ module command as a string")
            (old (and (buffer-live-p old)
                      (not (get-buffer-process old))
                      old)))
-      (pop-to-buffer
+      (geiser-repl--switch-to-buffer
        (or old
            (generate-new-buffer (format "* %s *"
                                         (geiser-repl--repl-name impl)))))
@@ -597,13 +604,12 @@ If no REPL is running, execute `run-geiser' to start a fresh one."
                      ((and (not ask)
                            (not in-repl)
                            impl
-                           (geiser-repl--repl/impl impl)))))
-         (pop-up-windows geiser-repl-window-allow-split))
+                           (geiser-repl--repl/impl impl))))))
     (cond ((or in-live-repl
                (and (eq (current-buffer) repl) (not (eq repl buffer))))
            (when (buffer-live-p geiser-repl--last-scm-buffer)
-             (pop-to-buffer geiser-repl--last-scm-buffer)))
-          (repl (pop-to-buffer repl))
+             (geiser-repl--switch-to-buffer geiser-repl--last-scm-buffer)))
+          (repl (geiser-repl--switch-to-buffer repl))
           ((geiser-repl--remote-p) (geiser-connect impl))
           (t (run-geiser impl)))
     (when (and buffer (eq major-mode 'geiser-repl-mode))

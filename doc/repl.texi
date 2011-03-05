@@ -26,7 +26,9 @@ the supported implementations you want to launch---yes, you can stop the
 asking, see @altr{active-implementations,below,Customization and tips,.}
 Tabbing for completion will offer you, as of this writing, @code{guile}
 and @code{racket}.  Just choose your poison, and a new REPL buffer will
-pop up.
+pop up (by default, the REPL will appear in a new window: if that annoys
+you, just set @code{geiser-repl-use-other-window} to @code{nil} and the
+current window will be used).
 
 @imgc{repls}
 
