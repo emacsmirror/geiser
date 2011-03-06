@@ -28,7 +28,7 @@
 
     Geiser needs Emacs 23.2 or better, and at least one of the
     supported scheme implementations:
-      - Guile 2.0 (not released yet: use the latest git master branch).
+      - Guile 2.0 or better.
       - PLT Racket 5.0.1 or better.
 
 * Installation

@@ -21,10 +21,8 @@ namely:
 @item
 @uref{http://www.racket-lang.org, Racket} @value{RACKET_VERSION} or better
 @item
-@uref{http://www.gnu.org/software/guile, Guile} @value{GUILE_VERSION},
-directly compiled from a recent checkout of
-@uref{http://www.gnu.org/software/guile/repository.html, its Git
-@i{master} branch}.
+@uref{http://www.gnu.org/software/guile, Guile} @value{GUILE_VERSION} or
+better
 @end itemize
 
 Since Geiser supports multiple REPLs, having both of them will just add
