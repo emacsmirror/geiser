@@ -433,7 +433,7 @@ module command as a string")
       (beginning-of-defun))))
 
 (defun geiser-repl--module-function (&optional module)
-  (if module
+  (if (and module geiser-eval--get-impl-module)
       (funcall geiser-eval--get-impl-module module)
       :f))
 
