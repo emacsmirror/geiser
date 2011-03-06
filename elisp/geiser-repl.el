@@ -184,6 +184,9 @@ module command as a string")
 (defsubst geiser-repl--repl-name (impl)
   (format "%s REPL" (geiser-impl--impl-str impl)))
 
+(defsubst geiser-repl--buffer-name (impl)
+  (format "* %s *" (geiser-repl--repl-name impl)))
+
 (defun geiser-repl--switch-to-buffer (buffer)
   (unless (eq buffer (current-buffer))
     (let ((pop-up-windows geiser-repl-window-allow-split))
@@ -193,15 +196,14 @@ module command as a string")
 
 (defun geiser-repl--to-repl-buffer (impl)
   (unless (and (eq major-mode 'geiser-repl-mode)
+               (eq geiser-impl--implementation impl)
                (not (get-buffer-process (current-buffer))))
     (let* ((old (geiser-repl--repl/impl impl geiser-repl--closed-repls))
            (old (and (buffer-live-p old)
                      (not (get-buffer-process old))
                      old)))
       (geiser-repl--switch-to-buffer
-       (or old
-           (generate-new-buffer (format "* %s *"
-                                        (geiser-repl--repl-name impl)))))
+       (or old (generate-new-buffer (geiser-repl--buffer-name impl))))
       (unless old
         (geiser-repl-mode)
         (geiser-impl--set-buffer-implementation impl)))))
