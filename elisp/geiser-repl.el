@@ -10,6 +10,7 @@
 
 
 (require 'geiser-company)
+(require 'geiser-compile)
 (require 'geiser-doc)
 (require 'geiser-autodoc)
 (require 'geiser-edit)
