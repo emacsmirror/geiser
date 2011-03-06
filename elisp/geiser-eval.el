@@ -1,6 +1,6 @@
 ;;; geiser-eval.el -- sending scheme code for evaluation
 
-;; Copyright (C) 2009, 2010 Jose Antonio Ortega Ruiz
+;; Copyright (C) 2009, 2010, 2011 Jose Antonio Ortega Ruiz
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the Modified BSD License. You should
@@ -27,7 +27,7 @@
  (defvar geiser-eval--get-module-function nil))
 (set-default 'geiser-eval--get-module-function nil)
 
-(defvar geiser-eval--get-impl-module)
+(defvar geiser-eval--get-impl-module nil)
 (geiser-impl--register-local-method
  'geiser-eval--get-impl-module 'find-module '(lambda (&rest) nil)
  "Function used to obtain the module for current buffer. It takes
