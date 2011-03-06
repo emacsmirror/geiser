@@ -36,6 +36,9 @@ third key not modified by @key{Control}; e.g.,
 @item C-c C-e C-m
 @tab @code{geiser-edit-module}
 @tab Ask for a module and open its file
+@item C-c C-e C-l
+@tab @code{geiser-add-to-load-path}
+@tab Ask for a directory and add to Scheme load path
 @item C-c C-e C-[
 @tab @code{geiser-squarify}
 @tab Toggle between () and [] for current form
@@ -133,6 +136,9 @@ third key not modified by @key{Control}; e.g.,
 @item M-`, C-.
 @tab @code{geiser-completion--complete-module}
 @tab Complete module name at point
+@item C-c C-r
+@tab @code{geiser-add-to-load-path}
+@tab Ask for a directory and add to Scheme load path
 @item M-p, M-n
 @tab (comint commands)
 @tab Prompt history, matching current prefix
