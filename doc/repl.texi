@@ -320,6 +320,15 @@ initialisation file to be loaded on start-up.  The equivalent variables
 for Racket are @code{geiser-racket-collects} and
 @code{geiser-racket-init-file}.
 
+Note, however, that specifying @code{geiser-guile-init-file} is @i{not}
+equivalent to changing Guile's init file (@file{~/.guile}), because the
+former is loaded using the @code{-l} flag, together with @code{-q} to
+disable loading the second.  But there are subtle differences in the way
+Guile loads the init file vs. how it loads a file specifed via the
+@code{-l} flag.  If what you want is just loading @file{~/.guile}, leave
+@code{geiser-guile-init-file} alone and set
+@code{geiser-guile-load-init-file-p} to @code{t} instead.
+
 @subsubheading History
 
 By default, Geiser won't record duplicates in your input history.  If you
