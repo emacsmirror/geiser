@@ -5,6 +5,8 @@
     - New C-c C-e C-l (or C-c C-r in REPL) to add a directory to
       Scheme's load path.
     - Guile 2.0 as lowest Guile version supported.
+    - New custom variable, geiser-guile-load-init-file-p, to allow
+      loading of ~/.guile.
 
   Bug fixes:
 
