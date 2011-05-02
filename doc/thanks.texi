@@ -38,22 +38,22 @@ Slime hackers, who led the way.
 For questions, praise, critique and anything else Geiser, do not
 hesitate to drop an email to our list, @i{(@@ geiser-users (. nongnu
 org))}: no subscription required.  Check
-@uref{http://lists.nongnu.org/mailman/listinfo/geiser-users, the list
+@uref{http://lists.nongnu.org/@/mailman/@/listinfo/@/geiser-users, the list
 page} for more information or browse
-@uref{http://lists.nongnu.org/archive/html/geiser-users/, the archives}.
+@uref{http://lists.nongnu.org/@/archive/@/html/@/geiser-users/, the archives}.
 The list is also accessible via @uref{http://gmane.org, Gmane} as
-@url{http://dir.gmane.org/gmane.lisp.scheme.geiser,
+@url{http://dir.gmane.org/@/gmane.lisp.scheme.geiser,
 gmane.lisp.scheme.geiser}.
 @item
 @cindex bug tracker
 You can submit bug reports either to the mailing list or to
-@uref{http://savannah.nongnu.org/bugs/?group=geiser, our bug tracker}
+@uref{http://savannah.nongnu.org/@/bugs/?group=geiser, our bug tracker}
 over at Savannah.
 @item
 @cindex news feed
 If you only need to hear about Geiser on new releases,
-@uref{http://savannah.nongnu.org/news/?group=geiser, the News page} and
-its @uref{https://savannah.nongnu.org/news/atom.php?group=geiser, Atom
+@uref{http://savannah.nongnu.org/@/news/?group=geiser, the News page} and
+its @uref{https://savannah.nongnu.org/@/news/atom.php?group=geiser, Atom
 feed} are probably what you're looking for.
 @item
 @cindex IRC channel
