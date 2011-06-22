@@ -158,6 +158,10 @@
   (and (not (geiser-con--connection-is-debugging con))
        (geiser-con--connection-update-debugging con answer)))
 
+(defun geiser-con--connection-eot-p (con txt)
+  (and txt
+       (string-match-p (geiser-con--connection-eot con) txt)))
+
 (defun geiser-con--connection-close (con)
   (let ((tq (geiser-con--connection-tq con)))
     (and tq (tq-close tq))))

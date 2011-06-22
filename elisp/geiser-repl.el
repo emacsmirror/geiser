@@ -253,8 +253,10 @@ module command as a string")
                                         (geiser-repl--host)
                                         (geiser-repl--port)))))
 
-(defun geiser-repl--update-debugging (txt)
-  (geiser-con--connection-update-debugging geiser-repl--connection txt))
+(defun geiser-repl--output-filter (txt)
+  (geiser-con--connection-update-debugging geiser-repl--connection txt)
+  (when (geiser-con--connection-eot-p geiser-repl--connection txt)
+    (geiser-autodoc--disinhibit-autodoc)))
 
 (defun geiser-repl--start-repl (impl address)
   (message "Starting Geiser REPL for %s ..." impl)
@@ -281,7 +283,7 @@ module command as a string")
     (geiser-repl--autodoc-mode 1)
     (geiser-company--setup geiser-repl-company-p)
     (add-hook 'comint-output-filter-functions
-              'geiser-repl--update-debugging
+              'geiser-repl--output-filter
               nil
               t)
     (message "%s up and running!" (geiser-repl--repl-name impl))))
@@ -334,7 +336,8 @@ module command as a string")
 (setq geiser-eval--default-connection-function 'geiser-repl--connection)
 
 (defun geiser-repl--prepare-send ()
-  (geiser-con--connection-deactivate geiser-repl--connection))
+  (geiser-con--connection-deactivate geiser-repl--connection)
+  (geiser-autodoc--inhibit-autodoc))
 
 (defun geiser-repl--send (cmd)
   (when (and cmd (eq major-mode 'geiser-repl-mode))
