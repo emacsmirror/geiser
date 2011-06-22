@@ -223,7 +223,7 @@ displayed in the minibuffer."
   (set (make-local-variable 'eldoc-minor-mode-string) nil)
   (set (make-local-variable 'eldoc-idle-delay) geiser-autodoc-delay)
   (eldoc-mode (if geiser-autodoc-mode 1 -1))
-  (when (interactive-p)
+  (when (called-interactively-p nil)
     (message "Geiser Autodoc %s"
              (if geiser-autodoc-mode "enabled" "disabled"))))
 
