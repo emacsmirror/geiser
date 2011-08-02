@@ -1,6 +1,6 @@
 ;;; geiser.el -- main geiser file
 
-;; Copyright (C) 2009, 2010 Jose Antonio Ortega Ruiz
+;; Copyright (C) 2009, 2010, 2011 Jose Antonio Ortega Ruiz
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the Modified BSD License. You should
@@ -90,9 +90,7 @@
 
 ;;; Setup:
 
-(eval-after-load "scheme"
-  '(add-hook 'scheme-mode-hook 'geiser-mode--maybe-activate))
-
+(add-hook 'scheme-mode-hook 'geiser-mode--maybe-activate)
 (add-to-list 'auto-mode-alist '("\\.rkt\\'" . scheme-mode))
 
 
