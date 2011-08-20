@@ -1,3 +1,14 @@
+* Version 0.1.4
+
+New features:
+
+   - New customizable faces: geiser-font-lock-repl-prompt and
+     geiser-font-lock-repl-input.
+
+Bug fixes:
+
+   - Racket: autodoc in R5RS modules
+
 * Version 0.1.3 (Jun 24, 2011)
 
   Bug fixes:

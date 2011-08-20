@@ -113,6 +113,13 @@ If you have a slow system, try to increase this time."
   :type 'integer
   :group 'geiser-repl)
 
+(geiser-custom--defface repl-input
+  'comint-highlight-input geiser-repl "evaluated input highlighting")
+
+(geiser-custom--defface repl-prompt
+  'comint-highlight-prompt geiser-repl "REPL prompt")
+
+
 
 ;;; Implementation-dependent parameters
 
@@ -517,10 +524,14 @@ buffer."
   (interactive "p")
   (compilation-next-error (- n)))
 
+
 (define-derived-mode geiser-repl-mode comint-mode "REPL"
   "Major mode for interacting with an inferior scheme repl process.
 \\{geiser-repl-mode-map}"
   (scheme-mode-variables)
+  (set (make-local-variable 'face-remapping-alist)
+       '((comint-highlight-prompt geiser-font-lock-repl-prompt)
+         (comint-highlight-input geiser-font-lock-repl-input)))
   (set (make-local-variable 'mode-line-process) nil)
   (set (make-local-variable 'comint-use-prompt-regexp) t)
   (set (make-local-variable 'comint-prompt-read-only)

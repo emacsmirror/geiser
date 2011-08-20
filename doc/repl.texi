@@ -37,18 +37,24 @@ implementation-dependent banner, followed by an interactive prompt.
 Going according to plan includes having the executable of the Scheme you
 chose in your path.  If that's not the case, you can tell Emacs where it
 is, as described in @altr{impl-binary,a moment,Customization and tips,.}
-Returning to our REPL,
-the first thing to notice is that the funny prompt is telling you your
-current module: its name is the part just after the @@ sign (in Guile,
-that means @code{guile-user}, while Racket's top namespace doesn't have
-a name; cf. discussion in @altr{Switching context,,Switching context,).}
-Other than that, this is
+Returning to our REPL, the first thing to notice is that the funny
+prompt is telling you your current module: its name is the part just
+after the @@ sign (in Guile, that means @code{guile-user}, while
+Racket's top namespace doesn't have a name; cf. discussion in
+@altr{Switching context,,Switching context,).} Other than that, this is
 pretty much equivalent to having a command-line interpreter in a
-terminal, with a bunch of add-ons that we'll be reviewing below.  You can
-start typing sexps right there: Geiser will only dispatch them for
+terminal, with a bunch of add-ons that we'll be reviewing below.  You
+can start typing sexps right there: Geiser will only dispatch them for
 evaluation when they're complete, and will indent new lines properly
-until then.  It will also keep track of your input, maintaining a history
-file that will be reloaded whenever you restart the REPL.
+until then.  It will also keep track of your input, maintaining a
+history file that will be reloaded whenever you restart the REPL.
+
+@cindex REPL, faces
+@cindex faces, in the REPL
+If you're not happy with the faces Geiser is using for the REPL's prompt
+and evaluated input, you can customise
+@code{geiser-font-lock-repl-prompt} and
+@code{geiser-font-lock-repl-input} to better looking faces.
 
 @subsubheading Connecting to an external Scheme
 @cindex remote REPL
@@ -331,11 +337,13 @@ set @code{geiser-guile-load-init-file-p} to @code{t} instead.
 
 @subsubheading Racket startup time
 
+@cindex startup timeout
+@cindex timeout
 When starting Racket in little computers, Geiser might have to wait a
 bit more than it expects (which is ten seconds, or ten thousand
 milliseconds, by default).  If you find that Geiser is giving up too
 quickly and complaining that no prompt was found, try to increase the
-value of @c{geiser-repl-startup-time} to, say, twenty seconds:
+value of @code{geiser-repl-startup-time} to, say, twenty seconds:
 
 @example
 (setq geiser-repl-startup-time 20000)
