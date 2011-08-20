@@ -329,6 +329,22 @@ loads a file specified via the @code{-l} flag.  If what you want is just
 loading @file{~/.guile}, leave @code{geiser-guile-init-file} alone and
 set @code{geiser-guile-load-init-file-p} to @code{t} instead.
 
+@subsubheading Racket startup time
+
+When starting Racket in little computers, Geiser might have to wait a
+bit more than it expects (which is ten seconds, or ten thousand
+milliseconds, by default).  If you find that Geiser is giving up too
+quickly and complaining that no prompt was found, try to increase the
+value of @c{geiser-repl-startup-time} to, say, twenty seconds:
+
+@example
+(setq geiser-repl-startup-time 20000)
+@end example
+
+@noindent
+If you prefer, you can use the customize interface to, well, customise
+the above variable's value.
+
 @subsubheading History
 
 By default, Geiser won't record duplicates in your input history.  If you

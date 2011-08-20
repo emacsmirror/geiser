@@ -107,6 +107,12 @@ expression, if any."
   :type 'integer
   :group 'geiser-repl)
 
+(geiser-custom--defcustom geiser-repl-startup-time 10000
+  "Time, in milliseconds, to wait for Racket to startup.
+If you have a slow system, try to increase this time."
+  :type 'integer
+  :group 'geiser-repl)
+
 
 ;;; Implementation-dependent parameters
 
@@ -302,7 +308,7 @@ module command as a string")
                      (error-message-string err)
                      "\n")
              (error "Couldn't start Geiser")))
-    (geiser-repl--wait-for-prompt 10000)))
+    (geiser-repl--wait-for-prompt geiser-repl-startup-time)))
 
 (defun geiser-repl--wait-for-prompt (timeout)
   (let ((p (point)) (seen) (buffer (current-buffer)))
