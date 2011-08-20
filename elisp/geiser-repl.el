@@ -516,7 +516,7 @@ there's no symbol at point). Otherwise, go to next error in the REPL
 buffer."
   (interactive "p")
   (if (>= (point) (geiser-repl--last-prompt-end))
-      (completion-at-point)
+      (or (completion-at-point) (lisp-indent-line))
     (compilation-next-error n)))
 
 (defun geiser-repl--previous-error (n)
