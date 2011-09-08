@@ -598,7 +598,9 @@ buffer."
   "Start a new Geiser REPL."
   (interactive
    (list (geiser-repl--get-impl "Start Geiser for scheme implementation: ")))
-  (geiser-repl--start-repl impl nil))
+  (let ((buffer (current-buffer)))
+    (geiser-repl--start-repl impl nil)
+    (geiser-repl--maybe-remember-scm-buffer buffer)))
 
 (defalias 'geiser 'run-geiser)
 
@@ -606,11 +608,19 @@ buffer."
   "Start a new Geiser REPL connected to a remote Scheme process."
   (interactive
    (list (geiser-repl--get-impl "Connect to Scheme implementation: ")))
-  (geiser-repl--start-repl impl
-                           (geiser-repl--read-address host port)))
+  (let ((buffer (current-buffer)))
+    (geiser-repl--start-repl impl
+                             (geiser-repl--read-address host port))
+    (geiser-repl--maybe-remember-scm-buffer buffer)))
 
 (make-variable-buffer-local
  (defvar geiser-repl--last-scm-buffer nil))
+
+(defun geiser-repl--maybe-remember-scm-buffer (buffer)
+  (when (and buffer
+             (eq 'scheme-mode (with-current-buffer buffer major-mode))
+             (eq major-mode 'geiser-repl-mode))
+    (setq geiser-repl--last-scm-buffer buffer)))
 
 (defun switch-to-geiser (&optional ask impl buffer)
   "Switch to running Geiser REPL.
@@ -635,8 +645,7 @@ If no REPL is running, execute `run-geiser' to start a fresh one."
           (repl (geiser-repl--switch-to-buffer repl))
           ((geiser-repl--remote-p) (geiser-connect impl))
           (t (run-geiser impl)))
-    (when (and buffer (eq major-mode 'geiser-repl-mode))
-      (setq geiser-repl--last-scm-buffer buffer))))
+    (geiser-repl--maybe-remember-scm-buffer buffer)))
 
 (defun switch-to-geiser-module (&optional module buffer)
   "Switch to running Geiser REPL and try to enter a given module."
