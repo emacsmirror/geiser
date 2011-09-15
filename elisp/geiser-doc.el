@@ -1,6 +1,6 @@
 ;;; geiser-doc.el -- accessing scheme-provided documentation
 
-;; Copyright (C) 2009, 2010 Jose Antonio Ortega Ruiz
+;; Copyright (C) 2009, 2010, 2011 Jose Antonio Ortega Ruiz
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the Modified BSD License. You should
@@ -224,7 +224,7 @@ help (e.g. browse an HTML page) implementing this method.")
 (defun geiser-doc--insert-title (title)
   (let ((p (point)))
     (insert (format "%s" title))
-    (fill-paragraph)
+    (fill-paragraph nil)
     (let ((indent-line-function 'lisp-indent-line))
       (indent-region p (point)))
     (put-text-property p (point) 'face 'geiser-font-lock-doc-title)
