@@ -71,6 +71,9 @@ scheme buffers."
 With prefix, goes to the REPL buffer afterwards (as
 `geiser-eval-region-and-go')"
   (interactive "rP")
+  (save-restriction
+    (narrow-to-region start end)
+    (check-parens))
   (geiser-debug--send-region nil
                              start
                              end
