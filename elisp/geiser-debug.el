@@ -1,6 +1,6 @@
 ;;; geiser-debug.el -- displaying debug information and evaluation results
 
-;; Copyright (C) 2009, 2010 Jose Antonio Ortega Ruiz
+;; Copyright (C) 2009, 2010, 2011 Jose Antonio Ortega Ruiz
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the Modified BSD License. You should
@@ -120,7 +120,7 @@ buffer.")
       (erase-buffer)
       (when dir (setq default-directory dir))
       (unless after
-        (insert what)
+        (geiser-debug--display-error impl module nil what)
         (newline 2))
       (when (and res (not err))
         (insert res)
@@ -128,7 +128,8 @@ buffer.")
       (setq jump (geiser-debug--display-error impl module key output))
       (when after
         (goto-char (point-max))
-        (insert "\nExpression evaluated was:\n\n" what))
+        (insert "\nExpression evaluated was:\n\n")
+        (geiser-debug--display-error impl module nil what))
       (goto-char (point-min)))
     (when jump (geiser-debug--pop-to-buffer))))
 
