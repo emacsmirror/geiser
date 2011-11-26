@@ -2,12 +2,21 @@
 
 New features:
 
+   - Indentation for Racket's splicing-let and friends.
+   - Customizable prompt waiting time (geiser-repl-startup-time).
    - New customizable faces: geiser-font-lock-repl-prompt and
      geiser-font-lock-repl-input.
 
 Bug fixes:
 
-   - Racket: autodoc in R5RS modules
+   - C-c C-r and friends won't send unbalanced sexps to Scheme.
+   - C-c C-z works after run-geiser in a Scheme buffer.
+   - REPL: TAB indenting around whitespace.
+   - Racket: correct display of output to standard error (such as
+     rackunit's).
+   - Guile: ditto.
+   - Elisp: compatibility problems with filladapt fixed.
+   - Racket: autodoc in R5RS modules.
 
 * Version 0.1.3 (Jun 24, 2011)
 
