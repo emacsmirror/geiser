@@ -1,6 +1,6 @@
 ;;; geiser-syntax.el -- utilities for parsing scheme syntax
 
-;; Copyright (C) 2009, 2010, 2011 Jose Antonio Ortega Ruiz
+;; Copyright (C) 2009, 2010, 2011, 2012 Jose Antonio Ortega Ruiz
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the Modified BSD License. You should
@@ -69,6 +69,7 @@
  (send* 1)
  (sigaction 1)
  (syntax-case 2)
+ (syntax-id-rules defun)
  (syntax/loc 1)
  (type-case defun)
  (unit defun)
