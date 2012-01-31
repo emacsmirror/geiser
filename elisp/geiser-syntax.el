@@ -40,6 +40,7 @@
  (define: defun)
  (dynamic-wind 0)
  (for/fold 2)
+ (for/hash 2)
  (instantiate 2)
  (interface 1)
  (lambda: 1)
