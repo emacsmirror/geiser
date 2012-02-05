@@ -1,6 +1,6 @@
 ;;; geiser-repl.el --- Geiser's REPL
 
-;; Copyright (C) 2009, 2010, 2011 Jose Antonio Ortega Ruiz
+;; Copyright (C) 2009, 2010, 2011, 2012 Jose Antonio Ortega Ruiz
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the Modified BSD License. You should
@@ -268,7 +268,8 @@ module command as a string")
 
 (defun geiser-repl--output-filter (txt)
   (geiser-con--connection-update-debugging geiser-repl--connection txt)
-  (when (geiser-con--connection-eot-p geiser-repl--connection txt)
+  (when (string-match-p (geiser-con--connection-prompt geiser-repl--connection)
+                        txt)
     (geiser-autodoc--disinhibit-autodoc)))
 
 (defun geiser-repl--start-repl (impl address)

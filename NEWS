@@ -1,4 +1,11 @@
-* Version 0.1.4
+* Version 0.1.5
+
+Bug fixes:
+
+   - We don't deactivate autodoc in the REPL unless requested.
+   - Indentation for syntax-id-rules and for/hash.
+
+* Version 0.1.4 (Nov 26, 2011)
 
 New features:
 
