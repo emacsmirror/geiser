@@ -376,14 +376,20 @@ will open your web browser displaying the corresponding reference's page
 (using Emacs' @code{browser-url} command), while in Guile a lookup will
 be performed in the texinfo manual.
 
-@cindex opening manual pages
-You can also jump directly to the manual page for the symbol at point
-with the command @code{geiser-doc-look-up-manual}, bound to @kbd{C-c C-d
-i}.
+@cindex Guile info nodes
+For Guile, the manual lookup uses the info indexes in the standard
+Guile info nodes, which are usually named ``guile'' or ``guile-2.0''.
+If yours are named differently, just add your name to the customizable
+variable @code{geiser-guile-manual-lookup-nodes}.
 
 A list of all navigation commands in the documentation browser is
 available in
 @altr{Documentation browser,our cheat-sheet,Documentation browser,.}
+
+@cindex opening manual pages
+You can also skip the documentation browser and jump directly to the
+manual page for the symbol at point with the command
+@code{geiser-doc-look-up-manual}, bound to @kbd{C-c C-d i}.
 
 @node To eval or not to eval, To err perchance to debug, Documentation helpers, Between the parens
 @section To eval or not to eval

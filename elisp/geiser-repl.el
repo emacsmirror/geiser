@@ -350,8 +350,8 @@ module command as a string")
 (setq geiser-eval--default-connection-function 'geiser-repl--connection)
 
 (defun geiser-repl--prepare-send ()
-  (geiser-con--connection-deactivate geiser-repl--connection)
-  (geiser-autodoc--inhibit-autodoc))
+  (geiser-autodoc--inhibit-autodoc)
+  (geiser-con--connection-deactivate geiser-repl--connection))
 
 (defun geiser-repl--send (cmd)
   (when (and cmd (eq major-mode 'geiser-repl-mode))
