@@ -1,6 +1,6 @@
 ;;; geiser-edit.el -- scheme edit locations
 
-;; Copyright (C) 2009, 2010 Jose Antonio Ortega Ruiz
+;; Copyright (C) 2009, 2010, 2012 Jose Antonio Ortega Ruiz
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the Modified BSD License. You should
@@ -145,7 +145,7 @@ or following links in error buffers.")
                'help-echo "Go to error location"))
 
 (defconst geiser-edit--default-file-rx
-  "^\\([^<>:\n\"]+\\):\\([0-9]+\\):\\([0-9]+\\)")
+  "^[ \t]*\\([^<>:\n\"]+\\):\\([0-9]+\\):\\([0-9]+\\)")
 
 (defun geiser-edit--buttonize-files (&optional rx no-fill)
   (let ((rx (or rx geiser-edit--default-file-rx))
