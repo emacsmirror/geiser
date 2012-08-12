@@ -266,8 +266,19 @@ module command as a string")
                                         (geiser-repl--host)
                                         (geiser-repl--port)))))
 
+(defun geiser-repl--replace-images ()
+  "Replace all image patterns with actual images"
+  (with-silent-modifications
+    (save-excursion
+      (goto-char (point-min))
+      (while (re-search-forward "#<Image: \\([-+./_0-9a-zA-Z]+\\)>" nil t)
+        (let ((file (match-string 1)))
+          (replace-match "")
+          (insert-image (create-image file) "[image]"))))))
+
 (defun geiser-repl--output-filter (txt)
   (geiser-con--connection-update-debugging geiser-repl--connection txt)
+  (geiser-repl--replace-images)
   (when (string-match-p (geiser-con--connection-prompt geiser-repl--connection)
                         txt)
     (geiser-autodoc--disinhibit-autodoc)))
