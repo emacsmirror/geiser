@@ -118,6 +118,12 @@ If you have a slow system, try to increase this time."
    :type 'boolean
    :group 'geiser-repl)
 
+(geiser-custom--defcustom geiser-system-image-viewer "display"
+   "Which system image viewer program to invoke upon M-x
+geiser-view-last-image"
+   :type 'string
+   :group 'geiser-repl)
+
 (geiser-custom--defface repl-input
   'comint-highlight-input geiser-repl "evaluated input highlighting")
 
@@ -271,6 +277,9 @@ module command as a string")
                                         (geiser-repl--host)
                                         (geiser-repl--port)))))
 
+(defvar geiser-repl--last-image nil)
+(defvar geiser-repl--last-image-filename nil)
+
 (defun geiser-repl--replace-images ()
   "Replace all image patterns with actual images"
   (with-silent-modifications
@@ -288,18 +297,41 @@ module command as a string")
                             (insert-file-contents-literally file nil)
                             (buffer-string)))))
           (delete-region begin end)
-          (put-image (create-image imgdata nil t) begin "[image]")
+          (if (and geiser-repl-inline-images (display-images-p))
+            (put-image (create-image imgdata nil t) begin "[image]")
+            (progn
+              (goto-char begin)
+              (insert "[image] ; use M-x geiser-view-last-image to view")))
           (delete-file file)
           ; XXX need to ensure that the file is in the temporary
           ; folder before deleting it. Racket will only generate files
           ; in the system temporary folder (/var/tmp), but we don't
           ; know what the temp. folder is, especially on Windows
+          (setq geiser-repl--last-image imgdata)
           )))))
+
+(defun geiser-view-last-image ()
+  "Open the last displayed image in the system's image viewer"
+  (interactive)
+  (when geiser-repl--last-image
+    (setq geiser-repl--last-image-filename
+          (make-temp-file "geiser-image" nil ".png"))
+    (let ((imgdata geiser-repl--last-image))
+      (with-temp-file geiser-repl--last-image-filename
+          (set-buffer-multibyte nil)
+          (insert imgdata))
+      (let* ((proc (start-process "Geiser image view"
+                                 nil
+                                 geiser-system-image-viewer
+                                 geiser-repl--last-image-filename)))
+        (set-process-sentinel proc
+                              '(lambda (proc evt)
+                                 (message "Deleting file %s" geiser-repl--last-image-filename)
+                                 (delete-file geiser-repl--last-image-filename)))))))
 
 (defun geiser-repl--output-filter (txt)
   (geiser-con--connection-update-debugging geiser-repl--connection txt)
-  (when (and geiser-repl-inline-images (display-images-p))
-    (geiser-repl--replace-images))
+  (geiser-repl--replace-images)
   (when (string-match-p (geiser-con--connection-prompt geiser-repl--connection)
                         txt)
     (geiser-autodoc--disinhibit-autodoc)))
