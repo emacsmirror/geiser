@@ -113,6 +113,11 @@ If you have a slow system, try to increase this time."
   :type 'integer
   :group 'geiser-repl)
 
+(geiser-custom--defcustom geiser-repl-inline-images t
+   "Whether to display inline images in the REPL"
+   :type 'boolean
+   :group 'geiser-repl)
+
 (geiser-custom--defface repl-input
   'comint-highlight-input geiser-repl "evaluated input highlighting")
 
@@ -272,13 +277,29 @@ module command as a string")
     (save-excursion
       (goto-char (point-min))
       (while (re-search-forward "#<Image: \\([-+./_0-9a-zA-Z]+\\)>" nil t)
-        (let ((file (match-string 1)))
-          (replace-match "")
-          (insert-image (create-image file) "[image]"))))))
+        ;; can't pass a filename to create-image because emacs might
+        ;; not display it before it gets deleted (race condition)
+        (let* ((file (match-string 1))
+               (begin (match-beginning 0))
+               (end (match-end 0))
+               (imgdata (save-excursion
+                          (with-temp-buffer
+                            (set-buffer-multibyte nil)
+                            (insert-file-contents-literally file nil)
+                            (buffer-string)))))
+          (delete-region begin end)
+          (put-image (create-image imgdata nil t) begin "[image]")
+          (delete-file file)
+          ; XXX need to ensure that the file is in the temporary
+          ; folder before deleting it. Racket will only generate files
+          ; in the system temporary folder (/var/tmp), but we don't
+          ; know what the temp. folder is, especially on Windows
+          )))))
 
 (defun geiser-repl--output-filter (txt)
   (geiser-con--connection-update-debugging geiser-repl--connection txt)
-  (geiser-repl--replace-images)
+  (when (and geiser-repl-inline-images (display-images-p))
+    (geiser-repl--replace-images))
   (when (string-match-p (geiser-con--connection-prompt geiser-repl--connection)
                         txt)
     (geiser-autodoc--disinhibit-autodoc)))
