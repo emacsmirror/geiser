@@ -124,6 +124,11 @@ If you have a slow system, try to increase this time."
    :type 'string
    :group 'geiser-repl)
 
+(geiser-custom--defcustom geiser-image-cache-keep-last 10
+   "How many images to keep in geiser's image cache."
+   :type 'integer
+   :group 'geiser-repl)
+
 (geiser-custom--defface repl-input
   'comint-highlight-input geiser-repl "evaluated input highlighting")
 
@@ -277,8 +282,27 @@ module command as a string")
                                         (geiser-repl--host)
                                         (geiser-repl--port)))))
 
-(defvar geiser-repl--last-image nil)
-(defvar geiser-repl--last-image-filename nil)
+(defvar geiser-image-cache-dir nil)
+;; XXX make this a parameter from Racket...
+
+(defun geiser-repl--list-image-cache ()
+  "List all the images in the image cache."
+  (and geiser-image-cache-dir
+       (file-directory-p geiser-image-cache-dir)
+       (let ((files (directory-files-and-attributes
+                     geiser-image-cache-dir t "geiser-img-[0-9]*.png")))
+         (mapcar 'car
+                 (sort files '(lambda (a b)
+                                (< (float-time (nth 6 a))
+                                   (float-time (nth 6 b)))))))))
+
+(defun geiser-repl--clean-image-cache ()
+  "Clean all except for the last `geiser-image-cache-keep-last'
+images in 'geiser-image-cache-dir'."
+  (interactive)
+    (dolist (file (butlast (geiser-repl--list-image-cache)
+                           geiser-image-cache-keep-last))
+      (delete-file file)))
 
 (defun geiser-repl--replace-images ()
   "Replace all image patterns with actual images"
@@ -290,44 +314,28 @@ module command as a string")
         ;; not display it before it gets deleted (race condition)
         (let* ((file (match-string 1))
                (begin (match-beginning 0))
-               (end (match-end 0))
-               (imgdata (save-excursion
-                          (with-temp-buffer
-                            (set-buffer-multibyte nil)
-                            (insert-file-contents-literally file nil)
-                            (buffer-string)))))
+               (end (match-end 0)))
           (delete-region begin end)
           (if (and geiser-repl-inline-images (display-images-p))
-            (put-image (create-image imgdata nil t) begin "[image]")
+            (put-image (create-image file) begin "[image]")
             (progn
               (goto-char begin)
               (insert "[image] ; use M-x geiser-view-last-image to view")))
-          (delete-file file)
-          ; XXX need to ensure that the file is in the temporary
-          ; folder before deleting it. Racket will only generate files
-          ; in the system temporary folder (/var/tmp), but we don't
-          ; know what the temp. folder is, especially on Windows
-          (setq geiser-repl--last-image imgdata)
-          )))))
+          (setq geiser-image-cache-dir (file-name-directory file))
+          (geiser-repl--clean-image-cache))))))
 
-(defun geiser-view-last-image ()
-  "Open the last displayed image in the system's image viewer"
-  (interactive)
-  (when geiser-repl--last-image
-    (setq geiser-repl--last-image-filename
-          (make-temp-file "geiser-image" nil ".png"))
-    (let ((imgdata geiser-repl--last-image))
-      (with-temp-file geiser-repl--last-image-filename
-          (set-buffer-multibyte nil)
-          (insert imgdata))
-      (let* ((proc (start-process "Geiser image view"
-                                 nil
-                                 geiser-system-image-viewer
-                                 geiser-repl--last-image-filename)))
-        (set-process-sentinel proc
-                              '(lambda (proc evt)
-                                 (message "Deleting file %s" geiser-repl--last-image-filename)
-                                 (delete-file geiser-repl--last-image-filename)))))))
+(defun geiser-view-last-image (n)
+  "Open the last displayed image in the system's image viewer.
+
+With prefix arg, open the N-th last shown image in the system's image viewer."
+  (interactive "p")
+  (let ((images (reverse (geiser-repl--list-image-cache))))
+    (if (>= (length images) n)
+        (start-process "Geiser image view"
+                       nil
+                       geiser-system-image-viewer
+                       (nth (- n 1) images))
+      (error "There aren't %d recent images" n))))
 
 (defun geiser-repl--output-filter (txt)
   (geiser-con--connection-update-debugging geiser-repl--connection txt)
