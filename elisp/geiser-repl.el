@@ -114,13 +114,13 @@ If you have a slow system, try to increase this time."
   :group 'geiser-repl)
 
 (geiser-custom--defcustom geiser-repl-inline-images t
-   "Whether to display inline images in the REPL"
+   "Whether to display inline images in the REPL."
    :type 'boolean
    :group 'geiser-repl)
 
 (geiser-custom--defcustom geiser-system-image-viewer "display"
    "Which system image viewer program to invoke upon M-x
-geiser-view-last-image"
+`geiser-view-last-image'."
    :type 'string
    :group 'geiser-repl)
 
