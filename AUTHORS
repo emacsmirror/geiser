@@ -1,4 +1,7 @@
-Jose A. Ortega Ruiz <jao@gnu.org> designed and implemented Geiser. For
-more boring details about him, see <http://hacks-galore.org/jao>.
+Jose A. Ortega Ruiz <jao@gnu.org> designed and implemented Geiser and
+is its active maintainer. For more boring details about him, see
+<http://hacks-galore.org/jao>.
+
+Michael Wilber implemented the initial Racket image support modules.
 
 See also the files THANKS and ChangeLog.

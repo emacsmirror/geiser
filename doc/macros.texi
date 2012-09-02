@@ -1,6 +1,6 @@
-@set VERSION 0.1.4
+@set VERSION 0.2
 @set GUILE_VERSION 2.0
-@set RACKET_VERSION 5.1.3
+@set RACKET_VERSION 5.3
 @set EMACS_VERSION 23.2
 @set DOWN_BASE http://download.savannah.nongnu.org/@/releases/@/geiser
 @set TARBALL geiser-@value{VERSION}.tar.gz

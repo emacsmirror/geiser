@@ -13,6 +13,9 @@ Ludovic Courtès, #geiser's citizen no. 1, joined the fun after a
 while, and has since then been a continuous source of encouragement,
 ideas and bug reports.
 
+Michael Wilber convinced me that image support for Racket was not only
+fun, but easy, with the best argument: actual code!
+
 Eduardo Cavazos' contagious enthusiasm has helped in many ways to keep
 Geiser alive, and he's become its best evangelist in R6RS circles.
 

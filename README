@@ -19,6 +19,8 @@
     - Rudimentary support for debugging (list of
       evaluation/compilation error in an Emacs' compilation-mode
       buffer).
+    - Support for inline images in schemes, such as Racket, that treat
+      them as first order values.
 
    NOTE: if you're not in a hurry, Geiser's website
    (http://www.nongnu.org/geiser/) contains a nicer manual, also
@@ -29,7 +31,7 @@
     Geiser needs Emacs 23.2 or better, and at least one of the
     supported scheme implementations:
       - Guile 2.0 or better.
-      - PLT Racket 5.0.1 or better.
+      - PLT Racket 5.3 or better.
 
 * Installation
   Geiser can be used either directly from its uninstalled source tree
