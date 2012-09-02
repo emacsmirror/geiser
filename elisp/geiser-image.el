@@ -22,7 +22,7 @@
   "Options for image displaying."
   :group 'geiser)
 
-(geiser-custom--defcustom geiser-system-image-viewer "display"
+(geiser-custom--defcustom geiser-image-viewer "display"
   "Which system image viewer program to invoke upon M-x
 `geiser-view-last-image'."
   :type 'string
@@ -67,7 +67,7 @@ images in `geiser-image-cache-dir'."
     (delete-file f)))
 
 (defun geiser-image--display (file)
-  (start-process "Geiser image view" nil geiser-system-image-viewer file))
+  (start-process "Geiser image view" nil geiser-image-viewer file))
 
 (defun geiser-image--button-action (button)
   (let ((file (button-get button 'geiser-image-file)))
