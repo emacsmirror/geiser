@@ -1,6 +1,6 @@
 ;;; geiser-debug.el -- displaying debug information and evaluation results
 
-;; Copyright (C) 2009, 2010, 2011 Jose Antonio Ortega Ruiz
+;; Copyright (C) 2009, 2010, 2011, 2012 Jose Antonio Ortega Ruiz
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the Modified BSD License. You should
@@ -41,6 +41,15 @@ of the debug pop-up (after the error message). If
 has no effect."
   :group 'geiser-debug
   :type 'int)
+
+
+(geiser-custom--defcustom geiser-debug-auto-display-images-p t
+  "Whether to automatically invoke the external viewer to display
+images when they're evaluated.
+
+See also `geiser-repl-auto-display-images-p'."
+  :group 'geiser-debug
+  :type 'boolean)
 
 
 ;;; Debug buffer mode:
@@ -102,13 +111,26 @@ buffer.")
             (count-lines (point-min) (point-max)))
           geiser-debug-long-sexp-lines)))
 
-(defun geiser-debug--display-retort (what ret &optional res)
+(defun geiser-debug--insert-res (res)
+  (let ((begin (point)))
+    (insert res)
+    (let ((end (point)))
+      (goto-char begin)
+      (let ((no
+             (geiser-image--replace-images t
+                                           geiser-debug-auto-display-images-p)))
+        (goto-char end)
+        (newline 2)
+        (and no (> no 0))))))
+
+(defun geiser-debug--display-retort (what ret &optional res auto-p)
   (let* ((err (geiser-eval--retort-error ret))
          (key (geiser-eval--error-key err))
          (output (geiser-eval--retort-output ret))
          (impl geiser-impl--implementation)
          (module (geiser-eval--get-module))
-         (jump nil)
+         (dbg nil)
+         (img nil)
          (dir default-directory)
          (buffer (current-buffer))
          (debug (eq key 'geiser-debugger))
@@ -122,16 +144,14 @@ buffer.")
       (unless after
         (geiser-debug--display-error impl module nil what)
         (newline 2))
-      (when (and res (not err))
-        (insert res)
-        (newline 2))
-      (setq jump (geiser-debug--display-error impl module key output))
+      (setq img (when (and res (not err)) (geiser-debug--insert-res res)))
+      (setq dbg (geiser-debug--display-error impl module key output))
       (when after
         (goto-char (point-max))
         (insert "\nExpression evaluated was:\n\n")
         (geiser-debug--display-error impl module nil what))
       (goto-char (point-min)))
-    (when jump (geiser-debug--pop-to-buffer))))
+    (when (or img dbg) (geiser-debug--pop-to-buffer))))
 
 (defsubst geiser-debug--wrap-region (str)
   (format "(begin %s)" str))

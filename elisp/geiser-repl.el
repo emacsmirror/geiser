@@ -123,7 +123,9 @@ If you have a slow system, try to increase this time."
 
 (geiser-custom--defcustom geiser-repl-auto-display-images-p t
   "Whether to automatically invoke the external viewer to display
-images pooping up in the REPL."
+images popping up in the REPL.
+
+See also `geiser-debug-auto-display-images-p'."
   :type 'boolean
   :group 'geiser-repl)
 

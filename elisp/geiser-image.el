@@ -77,29 +77,33 @@ images in `geiser-image-cache-dir'."
   'action 'geiser-image--button-action
   'follow-link t)
 
+(defun geiser-image--insert-button (file)
+  (insert-text-button "[image]"
+                      :type 'geiser-image--button
+                      'face 'geiser-font-lock-image-button
+                      'geiser-image-file file
+                      'help-echo "Click to display image"))
+
 (defun geiser-image--replace-images (inline-images-p auto-p)
   "Replace all image patterns with actual images"
-  (with-silent-modifications
-    (save-excursion
-      (goto-char (point-min))
-      (while (re-search-forward "#<Image: \\([-+./_0-9a-zA-Z]+\\)>" nil t)
-        ;; can't pass a filename to create-image because emacs might
-        ;; not display it before it gets deleted (race condition)
-        (let* ((file (match-string 1))
-               (begin (match-beginning 0))
-               (end (match-end 0)))
-          (delete-region begin end)
-          (if (and inline-images-p (display-images-p))
-              (put-image (create-image file) begin "[image]")
-            (goto-char begin)
-            (insert-text-button "[image]"
-                                :type 'geiser-image--button
-                                'face 'geiser-font-lock-image-button
-                                'geiser-image-file file
-                                'help-echo "Click to display image")
-            (when auto-p (geiser-image--display file)))
-          (setq geiser-image-cache-dir (file-name-directory file))
-          (geiser-image--clean-cache))))))
+  (let ((seen 0))
+    (with-silent-modifications
+      (save-excursion
+        (goto-char (point-min))
+        (while (re-search-forward "\"?#<Image: \\([-+./_0-9a-zA-Z]+\\)>\"?" nil t)
+          (setq seen (+ 1 seen))
+          (let* ((file (match-string 1))
+                 (begin (match-beginning 0))
+                 (end (match-end 0)))
+            (delete-region begin end)
+            (if (and inline-images-p (display-images-p))
+                (put-image (create-image file) begin "[image]")
+              (goto-char begin)
+              (geiser-image--insert-button file)
+              (when auto-p (geiser-image--display file)))
+            (setq geiser-image-cache-dir (file-name-directory file))
+          (geiser-image--clean-cache)))))
+    seen))
 
 (defun geiser-view-last-image (n)
   "Open the last displayed image in the system's image viewer.
