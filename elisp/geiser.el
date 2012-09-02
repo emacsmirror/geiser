@@ -1,6 +1,6 @@
 ;;; geiser.el -- main geiser file
 
-;; Copyright (C) 2009, 2010, 2011 Jose Antonio Ortega Ruiz
+;; Copyright (C) 2009, 2010, 2011, 2012 Jose Antonio Ortega Ruiz
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the Modified BSD License. You should
@@ -83,6 +83,7 @@
         geiser-faces
         geiser-mode
         geiser-guile
+        geiser-image
         geiser-racket
         geiser-implementation
         geiser-xref))

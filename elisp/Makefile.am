@@ -14,6 +14,7 @@ dist_lisp_LISP = \
    geiser.el \
    geiser-eval.el \
    geiser-guile.el \
+   geiser-image.el \
    geiser-impl.el \
    geiser-log.el \
    geiser-menu.el \
@@ -34,4 +35,3 @@ CLEANFILES = geiser-install.el geiser-load.el
 geiser-install.el: $(srcdir)/geiser.el $(srcdir)/geiser-install.el.in
 	@sed -e "s|@SCHEME_DIR[@]|$(datarootdir)/geiser|" \
              $(srcdir)/geiser-install.el.in >$@
-
