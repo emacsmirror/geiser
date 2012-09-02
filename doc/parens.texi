@@ -440,9 +440,16 @@ way, but it also teleports you to REPL after the evaluation.
 region.  Again, there's an @i{and-go} version available,
 @code{geiser-eval-region-and-go}, bound to @kbd{C-c M-r}.
 
+@cindex evaluating images
+@cindex image display
 For all the commands above, the result of the evaluation is displayed in
 the minibuffer, unless it causes a (Scheme-side) error (@pxref{To err
-perchance to debug}).
+perchance to debug}), or, for schemes supporting them (such as Racket),
+the evaluation yields an image, in which case you'll see it in popping
+up in the Geiser debug buffer (if your Emacs runs under the auspices of
+a graphical toolkit), or via an external viewer if you set
+@c{geiser-image-viewer} to the path of an appropriate visualization
+program (see also @ref{Seeing is believing} for more on image support).
 
 At the risk of repeating myself, i'll remind you that all these
 evaluations will take place in the namespace of the module corresponding

@@ -80,6 +80,9 @@ Rudimentary support for debugging (when the REPL provides a
 debugger) and error navigation.
 @item
 Support for multiple, simultaneous REPLs.
+@item
+Support for image display in those Schemes that treat them as first
+class values.
 @end itemize
 
 In the following pages, i'll try to explain what these features

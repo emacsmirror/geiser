@@ -9,7 +9,7 @@
 @copying
 This manual documents Geiser, an Emacs environment to hack in Scheme.
 
-Copyright @copyright{} 2010, 2011  Jose Antonio Ortega Ruiz
+Copyright @copyright{} 2010, 2011, 2012  Jose Antonio Ortega Ruiz
 
 @quotation
 Permission is granted to copy, distribute and/or modify this document
@@ -78,6 +78,7 @@ The REPL
 * Switching context::
 * Completion and error handling::
 * Autodoc and friends::
+* Seeing is believing::
 * Customization and tips::
 
 Between the parens

@@ -1,4 +1,4 @@
-@node The REPL, Between the parens, Installation, Top
+@node The REPL
 @chapter The REPL
 @anchor{quick-start}
 If you've followed the instructions in @ref{Setting it up}, your Emacs is
@@ -11,6 +11,7 @@ ready, just come back here and proceed to the following sections.
 * Switching context::
 * Completion and error handling::
 * Autodoc and friends::
+* Seeing is believing::
 * Customization and tips::
 @end menu
 
@@ -211,7 +212,7 @@ the last prompt, @kbd{@key{TAB}} will move to the next error in the
 buffer, and you can use @kbd{@key{BACKTAB}} everywhere to go to the
 previous one.
 
-@node Autodoc and friends, Customization and tips, Completion and error handling, The REPL
+@node Autodoc and friends, Seeing is believing, Completion and error handling, The REPL
 @section Autodoc and friends
 
 Oftentimes, there's more you'll want to know about an identifier
@@ -274,7 +275,33 @@ will see, these commands are also available in Scheme buffers.  @kbd{M-.}
 also works for modules: if your point is on an unambiguous module name,
 the file where it's defined will be opened for you.
 
-@node Customization and tips,  , Autodoc and friends, The REPL
+@node Seeing is believing, Customization and tips, Autodoc and friends, The REPL
+@section Seeing is believing
+
+@cindex image support
+In schemes that support images as values (currently, that means Racket),
+the REPL will display them inline if you're using them in a
+graphics-aware Emacs.
+
+@imgc{repl-images}
+
+@cindex external image viewer
+@cindex image viewer
+For the terminal, images will appear as buttons: press return on them to
+invoke an external viewer (configurable via @code{geiser-image-viewer})
+that will show you the image at hand.  You can also ask for the same
+behaviour on all emacsen by customising
+@code{geiser-repl-inline-images-p} to @code{nil}.
+
+@cindex image cache
+Geiser keeps a cache of the last displayed images in the directory
+@code{geiser-image-cache-dir}, which defaults to the system's temp
+directory, with up to @code{geiser-image-cache-keep-last} files.  You
+can invoke the external image viewer on any of them with @command{M-x
+geiser-view-last-image}, which takes a prefix argument to indicate which
+image number you want, 0 corresponding to the newest one.
+
+@node Customization and tips,  , Seeing is believing, The REPL
 @section Customization and tips
 
 @cindex REPL customization
