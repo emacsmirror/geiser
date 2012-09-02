@@ -1,9 +1,23 @@
-* Version 0.1.5
+* Version 0.2
+
+New features:
+
+   - Support for images in Racket, both in the REPL and during
+     evaluations.  Thanks to Michael Wilber for code, discussion and
+     testing.
+   - Support for Racket 5.3.  Older Rackets not actively supported.
+   - ,cd command in Racket's REPL.
+   - New customizable variable, geiser-guile-manual-lookup-nodes, to
+     specify the name of Guile's info nodes, if need be.
 
 Bug fixes:
 
    - We don't deactivate autodoc in the REPL unless requested.
    - Indentation for syntax-id-rules and for/hash.
+   - Highlighting of [else forms in scheme buffers.
+   - Indentation for all 'for' forms in Racket.
+   - Correctly buttonizing paths with leading spaces in DBG buffers
+   - Autodoc was being deactivated in REPLs.
 
 * Version 0.1.4 (Nov 26, 2011)
 
