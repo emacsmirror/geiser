@@ -7,7 +7,7 @@
 ;; have received a copy of the license along with this program. If
 ;; not, see <http://www.xfree86.org/3.3.6/COPYRIGHT2.html#5>.
 
-;; Author: Jose Antonio Ortega Ruiz <jao@gnu.org>
+;; Authors: Michael Wilber, Jose Antonio Ortega Ruiz <jao@gnu.org>
 ;; Start date: Sun Sep 02, 2012 00:00
 
 
