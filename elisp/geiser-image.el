@@ -22,7 +22,6 @@
   "Options for image displaying."
   :group 'geiser)
 
-
 (geiser-custom--defcustom geiser-system-image-viewer "display"
   "Which system image viewer program to invoke upon M-x
 `geiser-view-last-image'."
@@ -44,6 +43,9 @@ system wide tmp dir will be used."
   :type 'path
   :group 'geiser-image)
 
+(geiser-custom--defface image-button
+  'button geiser-image "image buttons in terminal buffers")
+
 
 
 (defun geiser-image--list-cache ()
@@ -64,7 +66,18 @@ images in `geiser-image-cache-dir'."
   (dolist (f (butlast (geiser-image--list-cache) geiser-image-cache-keep-last))
     (delete-file f)))
 
-(defun geiser-image--replace-images (inline-images-p)
+(defun geiser-image--display (file)
+  (start-process "Geiser image view" nil geiser-system-image-viewer file))
+
+(defun geiser-image--button-action (button)
+  (let ((file (button-get button 'geiser-image-file)))
+    (when (file-exists-p file) (geiser-image--display file))))
+
+(define-button-type 'geiser-image--button
+  'action 'geiser-image--button-action
+  'follow-link t)
+
+(defun geiser-image--replace-images (inline-images-p auto-p)
   "Replace all image patterns with actual images"
   (with-silent-modifications
     (save-excursion
@@ -78,9 +91,13 @@ images in `geiser-image-cache-dir'."
           (delete-region begin end)
           (if (and inline-images-p (display-images-p))
               (put-image (create-image file) begin "[image]")
-            (progn
-              (goto-char begin)
-              (insert "[image] ; use M-x geiser-view-last-image to view")))
+            (goto-char begin)
+            (insert-text-button "[image]"
+                                :type 'geiser-image--button
+                                'face 'geiser-font-lock-image-button
+                                'geiser-image-file file
+                                'help-echo "Click to display image")
+            (when auto-p (geiser-image--display file)))
           (setq geiser-image-cache-dir (file-name-directory file))
           (geiser-image--clean-cache))))))
 
@@ -92,10 +109,7 @@ image viewer."
   (interactive "p")
   (let ((images (reverse (geiser-image--list-cache))))
     (if (>= (length images) n)
-        (start-process "Geiser image view"
-                       nil
-                       geiser-system-image-viewer
-                       (nth (- n 1) images))
+        (geiser-image--display (nth (- n 1) images))
       (error "There aren't %d recent images" n))))
 
 

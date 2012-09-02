@@ -46,8 +46,10 @@ REPL buffer."
   :type 'boolean
   :group 'geiser-repl)
 
-(geiser-custom--defcustom geiser-repl-history-filename (expand-file-name "~/.geiser_history")
+(geiser-custom--defcustom geiser-repl-history-filename
+    (expand-file-name "~/.geiser_history")
   "File where REPL input history is saved, so that it persists between sessions.
+
 This is actually the base name: the concrete Scheme
 implementation name gets appended to it."
   :type 'filename
@@ -114,10 +116,16 @@ If you have a slow system, try to increase this time."
   :type 'integer
   :group 'geiser-repl)
 
-(geiser-custom--defcustom geiser-repl-inline-images t
-   "Whether to display inline images in the REPL."
-   :type 'boolean
-   :group 'geiser-repl)
+(geiser-custom--defcustom geiser-repl-inline-images-p t
+  "Whether to display inline images in the REPL."
+  :type 'boolean
+  :group 'geiser-repl)
+
+(geiser-custom--defcustom geiser-repl-auto-display-images-p t
+  "Whether to automatically invoke the external viewer to display
+images pooping up in the REPL."
+  :type 'boolean
+  :group 'geiser-repl)
 
 (geiser-custom--defface repl-input
   'comint-highlight-input geiser-repl "evaluated input highlighting")
@@ -274,7 +282,8 @@ module command as a string")
 
 (defun geiser-repl--output-filter (txt)
   (geiser-con--connection-update-debugging geiser-repl--connection txt)
-  (geiser-image--replace-images geiser-repl-inline-images)
+  (geiser-image--replace-images geiser-repl-inline-images-p
+                                geiser-repl-auto-display-images-p)
   (when (string-match-p (geiser-con--connection-prompt geiser-repl--connection)
                         txt)
     (geiser-autodoc--disinhibit-autodoc)))
