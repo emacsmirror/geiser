@@ -75,11 +75,12 @@ In Racket, you have to use the REPL server that comes with Geiser.  To
 that end, put Geiser's Racket @file{scheme} directory in Racket's
 collection search path and invoke @code{start-geiser} (a procedure in
 the module @code{geiser/server}) somewhere in your program, passing it
-the desired port.  This procedure will start the REPL server in a
-separate thread.  For an example of how to do that, see the script
-@file{bin/geiser-racket.sh} in the source distribution, or, if you've
-compiled Geiser, @file{bin/geiser-racket-noinst} in the build directory,
-or, if you've installed Geiser, @file{geiser-racket} in
+the desired port and, if desired, network interface name.  This
+procedure will start the REPL server in a separate thread.  For an
+example of how to do that, see the script @file{bin/geiser-racket.sh} in
+the source distribution, or, if you've compiled Geiser,
+@file{bin/geiser-racket-noinst} in the build directory, or, if you've
+installed Geiser, @file{geiser-racket} in
 @file{<installation-prefix>/bin}.  These scripts start a new interactive
 Racket that is also running a REPL server (they also load the errortrace
 library to provide better diagnostics, but that's not strictly needed).
