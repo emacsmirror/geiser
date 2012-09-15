@@ -32,7 +32,7 @@ to the fun.
 
 @cindex use the source, Luke
 You'll also need Geiser itself.  The latest release tarball can be found
-@downfile{, here}, while older versions are @uref{@value{DOWN_BASE}/,
+@downfile{, here}, while older versions are @uref{@value{OLD_DOWN_BASE}/,
 here}.  Just download @downfile{@value{TARBALL}, @value{TARBALL}}
 and untar it in a directory of your choice.
 
