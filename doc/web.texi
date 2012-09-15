@@ -7,7 +7,7 @@
 @node Top, Introduction, (dir), (dir)
 
 @include top.texi
-@dvblurb{September 2012}
+@dvblurb{}
 
 @menu
 * Introduction::
