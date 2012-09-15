@@ -1,3 +1,17 @@
+* Version 0.2.1 (Sep 15, 2012)
+
+Bug fixes:
+
+   - Racket: correctly reloading modules that contain submodules (this
+     one was breaking for instance code based on plai-typed).
+
+New features:
+
+   - Racket: autodoc now displays argument names for constructors
+     defined by define-type (from either plai or plai-type).
+   - Racket: the included geiser-racket.sh script takes a new switch,
+     -n, to specify the network interface to listen to.
+
 * Version 0.2 (Sep 3, 2012)
 
 New features:
