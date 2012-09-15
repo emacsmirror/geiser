@@ -4,6 +4,8 @@ Bug fixes:
 
    - Racket: correctly reloading modules that contain submodules (this
      one was breaking for instance code based on plai-typed).
+   - Racket: correctly jumping to symbols defined in files with .ss
+     extension.
 
 New features:
 
