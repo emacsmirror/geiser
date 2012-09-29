@@ -1,6 +1,6 @@
 ;;; geiser-table.el -- table creation
 
-;; Copyright (C) 2009, 2010 Jose Antonio Ortega Ruiz
+;; Copyright (C) 2009, 2010, 2012 Jose Antonio Ortega Ruiz
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the Modified BSD License. You should
@@ -41,7 +41,7 @@
       (let ((fill-column width))
         (insert str)
         (fill-region (point-min) (point-max))
-        (mapcar '(lambda (s) (geiser-table--pad-str s width))
+        (mapcar (lambda (s) (geiser-table--pad-str s width))
                 (split-string (buffer-string) "\n"))))))
 
 (defun geiser-table--pad-row (row)
