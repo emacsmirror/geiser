@@ -34,43 +34,16 @@
       - PLT Racket 5.3 or better.
 
 * Installation
+
+  The easiest way is to use ELPA/Marmalade, and just type
+  `M-x install-package RET geiser` inside emacs.
+
   Geiser can be used either directly from its uninstalled source tree
   or byte-compiled and installed after perfoming the standard
-  configure/make/make install dance.
-
-*** In place
-    - Extract the tarball or clone the git repository anywhere in your
-      file system. Let's call that place <path-to-geiser>.
-    - In your .emacs:
-
-      (load-file "<path-to-geiser>/elisp/geiser.el")
-
-*** Byte-compiled
-    - Create a build directory, `build', say:
-      $ cd <path-to-geiser>
-      $ mkdir build; cd build
-    - Configure and make:
-      $ ../configure && make
-
-    Now, you can use the byte-compiled Geiser in place by adding to
-    your .emacs:
-
-    (load "<path-to-geiser>/build/elisp/geiser-load")
-
-    or, alternatively, install it with:
-
-    $ make install
-
-    (you might need to get root access, depending on your installation
-    directory) and, instead of the above load forms, require
-    'geiser-install (not 'geiser, mind you) in your emacs
-    initialization file:
-
-    (require 'geiser-install)
-
-    You're ready to go!
+  configure/make/make install dance.  See the INSTALL file for more details.
 
 * Basic configuration
+
   The loading invocations above install all supported Scheme
   implementations. You can list explicitly the ones that you want by
   setting the variable `geiser-impl-installed-implementations' *before*
@@ -91,7 +64,8 @@
 
   To start a REPL, M-x geiser.
 
-*** Completion with company-mode
+** Completion with company-mode
+
     Geiser offers identifier and module name completion, bound to
     M-TAB and M-` respectively. Only names visible in the current
     module are offered.
@@ -105,7 +79,7 @@
 
 * Quick key reference
 
-*** In Scheme buffers:
+** In Scheme buffers:
 
     |-------------+-------------------------------------------------|
     | C-c C-z     | Switch to REPL                                  |
@@ -145,7 +119,7 @@
     |             | (If `geiser-mode-smart-tab-p' is t)             |
     |-------------+-------------------------------------------------|
 
-*** In the REPL
+** In the REPL
 
     |-------------+----------------------------------------------------|
     | C-c C-z     | Start Scheme REPL, or jump to previous buffer      |
@@ -166,7 +140,7 @@
     | C-c C-d C-a | Toggle autodoc mode                                |
     |-------------+----------------------------------------------------|
 
-*** In the documentation browser:
+** In the documentation browser:
 
     |----------+----------------------------------------------|
     | f        | Next page                                    |
@@ -187,7 +161,7 @@
     | q        | Bury buffer                                  |
     |----------+----------------------------------------------|
 
-*** In backtrace (evaluation/compile result) buffers:
+** In backtrace (evaluation/compile result) buffers:
 
     - M-g n, M-g p, C-x ` for error navigation.
     - q to bury buffer.

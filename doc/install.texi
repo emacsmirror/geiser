@@ -3,11 +3,12 @@
 
 @menu
 * Must needs::
-* Setting it up::
+* The easy and quick way::
+* From the source's mouth::
 * Friends::
 @end menu
 
-@node Must needs, Setting it up, Installation, Installation
+@node Must needs, The easy and quick way, Installation, Installation
 @section Must needs
 
 @cindex supported versions
@@ -28,13 +29,67 @@ better
 Since Geiser supports multiple REPLs, having both of them will just add
 to the fun.
 
+You'll also need Geiser itself.  The quickest installation is via its
+ELPA package, as described in the next section.  If you prefer to use
+the source code directly, it's not that difficult either: just keep on
+reading.
+
+@node The easy and quick way, From the source's mouth, Must needs, Installation
+@section The easy and quick way
+
+@cindex quick install
+@cindex ELPA
+Did i mention that the easiest way of installing Geiser is using its
+@uref{http://emacswiki.org/emacs/ELPA, ELPA} package?  If you're using
+Emacs 24, @uref{http://emacswiki.org/emacs/ELPA, ELPA} is already there;
+for earlier versions, the page i just linked to twice will tell you
+where to find the goodies.
+
+ELPA packages live in repositories accessible via HTTP.  You can find
+Geiser's package either in @uref{http://marmalade-repo.org, Marmalade}
+or in Geiser's repository, located at
+@code{http://download.savannah.gnu.org/releases/geiser/packages}.  To
+tell Emacs that a repo exists, you add it to @code{package-archives}:
+
+@example
+(require 'package)
+(add-to-list 'package-archives
+  '("marmalade" . "http://marmalade-repo.org/packages/"))
+;; You don't need this one if you have marmalade:
+;; (add-to-list 'package-archives
+;;  '("geiser" . "http://download.savannah.gnu.org/releases/geiser/packages"))
+(package-initialize)
+@end example
+
+And then installing Geiser is as easy as:
+
+@example
+M-x install-package RET geiser RET
+@end example
+
+Alternatively, you can manually download the @uref{@value{PACKAGE},
+package file}, and install from your local disk with @kbd{M-x
+package-install-file}
+
+With that, you are pretty much all set up.  See @ref{The REPL} to start
+using Geiser.
+
+@ifnotinfo
+And, by the way, if you prefer to keep reading this manual within Emacs,
+@kbd{C-h i m Geiser RET} will bring you to the info version of it that
+you just installed!
+@end ifnotinfo
+
+@node From the source's mouth, Friends, The easy and quick way, Installation
+@section Installing from source
+
 @subsubheading Downloading Geiser
 
 @cindex use the source, Luke
-You'll also need Geiser itself.  The latest release tarball can be found
-@downfile{, here}, while older versions are @uref{@value{OLD_DOWN_BASE}/,
-here}.  Just download @downfile{@value{TARBALL}, @value{TARBALL}}
-and untar it in a directory of your choice.
+The latest release tarball can be found @downfile{, here}, while older
+versions are @uref{@value{OLD_DOWN_BASE}/, here}.  Just download
+@downfile{@value{TARBALL}, @value{TARBALL}} and untar it in a directory
+of your choice.
 
 If you feel like living on the bleeding edge, just grab Geiser from its
 Git repository @uref{http://git.savannah.nongnu.org/cgit/geiser.git/, over
@@ -60,8 +115,7 @@ synchronized with the one at Savannah.
 Either way, you'll now be in possession of a copy of Geiser's libre
 code.  I'll follow you into its directory and the next section.
 
-@node Setting it up, Friends, Must needs, Installation
-@section Setting it up
+@subsubheading Setting it up
 
 Geiser is ready to be used out of the box without much more ado.  For the
 sake of concreteness, let's assume you put its source in the directory
@@ -155,7 +209,7 @@ manual, in Info format, where Emacs can find it, so you can continue to
 learn about Geiser inside its natural habitat.  See you there and into
 the next chapter!
 
-@node Friends,  , Setting it up, Installation
+@node Friends,  , From the source's mouth, Installation
 @section Friends
 
 Although Geiser does not need them, it plays well with (and is enhanced

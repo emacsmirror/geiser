@@ -68,7 +68,8 @@ Introduction
 Installation
 
 * Must needs::
-* Setting it up::
+* The easy and quick way::
+* From the source's mouth::
 * Friends::
 
 The REPL

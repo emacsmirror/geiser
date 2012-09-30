@@ -1,7 +1,7 @@
 @node The REPL
 @chapter The REPL
 @anchor{quick-start}
-If you've followed the instructions in @ref{Setting it up}, your Emacs is
+If you've followed the instructions in @ref{Installation}, your Emacs is
 now ready to start playing.  Otherwise, i'll wait for you: when you're
 ready, just come back here and proceed to the following sections.
 
