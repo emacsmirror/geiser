@@ -1,6 +1,6 @@
 ;; geiser-xref.el -- utilities for cross-referencing
 
-;; Copyright (C) 2009, 2010 Jose Antonio Ortega Ruiz
+;; Copyright (C) 2009, 2010, 2012 Jose Antonio Ortega Ruiz
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the Modified BSD License. You should
@@ -167,4 +167,3 @@ With prefix, ask for the procedure."
 
 
 (provide 'geiser-xref)
-;;; geiser-xref.el ends here

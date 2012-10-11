@@ -84,4 +84,3 @@ loaded again."
 
 
 (provide 'geiser-reload)
-;;; geiser-reload.el ends here

@@ -437,4 +437,3 @@ implementation-specific entries for font-lock-keywords.")
 
 
 (provide 'geiser-syntax)
-;;; geiser-syntax.el ends here

@@ -237,4 +237,3 @@ With prefix, asks for the symbol to edit."
 
 
 (provide 'geiser-edit)
-;;; geiser-edit.el ends here

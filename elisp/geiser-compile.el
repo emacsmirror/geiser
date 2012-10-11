@@ -1,6 +1,6 @@
 ;; geiser-compile.el -- compile/load scheme files
 
-;; Copyright (C) 2009, 2010, 2011 Jose Antonio Ortega Ruiz
+;; Copyright (C) 2009, 2010, 2011, 2012 Jose Antonio Ortega Ruiz
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the Modified BSD License. You should
@@ -78,4 +78,3 @@ add, defaulting to the current buffer's directory."
 
 
 (provide 'geiser-compile)
-;;; geiser-compile.el ends here

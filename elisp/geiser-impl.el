@@ -1,6 +1,6 @@
 ;; geiser-impl.el -- generic support for scheme implementations
 
-;; Copyright (C) 2009, 2010 Jose Antonio Ortega Ruiz
+;; Copyright (C) 2009, 2010, 2012 Jose Antonio Ortega Ruiz
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the Modified BSD License. You should
@@ -344,5 +344,3 @@ buffer contains Scheme code of the given implementation.")
 ;;; Initialization:
 ;; After providing 'geiser-impl, so that impls can use us.
 (mapc 'geiser-impl--load-impl geiser-active-implementations)
-
-;;; geiser-impl.el ends here

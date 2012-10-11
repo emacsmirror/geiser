@@ -1,6 +1,6 @@
 ;; geiser-company.el -- integration with company-mode
 
-;; Copyright (C) 2009, 2010, 2011 Jose Antonio Ortega Ruiz
+;; Copyright (C) 2009, 2010, 2011, 2012 Jose Antonio Ortega Ruiz
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the Modified BSD License. You should
@@ -116,4 +116,3 @@
 
 
 (provide 'geiser-company)
-;;; geiser-company.el ends here

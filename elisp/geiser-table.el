@@ -134,4 +134,3 @@
 
 
 (provide 'geiser-table)
-;;; geiser-table.el ends here

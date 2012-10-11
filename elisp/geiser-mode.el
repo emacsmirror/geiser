@@ -1,6 +1,6 @@
 ;; geiser-mode.el -- minor mode for scheme buffers
 
-;; Copyright (C) 2009, 2010, 2011 Jose Antonio Ortega Ruiz
+;; Copyright (C) 2009, 2010, 2011, 2012 Jose Antonio Ortega Ruiz
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the Modified BSD License. You should
@@ -350,4 +350,3 @@ interacting with the Geiser REPL is at your disposal.
 
 
 (provide 'geiser-mode)
-;;; geiser-mode.el ends here
