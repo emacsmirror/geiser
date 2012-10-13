@@ -249,7 +249,9 @@ buffer will contain implementation-specific information about the
 identifier (e.g., its docstring for Guile, or its contract, if any, for
 Racket), and a handy button to open the corresponding manual entry for
 the symbol, which will open an HTML page (for Racket) or the texinfo
-manual (for Guile).
+manual (for Guile). If you'd rather go directly to the manual, try
+@kbd{C-c C-d i}, which invokes @code{geiser-doc-look-up-manual} as the
+handy button does.
 
 @cindex module exports
 @anchor{repl-mod} Geiser can also produce for you a list, classified by

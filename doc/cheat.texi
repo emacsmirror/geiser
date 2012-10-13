@@ -154,6 +154,9 @@ third key not modified by @key{Control}; e.g.,
 @item C-c C-d C-d
 @tab @code{geiser-doc-symbol-at-point}
 @tab See documentation for symbol at point
+@item C-c C-d C-i
+@tab @code{geiser-doc-look-up-manual}
+@tab Look up manual for symbol at point
 @item C-c C-d C-m
 @tab @code{geiser-repl--doc-module}
 @tab See documentation for module

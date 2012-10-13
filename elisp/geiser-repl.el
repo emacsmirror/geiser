@@ -599,6 +599,9 @@ buffer."
   ("Symbol documentation" ("\C-c\C-dd" "\C-c\C-d\C-d")
    geiser-doc-symbol-at-point
    "Documentation for symbol at point" :enable (geiser--symbol-at-point))
+  ("Lookup symbol in manul" ("\C-c\C-di" "\C-c\C-d\C-i")
+   geiser-doc-look-up-manual
+   "Documentation for symbol at point" :enable (geiser--symbol-at-point))
   ("Module documentation" ("\C-c\C-dm" "\C-c\C-d\C-m") geiser-repl--doc-module
    "Documentation for module at point" :enable (geiser--symbol-at-point))
   --
