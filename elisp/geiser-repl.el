@@ -65,6 +65,15 @@ implementation name gets appended to it."
    :type 'boolean
    :group 'geiser-repl)
 
+(geiser-custom--defcustom geiser-repl-save-debugging-history-p nil
+  "Whether to skip debugging input in REPL history.
+
+By default, REPL interactions while scheme is in the debugger are
+not added to the REPL command history.  Set this variable to t to
+change that."
+  :type 'boolean
+  :group 'geiser-repl)
+
 (geiser-custom--defcustom geiser-repl-autodoc-p t
   "Whether to enable `geiser-autodoc-mode' in the REPL by default."
   :type 'boolean
@@ -441,7 +450,8 @@ module command as a string")
         (remove (current-buffer) geiser-repl--closed-repls)))
 
 (defun geiser-repl--input-filter (str)
-  (not (or (geiser-repl--is-debugging)
+  (not (or (and (not geiser-repl-save-debugging-history-p)
+                (geiser-repl--is-debugging))
            (string-match "^\\s *$" str)
            (string-match "^,quit *$" str))))
 
