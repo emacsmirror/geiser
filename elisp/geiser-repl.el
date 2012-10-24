@@ -545,7 +545,9 @@ there's no symbol at point). Otherwise, go to next error in the REPL
 buffer."
   (interactive "p")
   (if (>= (point) (geiser-repl--last-prompt-end))
-      (or (completion-at-point) (lisp-indent-line))
+      (or (completion-at-point)
+          (comint-replace-by-expanded-filename)
+          (lisp-indent-line))
     (compilation-next-error n)))
 
 (defun geiser-repl--previous-error (n)
