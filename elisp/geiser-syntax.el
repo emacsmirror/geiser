@@ -241,6 +241,9 @@ implementation-specific entries for font-lock-keywords.")
 (defsubst geiser-syntax--nesting-level ()
   (or (nth 0 (syntax-ppss)) 0))
 
+(defsubst geiser-syntax--in-string-p ()
+  (nth 3 (syntax-ppss)))
+
 (defsubst geiser-syntax--pair-length (p)
   (if (cdr (last p)) (1+ (safe-length p)) (length p)))
 

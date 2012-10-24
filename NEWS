@@ -1,5 +1,6 @@
 * Version 0.2.3 ()
 
+  - TAB in a string context in the REPL triggers filename completion.
   - Indentation of scheme forms improved (specially for those of you
     using a single implementation).
 
