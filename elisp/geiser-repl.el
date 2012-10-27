@@ -547,8 +547,6 @@ buffer."
   (interactive "p")
   (if (>= (point) (geiser-repl--last-prompt-end))
       (or (completion-at-point)
-          (and (geiser-syntax--in-string-p)
-               (comint-replace-by-expanded-filename))
           (lisp-indent-line))
     (compilation-next-error n)))
 

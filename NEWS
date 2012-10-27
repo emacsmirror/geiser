@@ -1,8 +1,9 @@
 * Version 0.2.3 ()
 
-  - TAB in a string context in the REPL triggers filename completion.
-  - Indentation of scheme forms improved (specially for those of you
-    using a single implementation).
+   - TAB in a string context in the REPL and Scheme buffers triggers
+     filename completion.
+   - Indentation of scheme forms improved (specially for those of you
+     using a single implementation).
 
 
 * Version 0.2.2 (Sep 30, 2012)

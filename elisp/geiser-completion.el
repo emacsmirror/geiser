@@ -1,6 +1,6 @@
 ;;; geiser-completion.el -- tab completion
 
-;; Copyright (C) 2009, 2010, 2011 Jose Antonio Ortega Ruiz
+;; Copyright (C) 2009, 2010, 2011, 2012 Jose Antonio Ortega Ruiz
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the Modified BSD License. You should
@@ -17,6 +17,7 @@
 (require 'geiser-syntax)
 (require 'geiser-base)
 
+(require 'comint)
 (require 'minibuffer)
 
 
@@ -147,10 +148,16 @@ we're looking for a module name.")
 (defun geiser-completion--for-module (&optional predicate)
   (geiser-completion--thing-at-point t predicate))
 
+(defun geiser-completion--for-filename ()
+  (when (geiser-syntax--in-string-p)
+    (comint-filename-completion)))
+
 (defun geiser-completion--setup (enable)
   (set (make-local-variable 'completion-at-point-functions)
        (if enable
-           '(geiser-completion--for-symbol geiser-completion--for-module)
+           '(geiser-completion--for-symbol
+             geiser-completion--for-module
+             geiser-completion--for-filename)
          (default-value 'completion-at-point-functions))))
 
 (defun geiser-completion--complete-module ()
