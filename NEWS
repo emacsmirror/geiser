@@ -4,7 +4,8 @@
      filename completion.
    - Indentation of scheme forms improved (specially for those of you
      using a single implementation).
-
+   - New REPL command, geiser-repl-clear-buffer (C-c M-o), to remove
+     all scheme output (thanks to jxonas).
 
 * Version 0.2.2 (Sep 30, 2012)
 

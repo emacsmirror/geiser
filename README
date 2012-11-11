@@ -123,6 +123,7 @@
 
     |-------------+----------------------------------------------------|
     | C-c C-z     | Start Scheme REPL, or jump to previous buffer      |
+    | C-c M-o     | Clear scheme output                                |
     | C-c C-q     | Kill Scheme process                                |
     | C-c C-k     | Nuke REPL: use it if the REPL becomes unresponsive |
     |-------------+----------------------------------------------------|

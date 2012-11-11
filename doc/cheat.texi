@@ -118,6 +118,9 @@ third key not modified by @key{Control}; e.g.,
 @item C-c C-z
 @tab @code{switch-to-geiser}
 @tab Start Scheme REPL, or jump to previous buffer
+@item C-c M-o
+@tab @code{geiser-repl-clear-buffer}
+@tab Clear REPL buffer
 @item C-c C-q
 @tab @code{geiser-repl-exit}
 @tab Kill Scheme process
