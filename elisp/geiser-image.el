@@ -90,7 +90,8 @@ images in `geiser-image-cache-dir'."
     (with-silent-modifications
       (save-excursion
         (goto-char (point-min))
-        (while (re-search-forward "\"?#<Image: \\([-+./_0-9a-zA-Z]+\\)>\"?" nil t)
+        (while (re-search-forward "\"?#<Image: \\([-+.\\\\/_:0-9a-zA-Z]+\\)>\"?"
+                                  nil t)
           (setq seen (+ 1 seen))
           (let* ((file (match-string 1))
                  (begin (match-beginning 0))
