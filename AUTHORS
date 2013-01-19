@@ -3,5 +3,6 @@ is its active maintainer. For more boring details about him, see
 <http://hacks-galore.org/jao>.
 
 Michael Wilber implemented the initial Racket image support modules.
+Jonas Rodrigues implemented the initial version of geiser-repl-clear-buffer.
 
 See also the files THANKS and ChangeLog.
