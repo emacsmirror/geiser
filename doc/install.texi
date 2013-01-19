@@ -86,10 +86,9 @@ you just installed!
 @subsubheading Downloading Geiser
 
 @cindex use the source, Luke
-The latest release tarball can be found @downfile{, here}, while older
-versions are @uref{@value{OLD_DOWN_BASE}/, here}.  Just download
-@downfile{@value{TARBALL}, @value{TARBALL}} and untar it in a directory
-of your choice.
+The latest release tarball can be found @downfile{, here}.  Just
+download @downfile{@value{TARBALL}, @value{TARBALL}} and untar it in a
+directory of your choice.
 
 If you feel like living on the bleeding edge, just grab Geiser from its
 Git repository @uref{http://git.savannah.nongnu.org/cgit/geiser.git/, over

@@ -3,15 +3,13 @@
 @set GUILE_VERSION 2.0
 @set RACKET_VERSION 5.3
 @set EMACS_VERSION 23.2
-@set DOWN_BASE https://github.com/@/jaor/@/geiser/@/downloads
-@set OLD_DOWN_BASE http://download.savannah.gnu.org/@/releases/@/geiser
-@set PACKAGE_REPO @value{OLD_DOWN_BASE}/@/packages
+@set DOWN_BASE http://download.savannah.gnu.org/@/releases/@/geiser
+@set PACKAGE_REPO @value{DOWN_BASE}/@/packages
 @set PACKAGE @value{PACKAGE_REPO}/@/geiser-@value{VERSION}.tar
 @set TARBALL geiser-@value{VERSION}.tar.gz
 
 @macro downfile{FILE, CAPT}
-@c @uref{@value{DOWN_BASE}/@/@value{VERSION}/@/\FILE\, \CAPT\}
-@uref{@value{DOWN_BASE}/@/\FILE\, \CAPT\}
+@uref{@value{DOWN_BASE}/@/@value{VERSION}/@/\FILE\, \CAPT\}
 @end macro
 
 @macro vblurb{GVERS, RVERS, DATE}
