@@ -10,7 +10,7 @@ elpa_dir = $(abs_top_builddir)/$(elpa_name)
 elpa_slogan = "GNU Emacs and Scheme talk to each other"
 geiser_el = $(elpa_dir)/geiser.el
 
-elpa: info
+elpa: README.elpa info
 	rm -rf $(elpa_dir)
 	$(mkdir_p) $(elpa_dir)
 
@@ -34,7 +34,7 @@ elpa: info
 	$(INSTALL_DATA) $(srcdir)/doc/geiser.info $(elpa_dir)
 	(cd $(elpa_dir) && install-info --dir=dir geiser.info 2>/dev/null)
 
-	$(INSTALL_DATA) $(top_srcdir)/README $(elpa_dir)
+	$(INSTALL_DATA) $(top_srcdir)/README.elpa $(elpa_dir)/README
 
 	$(mkdir_p) $(elpa_dir)/bin
 	$(INSTALL) $(top_srcdir)/bin/geiser-racket.sh $(elpa_dir)/bin/geiser-racket
