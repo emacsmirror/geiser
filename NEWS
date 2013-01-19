@@ -1,11 +1,19 @@
-* Version 0.2.3 ()
+* Version 0.3 (Jan 19, 2013)
+
+New features:
 
    - TAB in a string context in the REPL and Scheme buffers triggers
      filename completion.
-   - Indentation of scheme forms improved (specially for those of you
-     using a single implementation).
+   - User manual lookup command (C-c C-d i) available also in the
+     REPL.
    - New REPL command, geiser-repl-clear-buffer (C-c M-o), to remove
      all scheme output (thanks to jxonas).
+   - Indentation of scheme forms improved..
+
+Bug fixes:
+
+   - Racket: fixes for problems entering modules sans main.rkt.
+   - Racket: image support in Windows fixed.
 
 * Version 0.2.2 (Sep 30, 2012)
 
