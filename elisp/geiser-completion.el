@@ -150,7 +150,8 @@ we're looking for a module name.")
 
 (defun geiser-completion--for-filename ()
   (when (geiser-syntax--in-string-p)
-    (comint-filename-completion)))
+    (let ((comint-completion-addsuffix "\""))
+      (comint-dynamic-complete-filename))))
 
 (defun geiser-completion--setup (enable)
   (set (make-local-variable 'completion-at-point-functions)
