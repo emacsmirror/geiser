@@ -321,6 +321,7 @@ interacting with the Geiser REPL is at your disposal.
   (custom "Customize Geiser mode" geiser-mode))
 
 (define-key geiser-mode-map [menu-bar scheme] 'undefined)
+(define-key geiser-mode-map "\C-\\" 'geiser-edit-insert-lambda)
 
 ;; (geiser-mode--triple-chord ?x ?m 'geiser-xref-generic-methods)
 

@@ -234,6 +234,14 @@ With prefix, asks for the symbol to edit."
                             (geiser-completion--read-module)))
     (when marker (ring-insert find-tag-marker-ring marker))))
 
+
+;; Editing key bindings
+
+(defun geiser-edit-insert-lambda ()
+  "Insert λ at point."
+  (interactive)
+  (insert-char ?λ 1))
 
 
+
 (provide 'geiser-edit)
