@@ -1,3 +1,14 @@
+* Version 0.4 ()
+
+  New features:
+
+   - New command geiser-edit-insert-lambda, bound to C-c \ in Scheme
+     buffers (thanks to Ray Racine).
+
+  Bug fixes:
+
+   - Filename completion should also work in emacs 23.2 now.
+
 * Version 0.3 (Jan 19, 2013)
 
   New features:
