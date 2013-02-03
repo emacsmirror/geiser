@@ -235,13 +235,5 @@ With prefix, asks for the symbol to edit."
     (when marker (ring-insert find-tag-marker-ring marker))))
 
 
-;; Editing key bindings
-
-(defun geiser-edit-insert-lambda ()
-  "Insert λ at point."
-  (interactive)
-  (insert-char (make-char 'greek-iso8859-7 107) 1))
-
-
 
 (provide 'geiser-edit)
