@@ -2,7 +2,10 @@ Jose A. Ortega Ruiz <jao@gnu.org> designed and implemented Geiser and
 is its active maintainer. For more boring details about him, see
 <http://hacks-galore.org/jao>.
 
+Contributors:
+
 Michael Wilber implemented the initial Racket image support modules.
 Jonas Rodrigues implemented the initial version of geiser-repl-clear-buffer.
+Ray Racine implemented geiser-edit-insert-lambda.
 
 See also the files THANKS and ChangeLog.
