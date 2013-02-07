@@ -1,6 +1,6 @@
 ;; geiser-compile.el -- compile/load scheme files
 
-;; Copyright (C) 2009, 2010, 2011, 2012 Jose Antonio Ortega Ruiz
+;; Copyright (C) 2009, 2010, 2011, 2012, 2013 Jose Antonio Ortega Ruiz
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the Modified BSD License. You should
@@ -72,7 +72,7 @@
 When called interactively, this function will ask for the path to
 add, defaulting to the current buffer's directory."
   (interactive "DDirectory to add: ")
-  (let* ((c `(:eval (:ge add-to-load-path ,path)))
+  (let* ((c `(:eval (:ge add-to-load-path ,(expand-file-name path))))
          (r (geiser-eval--send/result c)))
     (message "%s" (if r "Added" "Failed!"))))
 
