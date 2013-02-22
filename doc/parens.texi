@@ -373,8 +373,11 @@ named @i{source}: pressing it you'll jump to the symbol's definition.
 The second button, dubbed @i{manual}, will open the Scheme
 implementation's manual page for the symbol at hand.  For Racket, that
 will open your web browser displaying the corresponding reference's page
-(using Emacs' @code{browser-url} command), while in Guile a lookup will
-be performed in the texinfo manual.
+(using the HTML browser in Racket's configuration, which you can edit in
+DrRacket's preferences dialog, or by setting
+@code{plt:framework-pref:external-browser} directly in
+@file{~/.racket/racket-prefs.rktd}), while in Guile a lookup will be
+performed in the texinfo manual.
 
 @cindex Guile info nodes
 For Guile, the manual lookup uses the info indexes in the standard
