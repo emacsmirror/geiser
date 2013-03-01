@@ -1,6 +1,6 @@
 ;;; geiser-repl.el --- Geiser's REPL
 
-;; Copyright (C) 2009, 2010, 2011, 2012 Jose Antonio Ortega Ruiz
+;; Copyright (C) 2009, 2010, 2011, 2012, 2013 Jose Antonio Ortega Ruiz
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the Modified BSD License. You should
@@ -583,6 +583,7 @@ buffer."
   (geiser-completion--setup t)
   (setq geiser-smart-tab-mode-string "")
   (geiser-smart-tab-mode t)
+  (geiser-syntax--add-kws)
   ;; enabling compilation-shell-minor-mode without the annoying highlighter
   (compilation-setup t))
 
