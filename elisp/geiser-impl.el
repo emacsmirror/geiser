@@ -1,6 +1,6 @@
 ;; geiser-impl.el -- generic support for scheme implementations
 
-;; Copyright (C) 2009, 2010, 2012 Jose Antonio Ortega Ruiz
+;; Copyright (C) 2009, 2010, 2012, 2013 Jose Antonio Ortega Ruiz
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the Modified BSD License. You should
@@ -200,7 +200,8 @@ Here's how a typical call to this macro looks like:
     (display-error geiser-guile--display-error)
     (display-help)
     (check-buffer geiser-guile--guess)
-    (keywords geiser-guile--keywords))
+    (keywords geiser-guile--keywords)
+    (case-sensitive geiser-guile-case-sensitive-p))
 
 This macro also defines a runner function (run-NAME) and a
 switcher (switch-to-NAME), and provides geiser-NAME."

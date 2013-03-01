@@ -1,6 +1,6 @@
 ;;; geiser-syntax.el -- utilities for parsing scheme syntax
 
-;; Copyright (C) 2009, 2010, 2011, 2012 Jose Antonio Ortega Ruiz
+;; Copyright (C) 2009, 2010, 2011, 2012, 2013 Jose Antonio Ortega Ruiz
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the Modified BSD License. You should
@@ -61,10 +61,15 @@
   "A variable (or thunk returning a value) giving additional,
 implementation-specific entries for font-lock-keywords.")
 
+(geiser-impl--define-caller geiser-syntax--case-sensitive case-sensitive ()
+  "A flag saying whether keywords are case sensitive.")
+
 (defun geiser-syntax--add-kws ()
   (when (not (and (boundp 'quack-mode) quack-mode))
-    (let ((kw (geiser-syntax--impl-kws geiser-impl--implementation)))
-      (when kw (font-lock-add-keywords nil kw)))))
+    (let ((kw (geiser-syntax--impl-kws geiser-impl--implementation))
+          (cs (geiser-syntax--case-sensitive geiser-impl--implementation)))
+      (when kw (font-lock-add-keywords nil kw))
+      (setq font-lock-keywords-case-fold-search (not cs)))))
 
 
 ;;; A simple scheme reader
