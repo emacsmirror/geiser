@@ -62,9 +62,9 @@ implementation name gets appended to it."
   :group 'geiser-repl)
 
 (geiser-custom--defcustom geiser-repl-history-no-dups-p t
-   "Whether to skip duplicates when recording history."
-   :type 'boolean
-   :group 'geiser-repl)
+  "Whether to skip duplicates when recording history."
+  :type 'boolean
+  :group 'geiser-repl)
 
 (geiser-custom--defcustom geiser-repl-save-debugging-history-p nil
   "Whether to skip debugging input in REPL history.
@@ -107,6 +107,12 @@ expression, if any."
 
 (geiser-custom--defcustom geiser-repl-query-on-exit-p nil
   "Whether to prompt for confirmation on \\[geiser-repl-exit]."
+  :type 'boolean
+  :group 'geiser-repl)
+
+(geiser-custom--defcustom geiser-repl-query-on-kill-p t
+  "Whether to prompt for confirmation when killing a REPL buffer with
+a life process."
   :type 'boolean
   :group 'geiser-repl)
 
@@ -328,6 +334,8 @@ module command as a string")
               'geiser-repl--output-filter
               nil
               t)
+    (set-process-query-on-exit-flag (get-buffer-process (current-buffer))
+                                    geiser-repl-query-on-kill-p)
     (message "%s up and running!" (geiser-repl--repl-name impl))))
 
 (defun geiser-repl--start-scheme (impl address prompt)
