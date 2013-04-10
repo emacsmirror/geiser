@@ -1,6 +1,6 @@
 ;;; geiser-connection.el -- talking to a scheme process
 
-;; Copyright (C) 2009, 2010, 2011 Jose Antonio Ortega Ruiz
+;; Copyright (C) 2009, 2010, 2011, 2013 Jose Antonio Ortega Ruiz
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the Modified BSD License. You should
@@ -201,7 +201,7 @@
         `((error (key . geiser-debugger))
           (output . ,answer))
       (condition-case err
-          (let* ((start (string-match "((\\(?:result\\|error\\) " answer))
+          (let* ((start (string-match "((\\(?:result)?\\|error\\) " answer))
                  (form (or (and start (car (read-from-string answer start)))
                            `((error (key . retort-syntax))
                              (output . ,answer)))))
