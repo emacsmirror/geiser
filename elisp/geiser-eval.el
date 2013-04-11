@@ -173,6 +173,16 @@ module-exports, autodoc, callers, callees and generic-methods.")
         (concat "=> " (mapconcat 'identity values "\n=> "))
       "(No value)")))
 
+(defun geiser-eval--retort-result-list (ret)
+  "Return the list of results."
+  (cdr (assoc 'result ret)))
+
+(defun geiser-eval--retort-result-to-buffer (ret)
+  "Return a string formated for printing to buffer."
+  (mapconcat 'identity
+             (geiser-eval--retort-result-list ret)
+             "\n"))
+
 (defsubst geiser-eval--retort-output (ret) (cdr (assoc 'output ret)))
 (defsubst geiser-eval--retort-error (ret) (cdr (assoc 'error ret)))
 

@@ -107,13 +107,23 @@ With prefix, goes to the REPL buffer afterwards (as
   (interactive)
   (geiser-eval-definition t))
 
-(defun geiser-eval-last-sexp ()
-  "Eval the previous sexp in the Geiser REPL."
-  (interactive)
-  (geiser-eval-region (save-excursion (backward-sexp) (point))
-                      (point)
-                      nil
-                      t))
+(defun geiser-eval-last-sexp (print-to-buffer-p)
+  "Eval the previous sexp in the Geiser REPL.
+
+With a prefix, print the result of the evaluation to the buffer."
+  (interactive "P")
+  (let ((ret (geiser-eval-region (save-excursion (backward-sexp) (point))
+                                 (point)
+                                 nil
+                                 t)))
+    (if print-to-buffer-p
+        (let ((str (geiser-eval--retort-result-to-buffer ret)))
+          ;; It's possible that a procedure returns nothing, so we
+          ;; don't want to `push-mark' if it's not necessary
+          (unless (string= "" str)
+            (push-mark)
+            (insert str)))
+      (message "%s" (geiser-eval--retort-result-str ret)))))
 
 (defun geiser-compile-definition (&optional and-go)
   "Compile the current definition in the Geiser REPL.

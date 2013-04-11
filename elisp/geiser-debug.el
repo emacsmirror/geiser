@@ -172,9 +172,9 @@ buffer.")
     (when (not err)
       (save-excursion
         (goto-char (/ (+ end start) 2))
-        (geiser-autodoc--clean-cache))
-      (message "%s" res))
-    (geiser-debug--display-retort (geiser-syntax--scheme-str str) ret res)))
+        (geiser-autodoc--clean-cache)))
+    (geiser-debug--display-retort (geiser-syntax--scheme-str str) ret res)
+    ret))
 
 (defun geiser-debug--expand-region (start end all wrap)
   (let* ((str (buffer-substring-no-properties start end))
