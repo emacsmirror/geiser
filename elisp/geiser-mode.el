@@ -74,6 +74,7 @@ active when `geiser-mode' is activated in a buffer."
 
 (defun geiser-eval-region (start end &optional and-go raw nomsg)
   "Eval the current region in the Geiser REPL.
+
 With prefix, goes to the REPL buffer afterwards (as
 `geiser-eval-region-and-go')"
   (interactive "rP")
@@ -94,6 +95,7 @@ With prefix, goes to the REPL buffer afterwards (as
 
 (defun geiser-eval-definition (&optional and-go)
   "Eval the current definition in the Geiser REPL.
+
 With prefix, goes to the REPL buffer afterwards (as
 `geiser-eval-definition-and-go')"
   (interactive "P")
@@ -110,6 +112,7 @@ With prefix, goes to the REPL buffer afterwards (as
 
 (defun geiser-eval-last-sexp (print-to-buffer-p)
   "Eval the previous sexp in the Geiser REPL.
+
 With a prefix, print the result of the evaluation to the buffer."
   (interactive "P")
   (let* ((ret (geiser-eval-region (save-excursion (backward-sexp) (point))
@@ -124,6 +127,7 @@ With a prefix, print the result of the evaluation to the buffer."
 
 (defun geiser-compile-definition (&optional and-go)
   "Compile the current definition in the Geiser REPL.
+
 With prefix, goes to the REPL buffer afterwards (as
 `geiser-eval-definition-and-go')"
   (interactive "P")
@@ -150,6 +154,7 @@ With prefix, recursively macro-expand the resulting expression."
 
 (defun geiser-expand-definition (&optional all)
   "Macro-expand the current definition.
+
 With prefix, recursively macro-expand the resulting expression."
   (interactive "P")
   (save-excursion
@@ -160,6 +165,7 @@ With prefix, recursively macro-expand the resulting expression."
 
 (defun geiser-expand-last-sexp (&optional all)
   "Macro-expand the previous sexp.
+
 With prefix, recursively macro-expand the resulting expression."
   (interactive "P")
   (geiser-expand-region (save-excursion (backward-sexp) (point))
@@ -176,6 +182,7 @@ With prefix, recursively macro-expand the resulting expression."
 
 (defun geiser-mode-switch-to-repl (arg)
   "Switches to Geiser REPL.
+
 With prefix, try to enter the current buffer's module."
   (interactive "P")
   (if arg
@@ -201,6 +208,7 @@ With prefix, try to enter the current buffer's module."
 
 (defun geiser-squarify (n)
   "Toggle between () and [] for current form.
+
 With numeric prefix, perform that many toggles, forward for
 positive values and backward for negative."
   (interactive "p")
@@ -251,6 +259,7 @@ positive values and backward for negative."
 
 (define-minor-mode geiser-mode
   "Toggle Geiser's mode.
+
 With no argument, this command toggles the mode.
 Non-null prefix argument turns on the mode.
 Null prefix argument turns off the mode.

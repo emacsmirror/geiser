@@ -4,8 +4,9 @@ is its active maintainer. For more boring details about him, see
 
 Contributors:
 
-Michael Wilber implemented the initial Racket image support modules.
-Jonas Rodrigues implemented the initial version of geiser-repl-clear-buffer.
-Ray Racine implemented geiser-edit-insert-lambda.
+Michael Wilber
+Diogo F. S. Ramos
+Jonas Rodrigues
+Ray Racine
 
-See also the files THANKS and ChangeLog.
+See also <https://github.com/jaor/geiser/contributors>.

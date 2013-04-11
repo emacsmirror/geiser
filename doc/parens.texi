@@ -438,7 +438,9 @@ For all of you bearded old lispers still with me, here are some of the
 commands performing incremental evaluation in Geiser.
 
 @code{geiser-eval-last-sexp}, bound to @kbd{C-x C-e}, will eval the
-s-expression just before point.
+s-expression just before point.  If you use a prefix, as in @kbd{C-u C-x
+C-e}, besides evaluating it the expression is inserted in the the
+buffer.
 
 @code{geiser-eval-definition}, bound to @kbd{C-M-x}, finds the topmost
 definition containing point and sends it for evaluation.  The variant
