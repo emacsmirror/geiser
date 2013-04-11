@@ -268,7 +268,7 @@ interacting with the Geiser REPL is at your disposal.
   (when (and geiser-mode
              geiser-mode-start-repl-p
              (not (geiser-repl--connection*)))
-    (save-current-buffer (switch-to-geiser))))
+    (save-window-excursion (run-geiser geiser-impl--implementation))))
 
 (defun turn-on-geiser-mode ()
   "Enable `geiser-mode' (in a Scheme buffer)."
