@@ -421,6 +421,18 @@ defaulting to ``localhost'' and 37146.  You can change those defaults
 customizing @code{geiser-repl-default-host} and
 @code{geiser-repl-default-port}, respectively.
 
+@subsubheading Killing REPLs
+
+@cindex ask on kill, don't
+If you don't want Emacs to ask for confirmation when you're about to
+kill a live REPL buffer (as will happen, for instance, if you're exiting
+Emacs before closing all your REPLs), you can set the flag
+@code{geiser-repl-query-on-kill-p} to @code{nil}.  On a related note,
+the customizable variable @code{geiser-repl-query-on-exit-p} controls
+whether Geiser should ask for confirmation when you exit the REPL
+explicitly (via, say, @kbd{C-c C-q}, as opposed to killing the buffer),
+and is set to @code{nil} by default.
+
 @c Local Variables:
 @c mode: texinfo
 @c TeX-master: "geiser"

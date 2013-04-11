@@ -7,6 +7,11 @@
    - Configurable case-sensitivity when highlighting keywords (thanks
      to Diogo F.S. Ramos), via geiser-guile-case-sensitive-p and
      geiser-racket-case-sensitive-pp
+   - New flag geiser-repl-query-on-kill-p to control whether emacs
+     will ask for confirmation before killing a buffer with a live
+     REPL process.
+   - New flag geiser-mode-start-repl-p to tell Geiser to start a new
+     REPL if one isn't active when geiser-mode is activated.
 
   Bug fixes:
 

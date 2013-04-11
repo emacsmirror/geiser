@@ -197,6 +197,12 @@ will add a new rule that says that any file inside my
 children) is to be assigned to Guile.  Since rules are first matched,
 first served, this new rule will take precedence over the default ones.
 
+@cindex autostart REPL
+@cindex start REPL, automatically
+A final tip: if you want Geiser to start automatically a REPL for you if
+it notices that there's no one active when it enters @i{geiser-mode},
+you can customize @code{geiser-mode-start-repl-p} to @code{t}.
+
 @subsubheading Switching between source files and the REPL
 @cindex switching to REPL
 @cindex switching to source
