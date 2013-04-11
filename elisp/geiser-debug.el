@@ -1,6 +1,6 @@
 ;;; geiser-debug.el -- displaying debug information and evaluation results
 
-;; Copyright (C) 2009, 2010, 2011, 2012 Jose Antonio Ortega Ruiz
+;; Copyright (C) 2009, 2010, 2011, 2012, 2013 Jose Antonio Ortega Ruiz
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the Modified BSD License. You should
@@ -161,18 +161,19 @@ buffer.")
       (match-string 1 str)
     str))
 
-(defun geiser-debug--send-region (compile start end and-go wrap)
+(defun geiser-debug--send-region (compile start end and-go wrap &optional nomsg)
   (let* ((str (buffer-substring-no-properties start end))
          (wrapped (if wrap (geiser-debug--wrap-region str) str))
          (code `(,(if compile :comp :eval) (:scm ,wrapped)))
          (ret (geiser-eval--send/wait code))
-         (res (geiser-eval--retort-result-str ret))
+         (res (geiser-eval--retort-result-str ret nil))
          (err (geiser-eval--retort-error ret)))
     (when and-go (funcall and-go))
     (when (not err)
       (save-excursion
         (goto-char (/ (+ end start) 2))
-        (geiser-autodoc--clean-cache)))
+        (geiser-autodoc--clean-cache))
+      (unless nomsg (message "%s" res)))
     (geiser-debug--display-retort (geiser-syntax--scheme-str str) ret res)
     ret))
 

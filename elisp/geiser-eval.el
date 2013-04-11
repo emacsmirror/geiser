@@ -1,6 +1,6 @@
 ;;; geiser-eval.el -- sending scheme code for evaluation
 
-;; Copyright (C) 2009, 2010, 2011, 2012 Jose Antonio Ortega Ruiz
+;; Copyright (C) 2009, 2010, 2011, 2012, 2013 Jose Antonio Ortega Ruiz
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the Modified BSD License. You should
@@ -167,21 +167,13 @@ module-exports, autodoc, callers, callees and generic-methods.")
   (let ((values (cdr (assoc 'result ret))))
     (car (geiser-syntax--read-from-string (car values)))))
 
-(defun geiser-eval--retort-result-str (ret)
-  (let ((values (cdr (assoc 'result ret))))
+(defun geiser-eval--retort-result-str (ret prefix)
+  (let* ((prefix (or prefix "=> "))
+         (nlprefix (concat "\n" prefix))
+         (values (cdr (assoc 'result ret))))
     (if values
-        (concat "=> " (mapconcat 'identity values "\n=> "))
-      "(No value)")))
-
-(defun geiser-eval--retort-result-list (ret)
-  "Return the list of results."
-  (cdr (assoc 'result ret)))
-
-(defun geiser-eval--retort-result-to-buffer (ret)
-  "Return a string formated for printing to buffer."
-  (mapconcat 'identity
-             (geiser-eval--retort-result-list ret)
-             "\n"))
+        (concat prefix (mapconcat 'identity values nlprefix))
+      (or prefix "(No value)"))))
 
 (defsubst geiser-eval--retort-output (ret) (cdr (assoc 'output ret)))
 (defsubst geiser-eval--retort-error (ret) (cdr (assoc 'error ret)))

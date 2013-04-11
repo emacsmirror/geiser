@@ -72,7 +72,7 @@ active when `geiser-mode' is activated in a buffer."
   (push-mark)
   (goto-char (point-max)))
 
-(defun geiser-eval-region (start end &optional and-go raw)
+(defun geiser-eval-region (start end &optional and-go raw nomsg)
   "Eval the current region in the Geiser REPL.
 With prefix, goes to the REPL buffer afterwards (as
 `geiser-eval-region-and-go')"
@@ -84,7 +84,8 @@ With prefix, goes to the REPL buffer afterwards (as
                              start
                              end
                              (and and-go 'geiser--go-to-repl)
-                             (not raw)))
+                             (not raw)
+                             nomsg))
 
 (defun geiser-eval-region-and-go (start end)
   "Eval the current region in the Geiser REPL and visit it afterwads."
@@ -109,21 +110,17 @@ With prefix, goes to the REPL buffer afterwards (as
 
 (defun geiser-eval-last-sexp (print-to-buffer-p)
   "Eval the previous sexp in the Geiser REPL.
-
 With a prefix, print the result of the evaluation to the buffer."
   (interactive "P")
-  (let ((ret (geiser-eval-region (save-excursion (backward-sexp) (point))
-                                 (point)
-                                 nil
-                                 t)))
-    (if print-to-buffer-p
-        (let ((str (geiser-eval--retort-result-to-buffer ret)))
-          ;; It's possible that a procedure returns nothing, so we
-          ;; don't want to `push-mark' if it's not necessary
-          (unless (string= "" str)
-            (push-mark)
-            (insert str)))
-      (message "%s" (geiser-eval--retort-result-str ret)))))
+  (let* ((ret (geiser-eval-region (save-excursion (backward-sexp) (point))
+                                  (point)
+                                  nil
+                                  t
+                                  print-to-buffer-p))
+         (str (geiser-eval--retort-result-str ret (when print-to-buffer-p ""))))
+    (when (and print-to-buffer-p (not (string= "" str)))
+      (push-mark)
+      (insert str))))
 
 (defun geiser-compile-definition (&optional and-go)
   "Compile the current definition in the Geiser REPL.
