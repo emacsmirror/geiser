@@ -376,12 +376,15 @@ module command as a string")
                               (overlay-end comint-last-prompt-overlay)
                               t)))))
 
-(defun geiser-repl--connection ()
+(defun geiser-repl--connection* ()
   (let ((buffer (geiser-repl--set-up-repl geiser-impl--implementation)))
-    (or (and (buffer-live-p buffer)
-             (get-buffer-process buffer)
-             (with-current-buffer buffer geiser-repl--connection))
-        (error "No Geiser REPL for this buffer (try M-x run-geiser)"))))
+   (and (buffer-live-p buffer)
+        (get-buffer-process buffer)
+        (with-current-buffer buffer geiser-repl--connection))))
+
+(defun geiser-repl--connection ()
+  (or (geiser-repl--connection*)
+      (error "No Geiser REPL for this buffer (try M-x run-geiser)")))
 
 (setq geiser-eval--default-connection-function 'geiser-repl--connection)
 
@@ -677,6 +680,7 @@ buffer."
 
 (defun switch-to-geiser (&optional ask impl buffer)
   "Switch to running Geiser REPL.
+
 With prefix argument, ask for which one if more than one is running.
 If no REPL is running, execute `run-geiser' to start a fresh one."
   (interactive "P")

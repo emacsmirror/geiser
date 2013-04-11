@@ -41,6 +41,12 @@ scheme buffers."
   :group 'geiser-mode
   :type 'boolean)
 
+(geiser-custom--defcustom geiser-mode-start-repl-p nil
+  "Whether a REPL should be automatically started if one is not
+active when `geiser-mode' is activated in a buffer."
+  :group 'geiser-mode
+  :type 'boolean)
+
 (geiser-custom--defcustom geiser-mode-autodoc-p t
   "Whether `geiser-autodoc-mode' gets enabled by default in Scheme buffers."
   :group 'geiser-mode
@@ -258,7 +264,11 @@ interacting with the Geiser REPL is at your disposal.
     (geiser-autodoc-mode (if geiser-mode 1 -1)))
   (when geiser-mode-smart-tab-p
     (geiser-smart-tab-mode (if geiser-mode 1 -1)))
-  (geiser-syntax--add-kws))
+  (geiser-syntax--add-kws)
+  (when (and geiser-mode
+             geiser-mode-start-repl-p
+             (not (geiser-repl--connection*)))
+    (save-current-buffer (switch-to-geiser))))
 
 (defun turn-on-geiser-mode ()
   "Enable `geiser-mode' (in a Scheme buffer)."
