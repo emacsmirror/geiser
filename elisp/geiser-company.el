@@ -1,6 +1,6 @@
 ;; geiser-company.el -- integration with company-mode
 
-;; Copyright (C) 2009, 2010, 2011, 2012 Jose Antonio Ortega Ruiz
+;; Copyright (C) 2009, 2010, 2011, 2012, 2013 Jose Antonio Ortega Ruiz
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the Modified BSD License. You should
@@ -34,20 +34,22 @@
 
 (defun geiser-company--doc (id)
   (ignore-errors
-    (let ((help (geiser-autodoc--autodoc `((,id 0)))))
-      (and help (substring-no-properties help)))))
+    (when (not (geiser-autodoc--inhibit))
+      (let ((help (geiser-autodoc--autodoc `((,id 0)))))
+        (and help (substring-no-properties help))))))
 
 (defsubst geiser-company--doc-buffer (id) nil)
 
 (defun geiser-company--location (id)
   (ignore-errors
-    (let ((id (make-symbol id)))
-      (condition-case nil
-          (geiser-edit-module id 'noselect)
-        (error (geiser-edit-symbol id 'noselect))))))
+    (when (not (geiser-autodoc--inhibit))
+      (let ((id (make-symbol id)))
+        (condition-case nil
+            (geiser-edit-module id 'noselect)
+          (error (geiser-edit-symbol id 'noselect)))))))
 
 (defun geiser-company--prefix-at-point ()
-  (when geiser-company--enabled-flag
+  (when (and (not (geiser-autodoc--inhibit)) geiser-company--enabled-flag)
     (if (nth 8 (syntax-ppss)) 'stop
       (let* ((prefix (and (looking-at-p "\\_>")
                           (geiser-completion--prefix nil)))
