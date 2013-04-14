@@ -20,6 +20,8 @@
    - Filename completion should also work in emacs 23.2 now.
    - Racket filenames with spaces no longer break Geiser when entering
      them.
+   - The REPL no longer hangs when company-mode is active (thanks to
+     Aleix Conchillo).
 
 * Version 0.3 (Jan 19, 2013)
 
