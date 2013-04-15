@@ -71,11 +71,9 @@
     module are offered.
 
     While that is cool and all, things are even better: if you have
-    company-mode (http://nschum.de/src/emacs/company-mode/) installed,
+    company-mode (http://company-mode.github.io/) installed,
     Geiser's completion will use it. Just require company-mode and,
-    from then on, any new scheme buffer or REPL will use it. If you
-    didn't know about Nikolaj Schumacher's awesome mode, check this
-    screencast: http://goo.gl/yxLQ.
+    from then on, any new scheme buffer or REPL will use it.
 
 * Quick key reference
 
