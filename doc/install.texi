@@ -223,12 +223,10 @@ by) the following Emacs packages:
 Regardless of whether you use Geiser or not, you shouldn't be coding
 in any Lisp dialect without the aid of Taylor Campbell's structured
 editing mode.
-@item @uref{http://nschum.de/src/emacs/company-mode/, Company}.
-Nikolaj Schumacher's @code{company-mode} provides a generic front-end
-for completion engines (such as Geiser's).  Very nice if you like that
-kind of thing: judge by yourself with the help of
-@uref{http://www.screentoaster.com/watch/stU0lSRERIR1pYRFVdXVlRVFFV/company_mode_for_gnu_emacs,
-this screencast}.
+@item @uref{http://company-mode.github.io/, Company}.
+Nikolaj Schumacher's and Dmitry Gutov's @code{company-mode} provides a
+generic front-end for completion engines (such as Geiser's), with pretty
+and automatic completion lists.
 @item @uref{http://www.neilvandyke.org/quack/, Quack}.
 You can still use the many goodies provided by Neil van Dyke's
 @code{quack-mode}, since most of them are not (yet) available in Geiser.
