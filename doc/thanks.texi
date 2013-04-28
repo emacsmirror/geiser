@@ -42,7 +42,8 @@ Slime hackers, who led the way.
 @cindex mailing list
 @cindex gmane
 For questions, praise, critique and anything else Geiser, do not
-hesitate to drop an email to our list, @i{(@@ geiser-users (. nongnu
+hesitate to drop an email to our list,
+@url{mailto:geiser-users@@nongnu.org, (@@ geiser-users (. nongnu
 org))}: no subscription required.  Check
 @uref{http://lists.nongnu.org/@/mailman/@/listinfo/@/geiser-users, the list
 page} for more information or browse
