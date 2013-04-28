@@ -54,8 +54,8 @@ gmane.lisp.scheme.geiser}.
 @item
 @cindex bug tracker
 You can submit bug reports either to the mailing list or to
-@uref{http://savannah.nongnu.org/@/bugs/?group=geiser, our bug tracker}
-over at Savannah.
+@uref{https://github.com/@/jaor/geiser/issues, our bug tracker} over at
+Github.
 @item
 @cindex news feed
 If you only need to hear about Geiser on new releases,
