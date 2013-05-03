@@ -1,8 +1,8 @@
-* Version 0.4 ()
+* Version 0.4 (May 2, 2013)
 
   New features:
 
-   - New command geiser-edit-insert-lambda, bound to C-c \ in Scheme
+   - New command geiser-insert-lambda, bound to C-c \ in Scheme
      buffers (thanks to Ray Racine).
    - Configurable case-sensitivity when highlighting keywords (thanks
      to Diogo F.S. Ramos), via geiser-guile-case-sensitive-p and

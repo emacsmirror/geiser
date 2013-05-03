@@ -42,6 +42,9 @@ third key not modified by @key{Control}; e.g.,
 @item C-c C-e C-[
 @tab @code{geiser-squarify}
 @tab Toggle between () and [] for current form
+@item C-c C-\
+@tab @code{geiser-insert-lambda}
+@tab Insert greek lambda or, with prefix, a lambda form
 @item @tab @tab
 @item C-M-x
 @tab @code{geiser-eval-definition}
