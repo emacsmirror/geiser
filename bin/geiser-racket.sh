@@ -7,6 +7,7 @@ exec racket -i -S "$top/racket" -l errortrace -cu "$0" ${1+"$@"}
 #lang racket/base
 
 (require (lib "cmdline.rkt"))
+(require geiser/server)
 
 (define port (make-parameter 0))
 (define host (make-parameter #f (lambda (h) (and (string? h) h))))
@@ -17,5 +18,4 @@ exec racket -i -S "$top/racket" -l errortrace -cu "$0" ${1+"$@"}
   (("-n" "--hostname") n "Network hostname, or #f for all interfaces" (host n))
   (("-p" "--port") p "Geiser server port" (port (string->number p)))))
 
-(printf "Geiser server running at port ~a~%"
-        ((dynamic-require 'geiser/server 'start-geiser) (port) (host)))
+(printf "Geiser server running at port ~a~%" (start-geiser (port) (host)))
