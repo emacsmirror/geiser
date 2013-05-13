@@ -449,10 +449,9 @@ way, but it also teleports you to REPL after the evaluation.
 
 @code{geiser-eval-region}, bound to @kbd{C-c C-r}, evals the current
 region.  Again, there's an @i{and-go} version available,
-@code{geiser-eval-region-and-go}, bound to @kbd{C-c M-r}.
-
-@code{geiser-eval-buffer}, bound to @kbd{C-c C-b}, evals the current
-buffer.  There is a @i{and-go} version available,
+@code{geiser-eval-region-and-go}, bound to @kbd{C-c M-r}.  And, if you
+want to extend the evaluated region to the whole buffer, there is
+@code{geiser-eval-buffer}, bound to @kbd{C-c C-b} and its companion
 @code{geiser-eval-buffer-and-go}, bound to @kbd{C-c M-b}.
 
 @cindex evaluating images

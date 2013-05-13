@@ -1,3 +1,10 @@
+* Version 0.5 ()
+
+  New features:
+
+   - New commands geiser-eval-buffer (C-c C-b) and
+     geiser-eval-buffer-and-go (C-c M-b), by Nick Parker.
+
 * Version 0.4 (May 2, 2013)
 
   New features:
