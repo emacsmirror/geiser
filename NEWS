@@ -4,6 +4,8 @@
 
    - New commands geiser-eval-buffer (C-c C-b) and
      geiser-eval-buffer-and-go (C-c M-b), by Nick Parker.
+   - Pressing return on a previous expression in the REPL will resend
+     it, by Darren Hoo.
 
 * Version 0.4 (May 2, 2013)
 
