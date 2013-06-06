@@ -6,6 +6,7 @@
      geiser-eval-buffer-and-go (C-c M-b), by Nick Parker.
    - Pressing return on a previous expression in the REPL will resend
      it, by Darren Hoo.
+   - Improvements to syntax highlighting (define/match in racket).
 
 
   Bug fixes:
