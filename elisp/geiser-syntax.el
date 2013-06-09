@@ -202,6 +202,9 @@ implementation-specific entries for font-lock-keywords.")
         (save-excursion (insert string))
         (cons (ignore-errors (geiser-syntax--read)) (point))))))
 
+(defun geiser-syntax--form-from-string (s)
+  (car (geiser-syntax--read-from-string s)))
+
 (defsubst geiser-syntax--form-after-point (&optional boundary)
   (let ((geiser-syntax--read/buffer-limit (and (numberp boundary) boundary)))
     (save-excursion (values (geiser-syntax--read) (point)))))
