@@ -16,6 +16,8 @@
 (require 'geiser-edit)
 (require 'geiser-base)
 
+(eval-when-compile (require 'cl))
+
 
 ;;; Helpers:
 
