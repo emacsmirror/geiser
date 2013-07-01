@@ -411,12 +411,14 @@ module command as a string")
 
 (defun geiser-repl--read-input-ring ()
   (let ((comint-input-ring-file-name (geiser-repl--history-file))
-        (comint-input-ring-separator geiser-repl--history-separator))
+        (comint-input-ring-separator geiser-repl--history-separator)
+        (default-buffer-file-coding-system 'utf-8)))
     (comint-read-input-ring t)))
 
 (defun geiser-repl--write-input-ring ()
   (let ((comint-input-ring-file-name (geiser-repl--history-file))
-        (comint-input-ring-separator geiser-repl--history-separator))
+        (comint-input-ring-separator geiser-repl--history-separator)
+        (default-buffer-file-coding-system 'utf-8))
     (comint-write-input-ring)))
 
 (defun geiser-repl--history-setup ()
