@@ -1,3 +1,4 @@
+(defconst geiser-elisp-dir nil)
 (setq geiser-elisp-dir (file-name-directory load-file-name))
 (add-to-list 'load-path geiser-elisp-dir)
 

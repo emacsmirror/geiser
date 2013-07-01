@@ -1,6 +1,6 @@
 ;; geiser-popup.el -- popup windows
 
-;; Copyright (C) 2009, 2010, 2012 Jose Antonio Ortega Ruiz
+;; Copyright (C) 2009, 2010, 2012, 2013 Jose Antonio Ortega Ruiz
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the Modified BSD License. You should
@@ -16,7 +16,7 @@
 
 (defvar geiser-popup--registry nil)
 
-(setq geiser-popup--overriding-map
+(defvar geiser-popup--overriding-map
   (let ((map (make-sparse-keymap)))
     (define-key map "q" 'View-quit)
     map))
