@@ -1,7 +1,7 @@
-@set VERSION 0.4
-@set RELEASE_DATE May 2013
-@set GUILE_VERSION 2.0
-@set RACKET_VERSION 5.3
+@set VERSION 0.5
+@set RELEASE_DATE July 2013
+@set GUILE_VERSION 2.0.9
+@set RACKET_VERSION 5.3.4
 @set EMACS_VERSION 23.2
 @set DOWN_BASE http://download.savannah.gnu.org/@/releases/@/geiser
 @set PACKAGE_REPO @value{DOWN_BASE}/@/packages
