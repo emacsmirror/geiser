@@ -1,6 +1,6 @@
 ;;; geiser-doc.el -- accessing scheme-provided documentation
 
-;; Copyright (C) 2009, 2010, 2011, 2012 Jose Antonio Ortega Ruiz
+;; Copyright (C) 2009, 2010, 2011, 2012, 2013 Jose Antonio Ortega Ruiz
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the Modified BSD License. You should
@@ -61,6 +61,9 @@ help (e.g. browse an HTML page) implementing this method.")
         (make-ring geiser-doc-history-size))) ; next
 
 (setq geiser-doc--history (geiser-doc--make-history))
+
+(eval-after-load "session.el"
+  '(add-to-list 'session-globals-exclude 'geiser-doc--history))
 
 (defsubst geiser-doc--history-current ()
   (car geiser-doc--history))
