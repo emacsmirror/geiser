@@ -404,7 +404,7 @@ module command as a string")
 
 ;;; REPL history
 
-(defconst geiser-repl--history-separator "\n\0\n")
+(defconst geiser-repl--history-separator "\n}{\n")
 
 (defsubst geiser-repl--history-file ()
   (format "%s.%s" geiser-repl-history-filename geiser-impl--implementation))
@@ -412,13 +412,13 @@ module command as a string")
 (defun geiser-repl--read-input-ring ()
   (let ((comint-input-ring-file-name (geiser-repl--history-file))
         (comint-input-ring-separator geiser-repl--history-separator)
-        (buffer-file-coding-system 'raw-text))
+        (buffer-file-coding-system 'utf-8))
     (comint-read-input-ring t)))
 
 (defun geiser-repl--write-input-ring ()
   (let ((comint-input-ring-file-name (geiser-repl--history-file))
         (comint-input-ring-separator geiser-repl--history-separator)
-        (buffer-file-coding-system 'raw-text))
+        (buffer-file-coding-system 'utf-8))
     (comint-write-input-ring)))
 
 (defun geiser-repl--history-setup ()

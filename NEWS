@@ -14,6 +14,8 @@
   Bug fixes:
 
    - Autodoc for Guile 2.0.9+'s subr fixed, thanks to Ludovic Courtès.
+   - Fixed problem when saving REPL history that contained non-ASCII
+     chars: all UTF-8 characters should be fair game now.
    - Fixed problems with geiser-doc's history being handled by
      session.el (by not letting the latter handle it).
 
