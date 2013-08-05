@@ -36,3 +36,5 @@ web:
                   $(top_srcdir)/doc/web.texi
 	cp $(top_srcdir)/doc/geiser.css ${output_dir}
 	cp -r $(top_srcdir)/doc/img ${output_dir}
+
+EXTRA_DIST = dir
