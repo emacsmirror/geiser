@@ -181,6 +181,34 @@ or following links in error buffers.")
       (goto-char p)
       (error "No %s error" msg))))
 
+
+;;; Visibility
+(defun geiser-edit--cloak (form)
+  (intern (format "geiser-edit-cloak-%s" form)))
+
+(defun geiser-edit--hide (form)
+  (geiser-edit--show form)
+  (let ((cloak (geiser-edit--cloak form)))
+    (save-excursion
+      (goto-char (point-min))
+      (while (re-search-forward (format "(%s\\b" (regexp-quote form)) nil t)
+        (let* ((beg (match-beginning 0))
+               (end (progn (ignore-errors (goto-char beg) (forward-sexp))
+                           (point))))
+          (when (> end beg)
+            (overlay-put (make-overlay beg end) 'invisible cloak)))))
+    (add-to-invisibility-spec (cons cloak t))))
+
+(defun geiser-edit--show (form)
+  (let ((cloak (geiser-edit--cloak form)))
+    (remove-overlays nil nil 'invisible cloak)
+    (remove-from-invisibility-spec (cons cloak t))))
+
+(defun geiser-edit--toggle-visibility (form)
+  (if (and (listp buffer-invisibility-spec)
+           (assoc (geiser-edit--cloak form) buffer-invisibility-spec))
+      (geiser-edit--show form)
+    (geiser-edit--hide form)))
 
 
 ;;; Commands:

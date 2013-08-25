@@ -2,6 +2,8 @@
 
   New features:
 
+   - Racket: new commands geiser-racket-{show, hide, toggle}-tests,
+     for hiding test modules in code buffers.
    - Racket: interaction with submodules (entering them and evaluation
      within their scope).
    - New commands geiser-eval-buffer (C-c C-b) and
