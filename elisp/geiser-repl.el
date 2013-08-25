@@ -606,6 +606,7 @@ buffer."
   (set (make-local-variable 'comint-use-prompt-regexp) t)
   (set (make-local-variable 'comint-prompt-read-only)
        geiser-repl-read-only-prompt-p)
+  (setq comint-process-echoes nil)
   (set (make-local-variable 'beginning-of-defun-function)
        'geiser-repl--beginning-of-defun)
   (set (make-local-variable 'comint-input-ignoredups)
