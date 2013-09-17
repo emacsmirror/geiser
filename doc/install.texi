@@ -64,7 +64,7 @@ tell Emacs that a repo exists, you add it to @code{package-archives}:
 And then installing Geiser is as easy as:
 
 @example
-M-x install-package RET geiser RET
+M-x package-install RET geiser RET
 @end example
 
 Alternatively, you can manually download the @uref{@value{PACKAGE},
