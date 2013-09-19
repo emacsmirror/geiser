@@ -1,6 +1,9 @@
 #!/bin/bash
 #|
-top="$(dirname $0)/../scheme"
+topdir=$(dirname $0)
+elpa_scheme=$topdir/scheme
+in_scheme=$topdir/../scheme
+top=$(if [ -d $elpa_scheme ]; then echo $elpa_scheme; else echo $in_scheme; fi)
 exec racket -i -S "$top/racket" -l errortrace -cu "$0" ${1+"$@"}
 |#
 
