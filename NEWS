@@ -2,6 +2,7 @@
 
   New features:
 
+   - Geiser is now available from MELPA.
    - Racket: new commands geiser-racket-{show, hide, toggle}-submodules,
      for folding submodule forms in code buffers.
    - Racket: interaction with submodules (entering them and evaluation
@@ -12,7 +13,6 @@
      it, by Darren Hoo.
    - Improvements to syntax highlighting (define/match in racket).
 
-
   Bug fixes:
 
    - Autodoc for Guile 2.0.9+'s subr fixed, thanks to Ludovic Courtès.
@@ -20,6 +20,10 @@
      chars: all UTF-8 characters should be fair game now.
    - Fixed problems with geiser-doc's history being handled by
      session.el (by not letting the latter handle it).
+   - Paths in `geiser-load-path' are now also added to
+     `%load-compiled-path'.  Ditto for paths added via
+     `geiser-add-to-load-path`.
+   - Compatibility fixes for Emacs snapshots.
 
 * Version 0.4 (May 2, 2013)
 
