@@ -12,9 +12,11 @@
 
 ;;; Locations:
 
+;;;###autoload
 (defconst geiser-elisp-dir (file-name-directory load-file-name)
   "Directory containing Geiser's Elisp files.")
 
+;;;###autoload
 (defconst geiser-scheme-dir
   (let ((d (expand-file-name "./scheme/" geiser-elisp-dir)))
     (if (file-directory-p d)
@@ -22,6 +24,7 @@
       (expand-file-name "../scheme/" geiser-elisp-dir)))
   "Directory containing Geiser's Scheme files.")
 
+;;;###autoload
 (when (not (member geiser-elisp-dir load-path))
   (add-to-list 'load-path geiser-elisp-dir))
 
