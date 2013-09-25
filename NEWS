@@ -12,7 +12,8 @@
    - Pressing return on a previous expression in the REPL will resend
      it, by Darren Hoo.
    - Improvements to syntax highlighting (define/match in racket).
-   - Version checks for the underlying Scheme process.
+   - Version checks for the underlying Scheme process, thanks to an
+     idea of B Batsov.
 
   Bug fixes:
 
