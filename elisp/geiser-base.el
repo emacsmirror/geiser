@@ -1,6 +1,6 @@
 ;;; geiser-base.el --- shared bits
 
-;; Copyright (C) 2009, 2010, 2012  Jose Antonio Ortega Ruiz
+;; Copyright (C) 2009, 2010, 2012, 2013  Jose Antonio Ortega Ruiz
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the Modified BSD License. You should
@@ -73,6 +73,15 @@
 (defsubst geiser--symbol-at-point ()
   (let ((thing (thing-at-point 'symbol)))
     (and thing (make-symbol thing))))
+
+(defun geiser--cut-version (v)
+  (when (string-match "\\([0-9]+\\.[0-9]\\(?:\\.[0-9]+\\)?\\).*" v)
+    (match-string 1 v)))
+
+(defun geiser--version< (v1 v2)
+  (let ((v1 (geiser--cut-version v1))
+        (v2 (geiser--cut-version v2)))
+    (and v1 v2 (version< v1 v2))))
 
 
 (provide 'geiser-base)

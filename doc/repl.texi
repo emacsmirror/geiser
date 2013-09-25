@@ -345,16 +345,27 @@ not the case, the variables to tweak are @code{geiser-guile-binary} and
 @code{geiser-racket-binary}, which should be set to a string with the
 full path to the requisite binary.
 
+@cindex Version checking
+Before starting the REPL, Geiser will check wether the version of your
+Scheme interpreter is good enough.  This means that it will spend a
+couple tenths of a second launching and quickly discarding a Scheme
+process, but also that the error message you'll get if you're on the
+wrong Scheme version will be much more informative.  If you one to
+avoid version checks, just check
+@code{geiser-repl-skip-version-check-p} to @code{t} in your
+configuration.
+
 @cindex scheme load path
 @cindex scheme init file
 @cindex GUILE_LOAD_PATH
+@cindex GUILE_LOAD_COMPILED_PATH
 @cindex PLTCOLLECTS
-You can also specify a couple more initialisation parameters.  For Guile,
-@code{geiser-guile-load-path} is a list of paths to add to its load path
-when it's started, while @code{geiser-guile-init-file} is the path to an
-initialisation file to be loaded on start-up.  The equivalent variables
-for Racket are @code{geiser-racket-collects} and
-@code{geiser-racket-init-file}.
+You can also specify a couple more initialisation parameters.  For
+Guile, @code{geiser-guile-load-path} is a list of paths to add to its
+load path (and its compiled load path) when it's started, while
+@code{geiser-guile-init-file} is the path to an initialisation file to
+be loaded on start-up.  The equivalent variables for Racket are
+@code{geiser-racket-collects} and @code{geiser-racket-init-file}.
 
 Note, however, that specifying @code{geiser-guile-init-file} is @i{not}
 equivalent to changing Guile's initialization file (@file{~/.guile}),
