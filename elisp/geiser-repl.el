@@ -340,8 +340,16 @@ module command as a string")
                         txt)
     (geiser-autodoc--disinhibit-autodoc)))
 
+(defun geiser-repl--check-version (impl)
+  (when (not geiser-repl-skip-version-check-p)
+    (let ((v (geiser-repl--version impl (geiser-repl--binary impl)))
+          (r (geiser-repl--min-version impl)))
+      (when (geiser--version< v r)
+        (error "Geiser requires %s version %s but detected %s" impl r v)))))
+
 (defun geiser-repl--start-repl (impl address)
   (message "Starting Geiser REPL for %s ..." impl)
+  (when (not address) (geiser-repl--check-version impl))
   (geiser-repl--to-repl-buffer impl)
   (sit-for 0)
   (goto-char (point-max))
@@ -372,13 +380,6 @@ module command as a string")
                                     geiser-repl-query-on-kill-p)
     (message "%s up and running!" (geiser-repl--repl-name impl))))
 
-(defun geiser-repl--check-version (impl)
-  (when (not geiser-repl-skip-version-check-p)
-    (let ((v (geiser-repl--version impl (geiser-repl--binary impl)))
-          (r (geiser-repl--min-version impl)))
-      (when (geiser--version< v r)
-        (error "Geiser requires %s version %s but detected %s" impl r v)))))
-
 (defun geiser-repl--start-scheme (impl address prompt)
   (setq comint-prompt-regexp prompt)
   (let* ((name (geiser-repl--repl-name impl))
@@ -387,7 +388,6 @@ module command as a string")
                  `(,(geiser-repl--binary impl)
                    nil
                    ,@(geiser-repl--arglist impl)))))
-    (when (not address) (geiser-repl--check-version impl))
     (condition-case err
         (apply 'make-comint-in-buffer `(,name ,buff ,@args))
       (error (insert "Unable to start REPL:\n"
