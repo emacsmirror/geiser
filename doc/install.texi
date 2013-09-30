@@ -230,11 +230,11 @@ Nikolaj Schumacher's and Dmitry Gutov's @code{company-mode} provides a
 generic front-end for completion engines (such as Geiser's), with pretty
 and automatic completion lists.
 @item @uref{https://github.com/xiaohanyu/ac-geiser/, ac-geiser}
-If you prefer @code{auto-complete-mode} to @code{company-mode}, Xiau
+If you prefer @code{auto-complete-mode} to @code{company-mode}, Xiao
 Hanyu's @code{ac-geiser}, which provides a Geiser plugin for the
 popular @uref{http://cx4a.org/software/auto-complete/, Emacs Auto
 Completion Mode}, is the package for you.  Like Geiser,
-@code{ac-geiser} is available in Marmaled and MELPA, and also as an
+@code{ac-geiser} is available in Marmalade and MELPA, and also as an
 @code{el-get} package.
 @item @uref{http://www.neilvandyke.org/quack/, Quack}.
 You can still use the many goodies provided by Neil van Dyke's
