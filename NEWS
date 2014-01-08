@@ -1,3 +1,10 @@
+* Version 0.5.1
+
+  Bug fixes:
+
+   - Better support for Typed Racket: (re)definitions now work for
+     typed/racket modules (thanks to Sam Tobin-Hochstadt).
+
 * Version 0.5 (Dec 9, 2013)
 
   New features:
