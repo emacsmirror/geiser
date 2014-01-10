@@ -1,6 +1,6 @@
 ;; geiser-mode.el -- minor mode for scheme buffers
 
-;; Copyright (C) 2009, 2010, 2011, 2012, 2013 Jose Antonio Ortega Ruiz
+;; Copyright (C) 2009, 2010, 2011, 2012, 2013, 2014 Jose Antonio Ortega Ruiz
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the Modified BSD License. You should
@@ -93,23 +93,20 @@ With prefix, goes to the REPL buffer afterwards (as
   (interactive "r")
   (geiser-eval-region start end t))
 
+(geiser-impl--define-caller geiser-eval--bounds eval-bounds ()
+  "A pair with the bounds of a buffer to be evaluated, defaulting
+  to (cons (point-min) . (point-max)).")
+
 (defun geiser-eval-buffer (&optional and-go raw nomsg)
   "Eval the current buffer in the Geiser REPL.
 
 With prefix, goes to the REPL buffer afterwards (as
 `geiser-eval-buffer-and-go')"
   (interactive "P")
-  (let ((start (point-min))
-        (end (point-max)))
-    (save-restriction
-      (narrow-to-region start end)
-      (check-parens))
-    (geiser-debug--send-region nil
-                               start
-                               end
-                               (and and-go 'geiser--go-to-repl)
-                               (not raw)
-                               nomsg)))
+  (let* ((bounds (geiser-eval--bounds geiser-impl--implementation))
+         (from (or (car bounds) (point-min)))
+         (to (or (cdr bounds) (point-max))))
+    (geiser-eval-region from to and-go raw nomsg)))
 
 (defun geiser-eval-buffer-and-go ()
   "Eval the current buffer in the Geiser REPL and visit it afterwads."

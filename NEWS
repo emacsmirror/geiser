@@ -4,6 +4,9 @@
 
    - Better support for Typed Racket: (re)definitions now work for
      typed/racket modules (thanks to Sam Tobin-Hochstadt).
+   - Better behaviour for geiser-eval-buffer in racket
+     buffers that contain a #lang directive.  But you'd better use C-c
+     C-k instead.
 
 * Version 0.5 (Dec 9, 2013)
 
