@@ -52,8 +52,12 @@
 
 ;;; Extra syntax keywords
 (defconst geiser-syntax--keywords
-  '(("\\[\\(else\\)\\>" . 1)
-    ("(\\(parameterize\\)\\>" . 1)))
+  `(("\\[\\(else\\)\\>" . 1)
+    ("(\\(parameterize\\)\\>" . 1)
+    (,(rx "(" (group "define-syntax-rule") eow (* space)
+          (? "(") (? (group (1+ word))))
+      (1 font-lock-keyword-face)
+      (2 font-lock-variable-name-face))))
 
 (font-lock-add-keywords 'scheme-mode geiser-syntax--keywords)
 
