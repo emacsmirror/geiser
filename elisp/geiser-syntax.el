@@ -57,7 +57,7 @@
     (,(rx "(" (group "define-syntax-rule") eow (* space)
           (? "(") (? (group (1+ word))))
       (1 font-lock-keyword-face)
-      (2 font-lock-function-name-face))))
+      (2 font-lock-function-name-face nil t))))
 
 (font-lock-add-keywords 'scheme-mode geiser-syntax--keywords)
 
