@@ -508,6 +508,12 @@ to said exception type.  Both the error and exception link faces are
 customizable (@code{geiser-font-lock-error-link} and
 @code{geiser-font-lock-doc-link}).
 
+By default, Geiser will tele-transport your pointer to the debug buffer:
+if you prefer to stay in the source buffer, set
+@code{geiser-debug-jump-to-debug-p} to nil.  And if, in addition, you
+don't even want to see the error trace, customize
+@code{geiser-debug-show-debug-p}, again, to nil.
+
 On the other hand, Guile's reaction to evaluation errors is different:
 it enters the debugger in its REPL.  Accordingly, the REPL buffer will
 pop up if your evaluation fails in a Guile file, and the error message

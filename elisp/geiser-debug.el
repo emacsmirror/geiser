@@ -1,6 +1,6 @@
 ;;; geiser-debug.el -- displaying debug information and evaluation results
 
-;; Copyright (C) 2009, 2010, 2011, 2012, 2013 Jose Antonio Ortega Ruiz
+;; Copyright (C) 2009, 2010, 2011, 2012, 2013, 2014 Jose Antonio Ortega Ruiz
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the Modified BSD License. You should
@@ -42,6 +42,22 @@ has no effect."
   :group 'geiser-debug
   :type 'int)
 
+(geiser-custom--defcustom geiser-debug-jump-to-debug-p t
+  "When set to t (the default), jump to the debug pop-up buffer
+  in case of evaluation errors.
+
+See also `geiser-debug-show-debug-p`. "
+  :group 'geiser-debug
+  :type 'boolean)
+
+(geiser-custom--defcustom geiser-debug-show-debug-p t
+  "When set to t (the default), show the debug pop-up buffer in
+  case of evaluation errors.
+
+This option takes effect even if `geiser-debug-jump-to-debug-p`
+is set."
+  :group 'geiser-debug
+  :type 'boolean)
 
 (geiser-custom--defcustom geiser-debug-auto-display-images-p t
   "Whether to automatically invoke the external viewer to display
@@ -116,9 +132,8 @@ buffer.")
     (insert res)
     (let ((end (point)))
       (goto-char begin)
-      (let ((no
-             (geiser-image--replace-images t
-                                           geiser-debug-auto-display-images-p)))
+      (let ((no (geiser-image--replace-images
+                 t geiser-debug-auto-display-images-p)))
         (goto-char end)
         (newline 2)
         (and no (> no 0))))))
@@ -151,7 +166,15 @@ buffer.")
         (insert "\nExpression evaluated was:\n\n")
         (geiser-debug--display-error impl module nil what))
       (goto-char (point-min)))
-    (when (or img dbg) (geiser-debug--pop-to-buffer))))
+    (when (or img dbg)
+      (geiser-debug--pop-to-buffer)
+      (when (and dbg (not geiser-debug-jump-to-debug-p))
+        (next-error)
+        (when (not geiser-debug-show-debug-p)
+          (pop-to-buffer (geiser-debug--buffer)
+                         'display-buffer-reuse-window t)
+          (View-quit))
+        (message "Evaluation error: %s" dbg)))))
 
 (defsubst geiser-debug--wrap-region (str)
   (format "(begin %s)" str))
