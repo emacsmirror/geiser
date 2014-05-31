@@ -130,6 +130,9 @@ third key not modified by @key{Control}; e.g.,
 @item C-c M-o
 @tab @code{geiser-repl-clear-buffer}
 @tab Clear REPL buffer
+@item C-c C-k
+@tab @code{geiser-repl-interrupt}
+@tab Interrupt REPL evaluation (signalling inferior scheme)
 @item C-c C-q
 @tab @code{geiser-repl-exit}
 @tab Kill Scheme process

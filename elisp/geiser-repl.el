@@ -452,6 +452,11 @@ module command as a string")
     (let ((comint-input-filter (lambda (x) nil)))
       (comint-send-input nil t))))
 
+(defun geiser-repl-interrupt ()
+  (interactive)
+  (when (get-buffer-process (current-buffer))
+    (interrupt-process nil comint-ptyp)))
+
 
 ;;; REPL history
 
@@ -684,6 +689,9 @@ buffer."
    "Next input matching current")
   ("Previous input" "\C-c\M-p" comint-previous-input)
   ("Next input" "\C-c\M-n" comint-next-input)
+  --
+  ("Interrupt evaluation" ("\C-c\C-k" "\C-c\C-c" "\C-ck")
+   geiser-repl-interrupt)
   --
   (mode "Autodoc mode" ("\C-c\C-da" "\C-c\C-d\C-a") geiser-autodoc-mode)
   ("Symbol documentation" ("\C-c\C-dd" "\C-c\C-d\C-d")
