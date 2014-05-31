@@ -33,7 +33,8 @@ process giving you the REPL, make those Scheme buffers come to life.
 @section Activating Geiser
 
 @cindex geiser-mode
-@img{geiser-mode, right} With Geiser installed following any of the
+@img{geiser-mode, right}
+With Geiser installed following any of the
 procedures described in @ref{The easy and quick way} or @ref{From the
 source's mouth}, Emacs will automatically activate @i{geiser-mode} when
 opening a Scheme buffer.  Geiser also instructs Emacs to consider files
@@ -216,7 +217,8 @@ If you use a numeric prefix, as in @kbd{C-u C-c C-z}, besides being
 teleported to the REPL, the latter will switch to the namespace of the
 Scheme source file, as if you had used @kbd{C-c C-m} in the REPL, with
 the source file's module as argument;
-cf. discussion in @altr{Switching context,,Switching context,. This}
+cf. discussion in
+@altr{Switching context,,Switching context,. This}
 command is also bound to @kbd{C-c C-a}.
 
 Once you're in the REPL, the same @kbd{C-c C-z} shortcut will bring
@@ -284,7 +286,8 @@ bound by default to @kbd{C-c C-d s}, to show the autodoc string for the
 symbol at point.
 
 @cindex autodoc explained
-@img{autodoc-scm, right} The way autodoc displays information deserves
+@img{autodoc-scm, right}
+The way autodoc displays information deserves
 some explanation.  It will first show the name of the module where the
 identifier at hand is defined, followed by a colon and the identifier
 itself.  If the latter corresponds to a procedure or macro, it will be
@@ -301,7 +304,8 @@ macros defined using @code{syntax-case}).  Another way in which autodoc
 displays its ignorance is by using an underscore to display parameters
 whose name is beyond its powers.
 
-@img{autodoc-multi, right} It can also be the case that a function or
+@img{autodoc-multi, right}
+It can also be the case that a function or
 macro has more than one signature (e.g., functions defined using
 @code{case-lambda}, or some @code{syntax-rules} macros, for which Geiser
 has often the black magic necessary to retrieve their actual arities).
@@ -312,7 +316,8 @@ As you have already noticed, the whole autodoc message is enclosed in
 parentheses.  After all, we're talking about Scheme here.
 
 @cindex autodoc for variables
-@img{autodoc-var, right} Finally, life is much easier when your cursor
+@img{autodoc-var, right}
+Finally, life is much easier when your cursor
 is on a symbol corresponding to a plain variable: you'll see in the echo
 area its name, preceded by the module where it's defined, and followed
 by its value, with an intervening arrow for greater effect.  This time,
@@ -371,7 +376,8 @@ some other tidbits for re-exported identifiers.
 
 You can also ask Geiser to display information about a module, in the
 form of a list of its exported identifiers, using @kbd{C-c C-d C-m},
-exactly as you would do in @altr{repl-mod,the REPL,The REPL,.}
+exactly as you would do in
+@altr{repl-mod,the REPL,The REPL,.}
 
 In both cases, the documentation browser will show a couple of buttons
 giving you access to further documentation.  First, you'll see a button

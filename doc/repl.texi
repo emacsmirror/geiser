@@ -24,7 +24,8 @@ Read-Eval-Print Loop), Geiser provides the generic interactive command
 @command{run-geiser}.  If you invoke it (via, as is customary in Emacs,
 @kbd{M-x run-geiser}), you'll be saluted by a prompt asking which one of
 the supported implementations you want to launch---yes, you can stop the
-asking, see @altr{active-implementations,below,Customization and tips,.}
+asking, see
+@altr{active-implementations,below,Customization and tips,.}
 Tabbing for completion will offer you, as of this writing, @code{guile}
 and @code{racket}.  Just choose your poison, and a new REPL buffer will
 pop up (by default, the REPL will appear in a new window: if that annoys
@@ -37,7 +38,8 @@ If all went according to plan, you'll be facing an
 implementation-dependent banner, followed by an interactive prompt.
 Going according to plan includes having the executable of the Scheme you
 chose in your path.  If that's not the case, you can tell Emacs where it
-is, as described in @altr{impl-binary,a moment,Customization and tips,.}
+is, as described in
+@altr{impl-binary,a moment,Customization and tips,.}
 Returning to our REPL, the first thing to notice is that the funny
 prompt is telling you your current module: its name is the part just
 after the @@ sign (in Guile, that means @code{guile-user}, while
@@ -134,7 +136,8 @@ both commands will just sever the connection and leave the remote
 process alone.  If worse comes to worst and the process is dead, @kbd{C-c
 C-z} will restart it.  However, the same shortcut, issued when the REPL is
 alive, will bring you back to the buffer you came from, as explained
-in @altr{switching-repl-buff,this section,The source and the REPL,.}
+in
+@altr{switching-repl-buff,this section,The source and the REPL,.}
 
 The remaining commands are meatier, and deserve sections of their own.
 
@@ -263,8 +266,8 @@ name.
 
 The list of exported bindings is shown, again, in a buffer belonging to
 Geiser's documentation browser, where you have at your disposal a bunch
-of navigation commands listed in @altr{Documentation browser,our
-cheat-sheet,Documentation browser,.}
+of navigation commands listed in
+@altr{Documentation browser,our cheat-sheet,Documentation browser,.}
 
 We'll have a bit more to say about the documentation browser in
 @altr{doc-browser,a later section,Documentation helpers,.}
