@@ -4,6 +4,8 @@
 
    - New customizable variables `geiser-debug-jump-to-debug-p` and
      `geiser-debug-show-debug-p`.
+   - Better fontification of some scheme keywords (thanks to Diogo
+     F. S. Ramos).
 
   Bug fixes:
 
@@ -12,6 +14,9 @@
    - Better behaviour for geiser-eval-buffer in racket
      buffers that contain a #lang directive.  But you'd better use C-c
      C-k instead.
+   - Better behaviour of C-c C-c when interrupting looping functions
+     in the REPL.
+   - Fixes for Makefile target html-am (as in now it works).
 
 * Version 0.5 (Dec 9, 2013)
 
