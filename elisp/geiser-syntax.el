@@ -255,6 +255,10 @@ implementation-specific entries for font-lock-keywords.")
 (defsubst geiser-syntax--nesting-level ()
   (or (nth 0 (syntax-ppss)) 0))
 
+(defun geiser-syntax--pop-to-top ()
+  (ignore-errors
+    (while (> (geiser-syntax--nesting-level) 0) (backward-up-list))))
+
 (defsubst geiser-syntax--in-string-p ()
   (nth 3 (syntax-ppss)))
 
@@ -287,7 +291,7 @@ implementation-specific entries for font-lock-keywords.")
          (smth (or fst (not (looking-at-p "[\s \s)\s>\s<\n]"))))
          (path (and fst `((,fst 0)))))
     (save-excursion
-      (while (not (zerop (geiser-syntax--nesting-level)))
+      (while (> (or (geiser-syntax--nesting-level) 0) 0)
         (let ((boundary (point)))
           (geiser-syntax--skip-comment/string)
           (backward-up-list)
@@ -383,8 +387,7 @@ implementation-specific entries for font-lock-keywords.")
         (skip-syntax-forward "->")
         (let ((boundary (point))
               (nesting (geiser-syntax--nesting-level)))
-          (while (not (zerop (geiser-syntax--nesting-level)))
-            (backward-up-list))
+          (geiser-syntax--pop-to-top)
           (multiple-value-bind (form end)
               (geiser-syntax--form-after-point boundary)
             (delete sym
