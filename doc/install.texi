@@ -46,18 +46,14 @@ for earlier versions, the page i just linked to twice will tell you
 where to find the goodies.
 
 ELPA packages live in repositories accessible via HTTP.  You can find
-Geiser's package either in @uref{http://marmalade-repo.org, Marmalade}
-(for releases) or in @uref{http://melpa.milkbox.net, MELPA} (for the
-unstable version directly from the git repo).  To tell Emacs that a repo
-exists, you add it to @code{package-archives}:
+Geiser's package in @uref{http://melpa.milkbox.net, MELPA} (directly
+from the git repo).  To tell Emacs that a repo exists, you add it to
+@code{package-archives}:
 
 @example
 (require 'package)
 (add-to-list 'package-archives
-  '("marmalade" . "http://marmalade-repo.org/packages/"))
-;; You don't need this one if you prefer marmalade and released versions:
-;; (add-to-list 'package-archives
-;;  '("melpa" . "http://melpa.milkbox.net/packages/"))
+  '("melpa" . "http://melpa.milkbox.net/packages/"))
 (package-initialize)
 @end example
 
