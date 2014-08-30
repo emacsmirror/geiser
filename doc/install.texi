@@ -46,14 +46,22 @@ for earlier versions, the page i just linked to twice will tell you
 where to find the goodies.
 
 ELPA packages live in repositories accessible via HTTP.  You can find
-Geiser's package in @uref{http://melpa.milkbox.net, MELPA} (directly
-from the git repo).  To tell Emacs that a repo exists, you add it to
+Geiser's package in either
+@uref{http://melpa-stable.milkbox.net/#/geiser, MELPA stable} or, if you
+like living on the bleeding edge,
+@uref{http://melpa.milkbox.net/#/geiser, MELPA} (directly from the git
+repo).  To tell Emacs that an ELPA repo exists, you add it to
 @code{package-archives}:
 
 @example
 (require 'package)
+;;; either the stable version:
+
 (add-to-list 'package-archives
-  '("melpa" . "http://melpa.milkbox.net/packages/"))
+  ;; choose either the stable or the latest git version:
+  ;; '("melpa-stable" . "http://melpa-stable.milkbox.net/packages/")
+  '("melpa-unstable" . "http://melpa.milkbox.net/packages/"))
+
 (package-initialize)
 @end example
 
