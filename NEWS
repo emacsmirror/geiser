@@ -1,3 +1,9 @@
+* Version 0.7
+
+  New features:
+
+   - `company-mode' support completed with a method for `doc-buffer'.
+
 * Version 0.6 (Aug 9, 2014)
 
   New features:
