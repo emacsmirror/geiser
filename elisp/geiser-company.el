@@ -1,6 +1,6 @@
 ;; geiser-company.el -- integration with company-mode
 
-;; Copyright (C) 2009, 2010, 2011, 2012, 2013 Jose Antonio Ortega Ruiz
+;; Copyright (C) 2009, 2010, 2011, 2012, 2013, 2014 Jose Antonio Ortega Ruiz
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the Modified BSD License. You should
@@ -49,7 +49,7 @@
     (if (or (not ds) (not (listp ds)))
         (message "No documentation available for '%s'" symbol)
       (with-current-buffer (get-buffer-create "*company-documentation*")
-        (geiser-doc-symbol--fill-current-buffer ds symbol module impl)
+        (geiser-doc--render-docstring ds symbol module impl)
         (current-buffer)))))
 
 (defun geiser-company--location (id)

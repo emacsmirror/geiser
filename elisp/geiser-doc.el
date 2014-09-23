@@ -1,6 +1,6 @@
 ;;; geiser-doc.el -- accessing scheme-provided documentation
 
-;; Copyright (C) 2009, 2010, 2011, 2012, 2013 Jose Antonio Ortega Ruiz
+;; Copyright (C) 2009, 2010, 2011, 2012, 2013, 2014 Jose Antonio Ortega Ruiz
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the Modified BSD License. You should
@@ -287,7 +287,8 @@ help (e.g. browse an HTML page) implementing this method.")
                                                           impl)
                                       impl))))
 
-(defun geiser-doc-symbol--fill-current-buffer (docstring symbol &optional module impl)
+(defun geiser-doc--render-docstring
+  (docstring symbol &optional module impl)
   (erase-buffer)
   (geiser-doc--insert-title
    (geiser-autodoc--str* (cdr (assoc "signature" docstring))))
@@ -309,7 +310,7 @@ help (e.g. browse an HTML page) implementing this method.")
       (if (or (not ds) (not (listp ds)))
           (message "No documentation available for '%s'" symbol)
         (geiser-doc--with-buffer
-          (geiser-doc-symbol--fill-current-buffer ds symbol module impl))
+          (geiser-doc--render-docstring ds symbol module impl))
         (geiser-doc--pop-to-buffer)))))
 
 (defun geiser-doc-symbol-at-point (&optional arg)
