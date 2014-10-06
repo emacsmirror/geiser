@@ -56,7 +56,8 @@
   (let ((fs (geiser--features-list)))
     (unload-feature 'geiser-reload t)
     (dolist (f fs)
-      (when (featurep f) (unload-feature f t)))))
+      (when (featurep f) (unload-feature f t)))
+    (remove-hook 'scheme-mode-hook 'geiser-mode--maybe-activate)))
 
 (defun geiser-reload (&optional arg)
   "Reload Geiser.
