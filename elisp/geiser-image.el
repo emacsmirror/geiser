@@ -1,6 +1,6 @@
 ;; geiser-image.el -- support for image display
 
-;; Copyright (c) 2012 Jose Antonio Ortega Ruiz
+;; Copyright (c) 2012, 2015 Jose Antonio Ortega Ruiz
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the Modified BSD License. You should
@@ -14,6 +14,7 @@
 
 (require 'geiser-custom)
 (require 'geiser-base)
+(require 'geiser-impl)
 
 
 ;;; Customization:
@@ -34,34 +35,35 @@
   :group 'geiser-image)
 
 (geiser-custom--defcustom geiser-image-cache-dir nil
-  ;; Currently, this variable is updated, if needed, by racket during
-  ;; initialization.  If/when we add image support for other
-  ;; implementations, we'll have to work with implementation-specific
-  ;; caches.
-  "Directory where generated images are stored.  If nil, the
-system wide tmp dir will be used."
+  "Default directory where generated images are stored.
+
+If nil,the system wide tmp dir will be used."
   :type 'path
   :group 'geiser-image)
 
 (geiser-custom--defface image-button
   'button geiser-image "image buttons in terminal buffers")
 
+(geiser-impl--define-caller geiser-image--cache-dir image-cache-dir ()
+  "Directory where generated images are stored.  If this function
+returns nil, no images are generated.")
+
 
 
 (defun geiser-image--list-cache ()
   "List all the images in the image cache."
-  (and geiser-image-cache-dir
-       (file-directory-p geiser-image-cache-dir)
-       (let ((files (directory-files-and-attributes
-                     geiser-image-cache-dir t "geiser-img-[0-9]*.png")))
-         (mapcar 'car
-                 (sort files (lambda (a b)
-                               (< (float-time (nth 6 a))
-                                  (float-time (nth 6 b)))))))))
+  (let ((cdir (geiser-image--cache-dir nil)))
+    (and cdir
+         (file-directory-p cdir)
+         (let ((files (directory-files-and-attributes cdir t
+                                                      "geiser-img-[0-9]*.png")))
+           (mapcar 'car (sort files (lambda (a b)
+                                      (< (float-time (nth 6 a))
+                                         (float-time (nth 6 b))))))))))
 
 (defun geiser-image--clean-cache ()
   "Clean all except for the last `geiser-image-cache-keep-last'
-images in `geiser-image-cache-dir'."
+images in `geiser-image--cache-dir'."
   (interactive)
   (dolist (f (butlast (geiser-image--list-cache) geiser-image-cache-keep-last))
     (delete-file f)))
@@ -101,9 +103,7 @@ images in `geiser-image-cache-dir'."
             (if (and inline-images-p (display-images-p))
                 (insert-image (create-image file) "[image]")
               (geiser-image--insert-button file)
-              (when auto-p (geiser-image--display file)))
-            (setq geiser-image-cache-dir (file-name-directory file))
-          (geiser-image--clean-cache)))))
+              (when auto-p (geiser-image--display file)))))))
     seen))
 
 (defun geiser-view-last-image (n)
