@@ -1,8 +1,10 @@
-* Version 0.7
+* Version 0.6.1
 
-  New features:
+  Improved features:
 
    - `company-mode' support completed with a method for `doc-buffer'.
+   - Support for multiple image display in Racket, including image
+     objects embedded in structured values (thanks to Greg Hendershott).
 
 * Version 0.6 (Aug 9, 2014)
 
