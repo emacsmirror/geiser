@@ -24,6 +24,8 @@ namely:
 @item
 @uref{http://www.gnu.org/software/guile, Guile} @value{GUILE_VERSION} or
 better
+@item
+@uref{http://call-cc.org, Chicken} @value{CHICKEN_VERSION} or better
 @end itemize
 
 Since Geiser supports multiple REPLs, having both of them will just add
@@ -73,7 +75,17 @@ M-x package-install RET geiser RET
 
 Alternatively, you can manually download the @uref{@value{PACKAGE},
 package file}, and install from your local disk with @kbd{M-x
-package-install-file}
+package-install-file}.
+
+@cindex Chicken
+@cindex Chicken installation
+If you plan to use Chicken, you'll need also to fire a terminal and
+configure a couple of Chicken eggs:
+@example
+$ chicken-install -s apropos chicken-doc
+$ cd `csi -p '(chicken-home)'`
+$ curl http://3e8.org/pub/chicken-doc/chicken-doc-repo.tgz | sudo tar zx
+@end example
 
 With that, you are pretty much all set up.  See @ref{The REPL} to start
 using Geiser.

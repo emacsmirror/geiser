@@ -1,7 +1,9 @@
-@set VERSION 0.6
-@set RELEASE_DATE August 2014
+@set VERSION 0.7
+@set VERSION_NICK Freija
+@set RELEASE_DATE February 2015
 @set GUILE_VERSION 2.0.9
 @set RACKET_VERSION 6.0
+@set CHICKEN_VERSION 4.8.0
 @set EMACS_VERSION 23.2
 @set DOWN_BASE http://download.savannah.gnu.org/@/releases/@/geiser
 @set PACKAGE_REPO @value{DOWN_BASE}/@/packages
@@ -12,19 +14,19 @@
 @uref{@value{DOWN_BASE}/@/@value{VERSION}/@/\FILE\, \CAPT\}
 @end macro
 
-@macro vblurb{GVERS, RVERS, DATE}
+@macro vblurb{GVERS, CVERS, RVERS, DATE}
 @html
 <div class="version" align="right">
 @end html
 @downfile{@value{TARBALL},
-          Version @value{VERSION} (\DATE\) Guile \GVERS\+ and Racket \RVERS\+}
+          Version @value{VERSION} ``@value{VERSION_NICK}'' (\DATE\) Guile \GVERS\+ Chicken \CVERS\+ and Racket \RVERS\+}
 @html
 </div>
 @end html
 @end macro
 
 @macro dvblurb{}
-@vblurb{@value{GUILE_VERSION}, @value{RACKET_VERSION}, @value{RELEASE_DATE}}
+@vblurb{@value{GUILE_VERSION}, @value{CHICKEN_VERSION}, @value{RACKET_VERSION}, @value{RELEASE_DATE}}
 @end macro
 
 @macro altr{LINK, TXT, TLINK, TRAIL}

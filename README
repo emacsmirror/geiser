@@ -31,7 +31,7 @@
     Geiser needs Emacs 23.2 or better, and at least one of the
     supported scheme implementations:
       - Guile 2.0 or better.
-      - PLT Racket 5.3 or better.
+      - PLT Racket 6.0 or better.
       - Chicken 4.8.0 or better.
 
 * Installation
@@ -43,8 +43,15 @@
   or byte-compiled and installed after perfoming the standard
   configure/make/make install dance.  See the INSTALL file for more details.
 
-  Chicken Scheme requires additional steps which are detailed in the INSTALL
-  file and the README.elpa file.
+** Chicken Addendum
+    These steps are necessary to fully support Chicken Scheme, but are
+    not required for any other scheme.
+
+    - Install the necessary support eggs:
+      $ chicken-install -s apropos chicken-doc
+    - Update the Chicken documentation database:
+      $ cd `csi -p '(chicken-home)'`
+      $ curl http://3e8.org/pub/chicken-doc/chicken-doc-repo.tgz | sudo tar zx
 
 * Basic configuration
 

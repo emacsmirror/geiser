@@ -1,6 +1,6 @@
 ;;; geiser-base.el --- shared bits
 
-;; Copyright (C) 2009, 2010, 2012, 2013  Jose Antonio Ortega Ruiz
+;; Copyright (C) 2009, 2010, 2012, 2013, 2015  Jose Antonio Ortega Ruiz
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the Modified BSD License. You should
@@ -13,6 +13,8 @@
 ;; utilities and emacsen compatibility bits.
 
 ;;; Emacs compatibility:
+
+(require 'ring)
 
 (eval-after-load "ring"
   '(when (not (fboundp 'ring-member))

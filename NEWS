@@ -1,4 +1,12 @@
-* Version 0.6.1
+* Version 0.7 "Freija"
+
+  This release is dedicated to Dan's three-months-old daughter Freija,
+  who shared her dad's lap with his laptop while he was hacking on the
+  new Chicken scheme support for Geiser.
+
+  New features:
+
+   - Chicken support, by Dan Leslie.
 
   Improved features:
 

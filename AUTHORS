@@ -1,6 +1,8 @@
 Jose A. Ortega Ruiz <jao@gnu.org> designed and implemented Geiser and
 is its active maintainer. For more boring details about him, see
-<http://hacks-galore.org/jao>.
+<http://jao.io>.
+
+Daniel J. Leslie implemented Geiser's support for Chicken.
 
 Contributors:
 
@@ -11,6 +13,5 @@ Ray Racine
 Nick Parker
 Darren Hoo
 Ludovic Courtès
-Daniel J. Leslie
 
 See also <https://github.com/jaor/geiser/contributors>.

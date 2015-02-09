@@ -40,12 +40,14 @@ implementation itself).
 If your favourite Scheme supports the above modus operandi, it has all
 that's needed for a bare-bones Geiser mode.  But Geiser can, and will,
 use any metadata available: procedure arities and argument lists to
-display interactive help, documentation strings, location information to
-jump to definitions, export lists to provide completion, and so on and
-so forth.  Although this is not an all-or-none proposition (Geiser can
-operate with just part of that functionality available), i've initially
-concentrated in supporting those Schemes with the richest (to my
-knowledge) introspection capabilities, namely, Guile and Racket.
+display interactive help, documentation strings, location information
+to jump to definitions, export lists to provide completion, and so on
+and so forth.  Although this is not an all-or-none proposition (Geiser
+can operate with just part of that functionality available), i
+initially concentrated in supporting those Schemes with the richest
+(to my knowledge) introspection capabilities, namely, Guile and
+Racket.  Later on, Dan Leslie added support for Chicken, and there's
+active work to add support for scsh.
 
 @node Showing off,  , Modus operandi, Introduction
 @section Showing off

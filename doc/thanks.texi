@@ -1,6 +1,10 @@
 @node No hacker is an island, Index, Cheat sheet, Top
 @chapter No hacker is an island
 @cindex thanks
+Dan Leslie, with the help of his three-months old daughter Freija,
+proved there's a smidgen of sense in this madness by adding support
+for Chicken to version 0.7 of Geiser, several years after it was born.
+
 Andy Wingo, Geiser's first user, has been a continuous source of
 encouragement and suggestions, and keeps improving Guile and heeding
 my feature requests.

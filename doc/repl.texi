@@ -43,14 +43,15 @@ is, as described in
 Returning to our REPL, the first thing to notice is that the funny
 prompt is telling you your current module: its name is the part just
 after the @@ sign (in Guile, that means @code{guile-user}, while
-Racket's top namespace doesn't have a name; cf. discussion in
-@altr{Switching context,,Switching context,).} Other than that, this is
-pretty much equivalent to having a command-line interpreter in a
-terminal, with a bunch of add-ons that we'll be reviewing below.  You
-can start typing sexps right there: Geiser will only dispatch them for
-evaluation when they're complete, and will indent new lines properly
-until then.  It will also keep track of your input, maintaining a
-history file that will be reloaded whenever you restart the REPL.
+Racket's and Chicken's top namespaces don't have a name;
+cf. discussion in @altr{Switching context,,Switching context,).} Other
+than that, this is pretty much equivalent to having a command-line
+interpreter in a terminal, with a bunch of add-ons that we'll be
+reviewing below.  You can start typing sexps right there: Geiser will
+only dispatch them for evaluation when they're complete, and will
+indent new lines properly until then.  It will also keep track of your
+input, maintaining a history file that will be reloaded whenever you
+restart the REPL.
 
 @cindex REPL, faces
 @cindex faces, in the REPL
@@ -153,12 +154,12 @@ In tune with Geiser's
 @ifnothtml
 @i{modus operandi},
 @end ifnothtml
-evaluations in the REPL take place in the namespace of the
-current module.  As noted above, the REPL's prompt tells you the name of
-the current module.  To switch to a different one, you can use the
-command @command{switch-to-geiser-module}, bound to @kbd{C-c C-m}.
-You'll notice that Geiser simply uses a couple of meta-commands provided
-by the Scheme REPL (the stock @command{,m} in Guile and the
+evaluations in the REPL take place in the namespace of the current
+module.  As noted above, the REPL's prompt tells you the name of the
+current module.  To switch to a different one, you can use the command
+@command{switch-to-geiser-module}, bound to @kbd{C-c C-m}.  You'll
+notice that Geiser simply uses a couple of meta-commands provided by
+the Scheme REPL (the stock @command{,m} in Guile and Chicken and the
 (geiser-defined) @command{,enter} in Racket), and that it doesn't even
 try to hide that fact.  That means that you can freely use said native
 ways directly at the REPL, and Geiser will be happy to oblige.  In
@@ -166,8 +167,8 @@ Racket, @command{,enter} works like Racket's standard @code{enter!}
 form, but you can also provide a path string as its argument (e.g.,
 @command{,enter "/tmp/foo.rkt"} is equivalent to @command{,enter (file
 "/tmp/foo.rkt")}).  Like @code{enter!}, @command{,enter} accepts also
-module names (as in, say, @command{,enter geiser/main}).  As mentioned,
-Guile's @command{,m} is used @i{as is}.
+module names (as in, say, @command{,enter geiser/main}).  As
+mentioned, in Guile and Chicken, @command{,m} is used @i{as is}.
 
 @cindex current module, change
 Once you enter a new module, only those bindings visible in its
@@ -246,15 +247,15 @@ represented by a list made up of its name and that value.  When the
 argument is a keyword argument, its name has ``#:'' as a prefix.
 
 @cindex help on identifier
-If that's not enough documentation for you, @kbd{C-c C-d d} will open a
-separate documentation buffer with help on the symbol at point.  This
-buffer will contain implementation-specific information about the
-identifier (e.g., its docstring for Guile, or its contract, if any, for
-Racket), and a handy button to open the corresponding manual entry for
-the symbol, which will open an HTML page (for Racket) or the texinfo
-manual (for Guile). If you'd rather go directly to the manual, try
-@kbd{C-c C-d i}, which invokes @code{geiser-doc-look-up-manual} as the
-handy button does.
+If that's not enough documentation for you, @kbd{C-c C-d d} will open
+a separate documentation buffer with help on the symbol at point.
+This buffer will contain implementation-specific information about the
+identifier (e.g., its docstring for Guile, or its contract, if any,
+for Racket), and a handy button to open the corresponding manual entry
+for the symbol, which will open an HTML page (for Racket and Chicken)
+or the texinfo manual (for Guile). If you'd rather go directly to the
+manual, try @kbd{C-c C-d i}, which invokes
+@code{geiser-doc-look-up-manual} as the handy button does.
 
 @cindex module exports
 @anchor{repl-mod} Geiser can also produce for you a list, classified by
@@ -285,8 +286,8 @@ the file where it's defined will be opened for you.
 @section Seeing is believing
 
 @cindex image support
-In schemes that support images as values (currently, that means Racket),
-the REPL will display them inline if you're using them in a
+In schemes that support images as values (currently, that means
+Racket), the REPL will display them inline if you're using them in a
 graphics-aware Emacs.
 
 @imgc{repl-images}
