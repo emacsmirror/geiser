@@ -1,4 +1,4 @@
-# Copyright (C) 2009, 2010, 2011, 2012, 2013, 2014 Jose A Ortega Ruiz.
+# Copyright (C) 2009, 2010, 2011, 2012, 2013, 2014, 2015 Jose A Ortega Ruiz.
 #
 # This file is free software; as a special exception the author gives
 # unlimited permission to copy and/or distribute it, with or without
@@ -8,7 +8,7 @@
 # WITHOUT ANY WARRANTY, to the extent permitted by law; without even the
 # implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
-AC_INIT([Geiser],[0.6],[geiser-users@nongnu.org],geiser)
+AC_INIT([Geiser],[0.7],[geiser-users@nongnu.org],geiser)
 AC_CONFIG_SRCDIR([elisp/geiser.el])
 AM_INIT_AUTOMAKE
 
