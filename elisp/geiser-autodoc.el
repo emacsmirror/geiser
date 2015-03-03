@@ -1,6 +1,6 @@
 ;; geiser-autodoc.el -- autodoc mode
 
-;; Copyright (C) 2009, 2010, 2011, 2012 Jose Antonio Ortega Ruiz
+;; Copyright (C) 2009, 2010, 2011, 2012, 2015 Jose Antonio Ortega Ruiz
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the Modified BSD License. You should
@@ -26,7 +26,8 @@
   :group 'geiser)
 
 (geiser-custom--defface autodoc-current-arg
-  'bold geiser-autodoc "highlighting current argument in autodoc messages")
+  'font-lock-variable-name-face
+  geiser-autodoc "highlighting current argument in autodoc messages")
 
 (geiser-custom--defface autodoc-identifier
   'font-lock-function-name-face
