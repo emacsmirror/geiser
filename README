@@ -57,10 +57,10 @@
 
   The loading invocations above install all supported Scheme
   implementations. You can list explicitly the ones that you want by
-  setting the variable `geiser-impl-installed-implementations' *before*
+  setting the variable `geiser-active-implementations' *before*
   loading geiser.el. For instance:
 
-  (setq geiser-impl-installed-implementations '(racket guile))
+  (setq geiser-active-implementations '(chicken guile))
 
    On opening a scheme file, Geiser will try to guess its Scheme,
    defaulting to the first in the list. Use `C-c C-s' to select the
