@@ -7,8 +7,6 @@
 ;; have received a copy of the license along with this program. If
 ;; not, see <http://www.xfree86.org/3.3.6/COPYRIGHT2.html#5>.
 
-
-
 ;; Settings and vars shared by all geiser modules, including little
 ;; utilities and emacsen compatibility bits.
 
@@ -29,7 +27,6 @@
     (let ((inhibit-changing-match-data t))
       (looking-at regexp))))
 
-
 ;;; Utilities:
 
 (defsubst geiser--chomp (str)
@@ -77,7 +74,7 @@
     (and thing (make-symbol thing))))
 
 (defun geiser--cut-version (v)
-  (when (string-match "\\([0-9]+\\.[0-9]\\(?:\\.[0-9]+\\)?\\).*" v)
+  (when (string-match "\\([0-9]+\\(?:\\.[0-9]+\\.[0-9]+\\)?\\).*" v)
     (match-string 1 v)))
 
 (defun geiser--version< (v1 v2)
@@ -85,5 +82,4 @@
         (v2 (geiser--cut-version v2)))
     (and v1 v2 (version< v1 v2))))
 
-
 (provide 'geiser-base)
