@@ -74,7 +74,7 @@
     (and thing (make-symbol thing))))
 
 (defun geiser--cut-version (v)
-  (when (string-match "\\([0-9]+\\(?:\\.[0-9]+\\.[0-9]+\\)?\\).*" v)
+  (when (string-match "\\([0-9]+\\(?:\\.[0-9]+\\)*\\).*" v)
     (match-string 1 v)))
 
 (defun geiser--version< (v1 v2)
