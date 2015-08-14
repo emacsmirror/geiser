@@ -1,6 +1,6 @@
 ;; geiser-mode.el -- minor mode for scheme buffers
 
-;; Copyright (C) 2009, 2010, 2011, 2012, 2013, 2014 Jose Antonio Ortega Ruiz
+;; Copyright (C) 2009, 2010, 2011, 2012, 2013, 2014, 2015 Jose Antonio Ortega Ruiz
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the Modified BSD License. You should
@@ -36,8 +36,7 @@
   :group 'geiser)
 
 (geiser-custom--defcustom geiser-mode-auto-p t
-  "Whether `geiser-mode' should be active by default in all
-scheme buffers."
+  "Whether `geiser-mode' should be active by default in all scheme buffers."
   :group 'geiser-mode
   :type 'boolean)
 
@@ -317,7 +316,8 @@ interacting with the Geiser REPL is at your disposal.
   (geiser-mode -1))
 
 (defun geiser-mode--maybe-activate ()
-  (when geiser-mode-auto-p (turn-on-geiser-mode)))
+  (when (and geiser-mode-auto-p (eq major-mode 'scheme-mode))
+    (turn-on-geiser-mode)))
 
 
 ;;; Keys:
