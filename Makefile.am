@@ -1,6 +1,6 @@
 SUBDIRS = . elisp scheme bin doc
 
-EXTRA_DIST = THANKS
+EXTRA_DIST = THANKS README.elpa
 
 dist-hook:
 	$(SHELL) $(top_srcdir)/ChangeLog > $(top_distdir)/ChangeLog
@@ -20,7 +20,6 @@ elpa: README.elpa info
              > $(elpa_dir)/geiser-pkg.el
 
 	$(INSTALL_DATA) $(abs_top_srcdir)/elisp/*.el \
-                        $(top_builddir)/elisp/geiser-version.el \
                         $(elpa_dir)
 
 	$(mkdir_p) $(scheme_dir)/guile/geiser
