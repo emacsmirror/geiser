@@ -444,13 +444,17 @@ module command as a string")
   (geiser-autodoc--inhibit-autodoc)
   (geiser-con--connection-deactivate geiser-repl--connection))
 
-(defun geiser-repl--send (cmd)
+(defun geiser-repl--send (cmd &optional save-history)
+  "Send CMD input string to the current REPL buffer.
+If SAVE-HISTORY is non-nil, save CMD in the REPL history."
   (when (and cmd (eq major-mode 'geiser-repl-mode))
     (geiser-repl--prepare-send)
     (goto-char (point-max))
     (comint-kill-input)
     (insert cmd)
-    (let ((comint-input-filter (lambda (x) nil)))
+    (let ((comint-input-filter (if save-history
+                                   comint-input-filter
+                                 'ignore)))
       (comint-send-input nil t))))
 
 (defun geiser-repl-interrupt ()
