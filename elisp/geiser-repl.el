@@ -348,7 +348,7 @@ module command as a string")
   (when (not geiser-repl-skip-version-check-p)
     (let ((v (geiser-repl--version impl (geiser-repl--binary impl)))
           (r (geiser-repl--min-version impl)))
-      (when (geiser--version< v r)
+      (when (and v r (geiser--version< v r))
         (error "Geiser requires %s version %s but detected %s" impl r v)))))
 
 (defun geiser-repl--start-repl (impl address)
@@ -784,7 +784,8 @@ If no REPL is running, execute `run-geiser' to start a fresh one."
              (geiser-repl--switch-to-buffer geiser-repl--last-scm-buffer)))
           (repl (geiser-repl--switch-to-buffer repl))
           ((geiser-repl--remote-p) (geiser-connect impl))
-          (t (run-geiser impl)))
+	  (impl (run-geiser impl))
+          (t (call-interactively 'run-geiser)))
     (geiser-repl--maybe-remember-scm-buffer buffer)))
 
 (defun switch-to-geiser-module (&optional module buffer)
