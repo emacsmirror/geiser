@@ -53,7 +53,8 @@
 
 ;;;###autoload
 (autoload 'geiser-connect-local "geiser-repl"
-  "Start a Geiser REPL connected to a remote server over a Unix-domain socket." t)
+  "Start a Geiser REPL connected to a remote server over a Unix-domain socket."
+  t)
 
 ;;;###autoload
 (autoload 'switch-to-geiser "geiser-repl"
