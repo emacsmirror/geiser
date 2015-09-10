@@ -393,19 +393,25 @@ module command as a string")
 		     (t `(,(geiser-repl--binary impl)
 			  nil
 			  ,@(geiser-repl--arglist impl))))))
-    (when (and address (stringp address))
-      ;; Connect over a Unix-domain socket.
-      (make-network-process :name (buffer-name buff)
-			    :buffer buff
-			    :family 'local
-			    :remote address))
-
     (condition-case err
-        (apply 'make-comint-in-buffer `(,name ,buff ,@args))
+        (if (and address (stringp address))
+            ;; Connect over a Unix-domain socket.
+            (let ((proc (make-network-process :name (buffer-name buff)
+                                              :buffer buff
+                                              :family 'local
+                                              :remote address)))
+              ;; brittleness warning: this is stuff
+              ;; make-comint-in-buffer sets up, via comint-exec, when
+              ;; it creates its own process, something we're doing
+              ;; here by ourselves.
+              (set-process-filter proc 'comint-output-filter)
+              (goto-char (point-max))
+              (set-marker (process-mark proc) (point)))
+          (apply 'make-comint-in-buffer `(,name ,buff ,@args)))
       (error (insert "Unable to start REPL:\n"
                      (error-message-string err)
                      "\n")
-             (error "Couldn't start Geiser")))
+             (error "Couldn't start Geiser" err)))
     (geiser-repl--wait-for-prompt geiser-repl-startup-time)))
 
 (defun geiser-repl--wait-for-prompt (timeout)
