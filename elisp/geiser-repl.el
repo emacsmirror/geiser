@@ -290,7 +290,7 @@ module command as a string")
          (marker-position (cdr comint-last-prompt)))
         ((and (boundp 'comint-last-prompt-overlay) comint-last-prompt-overlay)
          (overlay-end comint-last-prompt-overlay))
-        (t (save-excursion (geiser-repl--bol) (point)))))
+        (t (save-excursion (geiser-repl--bol) (+ 1 (point))))))
 
 (defun geiser-repl--last-prompt-start ()
   (cond ((and (boundp 'comint-last-prompt) (markerp (car comint-last-prompt)))
@@ -854,3 +854,8 @@ With a prefix argument, force exit by killing the scheme process."
 
 
 (provide 'geiser-repl)
+
+
+;;; Initialization:
+;; After providing 'geiser-repl, so that impls can use us.
+(mapc 'geiser-impl--load-impl geiser-active-implementations)
