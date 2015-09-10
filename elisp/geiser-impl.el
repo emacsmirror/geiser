@@ -227,8 +227,7 @@ switcher (switch-to-NAME), and provides geiser-NAME."
            ,switcher-doc
            (interactive "P")
            (switch-to-geiser ,ask ',name))
-         (geiser-menu--add-impl ',name ',runner ',switcher)
-         (provide ',(geiser-impl--feature name))))))
+         (geiser-menu--add-impl ',name ',runner ',switcher)))))
 
 (defun geiser-impl--add-to-alist (kind what impl &optional append)
   (add-to-list 'geiser-implementations-alist
