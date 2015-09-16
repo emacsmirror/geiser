@@ -35,6 +35,15 @@
   "Interacting with the Geiser REPL."
   :group 'geiser)
 
+(geiser-custom--defcustom geiser-repl-buffer-name-function
+    'geiser-repl-buffer-name
+  "Function used to define the name of a REPL buffer.
+The function is called with a single argument - an implementation
+symbol (e.g., `guile', `chicken', etc.)."
+  :type '(choice (function-item geiser-repl-buffer-name)
+                 (function :tag "Other function"))
+  :group 'geiser-repl)
+
 (geiser-custom--defcustom geiser-repl-use-other-window t
   "Whether to Use a window other than the current buffer's when
 switching to the Geiser REPL buffer."
@@ -247,6 +256,10 @@ module command as a string")
   (format "%s REPL" (geiser-impl--impl-str impl)))
 
 (defsubst geiser-repl--buffer-name (impl)
+  (funcall geiser-repl-buffer-name-function impl))
+
+(defun geiser-repl-buffer-name (impl)
+  "Return default name of the REPL buffer for implementation IMPL."
   (format "* %s *" (geiser-repl--repl-name impl)))
 
 (defun geiser-repl--switch-to-buffer (buffer)
