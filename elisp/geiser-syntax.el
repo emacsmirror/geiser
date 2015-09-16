@@ -60,6 +60,12 @@
       (2 font-lock-function-name-face nil t))
     (,(rx "(" (group "when") eow) . 1)))
 
+(defun geiser-syntax--simple-keywords (keywords)
+  "Return `font-lock-keywords' to highlight scheme KEYWORDS.
+KEYWORDS should be a list of strings."
+  (when keywords
+    `((,(format "[[(]%s\\>" (regexp-opt keywords 1)) . 1))))
+
 (font-lock-add-keywords 'scheme-mode geiser-syntax--keywords)
 
 (geiser-impl--define-caller geiser-syntax--impl-kws keywords ()
