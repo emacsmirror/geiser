@@ -51,14 +51,30 @@
 
 
 ;;; Extra syntax keywords
-(defconst geiser-syntax--keywords
-  `(("\\[\\(else\\)\\>" . 1)
-    ("(\\(parameterize\\)\\>" . 1)
-    (,(rx "(" (group "define-syntax-rule") eow (* space)
-          (? "(") (? (group (1+ word))))
-      (1 font-lock-keyword-face)
-      (2 font-lock-function-name-face nil t))
-    (,(rx "(" (group "when") eow) . 1)))
+
+(defconst geiser-syntax--builtin-keywords
+  '("and-let*"
+    "cut"
+    "cute"
+    "define-condition-type"
+    "define-immutable-record-type"
+    "define-record-type"
+    "define-values"
+    "letrec*"
+    "match"
+    "match-lambda"
+    "match-lambda*"
+    "match-let"
+    "match-let*"
+    "match-letrec"
+    "parameterize"
+    "receive"
+    "require-extension"
+    "set!"
+    "unless"
+    "when"
+    "with-input-from-file"
+    "with-output-to-file"))
 
 (defun geiser-syntax--simple-keywords (keywords)
   "Return `font-lock-keywords' to highlight scheme KEYWORDS.
@@ -66,7 +82,16 @@ KEYWORDS should be a list of strings."
   (when keywords
     `((,(format "[[(]%s\\>" (regexp-opt keywords 1)) . 1))))
 
-(font-lock-add-keywords 'scheme-mode geiser-syntax--keywords)
+(defun geiser-syntax--keywords ()
+  (append
+   (geiser-syntax--simple-keywords geiser-syntax--builtin-keywords)
+   `(("\\[\\(else\\)\\>" . 1)
+     (,(rx "(" (group "define-syntax-rule") eow (* space)
+           (? "(") (? (group (1+ word))))
+      (1 font-lock-keyword-face)
+      (2 font-lock-function-name-face nil t)))))
+
+(font-lock-add-keywords 'scheme-mode (geiser-syntax--keywords))
 
 (geiser-impl--define-caller geiser-syntax--impl-kws keywords ()
   "A variable (or thunk returning a value) giving additional,
