@@ -92,6 +92,7 @@
     "receive"
     "require-extension"
     "set!"
+    "syntax-case"
     "test-approximate"
     "test-assert"
     "test-begin"
