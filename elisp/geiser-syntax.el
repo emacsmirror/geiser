@@ -33,6 +33,7 @@
  (catch defun)
  (class defun)
  (dynamic-wind 0)
+ (guard 1)
  (let*-values 1)
  (let-values 1)
  (let/ec 1)
@@ -52,6 +53,7 @@
  (unless 1)
  (when 1)
  (while 1)
+ (with-exception-handler 1)
  (with-syntax 1))
 
 
@@ -78,6 +80,7 @@
     "set!"
     "unless"
     "when"
+    "with-exception-handler"
     "with-input-from-file"
     "with-output-to-file"))
 
