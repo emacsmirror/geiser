@@ -50,6 +50,20 @@
  (receive 2)
  (require-extension 0)
  (syntax-case 2)
+ (test-approximate 1)
+ (test-assert 1)
+ (test-eq 1)
+ (test-equal 1)
+ (test-eqv 1)
+ (test-group-with-cleanup 1)
+ (test-runner-on-bad-count! 1)
+ (test-runner-on-bad-end-name! 1)
+ (test-runner-on-final! 1)
+ (test-runner-on-group-begin! 1)
+ (test-runner-on-group-end! 1)
+ (test-runner-on-test-begin! 1)
+ (test-runner-on-test-end! 1)
+ (test-with-runner 1)
  (unless 1)
  (when 1)
  (while 1)
@@ -78,6 +92,17 @@
     "receive"
     "require-extension"
     "set!"
+    "test-approximate"
+    "test-assert"
+    "test-begin"
+    "test-end"
+    "test-eq"
+    "test-equal"
+    "test-eqv"
+    "test-error"
+    "test-group"
+    "test-group-with-cleanup"
+    "test-with-runner"
     "unless"
     "when"
     "with-exception-handler"
