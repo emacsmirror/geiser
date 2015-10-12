@@ -1,3 +1,19 @@
+* Version 0.8 (Oct 12, 2015)
+
+  Improved features:
+
+    - Lots of improvements to Chicken support, by Dan Leslie.
+    - Better interoperability with xscheme.
+    - Much better performance for long lists of completions or
+      evaluated values.
+    - Better highlighting and indentation rules, by Alex Kost and Dan
+      Leslie.
+    - Make completion work for quoted symbols.
+
+  Bug fixes:
+
+    - geiser-connect-local working again.
+
 * Version 0.7 "Freija" (Feb 21, 2015)
 
   This release is dedicated to Dan's three-months-old daughter Freija,

@@ -1,6 +1,6 @@
-@set VERSION 0.7
-@set VERSION_NICK Freija
-@set RELEASE_DATE February 2015
+@set VERSION 0.8
+@set VERSION_NICK
+@set RELEASE_DATE October 2015
 @set GUILE_VERSION 2.0.9
 @set RACKET_VERSION 6.0
 @set CHICKEN_VERSION 4.8.0
@@ -19,7 +19,7 @@
 <div class="version" align="right">
 @end html
 @downfile{@value{TARBALL},
-          Version @value{VERSION} ``@value{VERSION_NICK}'' (\DATE\) Guile \GVERS\+ Chicken \CVERS\+ and Racket \RVERS\+}
+          Version @value{VERSION} @value{VERSION_NICK} (\DATE\) Guile \GVERS\+ Chicken \CVERS\+ and Racket \RVERS\+}
 @html
 </div>
 @end html

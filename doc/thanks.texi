@@ -32,6 +32,9 @@ sender during more years and for more projects than i can remember.
 Eduardo Cavazos' contagious enthusiasm has helped in many ways to keep
 Geiser alive, and he's become its best evangelist in R6RS circles.
 
+Alex Kost has contributed with many bug reports and improved Geiser
+with several patches.
+
 Eli Barzilay took the time to play with an early alpha and made many
 valuable suggestions, besides answering all my 'how do you in PLT'
 questions.
