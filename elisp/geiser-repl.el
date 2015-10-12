@@ -10,7 +10,6 @@
 
 
 (require 'geiser-company)
-(require 'geiser-compile)
 (require 'geiser-doc)
 (require 'geiser-autodoc)
 (require 'geiser-edit)
@@ -424,7 +423,7 @@ module command as a string")
       (error (insert "Unable to start REPL:\n"
                      (error-message-string err)
                      "\n")
-             (error "Couldn't start Geiser" err)))
+             (error "Couldn't start Geiser: %s" err)))
     (geiser-repl--wait-for-prompt geiser-repl-startup-time)))
 
 (defun geiser-repl--wait-for-prompt (timeout)

@@ -1,6 +1,6 @@
 ;;; geiser-debug.el -- displaying debug information and evaluation results
 
-;; Copyright (C) 2009, 2010, 2011, 2012, 2013, 2014 Jose Antonio Ortega Ruiz
+;; Copyright (C) 2009, 2010, 2011, 2012, 2013, 2014, 2015 Jose Antonio Ortega Ruiz
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the Modified BSD License. You should
@@ -18,6 +18,7 @@
 (require 'geiser-menu)
 (require 'geiser-popup)
 (require 'geiser-base)
+(require 'geiser-image)
 
 
 ;;; Customization:

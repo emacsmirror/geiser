@@ -1,6 +1,6 @@
 ;;; geiser-eval.el -- sending scheme code for evaluation
 
-;; Copyright (C) 2009, 2010, 2011, 2012, 2013 Jose Antonio Ortega Ruiz
+;; Copyright (C) 2009, 2010, 2011, 2012, 2013, 2015 Jose Antonio Ortega Ruiz
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the Modified BSD License. You should
@@ -69,16 +69,6 @@ module-exports, autodoc, callers, callees and generic-methods.")
 
 ;;; Code formatting:
 
-(defsubst geiser-eval--eval (code)
-  (geiser-eval--form 'eval
-                     (geiser-eval--module (nth 1 code))
-                     (geiser-eval--scheme-str (nth 0 code))))
-
-(defsubst geiser-eval--comp (code)
-  (geiser-eval--form 'compile
-                     (geiser-eval--module (nth 1 code))
-                     (geiser-eval--scheme-str (nth 0 code))))
-
 (defsubst geiser-eval--load-file (file)
   (geiser-eval--form 'load-file
                      (geiser-eval--scheme-str file)))
@@ -93,6 +83,16 @@ module-exports, autodoc, callers, callees and generic-methods.")
           (geiser-eval--get-module))
          ((or (eq code :repl) (eq code :f)) :f)
          (t (geiser-eval--get-module code)))))
+
+(defsubst geiser-eval--eval (code)
+  (geiser-eval--form 'eval
+                     (geiser-eval--module (nth 1 code))
+                     (geiser-eval--scheme-str (nth 0 code))))
+
+(defsubst geiser-eval--comp (code)
+  (geiser-eval--form 'compile
+                     (geiser-eval--module (nth 1 code))
+                     (geiser-eval--scheme-str (nth 0 code))))
 
 (defsubst geiser-eval--ge (proc args)
   (apply 'geiser-eval--form (cons proc
@@ -154,9 +154,6 @@ module-exports, autodoc, callers, callees and generic-methods.")
                                 buffer)
   geiser-eval--sync-retort)
 
-(defsubst geiser-eval--send/result (code &optional timeout buffer)
-  (geiser-eval--retort-result (geiser-eval--send/wait code timeout buffer)))
-
 
 ;;; Retort parsing:
 
@@ -166,6 +163,9 @@ module-exports, autodoc, callers, callees and generic-methods.")
 (defsubst geiser-eval--retort-result (ret)
   (let ((values (cdr (assoc 'result ret))))
     (car (geiser-syntax--read-from-string (car values)))))
+
+(defsubst geiser-eval--send/result (code &optional timeout buffer)
+  (geiser-eval--retort-result (geiser-eval--send/wait code timeout buffer)))
 
 (defun geiser-eval--retort-result-str (ret prefix)
   (let* ((prefix (or prefix "=> "))

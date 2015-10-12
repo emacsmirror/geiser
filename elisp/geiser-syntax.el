@@ -1,6 +1,6 @@
 ;;; geiser-syntax.el -- utilities for parsing scheme syntax
 
-;; Copyright (C) 2009, 2010, 2011, 2012, 2013, 2014 Jose Antonio Ortega Ruiz
+;; Copyright (C) 2009, 2010, 2011, 2012, 2013, 2014, 2015 Jose Antonio Ortega Ruiz
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the Modified BSD License. You should
@@ -289,22 +289,6 @@ implementation-specific entries for font-lock-keywords.")
                    sep
                    (geiser-syntax--mapconcat fun (cdr lst) sep)))))
 
-(defun geiser-syntax--display (a)
-  (cond ((null a) "()")
-        ((eq a :t) "#t")
-        ((eq a :f) "#f")
-        ((geiser-syntax--keywordp a) (format "#%s" a))
-        ((symbolp a) (format "%s" a))
-        ((equal a "...") "...")
-        ((stringp a) (format "%S" a))
-        ((and (listp a) (symbolp (car a))
-              (equal (symbol-name (car a)) "quote"))
-         (format "'%s" (geiser-syntax--display (cadr a))))
-        ((listp a)
-         (format "(%s)"
-                 (geiser-syntax--mapconcat 'geiser-syntax--display a " ")))
-        (t (format "%s" a))))
-
 
 ;;; Code parsing:
 
@@ -463,7 +447,23 @@ implementation-specific entries for font-lock-keywords.")
                                                 '()))))))))
 
 
-;;; Fontify strings as Scheme code:
+;;; Display and fontify strings as Scheme code:
+
+(defun geiser-syntax--display (a)
+  (cond ((null a) "()")
+        ((eq a :t) "#t")
+        ((eq a :f) "#f")
+        ((geiser-syntax--keywordp a) (format "#%s" a))
+        ((symbolp a) (format "%s" a))
+        ((equal a "...") "...")
+        ((stringp a) (format "%S" a))
+        ((and (listp a) (symbolp (car a))
+              (equal (symbol-name (car a)) "quote"))
+         (format "'%s" (geiser-syntax--display (cadr a))))
+        ((listp a)
+         (format "(%s)"
+                 (geiser-syntax--mapconcat 'geiser-syntax--display a " ")))
+        (t (format "%s" a))))
 
 (defun geiser-syntax--font-lock-buffer ()
   (let ((name " *geiser font lock*"))
