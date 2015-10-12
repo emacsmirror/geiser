@@ -481,7 +481,7 @@ implementation-specific entries for font-lock-keywords.")
     (set-buffer (geiser-syntax--font-lock-buffer))
     (erase-buffer)
     (insert str)
-    (let ((font-lock-verbose nil)) (font-lock-fontify-buffer))
+    (let ((font-lock-verbose nil)) (font-lock-ensure))
     (buffer-string)))
 
 
