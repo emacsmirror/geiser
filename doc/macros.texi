@@ -5,7 +5,7 @@
 @set RACKET_VERSION 6.0
 @set CHICKEN_VERSION 4.8.0
 @set EMACS_VERSION 23.2
-@set DOWN_BASE http://download.savannah.gnu.org/@/releases/@/geiser
+@set DOWN_BASE http://download-mirror.savannah.gnu.org/@/releases/@/geiser
 @set PACKAGE_REPO @value{DOWN_BASE}/@/packages
 @set PACKAGE @value{PACKAGE_REPO}/@/geiser-@value{VERSION}.tar
 @set TARBALL geiser-@value{VERSION}.tar.gz
