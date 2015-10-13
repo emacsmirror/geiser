@@ -1,3 +1,7 @@
+* Version 0.8.1 (Oct 13, 2015)
+
+  Bug fix: font-lock-ensure is from the future.
+
 * Version 0.8 (Oct 12, 2015)
 
   Improved features:

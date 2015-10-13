@@ -8,7 +8,7 @@
 # WITHOUT ANY WARRANTY, to the extent permitted by law; without even the
 # implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
-AC_INIT([Geiser],[0.8],[geiser-users@nongnu.org],geiser)
+AC_INIT([Geiser],[0.8.1],[geiser-users@nongnu.org],geiser)
 AC_CONFIG_SRCDIR([elisp/geiser.el])
 AM_INIT_AUTOMAKE
 
