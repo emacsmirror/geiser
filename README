@@ -40,7 +40,7 @@
   `M-x install-package RET geiser` inside emacs.
 
   Geiser can be used either directly from its uninstalled source tree
-  or byte-compiled and installed after perfoming the standard
+  or byte-compiled and installed after performing the standard
   configure/make/make install dance.  See the INSTALL file for more details.
 
 ** Chicken Addendum
@@ -111,7 +111,7 @@
     |-------------+-------------------------------------------------|
     | C-c C-m x   | Macro-expand definition around point            |
     | C-c C-m e   | Macro-expand sexp before point                  |
-    | C-c C-m r   | Marcro-expand region                            |
+    | C-c C-m r   | Macro-expand region                             |
     |-------------+-------------------------------------------------|
     | C-c C-k     | Compile and load current file                   |
     |-------------+-------------------------------------------------|
