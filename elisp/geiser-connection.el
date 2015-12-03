@@ -202,7 +202,7 @@
         `((error (key . geiser-debugger))
           (output . ,answer))
       (condition-case err
-          (let ((start (string-match "((\\(?:result)?\\|error\\) " answer)))
+          (let ((start (string-match "((\\(?:result)?\\|error\\|Error\\) " answer)))
             (or (and start (car (read-from-string answer start)))
                 `((error (key . retort-syntax)) (output . ,answer))))
         (error `((error (key . geiser-con-error))
