@@ -1,3 +1,9 @@
+* Version 0.8.2
+
+  - Chicken: improvements by Dan Leslie.
+  - Guile: support for Guile 2.2 (with help from Raffik Naccache and
+    David Thompson).
+
 * Version 0.8.1 (Oct 13, 2015)
 
   Bug fix: font-lock-ensure is from the future.
