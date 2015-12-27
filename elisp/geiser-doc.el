@@ -1,6 +1,6 @@
 ;;; geiser-doc.el -- accessing scheme-provided documentation
 
-;; Copyright (C) 2009, 2010, 2011, 2012, 2013, 2014 Jose Antonio Ortega Ruiz
+;; Copyright (C) 2009, 2010, 2011, 2012, 2013, 2014, 2015 Jose Antonio Ortega Ruiz
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the Modified BSD License. You should
@@ -267,6 +267,70 @@ help (e.g. browse an HTML page) implementing this method.")
       (geiser-doc--insert-nav-button t))))
 
 
+;;; Documentation browser and mode:
+
+(defun geiser-doc-edit-symbol-at-point ()
+  "Open definition of symbol at point."
+  (interactive)
+  (let* ((impl (geiser-doc--implementation))
+         (module (geiser-doc--module)))
+    (unless (and impl module)
+      (error "I don't know what module this buffer refers to."))
+    (with--geiser-implementation impl
+      (geiser-edit-symbol-at-point))))
+
+(defvar geiser-doc-mode-map nil)
+(setq geiser-doc-mode-map
+      (let ((map (make-sparse-keymap)))
+        (suppress-keymap map)
+        (set-keymap-parent map button-buffer-map)
+        map))
+
+(defun geiser-doc-switch-to-repl ()
+  (interactive)
+  (switch-to-geiser nil nil (current-buffer)))
+
+(geiser-menu--defmenu doc geiser-doc-mode-map
+  ("Next link" ("n") forward-button)
+  ("Previous link" ("p") backward-button)
+  ("Next section" ("N") geiser-doc-next-section)
+  ("Previous section" ("P") geiser-doc-previous-section)
+  --
+  ("Next page" ("f") geiser-doc-next "Next item"
+   :enable (geiser-doc--history-next-p))
+  ("Previous page" ("b") geiser-doc-previous "Previous item"
+   :enable (geiser-doc--history-previous-p))
+  --
+  ("Go to REPL" ("z" "\C-cz" "\C-c\C-z") geiser-doc-switch-to-repl)
+  ("Refresh" ("g" "r") geiser-doc-refresh "Refresh current page")
+  --
+  ("Edit symbol" ("." "\M-.") geiser-doc-edit-symbol-at-point
+   :enable (geiser--symbol-at-point))
+  --
+  ("Kill item" "k" geiser-doc-kill-page "Kill this page")
+  ("Clear history" "c" geiser-doc-clean-history)
+  --
+  (custom "Browser options" geiser-doc)
+  --
+  ("Quit" nil View-quit))
+
+(defun geiser-doc-mode ()
+  "Major mode for browsing scheme documentation.
+\\{geiser-doc-mode-map}"
+  (interactive)
+  (kill-all-local-variables)
+  (buffer-disable-undo)
+  (setq truncate-lines t)
+  (use-local-map geiser-doc-mode-map)
+  (set-syntax-table scheme-mode-syntax-table)
+  (setq mode-name "Geiser Doc")
+  (setq major-mode 'geiser-doc-mode)
+  (setq geiser-eval--get-module-function 'geiser-doc--module)
+  (setq buffer-read-only t))
+
+(geiser-popup--define doc "*Geiser documentation*" geiser-doc-mode)
+
+
 ;;; Commands:
 
 (defun geiser-doc--get-docstring (symbol module)
@@ -421,69 +485,6 @@ With prefix, the current page is deleted from history."
     (geiser-doc-refresh))
   (message ""))
 
-
-;;; Documentation browser and mode:
-
-(defun geiser-doc-edit-symbol-at-point ()
-  "Open definition of symbol at point."
-  (interactive)
-  (let* ((impl (geiser-doc--implementation))
-         (module (geiser-doc--module)))
-    (unless (and impl module)
-      (error "I don't know what module this buffer refers to."))
-    (with--geiser-implementation impl
-      (geiser-edit-symbol-at-point))))
-
-(defvar geiser-doc-mode-map nil)
-(setq geiser-doc-mode-map
-      (let ((map (make-sparse-keymap)))
-        (suppress-keymap map)
-        (set-keymap-parent map button-buffer-map)
-        map))
-
-(defun geiser-doc-switch-to-repl ()
-  (interactive)
-  (switch-to-geiser nil nil (current-buffer)))
-
-(geiser-menu--defmenu doc geiser-doc-mode-map
-  ("Next link" ("n") forward-button)
-  ("Previous link" ("p") backward-button)
-  ("Next section" ("N") geiser-doc-next-section)
-  ("Previous section" ("P") geiser-doc-previous-section)
-  --
-  ("Next page" ("f") geiser-doc-next "Next item"
-   :enable (geiser-doc--history-next-p))
-  ("Previous page" ("b") geiser-doc-previous "Previous item"
-   :enable (geiser-doc--history-previous-p))
-  --
-  ("Go to REPL" ("z" "\C-cz" "\C-c\C-z") geiser-doc-switch-to-repl)
-  ("Refresh" ("g" "r") geiser-doc-refresh "Refresh current page")
-  --
-  ("Edit symbol" ("." "\M-.") geiser-doc-edit-symbol-at-point
-   :enable (geiser--symbol-at-point))
-  --
-  ("Kill item" "k" geiser-doc-kill-page "Kill this page")
-  ("Clear history" "c" geiser-doc-clean-history)
-  --
-  (custom "Browser options" geiser-doc)
-  --
-  ("Quit" nil View-quit))
-
-(defun geiser-doc-mode ()
-  "Major mode for browsing scheme documentation.
-\\{geiser-doc-mode-map}"
-  (interactive)
-  (kill-all-local-variables)
-  (buffer-disable-undo)
-  (setq truncate-lines t)
-  (use-local-map geiser-doc-mode-map)
-  (set-syntax-table scheme-mode-syntax-table)
-  (setq mode-name "Geiser Doc")
-  (setq major-mode 'geiser-doc-mode)
-  (setq geiser-eval--get-module-function 'geiser-doc--module)
-  (setq buffer-read-only t))
-
-(geiser-popup--define doc "*Geiser documentation*" geiser-doc-mode)
 
 
 (provide 'geiser-doc)
