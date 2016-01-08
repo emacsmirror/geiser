@@ -110,10 +110,9 @@
          ('location (geiser-company--location arg))
          ('sorted t)))
      (defun geiser-company--setup-company (enable)
-       (set (make-local-variable 'company-default-lighter) "/C")
-       (set (make-local-variable 'company-echo-delay) 0.01)
-       (set (make-local-variable 'company-backends)
-            (and enable '(geiser-company-backend)))
+       (when enable
+	 (set (make-local-variable 'company-backends)
+	      (add-to-list 'company-backends 'geiser-company-backend)))
        (company-mode (if enable 1 -1)))
      (add-hook 'company-completion-finished-hook
                'geiser-company--restore-autodoc)
