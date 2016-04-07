@@ -320,7 +320,13 @@ module command as a string")
 (make-variable-buffer-local
  (defvar geiser-repl--connection nil))
 
-(defun geiser-repl--remote-p () geiser-repl--address)
+(defun geiser-repl--local-p ()
+  "Return non-nil, if current REPL is local (connected to socket)."
+  (stringp geiser-repl--address))
+
+(defun geiser-repl--remote-p ()
+  "Return non-nil, if current REPL is remote (connected to host:port)."
+  (consp geiser-repl--address))
 
 (defsubst geiser-repl--host () (car geiser-repl--address))
 (defsubst geiser-repl--port () (cdr geiser-repl--address))
@@ -801,7 +807,10 @@ If no REPL is running, execute `run-geiser' to start a fresh one."
            (when (buffer-live-p geiser-repl--last-scm-buffer)
              (geiser-repl--switch-to-buffer geiser-repl--last-scm-buffer)))
           (repl (geiser-repl--switch-to-buffer repl))
-          ((geiser-repl--remote-p) (geiser-connect impl))
+          ((geiser-repl--remote-p)
+           (geiser-connect impl (geiser-repl--host) (geiser-repl--port)))
+          ((geiser-repl--local-p)
+           (geiser-connect-local impl geiser-repl--address))
 	  (impl (run-geiser impl))
           (t (call-interactively 'run-geiser)))
     (geiser-repl--maybe-remember-scm-buffer buffer)))
