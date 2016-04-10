@@ -228,16 +228,17 @@
     (geiser-con--connection-completed con req)))
 
 (defun geiser-con--connection-add-request (c r)
-  (geiser-log--info "REQUEST: <%s>: %s"
-                    (geiser-con--request-id r)
-                    (geiser-con--request-string r))
-  (geiser-con--connection-activate c)
-  (tq-enqueue (geiser-con--connection-tq c)
-              (concat (geiser-con--request-string r) "\n")
-              (geiser-con--connection-eot c)
-              r
-              'geiser-con--process-completed-request
-              t))
+  (let ((rstr (geiser-con--request-string r)))
+    (geiser-log--info "REQUEST: <%s>: %s"
+                      (geiser-con--request-id r)
+                      rstr)
+    (geiser-con--connection-activate c)
+    (tq-enqueue (geiser-con--connection-tq c)
+                (concat rstr "\n")
+                (geiser-con--connection-eot c)
+                r
+                'geiser-con--process-completed-request
+                t)))
 
 
 ;;; Message sending interface:
