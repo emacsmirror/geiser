@@ -43,25 +43,25 @@
         (cons :connection con)))
 
 (defsubst geiser-con--request-id (req)
-  (cdr (assoc :id req)))
+  (cdr (assq :id req)))
 
 (defsubst geiser-con--request-string (req)
-  (cdr (assoc :string req)))
+  (cdr (assq :string req)))
 
 (defsubst geiser-con--request-continuation (req)
-  (cdr (assoc :continuation req)))
+  (cdr (assq :continuation req)))
 
 (defsubst geiser-con--request-buffer (req)
-  (cdr (assoc :buffer req)))
+  (cdr (assq :buffer req)))
 
 (defsubst geiser-con--request-connection (req)
-  (cdr (assoc :connection req)))
+  (cdr (assq :connection req)))
 
 (defsubst geiser-con--request-deactivate (req)
-  (setcdr (assoc :continuation req) nil))
+  (setcdr (assq :continuation req) nil))
 
 (defsubst geiser-con--request-deactivated-p (req)
-  (null (cdr (assoc :continuation req))))
+  (null (cdr (assq :continuation req))))
 
 
 ;;; Connection datatype:
@@ -109,31 +109,31 @@
         (cons :completed (make-hash-table :weakness 'value))))
 
 (defsubst geiser-con--connection-process (c)
-  (tq-process (cdr (assoc :tq c))))
+  (tq-process (cdr (assq :tq c))))
 
 (defsubst geiser-con--connection-filter (c)
-  (cdr (assoc :filter c)))
+  (cdr (assq :filter c)))
 
 (defsubst geiser-con--connection-tq-filter (c)
-  (cdr (assoc :tq-filter c)))
+  (cdr (assq :tq-filter c)))
 
 (defsubst geiser-con--connection-tq (c)
-  (cdr (assoc :tq c)))
+  (cdr (assq :tq c)))
 
 (defsubst geiser-con--connection-eot (c)
-  (cdr (assoc :eot c)))
+  (cdr (assq :eot c)))
 
 (defsubst geiser-con--connection-prompt (c)
-  (cdr (assoc :prompt c)))
+  (cdr (assq :prompt c)))
 
 (defsubst geiser-con--connection-debug-prompt (c)
-  (cdr (assoc :debug-prompt c)))
+  (cdr (assq :debug-prompt c)))
 
 (defsubst geiser-con--connection-is-debugging (c)
-  (cdr (assoc :is-debugging c)))
+  (cdr (assq :is-debugging c)))
 
 (defsubst geiser-con--connection-set-debugging (c d)
-  (setcdr (assoc :is-debugging c) d))
+  (setcdr (assq :is-debugging c) d))
 
 (defun geiser-con--connection-update-debugging (c txt)
   (let* ((dp (geiser-con--connection-debug-prompt c))

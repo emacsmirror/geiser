@@ -175,13 +175,23 @@ module-exports, autodoc, callers, callees and generic-methods.")
         (concat prefix (mapconcat 'identity values nlprefix))
       (or prefix "(No value)"))))
 
-(defsubst geiser-eval--retort-output (ret) (cdr (assoc 'output ret)))
-(defsubst geiser-eval--retort-error (ret) (cdr (assoc 'error ret)))
+(defsubst geiser-eval--retort-output (ret)
+  (cdr (assq 'output ret)))
 
-(defsubst geiser-eval--error-key (err) (cdr (assoc 'key err)))
-(defsubst geiser-eval--error-subr (err) (cdr (assoc 'subr err)))
-(defsubst geiser-eval--error-msg (err) (cdr (assoc 'msg err)))
-(defsubst geiser-eval--error-rest (err) (cdr (assoc 'rest err)))
+(defsubst geiser-eval--retort-error (ret)
+  (cdr (assq 'error ret)))
+
+(defsubst geiser-eval--error-key (err)
+  (cdr (assq 'key err)))
+
+(defsubst geiser-eval--error-subr (err)
+  (cdr (assq 'subr err)))
+
+(defsubst geiser-eval--error-msg (err)
+  (cdr (assq 'msg err)))
+
+(defsubst geiser-eval--error-rest (err)
+  (cdr (assq 'rest err)))
 
 (defun geiser-eval--error-str (err)
   (let* ((key (geiser-eval--error-key err))
