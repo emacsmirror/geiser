@@ -97,6 +97,13 @@
   "Connect to a remote Geiser Chicken REPL." t)
 
 ;;;###autoload
+(autoload 'run-mit "geiser-mit" "Start a Geiser MIT/GNU Scheme REPL." t)
+
+;;;###autoload
+(autoload 'switch-to-mit "geiser-mit"
+  "Start a Geiser MIT/GNU Scheme REPL, or switch to a running one." t)
+
+;;;###autoload
 (autoload 'geiser-mode "geiser-mode"
   "Minor mode adding Geiser REPL interaction to Scheme buffers." t)
 

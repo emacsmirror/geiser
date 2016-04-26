@@ -33,6 +33,7 @@
       - Guile 2.0 or better.
       - PLT Racket 6.0 or better.
       - Chicken 4.8.0 or better.
+      - MIT/GNU Scheme 9.2 or better
 
 * Installation
 
