@@ -21,16 +21,16 @@ ready, just come back here and proceed to the following sections.
 @cindex REPL
 To start a Scheme REPL (meaning, a Scheme process offering you a
 Read-Eval-Print Loop), Geiser provides the generic interactive command
-@command{run-geiser}.  If you invoke it (via, as is customary in Emacs,
+@command{run-geiser}. If you invoke it (via, as is customary in Emacs,
 @kbd{M-x run-geiser}), you'll be saluted by a prompt asking which one of
 the supported implementations you want to launch---yes, you can stop the
-asking, see
-@altr{active-implementations,below,Customization and tips,.}
-Tabbing for completion will offer you, as of this writing, @code{guile}
-and @code{racket}.  Just choose your poison, and a new REPL buffer will
-pop up (by default, the REPL will appear in a new window: if that annoys
-you, just set @code{geiser-repl-use-other-window} to @code{nil} and the
-current window will be used).
+asking, see @altr{active-implementations,below,Customization and tips,.}
+Tabbing for completion will offer you, as of this writing, @code{guile},
+@code{racket}, @code{chicken}, @code{mit}, @code{chibi} and @code{chez}.
+Just choose your poison, and a new REPL buffer will pop up (by default,
+the REPL will appear in a new window: if that annoys you, just set
+@code{geiser-repl-use-other-window} to @code{nil} and the current window
+will be used).
 
 @imgc{repls}
 
@@ -58,7 +58,7 @@ restart the REPL.
 If you're not happy with the faces Geiser is using for the REPL's prompt
 and evaluated input, you can customise
 @code{geiser-font-lock-repl-prompt} and
-@code{geiser-font-lock-repl-input} to better looking faces.
+@code{geiser-font-lock-repl-input} to better-looking faces.
 
 @subsubheading Connecting to an external Scheme
 @cindex remote REPL
@@ -327,8 +327,16 @@ some related tips.
 @cindex scheme implementation, choosing
 @anchor{choosing-impl}
 Instead of using the generic @command{run-geiser} command, you can start
-directly your Scheme of choice via @command{run-racket} or
-@command{run-guile}.  @anchor{active-implementations} In addition, the
+directly your Scheme of choice one of the following:
+@itemize @bullet
+@item @command{run-racket}
+@item @command{run-guile}
+@item @command{run-chicken}
+@item @command{run-mit}
+@item @command{run-chibi}
+@item @command{run-chez}
+@end itemize
+  @anchor{active-implementations} In addition, the
 variable @code{geiser-active-implementations} contains a list of those
 Schemes Geiser should be aware of.  Thus, if you happen to be, say, a
 racketeer not to be beguiled by other schemes, you can tell Geiser to
@@ -345,9 +353,16 @@ in your initialisation files.
 @cindex scheme executable path
 @anchor{impl-binary} When starting a new REPL, Geiser assumes, by
 default, that the corresponding Scheme binary is in your path.  If that's
-not the case, the variables to tweak are @code{geiser-guile-binary} and
-@code{geiser-racket-binary}, which should be set to a string with the
-full path to the requisite binary.
+not the case, the variables to tweak are (depending on which Scheme you choose):
+@itemize @bullet
+@item @code{geiser-guile-binary}
+@item @code{geiser-racket-binary}
+@item @code{geiser-chicken-binary}
+@item @code{geiser-mit-binary}
+@item @code{geiser-chibi-binary}
+@item @code{geiser-chez-binary}
+@end itemize
+They should be set to a string with the full path to the requisite binary.
 
 @cindex Version checking
 Before starting the REPL, Geiser will check wether the version of your
@@ -430,11 +445,12 @@ back, on a per-REPL basis, using @kbd{C-c C-d C-a}.
 
 @cindex port, default
 @cindex host, default
-When using @code{connect-to-guile}, @code{connect-to-racket} or
-@code{geiser-connect}, you'll be prompted for a host and a port,
-defaulting to ``localhost'' and 37146.  You can change those defaults
-customizing @code{geiser-repl-default-host} and
-@code{geiser-repl-default-port}, respectively.
+When using any of the connection commands (e.g. @code{geiser-connect},
+@code{connect-to-guile}, @code{connect-to-racket}, etc.) you'll be
+prompted for a host and a port, defaulting to ``localhost'' and 37146.
+You can change those defaults customizing
+@code{geiser-repl-default-host} and @code{geiser-repl-default-port},
+respectively.
 
 @subsubheading Killing REPLs
 

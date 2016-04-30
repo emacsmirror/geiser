@@ -26,9 +26,17 @@ namely:
 better
 @item
 @uref{http://call-cc.org, Chicken} @value{CHICKEN_VERSION} or better
+@item
+@uref{https://www.gnu.org/software/mit-scheme/, MIT/GNU Scheme}
+@value{MIT_VERSION} or better
+@item
+@uref{http://synthcode.com/scheme/chibi/, Chibi Scheme}
+@value{CHIBI_VERSION} or better
+@item
+@uref{http://www.scheme.com, Chez Scheme} @value{CHEZ_VERSION} or better
 @end itemize
 
-Since Geiser supports multiple REPLs, having both of them will just add
+Since Geiser supports multiple REPLs, having all of them will just add
 to the fun.
 
 You'll also need Geiser itself.  The quickest installation is via its
@@ -135,8 +143,8 @@ code.  I'll follow you into its directory and the next section.
 Geiser is ready to be used out of the box without much more ado.  For the
 sake of concreteness, let's assume you put its source in the directory
 @file{~/lisp/geiser}.  All you need to do is to add the following
-line to your Emacs initialisation file (be it @file{~/.emacs} or any of
-its moral equivalents):
+line to your Emacs initialisation file (be it @file{~/.emacs},
+@file{~/.emacs.d/init.el} or any of its moral equivalents):
 
 @example
 (load-file "~/lisp/geiser/elisp/geiser.el")
@@ -205,7 +213,7 @@ $ sudo make install
 @end example
 
 With the above spell, Geiser will be compiled and installed in a safe
-place inside Emacs load path.  To load it into Emacs you'll need,
+place inside Emacs' load path.  To load it into Emacs you'll need,
 @i{instead} of the @code{load-file} form above, the following line in
 your initialisation file:
 
