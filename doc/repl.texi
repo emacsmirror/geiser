@@ -326,8 +326,8 @@ some related tips.
 @subsubheading Choosing a Scheme implementation
 @cindex scheme implementation, choosing
 @anchor{choosing-impl}
-Instead of using the generic @command{run-geiser} command, you can start
-directly your Scheme of choice one of the following:
+Instead of using the generic @command{run-geiser} command, you can directly
+start your Scheme of choice using any of the following commands:
 @itemize @bullet
 @item @command{run-racket}
 @item @command{run-guile}
