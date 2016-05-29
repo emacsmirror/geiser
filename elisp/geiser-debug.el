@@ -1,6 +1,6 @@
 ;;; geiser-debug.el -- displaying debug information and evaluation results
 
-;; Copyright (C) 2009, 2010, 2011, 2012, 2013, 2014, 2015 Jose Antonio Ortega Ruiz
+;; Copyright (C) 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016 Jose Antonio Ortega Ruiz
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the Modified BSD License. You should
@@ -164,9 +164,10 @@ buffer.")
         (geiser-debug--display-error impl module nil what))
       (goto-char (point-min)))
     (when (or img dbg)
-      (geiser-debug--pop-to-buffer)
+      (when geiser-debug-show-debug-p
+        (geiser-debug--pop-to-buffer))
       (when (and dbg (not geiser-debug-jump-to-debug-p))
-        (next-error)
+        (ignore-errors (next-error))
         (when (not geiser-debug-show-debug-p)
           (pop-to-buffer (geiser-debug--buffer)
                          'display-buffer-reuse-window t)
