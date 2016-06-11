@@ -134,11 +134,12 @@ implementation-specific entries for font-lock-keywords.")
 (geiser-impl--define-caller geiser-syntax--case-sensitive case-sensitive ()
   "A flag saying whether keywords are case sensitive.")
 
-(defun geiser-syntax--add-kws ()
+(defun geiser-syntax--add-kws (&optional global-p)
   (when (not (and (boundp 'quack-mode) quack-mode))
     (let ((kw (geiser-syntax--impl-kws geiser-impl--implementation))
           (cs (geiser-syntax--case-sensitive geiser-impl--implementation)))
       (when kw (font-lock-add-keywords nil kw))
+      (when global-p (font-lock-add-keywords nil (geiser-syntax--keywords)))
       (setq font-lock-keywords-case-fold-search (not cs)))))
 
 

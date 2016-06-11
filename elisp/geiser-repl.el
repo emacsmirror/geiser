@@ -281,7 +281,7 @@ module command as a string")
       (unless old
         (geiser-repl-mode)
         (geiser-impl--set-buffer-implementation impl)
-        (geiser-syntax--add-kws)))))
+        (geiser-syntax--add-kws t)))))
 
 (defun geiser-repl--read-impl (prompt &optional active)
   (geiser-impl--read-impl prompt (and active (geiser-repl--active-impls))))
