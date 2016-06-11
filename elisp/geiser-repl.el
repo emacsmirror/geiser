@@ -1,6 +1,6 @@
 ;;; geiser-repl.el --- Geiser's REPL
 
-;; Copyright (C) 2009, 2010, 2011, 2012, 2013, 2015 Jose Antonio Ortega Ruiz
+;; Copyright (C) 2009, 2010, 2011, 2012, 2013, 2015, 2016 Jose Antonio Ortega Ruiz
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the Modified BSD License. You should
@@ -280,7 +280,8 @@ module command as a string")
        (or old (generate-new-buffer (geiser-repl--buffer-name impl))))
       (unless old
         (geiser-repl-mode)
-        (geiser-impl--set-buffer-implementation impl)))))
+        (geiser-impl--set-buffer-implementation impl)
+        (geiser-syntax--add-kws)))))
 
 (defun geiser-repl--read-impl (prompt &optional active)
   (geiser-impl--read-impl prompt (and active (geiser-repl--active-impls))))
@@ -688,7 +689,6 @@ buffer."
   (geiser-completion--setup t)
   (setq geiser-smart-tab-mode-string "")
   (geiser-smart-tab-mode t)
-  (geiser-syntax--add-kws)
   ;; enabling compilation-shell-minor-mode without the annoying highlighter
   (compilation-setup t))
 
