@@ -1,6 +1,6 @@
 ;; geiser-compile.el -- compile/load scheme files
 
-;; Copyright (C) 2009, 2010, 2011, 2012, 2013 Jose Antonio Ortega Ruiz
+;; Copyright (C) 2009, 2010, 2011, 2012, 2013, 2016 Jose Antonio Ortega Ruiz
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the Modified BSD License. You should
@@ -37,12 +37,11 @@
   (let* ((b/p (geiser-compile--buffer/path path))
          (buffer (car b/p))
          (path (cdr b/p))
-         (msg (format "%s %s ..." msg path)))
+         (msg (format "%s %s ..." msg path))
+         (code `(,(if compile-p :comp-file :load-file) ,path)))
     (message msg)
     (geiser-autodoc--clean-cache)
-    (geiser-compile--display-result
-     msg (geiser-eval--send/wait
-          `(,(if compile-p :comp-file :load-file) ,path)))))
+    (geiser-compile--display-result msg (geiser-eval--send/wait code))))
 
 
 ;;; User commands:
