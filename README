@@ -105,6 +105,7 @@
     | C-c C-e [   | Toggle between () and [] for current form       |
     |-------------+-------------------------------------------------|
     | C-M-x       | Eval definition around point                    |
+    | C-c C-c     | Eval definition around point                    |
     | C-c M-e     | Eval definition around point and switch to REPL |
     | C-x C-e     | Eval sexp before point                          |
     | C-c C-r     | Eval region                                     |
@@ -117,6 +118,7 @@
     | C-c C-m r   | Macro-expand region                             |
     |-------------+-------------------------------------------------|
     | C-c C-k     | Compile and load current file                   |
+    | C-c C-l     | Load scheme file                                |
     |-------------+-------------------------------------------------|
     | C-c C-d d   | See documentation for identifier at point       |
     | C-c C-d s   | See short documentation for identifier at point |
@@ -139,6 +141,7 @@
     | C-c C-z     | Start Scheme REPL, or jump to previous buffer      |
     | C-c M-o     | Clear scheme output                                |
     | C-c C-q     | Kill Scheme process                                |
+    | C-c C-l     | Load scheme file                                   |
     | C-c C-k     | Nuke REPL: use it if the REPL becomes unresponsive |
     |-------------+----------------------------------------------------|
     | M-.         | Edit identifier at point                           |

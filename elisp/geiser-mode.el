@@ -328,15 +328,15 @@ interacting with the Geiser REPL is at your disposal.
 
 (geiser-menu--defmenu geiserm geiser-mode-map
   ("Eval sexp before point" "\C-x\C-e" geiser-eval-last-sexp)
-  ("Eval definition" "\M-\C-x" geiser-eval-definition)
-  ("Eval definition and go" "\C-c\M-e" geiser-eval-definition-and-go)
+  ("Eval definition" ("\M-\C-x" "\C-c\C-c") geiser-eval-definition)
+  ("Eval definition and go" ("\C-c\M-e" "\C-c\M-e")
+   geiser-eval-definition-and-go)
   ("Eval region" "\C-c\C-r" geiser-eval-region :enable mark-active)
   ("Eval region and go" "\C-c\M-r" geiser-eval-region-and-go
    geiser-eval-region :enable mark-active)
   ("Eval buffer" "\C-c\C-b" geiser-eval-buffer)
   ("Eval buffer and go" "\C-c\M-b" geiser-eval-buffer-and-go)
-;;  ("Compile definition" "\C-c\M-c" geiser-compile-definition)
-;;  ("Compile definition and go" "\C-c\C-c" geiser-compile-definition-and-go)
+  ("Load scheme file..." "\C-c\C-l" geiser-load-file)
   (menu "Macroexpand"
         ("Sexp before point" ("\C-c\C-m\C-e" "\C-c\C-me")
          geiser-expand-last-sexp)

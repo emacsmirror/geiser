@@ -710,6 +710,7 @@ buffer."
   ("Edit symbol" "\M-." geiser-edit-symbol-at-point
    :enable (geiser--symbol-at-point))
   --
+  ("Load scheme file..." "\C-c\C-l" geiser-load-file)
   ("Switch to module..." "\C-c\C-m" switch-to-geiser-module)
   ("Import module..." "\C-c\C-i" geiser-repl-import-module)
   ("Add to load path..." "\C-c\C-r" geiser-add-to-load-path)
