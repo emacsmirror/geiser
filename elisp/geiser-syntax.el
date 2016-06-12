@@ -484,8 +484,8 @@ implementation-specific entries for font-lock-keywords.")
         (let ((geiser-default-implementation
                (or geiser-default-implementation
                    (car geiser-active-implementations))))
-          (scheme-mode)))
-        buffer))
+          (scheme-mode))
+        buffer)))
 
 (defun geiser-syntax--fontify (&optional beg end)
   (let ((font-lock-verbose nil)
