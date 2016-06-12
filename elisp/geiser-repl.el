@@ -718,6 +718,8 @@ buffer."
    "Previous input matching current")
   ("Next matching input" "\M-n" comint-next-matching-input-from-input
    "Next input matching current")
+  ("Previous prompt" "\C-c\C-p" geiser-repl-previous-prompt)
+  ("Next prompt" "\C-c\C-n" geiser-repl-next-prompt)
   ("Previous input" "\C-c\M-p" comint-previous-input)
   ("Next input" "\C-c\M-n" comint-next-input)
   --
@@ -850,6 +852,20 @@ With a prefix argument, force exit by killing the scheme process."
       (if cmd
           (when (stringp cmd) (geiser-repl--send cmd))
         (comint-kill-subjob)))))
+
+(defun geiser-repl-next-prompt (n)
+  (interactive "p")
+  (when (> n 0)
+    (end-of-line)
+    (re-search-forward comint-prompt-regexp nil 'go n)))
+
+(defun geiser-repl-previous-prompt (n)
+  (interactive "p")
+  (when (> n 0)
+    (previous-line)
+    (end-of-line)
+    (when (re-search-backward comint-prompt-regexp nil 'go n)
+      (goto-char (match-end 0)))))
 
 
 ;;; Unload:
