@@ -479,7 +479,7 @@ implementation-specific entries for font-lock-keywords.")
 
 (defun geiser-syntax--font-lock-buffer ()
   (or (get-buffer geiser-syntax--font-lock-buffer-name)
-      (let ((buffer (get-buffer-create geiser-syntax--font-lock-buffer)))
+      (let ((buffer (get-buffer-create geiser-syntax--font-lock-buffer-name)))
         (set-buffer buffer)
         (let ((geiser-default-implementation
                (or geiser-default-implementation
