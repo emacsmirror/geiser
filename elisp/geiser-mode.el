@@ -1,6 +1,6 @@
 ;; geiser-mode.el -- minor mode for scheme buffers
 
-;; Copyright (C) 2009, 2010, 2011, 2012, 2013, 2014, 2015 Jose Antonio Ortega Ruiz
+;; Copyright (C) 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016 Jose Antonio Ortega Ruiz
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the Modified BSD License. You should
@@ -195,6 +195,7 @@ With prefix, recursively macro-expand the resulting expression."
 (defun geiser-set-scheme ()
   "Associates current buffer with a given Scheme implementation."
   (interactive)
+  (geiser-syntax--remove-kws)
   (let ((impl (geiser-impl--read-impl)))
     (geiser-impl--set-buffer-implementation impl)
     (geiser-repl--set-up-repl impl)))
