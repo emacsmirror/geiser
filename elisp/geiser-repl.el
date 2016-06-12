@@ -863,8 +863,7 @@ With a prefix argument, force exit by killing the scheme process."
 (defun geiser-repl-previous-prompt (n)
   (interactive "p")
   (when (> n 0)
-    (forward-line -1)
-    (end-of-line)
+    (end-of-line 0)
     (when (re-search-backward comint-prompt-regexp nil 'go n)
       (goto-char (match-end 0)))))
 
