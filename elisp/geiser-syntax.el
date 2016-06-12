@@ -472,16 +472,20 @@ implementation-specific entries for font-lock-keywords.")
                  (geiser-syntax--mapconcat 'geiser-syntax--display a " ")))
         (t (format "%s" a))))
 
+(defconst geiser-syntax--font-lock-buffer-name " *geiser font lock*")
+
+(defun geiser-syntax--font-lock-buffer-p (&optional buffer)
+  (equal (buffer-name buffer) geiser-syntax--font-lock-buffer-name))
+
 (defun geiser-syntax--font-lock-buffer ()
-  (let ((name " *geiser font lock*"))
-    (or (get-buffer name)
-        (let ((buffer (get-buffer-create name)))
-          (set-buffer buffer)
-          (let ((geiser-default-implementation
-                 (or geiser-default-implementation
-                     (car geiser-active-implementations))))
-            (scheme-mode))
-          buffer))))
+  (or (get-buffer geiser-syntax--font-lock-buffer-name)
+      (let ((buffer (get-buffer-create geiser-syntax--font-lock-buffer)))
+        (set-buffer buffer)
+        (let ((geiser-default-implementation
+               (or geiser-default-implementation
+                   (car geiser-active-implementations))))
+          (scheme-mode)))
+        buffer))
 
 (defun geiser-syntax--scheme-str (str)
   (save-current-buffer

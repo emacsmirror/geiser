@@ -303,6 +303,7 @@ interacting with the Geiser REPL is at your disposal.
   (geiser-syntax--add-kws)
   (when (and geiser-mode
              geiser-mode-start-repl-p
+             (not (geiser-syntax--font-lock-buffer-p))
              (not (geiser-repl--connection*)))
     (save-window-excursion (run-geiser geiser-impl--implementation))))
 
