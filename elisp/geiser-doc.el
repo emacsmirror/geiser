@@ -1,6 +1,6 @@
 ;;; geiser-doc.el -- accessing scheme-provided documentation
 
-;; Copyright (C) 2009, 2010, 2011, 2012, 2013, 2014, 2015 Jose Antonio Ortega Ruiz
+;; Copyright (C) 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016 Jose Antonio Ortega Ruiz
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the Modified BSD License. You should
@@ -72,7 +72,7 @@ help (e.g. browse an HTML page) implementing this method.")
   (ring-ref (cadr geiser-doc--history) 0))
 
 (defsubst geiser-doc--history-next-link ()
-  (ring-ref (caddr geiser-doc--history) 0))
+  (ring-ref (car (cddr geiser-doc--history)) 0))
 
 (defun geiser-doc--history-push (link)
   (unless (or (null link) (equal link (geiser-doc--history-current)))
