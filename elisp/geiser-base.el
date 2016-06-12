@@ -1,6 +1,6 @@
 ;;; geiser-base.el --- shared bits
 
-;; Copyright (C) 2009, 2010, 2012, 2013, 2015  Jose Antonio Ortega Ruiz
+;; Copyright (C) 2009, 2010, 2012, 2013, 2015, 2016  Jose Antonio Ortega Ruiz
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the Modified BSD License. You should
@@ -26,6 +26,14 @@
   (defsubst looking-at-p (regexp)
     (let ((inhibit-changing-match-data t))
       (looking-at regexp))))
+
+(when (not (fboundp 'font-lock-ensure))
+  (defun font-lock-ensure (&optional beg end)
+    (with-no-warnings (font-lock-fontify-region (or beg (point-min))
+                                                (or end (point-max))))))
+
+(when (not (fboundp 'font-lock-flush))
+  (defun font-lock-flush (&optional beg end)))
 
 ;;; Utilities:
 
