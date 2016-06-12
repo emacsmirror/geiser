@@ -33,11 +33,13 @@
       - Guile 2.0 or better.
       - PLT Racket 6.0 or better.
       - Chicken 4.8.0 or better.
-      - MIT/GNU Scheme 9.2 or better
+      - MIT/GNU Scheme 9.1.1 or better.
+      - Chibi 0.7.3 or better.
+      - Chez 9.4 or better.
 
 * Installation
 
-  The easiest way is to use ELPA/Marmalade, and just type
+  The easiest way is to use MELPA, and just type
   `M-x install-package RET geiser` inside emacs.
 
   Geiser can be used either directly from its uninstalled source tree
