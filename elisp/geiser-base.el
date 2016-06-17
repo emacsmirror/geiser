@@ -27,14 +27,6 @@
     (let ((inhibit-changing-match-data t))
       (looking-at regexp))))
 
-(when (not (fboundp 'font-lock-ensure))
-  (defun font-lock-ensure (&optional beg end)
-    (with-no-warnings (font-lock-fontify-region (or beg (point-min))
-                                                (or end (point-max))))))
-
-(when (not (fboundp 'font-lock-flush))
-  (defun font-lock-flush (&optional beg end)))
-
 ;;; Utilities:
 
 (defsubst geiser--chomp (str)

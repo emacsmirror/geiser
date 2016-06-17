@@ -491,8 +491,9 @@ implementation-specific entries for font-lock-keywords.")
   (let ((font-lock-verbose nil)
         (beg (or beg (point-min)))
         (end (or end (point-max))))
-    (font-lock-flush beg end)
-    (font-lock-ensure beg end)))
+    (if (fboundp 'font-lock-flush)
+        (font-lock-flush beg end)
+      (with-no-warnings (font-lock-fontify-region beg end)))))
 
 (defun geiser-syntax--scheme-str (str)
   (save-current-buffer
