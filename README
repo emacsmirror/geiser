@@ -1,3 +1,4 @@
+-*- mode: org -*-
 * Overview
 
   Geiser is a generic Emacs/Scheme interaction mode, featuring an
