@@ -1,6 +1,6 @@
 ;; geiser-autodoc.el -- autodoc mode
 
-;; Copyright (C) 2009, 2010, 2011, 2012, 2015 Jose Antonio Ortega Ruiz
+;; Copyright (C) 2009, 2010, 2011, 2012, 2015, 2016 Jose Antonio Ortega Ruiz
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the Modified BSD License. You should
@@ -191,9 +191,9 @@ when `geiser-autodoc-display-module-p' is on."
   (geiser-autodoc--autodoc (geiser-syntax--scan-sexps)))
 
 (defun geiser-autodoc--eldoc-function ()
-  (condition-case e
-      (and (not (geiser-autodoc--inhibit)) (geiser-autodoc--autodoc-at-point))
-    (error (format "Autodoc not available (%s)" (error-message-string e)))))
+  (ignore-errors
+    (when (not (geiser-autodoc--inhibit))
+      (geiser-autodoc--autodoc-at-point))))
 
 (defun geiser-autodoc-show ()
   "Show the signature or value of the symbol at point in the echo area."
