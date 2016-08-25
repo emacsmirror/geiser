@@ -1,6 +1,6 @@
 ;; geiser-company.el -- integration with company-mode
 
-;; Copyright (C) 2009, 2010, 2011, 2012, 2013, 2014 Jose Antonio Ortega Ruiz
+;; Copyright (C) 2009, 2010, 2011, 2012, 2013, 2014, 2016 Jose Antonio Ortega Ruiz
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the Modified BSD License. You should
@@ -61,21 +61,22 @@
           (error (geiser-edit-symbol id 'noselect)))))))
 
 (defun geiser-company--prefix-at-point ()
-  (when (and (not (geiser-autodoc--inhibit)) geiser-company--enabled-flag)
-    (if (nth 8 (syntax-ppss)) 'stop
-      (let* ((prefix (and (looking-at-p "\\_>")
-                          (geiser-completion--prefix nil)))
-             (cmps1 (and prefix
-                         (geiser-completion--complete prefix nil)))
-             (cmps2 (and prefix
-                         (geiser-completion--complete prefix t)))
-             (mprefix (and (not cmps1) (not cmps2)
-                           (geiser-completion--prefix t)))
-             (cmps3 (and mprefix (geiser-completion--complete mprefix t)))
-             (cmps (or cmps3 (append cmps1 cmps2)))
-             (prefix (or mprefix prefix)))
-        (setq geiser-company--completions (cons prefix cmps))
-        prefix))))
+  (ignore-errors
+    (when (and (not (geiser-autodoc--inhibit)) geiser-company--enabled-flag)
+      (if (nth 8 (syntax-ppss)) 'stop
+        (let* ((prefix (and (looking-at-p "\\_>")
+                            (geiser-completion--prefix nil)))
+               (cmps1 (and prefix
+                           (geiser-completion--complete prefix nil)))
+               (cmps2 (and prefix
+                           (geiser-completion--complete prefix t)))
+               (mprefix (and (not cmps1) (not cmps2)
+                             (geiser-completion--prefix t)))
+               (cmps3 (and mprefix (geiser-completion--complete mprefix t)))
+               (cmps (or cmps3 (append cmps1 cmps2)))
+               (prefix (or mprefix prefix)))
+          (setq geiser-company--completions (cons prefix cmps))
+          prefix)))))
 
 
 ;;; Activation
