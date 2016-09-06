@@ -1,6 +1,7 @@
 ;;; geiser.el --- GNU Emacs and Scheme talk to each other
 
 ;; Copyright (C) 2009, 2010, 2011, 2012, 2013, 2015 Jose Antonio Ortega Ruiz
+;; URL: http://www.nongnu.org/geiser/
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the Modified BSD License. You should
