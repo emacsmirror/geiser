@@ -57,7 +57,7 @@ where to find the goodies.
 
 ELPA packages live in repositories accessible via HTTP.  You can find
 Geiser's package in either
-@uref{http://melpa-stable.org/#/geiser, MELPA stable} or, if you
+@uref{http://stable.melpa.org/#/geiser, MELPA stable} or, if you
 like living on the bleeding edge,
 @uref{http://melpa.org/#/geiser, MELPA} (directly from the git
 repo).  To tell Emacs that an ELPA repo exists, you add it to
@@ -69,7 +69,7 @@ repo).  To tell Emacs that an ELPA repo exists, you add it to
 
 (add-to-list 'package-archives
   ;; choose either the stable or the latest git version:
-  ;; '("melpa-stable" . "http://melpa-stable.org/packages/")
+  ;; '("melpa-stable" . "http://stable.melpa.org/packages/")
   '("melpa-unstable" . "http://melpa.org/packages/"))
 
 (package-initialize)
