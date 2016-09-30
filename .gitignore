@@ -33,3 +33,15 @@ Makefile.in
 /doc/texinfo.tex
 /autom4te.cache/
 /build/
+/scheme/mit/geiser/emacs.bci
+/scheme/mit/geiser/emacs.bin
+/scheme/mit/geiser/emacs.com
+/scheme/mit/geiser/geiser-os2.crf
+/scheme/mit/geiser/geiser-os2.fre
+/scheme/mit/geiser/geiser-os2.pkd
+/scheme/mit/geiser/geiser-unx.crf
+/scheme/mit/geiser/geiser-unx.fre
+/scheme/mit/geiser/geiser-unx.pkd
+/scheme/mit/geiser/geiser-w32.crf
+/scheme/mit/geiser/geiser-w32.fre
+/scheme/mit/geiser/geiser-w32.pkd
