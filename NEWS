@@ -1,8 +1,10 @@
-* Version 0.8.2
+* Version 0.9 (Oct 2016)
 
   - Chicken: improvements by Dan Leslie.
   - Guile: support for Guile 2.2 (with help from Raffik Naccache and
     David Thompson).
+  - Preliminary support for GNU/MIT, Chibi and Chez by Peter Feigl.
+  - Lots of bug fixes.
 
 * Version 0.8.1 (Oct 13, 2015)
 

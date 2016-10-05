@@ -1,6 +1,6 @@
-@set VERSION 0.8.1
+@set VERSION 0.9
 @set VERSION_NICK
-@set RELEASE_DATE October 2015
+@set RELEASE_DATE October 2016
 @set GUILE_VERSION 2.0.9
 @set RACKET_VERSION 6.0
 @set CHICKEN_VERSION 4.8.0
@@ -17,19 +17,14 @@
 @uref{@value{DOWN_BASE}/@/@value{VERSION}/@/\FILE\, \CAPT\}
 @end macro
 
-@macro vblurb{GVERS, CVERS, RVERS, DATE}
+@macro vblurb{}
 @html
 <div class="version" align="right">
 @end html
-@downfile{@value{TARBALL},
-          Version @value{VERSION} @value{VERSION_NICK} (\DATE\) Guile \GVERS\+ Chicken \CVERS\+ and Racket \RVERS\+}
+@downfile{@value{TARBALL}, Version @value{VERSION} @value{VERSION_NICK} (@value{RELEASE_DATE}) for Guile @value{GUILE_VERSION} Chicken @value{CHICKEN_VERSION} GNU/MIT  @value{MIT_VERSION} Chez @value{CHEZ_VERSION} Chibi @value{CHIBI_VERSION} and Racket @value{RACKET_VERSION}}
 @html
 </div>
 @end html
-@end macro
-
-@macro dvblurb{}
-@vblurb{@value{GUILE_VERSION}, @value{CHICKEN_VERSION}, @value{RACKET_VERSION}, @value{RELEASE_DATE}}
 @end macro
 
 @macro altr{LINK, TXT, TLINK, TRAIL}

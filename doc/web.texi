@@ -7,7 +7,7 @@
 @node Top, Introduction, (dir), (dir)
 
 @include top.texi
-@dvblurb{}
+@vblurb{}
 
 @menu
 * Introduction::
@@ -26,7 +26,7 @@
 href="http://savannah.nongnu.org/news/?group=geiser">News</a>&nbsp;&nbsp;&nbsp;&nbsp;<a class="navlink"
 href="http://savannah.nongnu.org/files/?group=geiser">Downloads</a>&nbsp;&nbsp;&nbsp;&nbsp;<a class="navlink"
 href="https://github.com/jaor/geiser/issues">Bugs</a>&nbsp;&nbsp;&nbsp;&nbsp;<a class="navlink"
-href="http://git.savannah.gnu.org/cgit/geiser.git">Source</a>&nbsp;&nbsp;&nbsp;&nbsp;<a class="navlink"
+href="https://github.com/jaor/geiser.git">Source</a>&nbsp;&nbsp;&nbsp;&nbsp;<a class="navlink"
 href="http://lists.nongnu.org/mailman/listinfo/geiser-users">Mailing
 list</a>&nbsp;
 </div>

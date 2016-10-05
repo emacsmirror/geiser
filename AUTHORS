@@ -5,6 +5,9 @@ is its active maintainer. For more boring details about him, see
 Daniel J. Leslie implemented and maintains Geiser's support for
 Chicken.
 
+Peter Feigl implemented and maintins Geiser's support for GNU/MIT
+Scheme, Chibi and Chez.
+
 Contributors:
 
 Michael Wilber
@@ -17,5 +20,9 @@ Ludovic Courtès
 Alex Kost
 Mario Rodas
 Christoph Egger
+Chunyang Xu
+Fice T
+Syohei Yoshida
+Mario Domenech
 
 See also <https://github.com/jaor/geiser/contributors>.
