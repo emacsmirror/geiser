@@ -22,6 +22,8 @@ dist_lisp_LISP = \
    geiser-mode.el \
    geiser-racket.el \
    geiser-chicken.el \
+   geiser-chez.el \
+   geiser-chibi.el \
    geiser-popup.el \
    geiser-reload.el \
    geiser-repl.el \
