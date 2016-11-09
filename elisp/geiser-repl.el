@@ -61,7 +61,7 @@ REPL buffer."
 
 This is actually the base name: the concrete Scheme
 implementation name gets appended to it."
-  :type 'filename
+  :type 'file
   :group 'geiser-repl)
 
 (geiser-custom--defcustom geiser-repl-history-size comint-input-ring-size
