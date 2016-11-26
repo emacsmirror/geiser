@@ -29,7 +29,7 @@
 
 (defvar geiser-eval--get-impl-module nil)
 (geiser-impl--register-local-method
- 'geiser-eval--get-impl-module 'find-module '(lambda (&rest) nil)
+ 'geiser-eval--get-impl-module 'find-module '(lambda (&rest args) nil)
  "Function used to obtain the module for current buffer. It takes
 an optional argument, for cases where we want to force its
 value.")

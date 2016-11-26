@@ -158,7 +158,7 @@ determine its scheme flavour."
              (= 2 (length m))
              (symbolp (car m)))
     (if (functionp (cadr m)) m
-      `(,(car m) (lambda (&rest) ,(cadr m))))))
+      `(,(car m) (lambda (&rest args) ,(cadr m))))))
 
 (defun geiser-impl--define (file name parent methods)
   (let* ((methods (mapcar 'geiser-impl--normalize-method methods))
