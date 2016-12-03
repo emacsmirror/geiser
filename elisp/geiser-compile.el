@@ -59,7 +59,7 @@
 (defun geiser-load-file (path)
   "Load Scheme file."
   (interactive "FScheme file: ")
-  (geiser-compile--file-op path nil "Loading"))
+  (geiser-compile--file-op (expand-file-name path) nil "Loading"))
 
 (defun geiser-load-current-buffer ()
   "Load current Scheme file."
