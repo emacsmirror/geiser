@@ -62,6 +62,16 @@ active when `geiser-mode' is activated in a buffer."
   :group 'geiser-mode
   :type 'boolean)
 
+(geiser-custom--defcustom geiser-mode-eval-last-sexp-to-buffer nil
+  "Whether `eval-last-sexp' prints results to buffer"
+  :group 'geiser-mode
+  :type 'boolean)
+
+(geiser-custom--defcustom geiser-mode-eval-to-buffer-prefix ""
+  "When `geiser-mode-eval-last-sexp-to-buffer', the prefix string which will prepend to results"
+  :group 'geiser-mode
+  :type 'string)
+
 
 
 ;;; Evaluation commands:
@@ -132,17 +142,27 @@ With prefix, goes to the REPL buffer afterwards (as
 (defun geiser-eval-last-sexp (print-to-buffer-p)
   "Eval the previous sexp in the Geiser REPL.
 
-With a prefix, print the result of the evaluation to the buffer."
+With a prefix, revert the effect of `geiser-mode-eval-last-sexp-to-buffer' "
   (interactive "P")
   (let* ((ret (geiser-eval-region (save-excursion (backward-sexp) (point))
                                   (point)
                                   nil
                                   t
                                   print-to-buffer-p))
-         (str (geiser-eval--retort-result-str ret (when print-to-buffer-p ""))))
-    (when (and print-to-buffer-p (not (string= "" str)))
-      (push-mark)
-      (insert str))))
+	 (err (geiser-eval--retort-error ret))
+	 (will-eval-to-buffer (if print-to-buffer-p
+				  (not geiser-mode-eval-last-sexp-to-buffer)
+				geiser-mode-eval-last-sexp-to-buffer))
+	 (str (geiser-eval--retort-result-str ret (when will-eval-to-buffer ""))))
+    (cond  ((not will-eval-to-buffer) str)
+	   ((string= "" str))
+	   (err (insert
+		 (format "\n%sERROR:%s\n" geiser-mode-eval-to-buffer-prefix
+			 (geiser-eval--error-str err))))
+	   (t (progn
+		(push-mark)
+		(insert
+		 (format "\n%s%s\n" geiser-mode-eval-to-buffer-prefix str)))))))
 
 (defun geiser-compile-definition (&optional and-go)
   "Compile the current definition in the Geiser REPL.
