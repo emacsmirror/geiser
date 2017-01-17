@@ -1,6 +1,6 @@
 ;; geiser-mode.el -- minor mode for scheme buffers
 
-;; Copyright (C) 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016 Jose Antonio Ortega Ruiz
+;; Copyright (C) 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017 Jose Antonio Ortega Ruiz
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the Modified BSD License. You should
@@ -156,13 +156,13 @@ With a prefix, revert the effect of `geiser-mode-eval-last-sexp-to-buffer' "
 	 (str (geiser-eval--retort-result-str ret (when will-eval-to-buffer ""))))
     (cond  ((not will-eval-to-buffer) str)
 	   ((string= "" str))
-	   (err (insert
-		 (format "\n%sERROR:%s\n" geiser-mode-eval-to-buffer-prefix
-			 (geiser-eval--error-str err))))
-	   (t (progn
-		(push-mark)
-		(insert
-		 (format "\n%s%s\n" geiser-mode-eval-to-buffer-prefix str)))))))
+	   (err (insert (format "\n%sERROR:%s\n"
+                                geiser-mode-eval-to-buffer-prefix
+                                (geiser-eval--error-str err))))
+	   (t (progn (push-mark)
+                     (insert (format "%s%s\n"
+                                     geiser-mode-eval-to-buffer-prefix
+                                     str)))))))
 
 (defun geiser-compile-definition (&optional and-go)
   "Compile the current definition in the Geiser REPL.
