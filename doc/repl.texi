@@ -395,6 +395,11 @@ loads a file specified via the @code{-l} flag.  If what you want is just
 loading @file{~/.guile}, leave @code{geiser-guile-init-file} alone and
 set @code{geiser-guile-load-init-file-p} to @code{t} instead.
 
+These variables controlling your scheme's initialisation process are
+good candidates for an entry in a project's @file{.dir-locals.el} file,
+so that they are automatically set to a sensible value whenever you
+start a REPL in the project's directory.
+
 @subsubheading Racket startup time
 
 @cindex startup timeout
