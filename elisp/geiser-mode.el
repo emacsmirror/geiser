@@ -149,11 +149,12 @@ With a prefix, revert the effect of `geiser-mode-eval-last-sexp-to-buffer' "
                                  (setq bosexp (point))
                                  (forward-sexp)
                                  (point)))
-         (ret (geiser-eval-region bosexp ;beginning of sexp
-                                  eosexp ;end of sexp
-                                  nil
-                                  t
-                                  print-to-buffer-p))
+         (ret (save-excursion
+                (geiser-eval-region bosexp ;beginning of sexp
+                                    eosexp ;end of sexp
+                                    nil
+                                    t
+                                    print-to-buffer-p)))
 	 (err (geiser-eval--retort-error ret))
 	 (will-eval-to-buffer (if print-to-buffer-p
 				  (not geiser-mode-eval-last-sexp-to-buffer)
