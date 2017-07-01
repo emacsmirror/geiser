@@ -429,11 +429,11 @@ uses of a macro after redefining it.  That's not a limitation imposed by
 Geiser, but a consequence of how macros work in Scheme (and other
 Lisps).  There's also the risk that you lose track of what's actually
 defined and what's not during a given session.  But,
-@uref{http://programming-musings.org/@/2009/03/29/@/from-my-cold-prying-hands/,in
-my opinion}, those are limitations we lispers are aware of, and they
+@uref{http://programming-musings.org/2009/03/29/from-my-cold-prying-hands/index.html,
+in my opinion}, those are limitations we lispers are aware of, and they
 don't force us to throw the baby with the bathwater and ditch
 incremental evaluation.  Some people disagree; if you happen to find
-@uref{http://blog.racket-lang.org/@/2009/@/03/@/drscheme-repl-isnt-lisp.html,
+@uref{http://blog.racket-lang.org/2009/03/drscheme-repl-isnt-lisp-the-one-in-emacs.html,
 their arguments} convincing, you don't have to throw away Geiser
 together with the baby: @kbd{M-x geiser-restart-repl} will let you
 restart the REPL as many times as you see fit.
