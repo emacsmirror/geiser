@@ -303,7 +303,9 @@ module command as a string")
          (marker-position (cdr comint-last-prompt)))
         ((and (boundp 'comint-last-prompt-overlay) comint-last-prompt-overlay)
          (overlay-end comint-last-prompt-overlay))
-        (t (save-excursion (geiser-repl--bol) (+ 1 (point))))))
+        (t (save-excursion
+             (geiser-repl--bol)
+             (min (+ 1 (point)) (point-max))))))
 
 (defun geiser-repl--last-prompt-start ()
   (cond ((and (boundp 'comint-last-prompt) (markerp (car comint-last-prompt)))
