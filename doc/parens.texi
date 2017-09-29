@@ -613,6 +613,14 @@ bound to @kbd{C-c C-e [}.  With a numeric prefix (as in, say, @kbd{M-2
 C-c C-e [}), it will perform that many toggles, forward for positive
 values and backward for negative ones.
 
+@subheading Caveat about completion
+
+It is possible for Geiser to hang your Emacs process when trying to
+complete symbols. This can happen in the REPL itself or even in a
+Scheme buffer that is attached to the REPL process. For more details
+on how to fix this problem, @ref{completion-caveat,,Caveat about
+completion & the REPL}
+
 @c Local Variables:
 @c mode: texinfo
 @c TeX-master: "geiser"
