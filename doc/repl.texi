@@ -218,6 +218,57 @@ the last prompt, @kbd{@key{TAB}} will move to the next error in the
 buffer, and you can use @kbd{@key{BACKTAB}} everywhere to go to the
 previous one.
 
+@subheading Caveat about completion & the REPL
+@anchor{completion-caveat}
+
+It is possible for Geiser to hang your Emacs process when trying to
+complete symbols. This can happen in the REPL itself or even in a
+Scheme buffer that is attached to the REPL process. If this happens,
+you've probably entered a module that changes the REPL prompt from
+what Geiser was expecting to see.
+
+Unfortunately, there's no general solution for this issue right now (as
+it is a daunting task to try to make a regexp that can encompass all
+possible REPL prompts). The best solution for now is to fix this issue
+on a case-by-case basis by adjusting your prompt regexp variable so
+that it matches the default prompt as well as your Scheme module's
+special prompt.
+
+For example, XREPL is a Racket module that implements a better Racket
+REPL. You might be interested in toying around with some of its
+functions, but when you try to enter XREPL via, say, @kbd{C-c C-m
+xrepl}, you'll notice that the REPL prompt has changed to something
+like this:
+
+@example
+<pkgs>/xrepl-lib/xrepl/main> 
+@end example
+
+If you start typing symbols, and then you try to auto-complete those
+symbols, your Emacs process may hang. This is because Geiser expects
+the REPL prompt to match this regexp (for Racket):
+
+@example
+"\\(mzscheme\\|racket\\)@@[^ ]*> "
+@end example
+
+Therefore, we can fix this issue by changing our default prompt regexp
+like so:
+
+@example
+(setq geiser-racket--prompt-regexp "<pkgs>.*> \\|\\(mzscheme\\|racket\\)@@[^ ]*> ")
+@end example
+
+Note that you may have to run @kbd{M-x geiser-reload} after setting
+this variable so that your changes will take effect.
+
+Again, you'll have to change the regexp to fit every prompt that
+causes this issue, but the only alternative (that we can think of
+right now) is to create a regexp that will match every possible
+prompt. Obviously, that is going to be more than a little
+tricky. However, if you have a better solution than that, please share
+it with the Geiser developers; we'll be more than happy to hear it.
+
 @node Autodoc and friends, Seeing is believing, Completion and error handling, The REPL
 @section Autodoc and friends
 
