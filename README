@@ -41,7 +41,7 @@
 * Installation
 
   The easiest way is to use MELPA, and just type
-  `M-x install-package RET geiser` inside emacs.
+  `M-x package-install RET geiser` inside emacs.
 
   Geiser can be used either directly from its uninstalled source tree
   or byte-compiled and installed after performing the standard
