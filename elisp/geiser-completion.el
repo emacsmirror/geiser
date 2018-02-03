@@ -1,6 +1,6 @@
 ;;; geiser-completion.el -- tab completion
 
-;; Copyright (C) 2009, 2010, 2011, 2012 Jose Antonio Ortega Ruiz
+;; Copyright (C) 2009, 2010, 2011, 2012, 2018 Jose Antonio Ortega Ruiz
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the Modified BSD License. You should
@@ -62,10 +62,14 @@
   (geiser-eval--send/result `(:eval (:ge module-completions ,prefix))))
 
 (defvar geiser-completion--symbol-list-func
-  (completion-table-dynamic 'geiser-completion--symbol-list t))
+  (if (< emacs-major-version 25)
+      (completion-table-dynamic 'geiser-completion--symbol-list)
+    (completion-table-dynamic 'geiser-completion--symbol-list t)))
 
 (defvar geiser-completion--module-list-func
-  (completion-table-dynamic 'geiser-completion--module-list t))
+  (if (< emacs-major-version 25)
+      (completion-table-dynamic 'geiser-completion--module-list)
+    (completion-table-dynamic 'geiser-completion--module-list t)))
 
 (defun geiser-completion--complete (prefix modules)
   (if modules (geiser-completion--module-list prefix)
