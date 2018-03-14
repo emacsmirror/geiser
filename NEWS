@@ -1,3 +1,12 @@
+* Version 0.10 (March 2018)
+
+  - Better support for Guile 2.2 (
+  - Better support for Chicken (Dan Leslie, John Whitbeck)
+  - Better support for Chez (Chaos Eternal)
+  - Bug fixes (Peter Wang, Diog F. S. Ramos, Mario Rodas, Jordan Brown)
+  - Documentation fixes (Jonas Bernoulli, Andrew Sackville-West, Ziyi
+    Yan, James C. De Ricco, George D. Plymale II)
+
 * Version 0.9 (Oct 2016)
 
   - Chicken: improvements by Dan Leslie.
