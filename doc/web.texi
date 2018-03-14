@@ -22,13 +22,9 @@
 @html
 <br/>
 <div class="navigation" align="right">
-<a class="navlink"
-href="http://savannah.nongnu.org/news/?group=geiser">News</a>&nbsp;&nbsp;&nbsp;&nbsp;<a class="navlink"
-href="http://savannah.nongnu.org/files/?group=geiser">Downloads</a>&nbsp;&nbsp;&nbsp;&nbsp;<a class="navlink"
-href="https://github.com/jaor/geiser/issues">Bugs</a>&nbsp;&nbsp;&nbsp;&nbsp;<a class="navlink"
-href="https://github.com/jaor/geiser.git">Source</a>&nbsp;&nbsp;&nbsp;&nbsp;<a class="navlink"
-href="http://lists.nongnu.org/mailman/listinfo/geiser-users">Mailing
-list</a>&nbsp;
+<a class="navlink" href="https://github.com/jaor/geiser/issues">Bugs</a>&nbsp;&nbsp;&nbsp;&nbsp;
+<a class="navlink" href="https://github.com/jaor/geiser.git">Source</a>&nbsp;&nbsp;&nbsp;&nbsp;
+<a class="navlink" href="http://lists.nongnu.org/mailman/listinfo/geiser-users">Mailing list</a>&nbsp;
 </div>
 @end html
 
