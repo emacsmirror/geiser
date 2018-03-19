@@ -86,7 +86,7 @@ third key not modified by @key{Control}; e.g.,
 @item @tab @tab
 @item C-c C-k
 @tab @code{geiser-compile-current-buffer}
-@tab Compile and load current file
+@tab Compile and load current file; with prefix, restart REPL before
 @item C-c C-l
 @tab @code{geiser-load-file}
 @tab Load scheme file

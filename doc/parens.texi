@@ -436,7 +436,12 @@ incremental evaluation.  Some people disagree; if you happen to find
 @uref{http://blog.racket-lang.org/2009/03/drscheme-repl-isnt-lisp-the-one-in-emacs.html,
 their arguments} convincing, you don't have to throw away Geiser
 together with the baby: @kbd{M-x geiser-restart-repl} will let you
-restart the REPL as many times as you see fit.
+restart the REPL as many times as you see fit.  Moreover, you can invoke
+@kbd{geiser-compile-current-buffer} and @kbd{geiser-load-current-buffer}
+with a prefix argument (that'd be something like @kbd{C-u C-c C-k} for
+compilation, for instance), to tell Geiser to restart the REPL
+associated with a buffer before compiling or loading its current
+contents.
 
 @cindex evaluation
 @cindex incremental development, not evil

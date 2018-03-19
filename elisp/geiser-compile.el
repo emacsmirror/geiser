@@ -1,6 +1,6 @@
 ;; geiser-compile.el -- compile/load scheme files
 
-;; Copyright (C) 2009, 2010, 2011, 2012, 2013, 2016 Jose Antonio Ortega Ruiz
+;; Copyright (C) 2009, 2010, 2011, 2012, 2013, 2016, 2018 Jose Antonio Ortega Ruiz
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the Modified BSD License. You should
@@ -51,9 +51,12 @@
   (interactive "FScheme file: ")
   (geiser-compile--file-op path t "Compiling"))
 
-(defun geiser-compile-current-buffer ()
-  "Compile and load current Scheme file."
-  (interactive)
+(defun geiser-compile-current-buffer (&optional restart-p)
+  "Compile and load current Scheme file.
+
+With prefix, restart REPL before compiling the file."
+  (interactive "P")
+  (when restart-p (geiser-restart-repl))
   (geiser-compile-file (buffer-file-name (current-buffer))))
 
 (defun geiser-load-file (path)
@@ -61,9 +64,12 @@
   (interactive "FScheme file: ")
   (geiser-compile--file-op (expand-file-name path) nil "Loading"))
 
-(defun geiser-load-current-buffer ()
-  "Load current Scheme file."
-  (interactive)
+(defun geiser-load-current-buffer (&optional restart-p)
+  "Load current Scheme file.
+
+With prefix, restart REPL before loading the file."
+  (interactive "P")
+  (when restart-p (geiser-restart-repl))
   (geiser-load-file (buffer-file-name (current-buffer))))
 
 (defun geiser-add-to-load-path (path)
