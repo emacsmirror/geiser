@@ -53,12 +53,13 @@
 
     - Install the necessary support eggs:
 
-         $ chicken-install -s apropos chicken-doc
+        =$ chicken-install -s apropos chicken-doc=
 
     - Update the Chicken documentation database:
 
-         $ =cd `csi -p '(chicken-home)'`=
-         $ curl http://3e8.org/pub/chicken-doc/chicken-doc-repo.tgz | sudo tar zx
+        =$ cd `csi -p '(chicken-home)'`=
+
+        =$ curl http://3e8.org/pub/chicken-doc/chicken-doc-repo.tgz | sudo tar zx=
 
 * Basic configuration
 
@@ -97,17 +98,17 @@
 
 ** In Scheme buffers:
 
-    |-------------+--------------------------------------------------|
+    |---------------+--------------------------------------------------|
     | =C-c C-z=     | Switch to REPL                                   |
     | =C-c C-a=     | Switch to REPL and current module                |
     | =C-c C-s=     | Specify Scheme implementation for buffer         |
-    |-------------+--------------------------------------------------|
+    |---------------+--------------------------------------------------|
     | =M-.=         | Go to definition of identifier at point          |
-    | =M-,=         | Go back to where =M-.= was last invoked            |
+    | =M-,=         | Go back to where =M-.= was last invoked          |
     | =C-c C-e m=   | Ask for a module and open its file               |
     | =C-c C-e C-l= | Add a given directory to Scheme's load path      |
     | =C-c C-e [=   | Toggle between () and [] for current form        |
-    |-------------+--------------------------------------------------|
+    |---------------+--------------------------------------------------|
     | =C-M-x=       | Eval definition around point                     |
     | =C-c C-c=     | Eval definition around point                     |
     | =C-c M-e=     | Eval definition around point and switch to REPL  |
@@ -116,73 +117,73 @@
     | =C-c M-r=     | Eval region and switch to REPL                   |
     | =C-c C-b=     | Eval buffer                                      |
     | =C-c M-b=     | Eval buffer and switch to REPL                   |
-    |-------------+--------------------------------------------------|
+    |---------------+--------------------------------------------------|
     | =C-c C-m x=   | Macro-expand definition around point             |
     | =C-c C-m e=   | Macro-expand sexp before point                   |
     | =C-c C-m r=   | Macro-expand region                              |
-    |-------------+--------------------------------------------------|
+    |---------------+--------------------------------------------------|
     | =C-c C-k=     | Compile and load current buffer                  |
     | =C-c C-l=     | Load scheme file                                 |
     | =C-u C-c C-k= | Compile and load current buffer, restarting REPL |
-    |-------------+--------------------------------------------------|
+    |---------------+--------------------------------------------------|
     | =C-c C-d d=   | See documentation for identifier at point        |
     | =C-c C-d s=   | See short documentation for identifier at point  |
     | =C-c C-d i=   | Look up manual for identifier at point           |
     | =C-c C-d m=   | See a list of a module's exported identifiers    |
     | =C-c C-d a=   | Toggle autodoc mode                              |
-    |-------------+--------------------------------------------------|
+    |---------------+--------------------------------------------------|
     | =C-c <=       | Show callers of procedure at point               |
     | =C-c >=       | Show callees of procedure at point               |
-    |-------------+--------------------------------------------------|
+    |---------------+--------------------------------------------------|
     | =M-TAB=       | Complete identifier at point                     |
-    | =M-`=, =C-.=    | Complete module name at point                    |
+    | =M-`=, =C-.=  | Complete module name at point                    |
     | =TAB=         | Complete identifier at point or indent           |
-    |             | (If =geiser-mode-smart-tab-p= is t)                |
-    |-------------+--------------------------------------------------|
+    |               | (If =geiser-mode-smart-tab-p= is t)              |
+    |---------------+--------------------------------------------------|
 
 ** In the REPL
 
-    |-------------+----------------------------------------------------|
-    | =C-c C-z=     | Start Scheme REPL, or jump to previous buffer      |
-    | =C-c M-o=     | Clear scheme output                                |
-    | =C-c C-q=     | Kill Scheme process                                |
-    | =C-c C-l=     | Load scheme file                                   |
-    | =C-c C-k=     | Nuke REPL: use it if the REPL becomes unresponsive |
-    |-------------+----------------------------------------------------|
-    | =M-.=         | Edit identifier at point                           |
-    | =TAB=, =M-TAB=  | Complete identifier at point                       |
-    | =M-`=, =C-.=    | Complete module name at point                      |
-    | =M-p=, =M-n=    | Prompt history, matching current prefix            |
-    |-------------+----------------------------------------------------|
-    | =C-c C-m=     | Set current module                                 |
-    | =C-c C-i=     | Import module into current namespace               |
-    | =C-c C-r=     | Add a given directory to scheme's load path        |
-    |-------------+----------------------------------------------------|
-    | =C-c C-d C-d= | See documentation for symbol at point              |
-    | =C-c C-d C-m= | See documentation for module                       |
-    | =C-c C-d C-a= | Toggle autodoc mode                                |
-    |-------------+----------------------------------------------------|
+    |----------------+----------------------------------------------------|
+    | =C-c C-z=      | Start Scheme REPL, or jump to previous buffer      |
+    | =C-c M-o=      | Clear scheme output                                |
+    | =C-c C-q=      | Kill Scheme process                                |
+    | =C-c C-l=      | Load scheme file                                   |
+    | =C-c C-k=      | Nuke REPL: use it if the REPL becomes unresponsive |
+    |----------------+----------------------------------------------------|
+    | =M-.=          | Edit identifier at point                           |
+    | =TAB=, =M-TAB= | Complete identifier at point                       |
+    | =M-`=, =C-.=   | Complete module name at point                      |
+    | =M-p=, =M-n=   | Prompt history, matching current prefix            |
+    |----------------+----------------------------------------------------|
+    | =C-c C-m=      | Set current module                                 |
+    | =C-c C-i=      | Import module into current namespace               |
+    | =C-c C-r=      | Add a given directory to scheme's load path        |
+    |----------------+----------------------------------------------------|
+    | =C-c C-d C-d=  | See documentation for symbol at point              |
+    | =C-c C-d C-m=  | See documentation for module                       |
+    | =C-c C-d C-a=  | Toggle autodoc mode                                |
+    |----------------+----------------------------------------------------|
 
 ** In the documentation browser:
 
-    |----------+----------------------------------------------|
-    | =f=        | Next page                                    |
-    | =b=        | Previous page                                |
-    |----------+----------------------------------------------|
+    |--------------+----------------------------------------------|
+    | =f=          | Next page                                    |
+    | =b=          | Previous page                                |
+    |--------------+----------------------------------------------|
     | =TAB=, =n=   | Next link                                    |
     | =S-TAB=, =p= | Previous link                                |
-    | =N=        | Next section                                 |
-    | =P=        | Previous section                             |
-    |----------+----------------------------------------------|
-    | =k=        | Kill current page and go to previous or next |
+    | =N=          | Next section                                 |
+    | =P=          | Previous section                             |
+    |--------------+----------------------------------------------|
+    | =k=          | Kill current page and go to previous or next |
     | =g=, =r=     | Refresh page                                 |
-    | =c=        | Clear browsing history                       |
-    |----------+----------------------------------------------|
+    | =c=          | Clear browsing history                       |
+    |--------------+----------------------------------------------|
     | =.=, =M-.=   | Edit identifier at point                     |
-    | =z=        | Switch to REPL                               |
-    |----------+----------------------------------------------|
-    | =q=        | Bury buffer                                  |
-    |----------+----------------------------------------------|
+    | =z=          | Switch to REPL                               |
+    |--------------+----------------------------------------------|
+    | =q=          | Bury buffer                                  |
+    |--------------+----------------------------------------------|
 
 ** In backtrace (evaluation/compile result) buffers:
 
