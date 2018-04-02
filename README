@@ -53,13 +53,16 @@
 
     - Install the necessary support eggs:
 
-        =$ chicken-install -s apropos chicken-doc=
+#+BEGIN_EXAMPLE
+     $ chicken-install -s apropos chicken-doc
+#+END_EXAMPLE
 
     - Update the Chicken documentation database:
 
-        =$ cd `csi -p '(chicken-home)'`=
-
-        =$ curl http://3e8.org/pub/chicken-doc/chicken-doc-repo.tgz | sudo tar zx=
+#+BEGIN_EXAMPLE
+     $ cd `csi -p '(chicken-home)'`
+     $ curl http://3e8.org/pub/chicken-doc/chicken-doc-repo.tgz | sudo tar zx
+#+END_EXAMPLE
 
 * Basic configuration
 
@@ -68,7 +71,9 @@
   setting the variable =geiser-active-implementations= *before* loading
   geiser.el. For instance:
 
-  (setq geiser-active-implementations '(chicken guile))
+#+BEGIN_SRC elisp
+    (setq geiser-active-implementations '(chicken guile))
+#+END_SRC
 
   On opening a scheme file, Geiser will try to guess its Scheme,
   defaulting to the first in the list. Use =C-c C-s= to select the
@@ -76,7 +81,9 @@
 
   Check the geiser customization group for some options with:
 
+#+BEGIN_EXAMPLE
       M-x customize-group RET geiser RET
+#+END_EXAMPLE
 
   In particular, customize =geiser-<impl>-binary=, which should point
   to an executable in your path.
@@ -90,56 +97,56 @@
     module are offered.
 
     While that is cool and all, things are even better: if you have
-    company-mode (http://company-mode.github.io/) installed,
-    Geiser's completion will use it. Just require company-mode and,
-    from then on, any new scheme buffer or REPL will use it.
+    [[http://company-mode.github.io/][company mode]] installed, Geiser's completion will use it. Just
+    require company-mode and, from then on, any new scheme buffer or
+    REPL will use it.
 
 * Quick key reference
 
 ** In Scheme buffers:
 
-    |---------------+--------------------------------------------------|
-    | =C-c C-z=     | Switch to REPL                                   |
-    | =C-c C-a=     | Switch to REPL and current module                |
-    | =C-c C-s=     | Specify Scheme implementation for buffer         |
-    |---------------+--------------------------------------------------|
-    | =M-.=         | Go to definition of identifier at point          |
-    | =M-,=         | Go back to where =M-.= was last invoked          |
-    | =C-c C-e m=   | Ask for a module and open its file               |
-    | =C-c C-e C-l= | Add a given directory to Scheme's load path      |
-    | =C-c C-e [=   | Toggle between () and [] for current form        |
-    |---------------+--------------------------------------------------|
-    | =C-M-x=       | Eval definition around point                     |
-    | =C-c C-c=     | Eval definition around point                     |
-    | =C-c M-e=     | Eval definition around point and switch to REPL  |
-    | =C-x C-e=     | Eval sexp before point                           |
-    | =C-c C-r=     | Eval region                                      |
-    | =C-c M-r=     | Eval region and switch to REPL                   |
-    | =C-c C-b=     | Eval buffer                                      |
-    | =C-c M-b=     | Eval buffer and switch to REPL                   |
-    |---------------+--------------------------------------------------|
-    | =C-c C-m x=   | Macro-expand definition around point             |
-    | =C-c C-m e=   | Macro-expand sexp before point                   |
-    | =C-c C-m r=   | Macro-expand region                              |
-    |---------------+--------------------------------------------------|
-    | =C-c C-k=     | Compile and load current buffer                  |
-    | =C-c C-l=     | Load scheme file                                 |
-    | =C-u C-c C-k= | Compile and load current buffer, restarting REPL |
-    |---------------+--------------------------------------------------|
-    | =C-c C-d d=   | See documentation for identifier at point        |
-    | =C-c C-d s=   | See short documentation for identifier at point  |
-    | =C-c C-d i=   | Look up manual for identifier at point           |
-    | =C-c C-d m=   | See a list of a module's exported identifiers    |
-    | =C-c C-d a=   | Toggle autodoc mode                              |
-    |---------------+--------------------------------------------------|
-    | =C-c <=       | Show callers of procedure at point               |
-    | =C-c >=       | Show callees of procedure at point               |
-    |---------------+--------------------------------------------------|
-    | =M-TAB=       | Complete identifier at point                     |
-    | =M-`=, =C-.=  | Complete module name at point                    |
-    | =TAB=         | Complete identifier at point or indent           |
-    |               | (If =geiser-mode-smart-tab-p= is t)              |
-    |---------------+--------------------------------------------------|
+   |---------------+--------------------------------------------------|
+   | =C-c C-s=     | Specify Scheme implementation for buffer         |
+   | =C-c C-z=     | Switch to REPL                                   |
+   | =C-c C-a=     | Switch to REPL and current module                |
+   |---------------+--------------------------------------------------|
+   | =M-.=         | Go to definition of identifier at point          |
+   | =M-,=         | Go back to where M-. was last invoked            |
+   | =C-c C-e m=   | Ask for a module and open its file               |
+   | =C-c C-e C-l= | Add a given directory to Scheme's load path      |
+   | =C-c C-e [=   | Toggle between () and [] for current form        |
+   |---------------+--------------------------------------------------|
+   | =C-M-x=       | Eval definition around point                     |
+   | =C-c C-c=     | Eval definition around point                     |
+   | =C-c M-e=     | Eval definition around point and switch to REPL  |
+   | =C-x C-e=     | Eval sexp before point                           |
+   | =C-c C-r=     | Eval region                                      |
+   | =C-c M-r=     | Eval region and switch to REPL                   |
+   | =C-c C-b=     | Eval buffer                                      |
+   | =C-c M-b=     | Eval buffer and switch to REPL                   |
+   |---------------+--------------------------------------------------|
+   | =C-c C-m x=   | Macro-expand definition around point             |
+   | =C-c C-m e=   | Macro-expand sexp before point                   |
+   | =C-c C-m r=   | Macro-expand region                              |
+   |---------------+--------------------------------------------------|
+   | =C-c C-k=     | Compile and load current buffer                  |
+   | =C-c C-l=     | Load scheme file                                 |
+   | =C-u C-c C-k= | Compile and load current buffer, restarting REPL |
+   |---------------+--------------------------------------------------|
+   | =C-c C-d d=   | See documentation for identifier at point        |
+   | =C-c C-d s=   | See short documentation for identifier at point  |
+   | =C-c C-d i=   | Look up manual for identifier at point           |
+   | =C-c C-d m=   | See a list of a module's exported identifiers    |
+   | =C-c C-d a=   | Toggle autodoc mode                              |
+   |---------------+--------------------------------------------------|
+   | =C-c <=       | Show callers of procedure at point               |
+   | =C-c >=       | Show callees of procedure at point               |
+   |---------------+--------------------------------------------------|
+   | =M-TAB=       | Complete identifier at point                     |
+   | =M-`=, =C-.=  | Complete module name at point                    |
+   | =TAB=         | Complete identifier at point or indent           |
+   |               | (If =geiser-mode-smart-tab-p= is t)              |
+   |---------------+--------------------------------------------------|
 
 ** In the REPL
 
