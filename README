@@ -52,10 +52,13 @@
     not required for any other scheme.
 
     - Install the necessary support eggs:
-      $ chicken-install -s apropos chicken-doc
+
+         $ chicken-install -s apropos chicken-doc
+
     - Update the Chicken documentation database:
-      $ =cd `csi -p '(chicken-home)'`=
-      $ curl http://3e8.org/pub/chicken-doc/chicken-doc-repo.tgz | sudo tar zx
+
+         $ =cd `csi -p '(chicken-home)'`=
+         $ curl http://3e8.org/pub/chicken-doc/chicken-doc-repo.tgz | sudo tar zx
 
 * Basic configuration
 
@@ -163,22 +166,22 @@
 ** In the documentation browser:
 
     |----------+----------------------------------------------|
-    | f        | Next page                                    |
-    | b        | Previous page                                |
+    | =f=        | Next page                                    |
+    | =b=        | Previous page                                |
     |----------+----------------------------------------------|
-    | TAB, n   | Next link                                    |
-    | S-TAB, p | Previous link                                |
-    | N        | Next section                                 |
-    | P        | Previous section                             |
+    | =TAB=, =n=   | Next link                                    |
+    | =S-TAB=, =p= | Previous link                                |
+    | =N=        | Next section                                 |
+    | =P=        | Previous section                             |
     |----------+----------------------------------------------|
-    | k        | Kill current page and go to previous or next |
-    | g, r     | Refresh page                                 |
-    | c        | Clear browsing history                       |
+    | =k=        | Kill current page and go to previous or next |
+    | =g=, =r=     | Refresh page                                 |
+    | =c=        | Clear browsing history                       |
     |----------+----------------------------------------------|
-    | ., M-.   | Edit identifier at point                     |
-    | z        | Switch to REPL                               |
+    | =.=, =M-.=   | Edit identifier at point                     |
+    | =z=        | Switch to REPL                               |
     |----------+----------------------------------------------|
-    | q        | Bury buffer                                  |
+    | =q=        | Bury buffer                                  |
     |----------+----------------------------------------------|
 
 ** In backtrace (evaluation/compile result) buffers:
