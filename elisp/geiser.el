@@ -1,6 +1,6 @@
 ;;; geiser.el --- GNU Emacs and Scheme talk to each other
 
-;; Copyright (C) 2009, 2010, 2011, 2012, 2013, 2015 Jose Antonio Ortega Ruiz
+;; Copyright (C) 2009, 2010, 2011, 2012, 2013, 2015, 2018 Jose Antonio Ortega Ruiz
 ;; URL: http://www.nongnu.org/geiser/
 
 ;; This program is free software; you can redistribute it and/or
@@ -26,8 +26,7 @@
   "Directory containing Geiser's Scheme files.")
 
 ;;;###autoload
-(when (not (member geiser-elisp-dir load-path))
-  (add-to-list 'load-path geiser-elisp-dir))
+(add-to-list 'load-path (directory-file-name geiser-elisp-dir))
 
 
 ;;; Autoloads:
