@@ -2,7 +2,7 @@ Geiser is a generic Emacs/Scheme interaction mode, featuring an
 enhanced REPL and a set of minor modes improving Emacs' basic scheme
 major mode.
 
-Geiser supports Racket and Guile.
+Geiser supports Racket, Guile, Chicken, Chibi, MIT-Scheme and Chez.
 
 Main functionalities:
 

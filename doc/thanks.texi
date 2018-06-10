@@ -70,8 +70,8 @@ gmane.lisp.scheme.geiser}.
 @item
 @cindex bug tracker
 You can submit bug reports either to the mailing list or to
-@uref{https://github.com/@/jaor/geiser/issues, our bug tracker} over at
-Github.
+@uref{https://gitlab.com/@/jaor/geiser/issues, our bug tracker} over at
+Gitlab.
 @item
 @cindex news feed
 If you only need to hear about Geiser on new releases,

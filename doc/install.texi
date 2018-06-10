@@ -130,7 +130,7 @@ git clone http://git.sv.gnu.org/r/geiser.git
 
 @noindent
 You can also follow Geiser's development in
-@uref{https://github.com/jaor/geiser, one}
+@uref{https://gitlab.com/jaor/geiser, one}
 @uref{http://repo.or.cz/w/geiser.git, or}
 @uref{http://gitorious.org/geiser, three} mirrors that are kept
 synchronized with the one at Savannah.
