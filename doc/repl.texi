@@ -24,7 +24,8 @@ Read-Eval-Print Loop), Geiser provides the generic interactive command
 @command{run-geiser}. If you invoke it (via, as is customary in Emacs,
 @kbd{M-x run-geiser}), you'll be saluted by a prompt asking which one of
 the supported implementations you want to launch---yes, you can stop the
-asking, see @altr{active-implementations,below,Customization and tips,.}
+asking, see
+@altr{active-implementations,below,Customization and tips,.}
 Tabbing for completion will offer you, as of this writing, @code{guile},
 @code{racket}, @code{chicken}, @code{mit}, @code{chibi} and @code{chez}.
 Just choose your poison, and a new REPL buffer will pop up (by default,
@@ -241,7 +242,7 @@ xrepl}, you'll notice that the REPL prompt has changed to something
 like this:
 
 @example
-<pkgs>/xrepl-lib/xrepl/main> 
+<pkgs>/xrepl-lib/xrepl/main>
 @end example
 
 If you start typing symbols, and then you try to auto-complete those
