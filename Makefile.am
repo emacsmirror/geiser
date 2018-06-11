@@ -1,6 +1,9 @@
 SUBDIRS = . elisp scheme bin doc
 
-EXTRA_DIST = THANKS README.elpa
+EXTRA_DIST = THANKS README.org README.elpa
+
+README: README.org
+	cp $(top_srcdir)/README.org README
 
 dist-hook:
 	$(SHELL) $(top_srcdir)/ChangeLog > $(top_distdir)/ChangeLog
