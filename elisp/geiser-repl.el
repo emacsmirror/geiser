@@ -1,6 +1,6 @@
 ;;; geiser-repl.el --- Geiser's REPL
 
-;; Copyright (C) 2009, 2010, 2011, 2012, 2013, 2015, 2016 Jose Antonio Ortega Ruiz
+;; Copyright (C) 2009, 2010, 2011, 2012, 2013, 2015, 2016, 2018 Jose Antonio Ortega Ruiz
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the Modified BSD License. You should
@@ -125,6 +125,11 @@ second.
 
 (geiser-custom--defcustom geiser-repl-query-on-exit-p nil
   "Whether to prompt for confirmation on \\[geiser-repl-exit]."
+  :type 'boolean
+  :group 'geiser-repl)
+
+(geiser-custom--defcustom geiser-repl-delete-last-output-on-exit-p nil
+  "Whether to delete partial outputs when the REPL's process exits."
   :type 'boolean
   :group 'geiser-repl)
 
@@ -542,9 +547,10 @@ If SAVE-HISTORY is non-nil, save CMD in the REPL history."
           (geiser-repl--on-quit)
           (push pb geiser-repl--closed-repls)
           (goto-char (point-max))
-          (comint-kill-region comint-last-input-start (point))
+          (when geiser-repl-delete-last-output-on-exit-p
+            (comint-kill-region comint-last-input-start (point)))
           (insert "\nIt's been nice interacting with you!\n")
-          (insert "Press C-c C-z to bring me back.\n" ))))))
+          (insert "Press C-c C-z to bring me back.\n"))))))
 
 (defun geiser-repl--on-kill ()
   (geiser-repl--on-quit)
