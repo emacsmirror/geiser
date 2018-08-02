@@ -54,6 +54,15 @@
         (geiser-doc--render-docstring ds symbol module impl)
         (current-buffer)))))
 
+(defun geiser-company--docstring (id)
+  (let* ((module (geiser-eval--get-module))
+         (symbol (make-symbol id))
+         (ds (geiser-doc--get-docstring symbol module)))
+    (and ds
+         (listp ds)
+         (concat (geiser-autodoc--str* (cdr (assoc "signature" ds)))
+                 "\n\n"
+                 (cdr (assoc "docstring" ds))))))
 
 (defun geiser-company--location (id)
   (ignore-errors
@@ -116,6 +125,7 @@
          ('candidates (geiser-company--candidates arg))
          ('meta (geiser-company--doc arg))
          ('doc-buffer (geiser-company--doc-buffer arg))
+         ('quickhelp-string (geiser-company--docstring arg))
          ('location (geiser-company--location arg))
          ('sorted t)))
      (defun geiser-company--setup-company (enable)
