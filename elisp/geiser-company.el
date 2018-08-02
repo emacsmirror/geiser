@@ -43,14 +43,17 @@
 
 (defun geiser-company--doc-buffer (id)
   (let* ((impl geiser-impl--implementation)
-         (module (geiser-doc-module (geiser-eval--get-module) impl))
+         (module (geiser-eval--get-module))
          (symbol (make-symbol id))
          (ds (geiser-doc--get-docstring symbol module)))
     (if (or (not ds) (not (listp ds)))
-        (message "No documentation available for '%s'" symbol)
+	(progn
+          (message "No documentation available for '%s'" symbol)
+          nil)
       (with-current-buffer (get-buffer-create "*company-documentation*")
         (geiser-doc--render-docstring ds symbol module impl)
         (current-buffer)))))
+
 
 (defun geiser-company--location (id)
   (ignore-errors
