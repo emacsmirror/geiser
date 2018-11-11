@@ -45,7 +45,18 @@
   or byte-compiled and installed after performing the standard
   configure/make/make install dance.  See the INSTALL file for more details.
 
-** Chicken Addendum
+** Chicken 5 Addendum
+    These steps are necessary to fully support Chicken Scheme, but are
+    not required for any other scheme.
+
+    - Install the necessary support eggs:
+
+#+BEGIN_EXAMPLE
+     $ chicken-install -s apropos srfi-18 srfi-1
+#+END_EXAMPLE
+
+
+** Chicken 4 Addendum
     These steps are necessary to fully support Chicken Scheme, but are
     not required for any other scheme.
 
