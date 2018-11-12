@@ -22,9 +22,8 @@
     - Support for inline images in schemes, such as Racket, that treat
       them as first order values.
 
-   NOTE: if you're not in a hurry, Geiser's website
-   (http://www.nongnu.org/geiser/) contains a nicer manual, also
-   included in Geiser tarballs as a texinfo file (doc/geiser.info).
+   NOTE: if you're not in a hurry, [[http://www.nongnu.org/geiser/][Geiser's website]] contains a much
+   nicer manual.
 
 * Requirements
 
