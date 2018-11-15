@@ -495,6 +495,42 @@ implementation-specific entries for font-lock-keywords.")
         (font-lock-flush beg end)
       (with-no-warnings (font-lock-fontify-region beg end)))))
 
+;; derived from org-src-font-lock-fontify-block (org-src.el)
+(defun geiser-syntax--fontify-syntax-region (start end)
+  "Fontify region as Scheme."
+  (let ((string (buffer-substring-no-properties start end))
+        (modified (buffer-modified-p))
+        (buffer-undo-list t)
+        (geiser-buffer (current-buffer)))
+    (with-current-buffer
+        (get-buffer-create " *geiser-repl-fontification*")
+      (let ((inhibit-modification-hooks nil))
+        (erase-buffer)
+        ;; Add string and a final space to ensure property change.
+        (insert string " "))
+      ;; prevent geiser prompt
+      (let ((geiser-default-implementation
+             (or geiser-default-implementation
+                 (car geiser-active-implementations))))
+        (scheme-mode))
+      (font-lock-ensure)
+      (let ((pos (point-min)) next)
+        (while (setq next (next-property-change pos))
+          ;; Handle additional properties from font-lock, so as to
+          ;; preserve, e.g., composition.
+          (dolist (prop (cons 'face font-lock-extra-managed-props))
+            (let ((new-prop (get-text-property pos prop))
+                  (start-point (+ start (1- pos)))
+                  (end-point (1- (+ start next))))
+              (put-text-property start-point end-point prop new-prop geiser-buffer)))
+          (setq pos next))))
+    (add-text-properties
+     start end
+     '(font-lock-fontified t
+                           fontified t
+                           font-lock-multiline t))
+    (set-buffer-modified-p modified)))
+
 (defun geiser-syntax--scheme-str (str)
   (save-current-buffer
     (set-buffer (geiser-syntax--font-lock-buffer))
