@@ -1,6 +1,6 @@
 ;;; geiser-repl.el --- Geiser's REPL
 
-;; Copyright (C) 2009, 2010, 2011, 2012, 2013, 2015, 2016, 2018 Jose Antonio Ortega Ruiz
+;; Copyright (C) 2009, 2010, 2011, 2012, 2013, 2015, 2016, 2018, 2019 Jose Antonio Ortega Ruiz
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the Modified BSD License. You should
@@ -395,7 +395,6 @@ module command as a string")
      font-lock-multiline t
      font-lock-face geiser-font-lock-repl-output)))
 
-
 (defun geiser-repl--narrow-to-prompt ()
   "Narrow to active prompt region and return t, otherwise returns nil."
   (let* ((proc (get-buffer-process (current-buffer)))
@@ -451,7 +450,7 @@ module command as a string")
         (add-text-properties (1+ geiser-repl--last-output-start)
                              geiser-repl--last-output-end
                              `(read-only ,geiser-repl-read-only-output-p))
-        (geiser-repl--fontify-output-region (1+ geiser-repl--last-output-start)
+        (geiser-repl--fontify-output-region geiser-repl--last-output-start
                                             geiser-repl--last-output-end)
         (font-lock-ensure geiser-repl--last-output-start
                           geiser-repl--last-output-end))))
