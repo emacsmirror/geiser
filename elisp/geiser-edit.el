@@ -227,7 +227,7 @@ or following links in error buffers.")
                                          geiser-edit--symbol-history)))
   (let ((cmd `(:eval (:ge symbol-location ',symbol))))
     (geiser-edit--try-edit symbol (geiser-eval--send/wait cmd) method)
-    (when marker (ring-insert find-tag-marker-ring marker))))
+    (when marker (xref-push-marker-stack))))
 
 (defun geiser-edit-symbol-at-point (&optional arg)
   "Opens a new window visiting the definition of the symbol at point.
@@ -239,7 +239,7 @@ With prefix, asks for the symbol to edit."
          (marker (point-marker)))
     (condition-case err
         (progn (geiser-edit--try-edit symbol (geiser-eval--send/wait cmd))
-               (when marker (ring-insert find-tag-marker-ring marker)))
+               (when marker (xref-push-marker-stack)))
       (error (condition-case nil
                  (geiser-edit-module-at-point)
                (error (error (error-message-string err))))))))
@@ -264,7 +264,7 @@ With prefix, asks for the symbol to edit."
   (let ((marker (point-marker)))
     (geiser-edit-module (or (geiser-completion--module-at-point)
                             (geiser-completion--read-module)))
-    (when marker (ring-insert find-tag-marker-ring marker))))
+    (when marker (xref-push-marker-stack))))
 
 
 
