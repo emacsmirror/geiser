@@ -452,8 +452,8 @@ module command as a string")
                              `(read-only ,geiser-repl-read-only-output-p))
         (geiser-repl--fontify-output-region geiser-repl--last-output-start
                                             geiser-repl--last-output-end)
-        (font-lock-ensure geiser-repl--last-output-start
-                          geiser-repl--last-output-end))))
+        (geiser--font-lock-ensure geiser-repl--last-output-start
+                                  geiser-repl--last-output-end))))
 
   (geiser-con--connection-update-debugging geiser-repl--connection txt)
   (geiser-image--replace-images geiser-repl-inline-images-p
