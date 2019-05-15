@@ -42,9 +42,15 @@ Chicken Addendum:
     - Install the necessary support eggs:
       $ chicken-install -s apropos chicken-doc
 
-    - Update the Chicken documentation database:
+    - Update the Chicken documentation database.  For Chicken 4:
       $ cd `csi -p '(chicken-home)'`
       $ curl http://3e8.org/pub/chicken-doc/chicken-doc-repo.tgz | sudo tar zx
+
+      or, for Chicken 5:
+      $ chicken-install -s srfi-18 srfi-1
+      $ cd `csi -R chicken.platform -p '(chicken-home)'`
+      $ curl https://3e8.org/pub/chicken-doc/chicken-doc-repo-5.tgz | sudo tar zx
+
 
 See http://www.nongnu.org/geiser/ for the full manual in HTML form, or
 the the info manual installed by this package.

@@ -88,12 +88,21 @@ package-install-file}.
 @cindex Chicken
 @cindex Chicken installation
 If you plan to use Chicken, you'll need also to fire a terminal and
-configure a couple of Chicken eggs:
+configure a couple of Chicken eggs.  For Chicken 4 that would be:
 @example
 $ chicken-install -s apropos chicken-doc
 $ cd `csi -p '(chicken-home)'`
 $ curl http://3e8.org/pub/chicken-doc/chicken-doc-repo.tgz | sudo tar zx
 @end example
+
+while Chicken 5 prefers:
+@example
+$ chicken-install -s apropos chicken-doc srfi-18 srfi-1
+$ cd `csi -R chicken.platform -p '(chicken-home)'`
+$ curl https://3e8.org/pub/chicken-doc/chicken-doc-repo-5.tgz | sudo tar zx
+@end example
+
+(see also @uref{https://wiki.call-cc.org/emacs#geiser, Chicken's wiki}).
 
 With that, you are pretty much all set up.  See @ref{The REPL} to start
 using Geiser.

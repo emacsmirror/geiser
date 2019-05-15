@@ -50,11 +50,14 @@
     not required for any other scheme.
 
     - Install the necessary support eggs:
-
-#+BEGIN_EXAMPLE
-     $ chicken-install -s apropos srfi-18 srfi-1
-#+END_EXAMPLE
-
+      #+BEGIN_EXAMPLE
+      $ chicken-install -s apropos chicken-doc srfi-18 srfi-1
+      #+END_EXAMPLE
+    - Update the Chicken documentation database:
+      #+BEGIN_EXAMPLE
+      $ cd `csi -R chicken.platform -p '(chicken-home)'`
+      $ curl https://3e8.org/pub/chicken-doc/chicken-doc-repo-5.tgz | sudo tar zx
+      #+END_EXAMPLE
 
 ** Chicken 4 Addendum
     These steps are necessary to fully support Chicken Scheme, but are
