@@ -114,6 +114,20 @@ change that."
   :type 'boolean
   :group 'geiser-repl)
 
+(geiser-custom--defcustom geiser-repl-context-sensitive-send nil
+  "Don't send input to REPL without the cursor being placed at the
+end of prompt.
+
+When on, pressing \\[enter] when the cursor is placed inside a
+balanced S-expression will introduce a new line without sending
+input to the inferior Scheme process.
+
+When off (the default), pressing \\[enter] when the cursor is
+placed inside a balanced S-expression will send the input to
+the inferior Scheme process."
+  :type 'boolean
+  :group 'geiser-repl)
+
 (geiser-custom--defcustom geiser-repl-forget-old-errors-p t
   "Whether to forget old errors upon entering a new expression.
 
@@ -735,7 +749,8 @@ If SAVE-HISTORY is non-nil, save CMD in the REPL history."
                (geiser-repl--grab-input)
              (ignore-errors (compile-goto-error))))
           ((let ((inhibit-field-text-motion t))
-             (end-of-line)
+             (unless geiser-repl-context-sensitive-send
+               (end-of-line))
              (<= (geiser-repl--nesting-level) 0))
            (geiser-repl--send-input))
           (t (goto-char p)
@@ -837,7 +852,7 @@ buffer."
   ("Symbol documentation" ("\C-c\C-dd" "\C-c\C-d\C-d")
    geiser-doc-symbol-at-point
    "Documentation for symbol at point" :enable (geiser--symbol-at-point))
-  ("Lookup symbol in manul" ("\C-c\C-di" "\C-c\C-d\C-i")
+  ("Lookup symbol in manual" ("\C-c\C-di" "\C-c\C-d\C-i")
    geiser-doc-look-up-manual
    "Documentation for symbol at point" :enable (geiser--symbol-at-point))
   ("Module documentation" ("\C-c\C-dm" "\C-c\C-d\C-m") geiser-repl--doc-module
