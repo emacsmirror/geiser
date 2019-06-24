@@ -1,6 +1,6 @@
 ;; geiser-impl.el -- generic support for scheme implementations
 
-;; Copyright (C) 2009, 2010, 2012, 2013, 2015, 2016 Jose Antonio Ortega Ruiz
+;; Copyright (C) 2009, 2010, 2012, 2013, 2015, 2016, 2019 Jose Antonio Ortega Ruiz
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the Modified BSD License. You should
@@ -81,8 +81,12 @@ determine its scheme flavour."
                   geiser-default-implementation)))
     (cadr (assq method (geiser-impl--methods impl)))))
 
+(defun geiser-impl--default-method (method)
+  (cadr (assoc method (mapcar 'cdr geiser-impl--local-methods))))
+
 (defun geiser-impl--call-method (method impl &rest args)
-  (let ((fun (geiser-impl--method method impl)))
+  (let ((fun (or (geiser-impl--method method impl)
+                 (geiser-impl--default-method method))))
     (when (functionp fun) (apply fun args))))
 
 (defun geiser-impl--method-doc (method doc user)
