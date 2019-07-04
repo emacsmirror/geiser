@@ -79,6 +79,17 @@
   "Connect to a remote Geiser Guile REPL." t)
 
 ;;;###autoload
+(autoload 'run-gambit "geiser-gambit" "Start a Geiser Gambit REPL." t)
+
+;;;###autoload
+(autoload 'switch-to-gambit "geiser-gambit"
+  "Start a Geiser Gambit REPL, or switch to a running one." t)
+
+;;;###autoload
+(autoload 'connect-to-gambit "geiser-gambit"
+  "Connect to a remote Geiser Gambit REPL." t)
+
+;;;###autoload
 (autoload 'run-racket "geiser-racket" "Start a Geiser Racket REPL." t)
 
 ;;;###autoload
@@ -144,6 +155,7 @@
         geiser-faces
         geiser-mode
         geiser-guile
+        geiser-gambit
         geiser-image
         geiser-racket
         geiser-chicken
