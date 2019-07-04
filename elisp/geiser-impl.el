@@ -29,7 +29,7 @@
   :group 'geiser-implementation)
 
 (geiser-custom--defcustom geiser-active-implementations
-    '(guile racket chicken chez mit chibi)
+    '(guile racket chicken chez mit chibi gambit)
   "List of active installed Scheme implementations."
   :type '(repeat symbol)
   :group 'geiser-implementation)
