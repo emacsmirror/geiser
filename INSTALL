@@ -62,6 +62,21 @@ package-install-file.
 
     You're ready to go!
 
+* Gambit Addendum
+  These steps are necessary to fully support all Gambit Scheme functionnalities,
+  but are not required for any other scheme.
+
+  -Configure Gambit correctly to have access to the (##decompile method)
+   this is required for dynamic autodoc of users defined methods and ## starting methods
+   $ cd ~/[YOUR GAMBIT FILES]
+   $ ./configure --enable-single-host --enable-debug --enable-rtlib-debug-source
+   $ make bootstrap
+   $ make bootclean
+   $ make -j
+   $ make install
+
+   You should now be ready to go!
+
 Geiser's makefile accepts also all those other standard autotools
 targets that you've come to know and love and that are documented
 in virtually all boilerplate INSTALL files out there.
