@@ -68,7 +68,7 @@ package-install-file.
 
   -Configure Gambit correctly to have access to the (##decompile method)
    this is required for dynamic autodoc of users defined methods and ## starting methods
-   $ cd ~/[YOUR GAMBIT FILES]
+   $ cd ~/[YOUR GAMBIT DIRECTORY]
    $ ./configure --enable-single-host --enable-debug --enable-rtlib-debug-source
    $ make bootstrap
    $ make bootclean
