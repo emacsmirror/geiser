@@ -237,10 +237,10 @@ With prefix, asks for the symbol to edit."
                      (geiser-completion--read-symbol "Edit symbol: ")))
          (cmd `(:eval (:ge symbol-location ',symbol)))
          (marker (point-marker)))
-    (condition-case err
+    (condition-case-unless-debug err
         (progn (geiser-edit--try-edit symbol (geiser-eval--send/wait cmd))
                (when marker (xref-push-marker-stack)))
-      (error (condition-case nil
+      (error (condition-case-unless-debug nil
                  (geiser-edit-module-at-point)
                (error (error (error-message-string err))))))))
 
