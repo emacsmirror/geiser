@@ -161,7 +161,6 @@ module-exports, autodoc, callers, callees and generic-methods.")
   (and (listp ret) (or (assoc 'error ret) (assoc 'result ret))))
 
 (defsubst geiser-eval--retort-result (ret)
-  (message "lwf:g-e--r-r:%s" ret)
   (let ((values (cdr (assoc 'result ret))))
     (car (geiser-syntax--read-from-string (car values)))))
 

@@ -252,7 +252,6 @@
   "Time limit, in msecs, blocking on synchronous evaluation requests")
 
 (defun geiser-con--send-string/wait (con str cont &optional timeout sbuf)
-  (message "lwf:g-c--s-s/w:%s" str)
   (save-current-buffer
     (let ((proc (and con (geiser-con--connection-process con))))
       (unless proc (error "Geiser connection not active"))
