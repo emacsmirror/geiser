@@ -237,12 +237,14 @@ With prefix, asks for the symbol to edit."
                      (geiser-completion--read-symbol "Edit symbol: ")))
          (cmd `(:eval (:ge symbol-location ',symbol)))
          (marker (point-marker)))
-    (condition-case-unless-debug err
+    (condition-case-unless-debug err-of-sym
         (progn (geiser-edit--try-edit symbol (geiser-eval--send/wait cmd))
                (when marker (xref-push-marker-stack)))
-      (error (condition-case-unless-debug nil
+      (error (condition-case-unless-debug err-of-mod
                  (geiser-edit-module-at-point)
-               (error (error (error-message-string err))))))))
+               (error (error "Geiser:cannot edit symbol at point\nSymbol error message:%s\nModule error message:%s"
+			     (error-message-string err-of-sym)
+			     (error-message-string err-of-mod))))))))
 
 (defun geiser-pop-symbol-stack ()
   "Pop back to where \\[geiser-edit-symbol-at-point] was last invoked."
