@@ -65,17 +65,52 @@ package-install-file.
 * Gambit Addendum
   These steps are necessary to fully support all Gambit Scheme functionnalities,
   but are not required for any other scheme.
+   
+   
+  # SETUP :                                  
+    1 - clone the last version of gambit and of this repo                                       
+    2 - configure gambit using --enable-rtlib-debuf-source to activate autodoc
+    ``` bash
+    $ cd ~/
+    $ git clone git@github.com:udem-dlteam/gambit.git
+    $ git clone git@github.com:udem-dlteam/geiser-gambit.git
+    $ cd gambit
+    $ ./configure --enable-single-host --enable-debug --enable-rtlib-debug-source
+    $ make bootstrap
+    $ make bootclean
+    $ make -j
+    $ make install
+    ```
+    3 - put a link to geiser-gambit/elisp/geiser.el in your init file 
+    in your init file paste : 
+    ``` elisp
+    (load-file "~/geiser-gambit/elisp/geiser.el")
+    ```
+    (the path is your path to geiser.el.)
+   
+  # setup REMOTE CONNECT TO A GAMBIT REPL
+    1 - you need to enable the gambit/geiser module
+    ( if you can't,  substitute the command below
+      with the PS: at the end of the readme ) 
+    ``` bash
+    $ mkdir ~/gambit/lib/gambit/geiser
+    $ cp ~/geiser-gambit/geiser-module/* ~/gambit/lib/geiser/
+    ```
+    2 - now that you have the module you start gsi with it and using the -:d@ 
+    ``` bash
+    $ gsi -:d gambit/geiser -
+    ```
+    3 - you can now open emacs and write 
+    ```
+    M-x geiser-connect gambit
+    ```
+  Enjoy !
 
-  -Configure Gambit correctly to have access to the (##decompile method)
-   this is required for dynamic autodoc of users defined methods and ## starting methods
-   $ cd ~/[YOUR GAMBIT DIRECTORY]
-   $ ./configure --enable-single-host --enable-debug --enable-rtlib-debug-source
-   $ make bootstrap
-   $ make bootclean
-   $ make -j
-   $ make install
+PS:
+if you are unable to use gambit modules , open gsi with the gambit.scm file 
+located in geiser-gambit/scheme/gambit/geiser/gambit.scm 
 
-   You should now be ready to go!
+something like : gsi -:d@ ~/geiser-gambit/scheme/gambit/geiser/gambit.scm -
 
 Geiser's makefile accepts also all those other standard autotools
 targets that you've come to know and love and that are documented
