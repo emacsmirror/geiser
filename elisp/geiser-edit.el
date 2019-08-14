@@ -1,6 +1,6 @@
 ;;; geiser-edit.el -- scheme edit locations
 
-;; Copyright (C) 2009, 2010, 2012, 2013 Jose Antonio Ortega Ruiz
+;; Copyright (C) 2009, 2010, 2012, 2013, 2019 Jose Antonio Ortega Ruiz
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the Modified BSD License. You should
@@ -239,7 +239,7 @@ With prefix, asks for the symbol to edit."
          (marker (point-marker)))
     (condition-case-unless-debug err-of-sym
         (progn (geiser-edit--try-edit symbol (geiser-eval--send/wait cmd))
-               (when marker (xref-push-marker-stack)))
+               (when marker (xref-push-marker-stack marker)))
       (error (condition-case-unless-debug err-of-mod
                  (geiser-edit-module-at-point)
                (error (error "Geiser:cannot edit symbol at point\nSymbol error message:%s\nModule error message:%s"
