@@ -85,6 +85,56 @@ Alternatively, you can manually download the @uref{@value{PACKAGE},
 package file}, and install from your local disk with @kbd{M-x
 package-install-file}.
 
+@cindex Gambit
+@cindex Gambit installation
+If you plan to use Gambit , you'll need also to open a terminal and
+configure a couple of awesome Gambit's features:
+
+  SETUP :
+    1 - clone the last version of gambit and of this repo
+    2 - configure gambit using --enable-rtlib-debuf-source to activate autodoc
+@example
+    $ cd ~/
+    $ git clone "the gambit repo current address"
+    $ cd gambit
+    $ ./configure --enable-single-host --enable-debug --enable-rtlib-debug-source
+    $ make bootstrap
+    $ make bootclean
+    $ make -j
+    $ make install
+@end example
+    3 - put a link to geiser/elisp/geiser.el in your init file 
+    in your init file paste : 
+@example
+    (load-file "~/geiser/elisp/geiser.el")
+@end example
+    (the path is your path to geiser.el.)
+   
+  # setup REMOTE CONNECT TO A GAMBIT REPL
+    1 - you need to enable the gambit/geiser module
+    ( if you can't,  substitute the command below
+      with the PS: at the end of the readme ) 
+@example
+    $ mkdir ~/gambit/lib/gambit/geiser
+    $ cp ~/geiser/geiser-module/* ~/gambit/lib/geiser/
+@end example
+    2 - now that you have the module you start gsi with it and using the -:d@ 
+@example
+    $ gsi -:d gambit/geiser -
+@end example
+    3 - you can now open emacs and write 
+@example
+    M-x geiser-connect gambit
+@end example
+  Enjoy !
+
+PS:
+if you are unable to use gambit modules , open gsi with the gambit.scm file 
+located in geiser/scheme/gambit/geiser/gambit.scm 
+
+something like : gsi -:d@ ~/geiser/scheme/gambit/geiser/gambit.scm -
+(keep in mind that these paths may be a little different for you) 
+
 @cindex Chicken
 @cindex Chicken installation
 If you plan to use Chicken, you'll need also to fire a terminal and

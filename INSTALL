@@ -72,8 +72,7 @@ package-install-file.
     2 - configure gambit using --enable-rtlib-debuf-source to activate autodoc
     ``` bash
     $ cd ~/
-    $ git clone git@github.com:udem-dlteam/gambit.git
-    $ git clone git@github.com:udem-dlteam/geiser-gambit.git
+    $ git clone "the gambit repo address"
     $ cd gambit
     $ ./configure --enable-single-host --enable-debug --enable-rtlib-debug-source
     $ make bootstrap
@@ -81,10 +80,10 @@ package-install-file.
     $ make -j
     $ make install
     ```
-    3 - put a link to geiser-gambit/elisp/geiser.el in your init file 
+    3 - put a link to geiser/elisp/geiser.el in your init file 
     in your init file paste : 
     ``` elisp
-    (load-file "~/geiser-gambit/elisp/geiser.el")
+    (load-file "~/geiser/elisp/geiser.el")
     ```
     (the path is your path to geiser.el.)
    
@@ -94,7 +93,7 @@ package-install-file.
       with the PS: at the end of the readme ) 
     ``` bash
     $ mkdir ~/gambit/lib/gambit/geiser
-    $ cp ~/geiser-gambit/geiser-module/* ~/gambit/lib/geiser/
+    $ cp ~/geiser/geiser-module/* ~/gambit/lib/geiser/
     ```
     2 - now that you have the module you start gsi with it and using the -:d@ 
     ``` bash
@@ -108,9 +107,9 @@ package-install-file.
 
 PS:
 if you are unable to use gambit modules , open gsi with the gambit.scm file 
-located in geiser-gambit/scheme/gambit/geiser/gambit.scm 
+located in geiser/scheme/gambit/geiser/gambit.scm 
 
-something like : gsi -:d@ ~/geiser-gambit/scheme/gambit/geiser/gambit.scm -
+something like : gsi -:d@ ~/geiser/scheme/gambit/geiser/gambit.scm -
 
 Geiser's makefile accepts also all those other standard autotools
 targets that you've come to know and love and that are documented
