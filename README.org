@@ -35,6 +35,7 @@
       - MIT/GNU Scheme 9.1.1 or better.
       - Chibi 0.7.3 or better.
       - Chez 9.4 or better.
+      - Gambit 4.9.3 or better.
 
 * Installation
 
@@ -74,6 +75,22 @@
 #+BEGIN_EXAMPLE
      $ cd `csi -p '(chicken-home)'`
      $ curl http://3e8.org/pub/chicken-doc/chicken-doc-repo.tgz | sudo tar zx
+#+END_EXAMPLE
+
+** Gambit Addendum
+    These steps are necessary to fully support Gambit Scheme.
+    
+    1 - clone the last version of gambit
+    2 - configure gambit using --enable-rtlib-debug-source to activate autodoc
+#+BEGIN_EXAMPLE
+    $ cd ~/
+    $ git clone "the gambit repo address"
+    $ cd gambit
+    $ ./configure --enable-single-host --enable-debug --enable-rtlib-debug-source
+    $ make bootstrap
+    $ make bootclean
+    $ make -j
+    $ make install
 #+END_EXAMPLE
 
 * Basic configuration
