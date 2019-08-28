@@ -52,6 +52,7 @@
                  ((eq ,method 'frame) (view-buffer-other-frame ,buffer))
                  (t (view-buffer-other-window ,buffer))))))
      (defmacro ,with-macro (&rest body)
+       (declare (debug (&rest form)))
        (list 'with-current-buffer (list ',get-buff)
              (cons 'let (cons '((inhibit-read-only t)) body))))
      (put ',with-macro 'lisp-indent-function 'defun))))
