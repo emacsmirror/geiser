@@ -22,6 +22,11 @@
 
 ;;; Customization:
 
+(geiser-custom--defcustom geiser-log-autoscroll-buffer-p nil
+  "Set this so than the buffer *geiser messages* always shows the last message"
+  :group 'geiser
+  :type 'boolean)
+
 (defvar geiser-log--buffer-name "*geiser messages*"
   "Name of the Geiser log buffer.")
 
@@ -48,6 +53,12 @@
                (let ((inhibit-read-only t))
                  (when (> b geiser-log--max-buffer-size)
                    (delete-region (point-min) b))))
+            nil t)
+  (add-hook 'after-change-functions
+            '(lambda (b e len)
+               (when geiser-log-autoscroll-buffer-p
+		 (let ((my-window (get-buffer-window (geiser-log--buffer) t)))
+		    (set-window-point my-window (point)))))
             nil t)
   (setq buffer-read-only t))
 
