@@ -39,6 +39,10 @@
 (defvar geiser-log-verbose-p nil
   "Log purely informational messages. Useful for debugging.")
 
+(defvar geiser-log-verbose-debug-p nil
+  "Log very verbose informational messages. Useful only for debugging.")
+
+
 (defvar geiser-log--inhibit-p nil
   "Set this to t to inhibit all log messages")
 
@@ -54,6 +58,7 @@
                  (when (> b geiser-log--max-buffer-size)
                    (delete-region (point-min) b))))
             nil t)
+  ;; Maybe this feature would better be implemented as a revert-buffer function?
   (add-hook 'after-change-functions
             '(lambda (b e len)
                (when geiser-log-autoscroll-buffer-p
@@ -84,6 +89,10 @@
 (defsubst geiser-log--info (&rest args)
   (when geiser-log-verbose-p
     (apply 'geiser-log--msg 'INFO args) ""))
+
+(defsubst geiser-log--debug (&rest args)
+  (when geiser-log-verbose-debug-p
+    (apply 'geiser-log--msg 'DEBUG args) ""))
 
 
 ;;; User commands:

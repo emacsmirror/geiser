@@ -484,7 +484,7 @@ module command as a string")
         (error "Geiser requires %s version %s but detected %s" impl r v)))))
 
 (defun geiser-repl--start-repl (impl address)
-  (message "Starting Geiser REPL for %s ..." impl)
+  (message "Starting Geiser REPL ...")
   (when (not address) (geiser-repl--check-version impl))
   (geiser-repl--to-repl-buffer impl)
   (sit-for 0)
