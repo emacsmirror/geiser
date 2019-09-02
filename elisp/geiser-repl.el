@@ -384,14 +384,14 @@ module command as a string")
 
 (defun geiser-repl--save-remote-data (address)
   (setq geiser-repl--address address)
-  (setq header-line-format
-        (cond ((consp address)
+  (cond ((consp address)
+         (setq header-line-format
                (format "Host: %s   Port: %s"
                        (geiser-repl--host)
-                       (geiser-repl--port)))
-              ((stringp address)
-               (format "Socket: %s" address))
-              (t nil))))
+                       (geiser-repl--port))))
+        ((stringp address)
+         (setq header-line-format
+               (format "Socket: %s" address)))))
 
 (defun geiser-repl--fontify-output-region (beg end)
   "Apply highlighting to a REPL output region."
