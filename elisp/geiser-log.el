@@ -63,7 +63,8 @@
             '(lambda (b e len)
                (when geiser-log-autoscroll-buffer-p
 		 (let ((my-window (get-buffer-window (geiser-log--buffer) t)))
-		    (set-window-point my-window (point)))))
+		   (when (window-live-p my-window)
+		     (set-window-point my-window (point))))))
             nil t)
   (setq buffer-read-only t))
 
