@@ -1,6 +1,6 @@
 ;; geiser-log.el -- logging utilities
 
-;; Copyright (C) 2009, 2010, 2012 Jose Antonio Ortega Ruiz
+;; Copyright (C) 2009, 2010, 2012, 2019 Jose Antonio Ortega Ruiz
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the Modified BSD License. You should
@@ -14,6 +14,7 @@
 ;; Some utilities for maintaining a simple log buffer, mainly for
 ;; debugging purposes.
 
+(require 'geiser-custom)
 (require 'geiser-popup)
 (require 'geiser-base)
 

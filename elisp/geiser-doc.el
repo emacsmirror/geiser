@@ -382,6 +382,11 @@ With prefix argument, ask for symbol (with completion)."
                      "Symbol: " (geiser--symbol-at-point)))))
     (when symbol (geiser-doc-symbol symbol))))
 
+(defun geiser-doc-manual-for-symbol (symbol)
+  (geiser-doc--external-help geiser-impl--implementation
+                             symbol
+                             (geiser-eval--get-module)))
+
 (defun geiser-doc-look-up-manual (&optional arg)
   "Look up manual for symbol at point.
 With prefix argument, ask for the lookup symbol (with completion)."
@@ -390,9 +395,7 @@ With prefix argument, ask for the lookup symbol (with completion)."
     (error "No manual available"))
   (let ((symbol (or (and (not arg) (geiser--symbol-at-point))
                     (geiser-completion--read-symbol "Symbol: "))))
-    (geiser-doc--external-help geiser-impl--implementation
-                               symbol
-                               (geiser-eval--get-module))))
+    (geiser-doc-manual-for-symbol symbol)))
 
 (defconst geiser-doc--sections '(("Procedures:" "procs")
                                  ("Syntax:" "syntax")
