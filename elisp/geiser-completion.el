@@ -61,12 +61,12 @@
 (defsubst geiser-completion--module-list (prefix)
   (geiser-eval--send/result `(:eval (:ge module-completions ,prefix))))
 
-(defvar geiser-completion--symbol-list-func
+(defvar geiser-completion-symbol-list-func
   (if (< emacs-major-version 25)
       (completion-table-dynamic 'geiser-completion--symbol-list)
     (completion-table-dynamic 'geiser-completion--symbol-list t)))
 
-(defvar geiser-completion--module-list-func
+(defvar geiser-completion-module-list-func
   (if (< emacs-major-version 25)
       (completion-table-dynamic 'geiser-completion--module-list)
     (completion-table-dynamic 'geiser-completion--module-list t)))
@@ -80,7 +80,7 @@
 (defun geiser-completion--read-symbol (prompt &optional default history)
   (let ((minibuffer-local-completion-map geiser-completion--minibuffer-map))
     (make-symbol (completing-read prompt
-                                  geiser-completion--symbol-list-func
+                                  geiser-completion-symbol-list-func
                                   nil nil nil
                                   (or history
                                       geiser-completion--symbol-history)
@@ -92,7 +92,7 @@
   (let ((minibuffer-local-completion-map
          geiser-completion--module-minibuffer-map))
     (completing-read (or prompt "Module name: ")
-                     geiser-completion--module-list-func
+                     geiser-completion-module-list-func
                      nil nil nil
                      (or history geiser-completion--module-history)
                      default)))
