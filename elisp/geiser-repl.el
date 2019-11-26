@@ -114,17 +114,19 @@ change that."
   :type 'boolean
   :group 'geiser-repl)
 
-(geiser-custom--defcustom geiser-repl-context-sensitive-send nil
-  "Don't send input to REPL without the cursor being placed at the
-end of prompt.
+(geiser-custom--defcustom geiser-repl-send-on-return-p t
+  "Sends input to REPL when ENTER is pressed in a balanced S-expression,
+regardless of cursor positioning.
 
-When on, pressing \\[enter] when the cursor is placed inside a
-balanced S-expression will introduce a new line without sending
-input to the inferior Scheme process.
+When off, pressing ENTER inside a balance S-expression will
+introduce a new line without sending input to the inferior
+Scheme process. This option is useful when using minor modes
+which might do parentheses balancing, or when entering additional
+arguments inside an existing expression.
 
-When off (the default), pressing \\[enter] when the cursor is
-placed inside a balanced S-expression will send the input to
-the inferior Scheme process."
+When on (the default), pressing ENTER inside a balanced S-expression
+will send the input to the inferior Scheme process regardless of the
+cursor placement."
   :type 'boolean
   :group 'geiser-repl)
 
@@ -749,7 +751,7 @@ If SAVE-HISTORY is non-nil, save CMD in the REPL history."
                (geiser-repl--grab-input)
              (ignore-errors (compile-goto-error))))
           ((let ((inhibit-field-text-motion t))
-             (unless geiser-repl-context-sensitive-send
+             (when geiser-repl-send-on-return-p
                (end-of-line))
              (<= (geiser-repl--nesting-level) 0))
            (geiser-repl--send-input))
