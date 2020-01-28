@@ -824,7 +824,6 @@ buffer."
 
 (define-key geiser-repl-mode-map "\C-a" 'geiser-repl--bol)
 (define-key geiser-repl-mode-map (kbd "<home>") 'geiser-repl--bol)
-(define-key geiser-repl-mode-map "\C-c" 'geiser-repl--bol)
 
 (geiser-menu--defmenu repl geiser-repl-mode-map
   ("Complete symbol" ((kbd "M-TAB"))
@@ -869,6 +868,7 @@ buffer."
   ("Kill Scheme interpreter" "\C-c\C-q" geiser-repl-exit
    :enable (geiser-repl--live-p))
   ("Restart" "\C-c\C-z" switch-to-geiser :enable (not (geiser-repl--live-p)))
+
   --
   (custom "REPL options" geiser-repl))
 
