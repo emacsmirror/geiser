@@ -79,7 +79,7 @@
 
 ** Gambit Addendum
     These steps are necessary to fully support Gambit Scheme.
-    
+
     1 - clone the last version of gambit
     2 - configure gambit using --enable-rtlib-debug-source to activate autodoc
 #+BEGIN_EXAMPLE
@@ -145,6 +145,7 @@
    | C-c C-e m   | Ask for a module and open its file               |
    | C-c C-e C-l | Add a given directory to Scheme's load path      |
    | C-c C-e [   | Toggle between () and [] for current form        |
+   | c-c C-e \   | Insert λ                                         |
    |             |                                                  |
    |-------------+--------------------------------------------------|
    | C-M-x       | Eval definition around point                     |
@@ -198,6 +199,10 @@
     | TAB, M-TAB  | Complete identifier at point                       |
     | M-`, C-.    | Complete module name at point                      |
     | M-p, M-n    | Prompt history, matching current prefix            |
+    |             |                                                    |
+    |-------------+----------------------------------------------------|
+    | C-c \       | Insert λ                                           |
+    | C-c [       | Toggle between () and [] for current form          |
     |             |                                                    |
     |-------------+----------------------------------------------------|
     | C-c C-m     | Set current module                                 |

@@ -1,6 +1,6 @@
 ;;; geiser-repl.el --- Geiser's REPL
 
-;; Copyright (C) 2009, 2010, 2011, 2012, 2013, 2015, 2016, 2018, 2019 Jose Antonio Ortega Ruiz
+;; Copyright (C) 2009, 2010, 2011, 2012, 2013, 2015, 2016, 2018, 2019, 2020 Jose Antonio Ortega Ruiz
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the Modified BSD License. You should
@@ -824,6 +824,7 @@ buffer."
 
 (define-key geiser-repl-mode-map "\C-a" 'geiser-repl--bol)
 (define-key geiser-repl-mode-map (kbd "<home>") 'geiser-repl--bol)
+(define-key geiser-repl-mode-map "\C-c" 'geiser-repl--bol)
 
 (geiser-menu--defmenu repl geiser-repl-mode-map
   ("Complete symbol" ((kbd "M-TAB"))
@@ -862,6 +863,9 @@ buffer."
   --
   ("Clear buffer" "\C-c\M-o" geiser-repl-clear-buffer
    "Clean up REPL buffer, leaving just a lonely prompt")
+  ("Toggle ()/[]" ("\C-c\C-e\C-[" "\C-c\C-e[") geiser-squarify)
+  ("Insert λ" ("\C-c\\" "\C-c\C-\\") geiser-insert-lambda)
+  --
   ("Kill Scheme interpreter" "\C-c\C-q" geiser-repl-exit
    :enable (geiser-repl--live-p))
   ("Restart" "\C-c\C-z" switch-to-geiser :enable (not (geiser-repl--live-p)))

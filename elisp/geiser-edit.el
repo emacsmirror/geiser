@@ -1,6 +1,6 @@
 ;;; geiser-edit.el -- scheme edit locations
 
-;; Copyright (C) 2009, 2010, 2012, 2013, 2019 Jose Antonio Ortega Ruiz
+;; Copyright (C) 2009, 2010, 2012, 2013, 2019, 2020 Jose Antonio Ortega Ruiz
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the Modified BSD License. You should
@@ -259,7 +259,6 @@ With prefix, asks for the symbol to edit."
   (let ((cmd `(:eval (:ge module-location '(:module ,module)))))
     (geiser-edit--try-edit module (geiser-eval--send/wait cmd) method)))
 
-
 (defun geiser-edit-module-at-point ()
   "Opens a new window visiting the module at point."
   (interactive)
@@ -267,6 +266,44 @@ With prefix, asks for the symbol to edit."
     (geiser-edit-module (or (geiser-completion--module-at-point)
                             (geiser-completion--read-module)))
     (when marker (xref-push-marker-stack))))
+
+(defun geiser-insert-lambda (&optional full)
+  "Insert λ at point.  With prefix, inserts (λ ())."
+  (interactive "P")
+  (if (not full)
+      (insert (make-char 'greek-iso8859-7 107))
+    (insert "(" (make-char 'greek-iso8859-7 107) " ())")
+    (backward-char 2)))
+
+(defun geiser-squarify (n)
+  "Toggle between () and [] for current form.
+
+With numeric prefix, perform that many toggles, forward for
+positive values and backward for negative."
+  (interactive "p")
+  (let ((pared (and (boundp 'paredit-mode) paredit-mode))
+        (fwd (> n 0))
+        (steps (abs n)))
+    (when (and pared (fboundp 'paredit-mode)) (paredit-mode -1))
+    (unwind-protect
+        (save-excursion
+          (unless (looking-at-p "\\s(") (backward-up-list))
+          (while (> steps 0)
+            (let ((p (point))
+                  (round (looking-at-p "(")))
+              (forward-sexp)
+              (backward-delete-char 1)
+              (insert (if round "]" ")"))
+              (goto-char p)
+              (delete-char 1)
+              (insert (if round "[" "("))
+              (setq steps (1- steps))
+              (backward-char)
+              (condition-case nil
+                  (progn (when fwd (forward-sexp 2))
+                         (backward-sexp))
+                (error (setq steps 0))))))
+      (when (and pared (fboundp 'paredit-mode)) (paredit-mode 1)))))
 
 
 

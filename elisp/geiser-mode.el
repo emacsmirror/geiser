@@ -1,6 +1,6 @@
 ;; geiser-mode.el -- minor mode for scheme buffers
 
-;; Copyright (C) 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017 Jose Antonio Ortega Ruiz
+;; Copyright (C) 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2020 Jose Antonio Ortega Ruiz
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the Modified BSD License. You should
@@ -271,44 +271,6 @@ With prefix, try to enter the current buffer's module."
     (sit-for 0.2) ;; ditto
     (goto-char (point-max))
     (pop-to-buffer b)))
-
-(defun geiser-squarify (n)
-  "Toggle between () and [] for current form.
-
-With numeric prefix, perform that many toggles, forward for
-positive values and backward for negative."
-  (interactive "p")
-  (let ((pared (and (boundp 'paredit-mode) paredit-mode))
-        (fwd (> n 0))
-        (steps (abs n)))
-    (when (and pared (fboundp 'paredit-mode)) (paredit-mode -1))
-    (unwind-protect
-        (save-excursion
-          (unless (looking-at-p "\\s(") (backward-up-list))
-          (while (> steps 0)
-            (let ((p (point))
-                  (round (looking-at-p "(")))
-              (forward-sexp)
-              (backward-delete-char 1)
-              (insert (if round "]" ")"))
-              (goto-char p)
-              (delete-char 1)
-              (insert (if round "[" "("))
-              (setq steps (1- steps))
-              (backward-char)
-              (condition-case nil
-                  (progn (when fwd (forward-sexp 2))
-                         (backward-sexp))
-                (error (setq steps 0))))))
-      (when (and pared (fboundp 'paredit-mode)) (paredit-mode 1)))))
-
-(defun geiser-insert-lambda (&optional full)
-  "Insert λ at point.  With prefix, inserts (λ ())."
-  (interactive "P")
-  (if (not full)
-      (insert (make-char 'greek-iso8859-7 107))
-    (insert "(" (make-char 'greek-iso8859-7 107) " ())")
-    (backward-char 2)))
 
 
 ;;; Geiser mode:
