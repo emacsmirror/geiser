@@ -27,15 +27,16 @@
 
 * Requirements
 
-    Geiser needs Emacs 23.2 or better, and at least one of the
-    supported scheme implementations:
+    Geiser needs Emacs 24 or better, and at least one of the supported
+    scheme implementations:
+
       - Guile 2.2 or better.
-      - PLT Racket 6.0 or better.
       - Chicken 4.8.0 or better.
       - MIT/GNU Scheme 9.1.1 or better.
       - Chibi 0.7.3 or better.
-      - Chez 9.4 or better.
       - Gambit 4.9.3 or better.
+      - Racket 6.0 or better.
+      - Chez 9.4 or better.
 
 * Installation
 
@@ -131,6 +132,8 @@
     REPL will use it.
 
 * Quick key reference
+
+  (See also [[file:///home/jao/usr/jao/geiser/web/geiser_5.html#Cheat-sheet][the manual]]'s cheat sheet)
 
 ** In Scheme buffers:
 

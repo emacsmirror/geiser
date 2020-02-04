@@ -20,8 +20,6 @@ namely:
 
 @itemize @bullet
 @item
-@uref{http://www.racket-lang.org, Racket} @value{RACKET_VERSION} or better
-@item
 @uref{http://www.gnu.org/software/guile, Guile} @value{GUILE_VERSION} or
 better
 @item
@@ -34,6 +32,11 @@ better
 @value{CHIBI_VERSION} or better
 @item
 @uref{http://www.scheme.com, Chez Scheme} @value{CHEZ_VERSION} or better
+@item
+@uref{http://gambitscheme.org/wiki/index.php/Main_Page, Gambit}
+@value{GAMBIT_VERSION} or better
+@item
+@uref{http://www.racket-lang.org, Racket} @value{RACKET_VERSION} or better
 @end itemize
 
 Since Geiser supports multiple REPLs, having all of them will just add
@@ -85,8 +88,39 @@ Alternatively, you can manually download the @uref{@value{PACKAGE},
 package file}, and install from your local disk with @kbd{M-x
 package-install-file}.
 
+@cindex Chicken
+@cindex Chicken installation
+@subsubheading Chicken installation
+If you plan to use Chicken, you'll need also to fire a terminal and
+configure a couple of Chicken eggs.  For Chicken 4 that would be:
+@example
+$ chicken-install -s apropos chicken-doc
+$ cd `csi -p '(chicken-home)'`
+$ curl http://3e8.org/pub/chicken-doc/chicken-doc-repo.tgz | sudo tar zx
+@end example
+
+while Chicken 5 prefers:
+@example
+$ chicken-install -s apropos chicken-doc srfi-18 srfi-1
+$ cd `csi -R chicken.platform -p '(chicken-home)'`
+$ curl https://3e8.org/pub/chicken-doc/chicken-doc-repo-5.tgz | sudo tar zx
+@end example
+
+(see also @uref{https://wiki.call-cc.org/emacs#geiser, Chicken's wiki}).
+
+With that, you are pretty much all set up.  See @ref{The REPL} to start
+using Geiser.
+
+@ifnotinfo
+And, by the way, if you prefer to keep reading this manual within Emacs,
+@kbd{C-h i m Geiser RET} will bring you to the info version of it that
+you just installed!
+@end ifnotinfo
+
 @cindex Gambit
 @cindex Gambit installation
+@subsubheading Gambit installation
+
 If you plan to use Gambit, you'll also need to open a terminal and
 configure a couple of awesome Gambit's features:
 
@@ -138,33 +172,6 @@ something like :
 @end example
 (Keep in mind that these paths may be a little different for you.)
 
-@cindex Chicken
-@cindex Chicken installation
-If you plan to use Chicken, you'll need also to fire a terminal and
-configure a couple of Chicken eggs.  For Chicken 4 that would be:
-@example
-$ chicken-install -s apropos chicken-doc
-$ cd `csi -p '(chicken-home)'`
-$ curl http://3e8.org/pub/chicken-doc/chicken-doc-repo.tgz | sudo tar zx
-@end example
-
-while Chicken 5 prefers:
-@example
-$ chicken-install -s apropos chicken-doc srfi-18 srfi-1
-$ cd `csi -R chicken.platform -p '(chicken-home)'`
-$ curl https://3e8.org/pub/chicken-doc/chicken-doc-repo-5.tgz | sudo tar zx
-@end example
-
-(see also @uref{https://wiki.call-cc.org/emacs#geiser, Chicken's wiki}).
-
-With that, you are pretty much all set up.  See @ref{The REPL} to start
-using Geiser.
-
-@ifnotinfo
-And, by the way, if you prefer to keep reading this manual within Emacs,
-@kbd{C-h i m Geiser RET} will bring you to the info version of it that
-you just installed!
-@end ifnotinfo
 
 @node From the source's mouth, Friends, The easy and quick way, Installation
 @section Installing from source
@@ -172,9 +179,7 @@ you just installed!
 @subsubheading Downloading Geiser
 
 @cindex use the source, Luke
-The latest release tarball can be found @downfile{, here}.  Just
-download @downfile{@value{TARBALL}, @value{TARBALL}} and untar it in a
-directory of your choice.
+The latest release tarballs can be found @releasesref{here}.
 
 If you feel like living on the bleeding edge, just grab Geiser from its
 Git repository @uref{http://git.savannah.nongnu.org/cgit/geiser.git/, over
@@ -320,15 +325,8 @@ If you prefer @code{auto-complete-mode} to @code{company-mode}, Xiao
 Hanyu's @code{ac-geiser}, which provides a Geiser plugin for the
 popular @uref{https://www.emacswiki.org/emacs/AutoComplete, Emacs Auto
 Completion Mode}, is the package for you.  Like Geiser,
-@code{ac-geiser} is available in Marmalade and MELPA, and also as an
+@code{ac-geiser} is available in MELPA, and also as an
 @code{el-get} package.
-@item @uref{http://www.neilvandyke.org/quack/, Quack}.
-You can still use the many goodies provided by Neil van Dyke's
-@code{quack-mode}, since most of them are not (yet) available in Geiser.
-The only caveat might be a conflict between Quack's and Geiser's default
-key bindings, which i'm sure you'll manage to tackle just fine.  It's
-also probably a good idea to require @code{quack} @i{after} loading
-@file{geiser.el} (or requiring a compiled version).
 @end itemize
 
 @noindent
