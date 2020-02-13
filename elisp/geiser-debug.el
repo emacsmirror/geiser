@@ -1,6 +1,6 @@
 ;;; geiser-debug.el -- displaying debug information and evaluation results
 
-;; Copyright (C) 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016 Jose Antonio Ortega Ruiz
+;; Copyright (C) 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2020 Jose Antonio Ortega Ruiz
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the Modified BSD License. You should
@@ -174,7 +174,7 @@ buffer.")
             (message "=> %s" dbg)))))))
 
 (defsubst geiser-debug--wrap-region (str)
-  (format "(begin %s)" str))
+  (format "(begin %s\n)" str))
 
 (defun geiser-debug--unwrap (str)
   (if (string-match "(begin[ \t\n\v\r]+\\(.+\\)*)" str)
