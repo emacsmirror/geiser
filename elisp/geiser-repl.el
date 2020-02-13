@@ -488,7 +488,9 @@ module command as a string")
 (defun geiser-repl--start-repl (impl address)
   (message "Starting Geiser REPL ...")
   (when (not address) (geiser-repl--check-version impl))
-  (geiser-repl--to-repl-buffer impl)
+  (let ((buffer (current-buffer)))
+    (geiser-repl--to-repl-buffer impl)
+    (setq geiser-repl--last-scm-buffer buffer))
   (sit-for 0)
   (goto-char (point-max))
   (geiser-repl--autodoc-mode -1)
@@ -881,9 +883,7 @@ buffer."
   "Start a new Geiser REPL."
   (interactive
    (list (geiser-repl--get-impl "Start Geiser for scheme implementation: ")))
-  (let ((buffer (current-buffer)))
-    (geiser-repl--start-repl impl nil)
-    (geiser-repl--maybe-remember-scm-buffer buffer)))
+  (geiser-repl--start-repl impl nil))
 
 (defalias 'geiser 'run-geiser)
 
@@ -891,10 +891,7 @@ buffer."
   "Start a new Geiser REPL connected to a remote Scheme process."
   (interactive
    (list (geiser-repl--get-impl "Connect to Scheme implementation: ")))
-  (let ((buffer (current-buffer)))
-    (geiser-repl--start-repl impl
-                             (geiser-repl--read-address host port))
-    (geiser-repl--maybe-remember-scm-buffer buffer)))
+  (geiser-repl--start-repl impl (geiser-repl--read-address host port)))
 
 (defun geiser-connect-local (impl socket)
   "Start a new Geiser REPL connected to a remote Scheme process
@@ -902,9 +899,7 @@ over a Unix-domain socket."
   (interactive
    (list (geiser-repl--get-impl "Connect to Scheme implementation: ")
          (expand-file-name (read-file-name "Socket file name: "))))
-  (let ((buffer (current-buffer)))
-    (geiser-repl--start-repl impl socket)
-    (geiser-repl--maybe-remember-scm-buffer buffer)))
+  (geiser-repl--start-repl impl socket))
 
 (make-variable-buffer-local
  (defvar geiser-repl--last-scm-buffer nil))
