@@ -62,20 +62,13 @@
   (geiser-eval--send/result `(:eval (:ge module-completions ,prefix))))
 
 (defvar geiser-completion--module-list-func
-  (cond ((< emacs-major-version 25)
-         (completion-table-dynamic 'geiser-completion--symbol-list))
-        ((= emacs-major-version 25)
-         (completion-table-dynamic 'geiser-completion--module-list t))
-        (t (completion-table-dynamic 'geiser-completion--module-list))))
+  (if (= emacs-major-version 25)
+      (completion-table-dynamic 'geiser-completion--module-list t)
+    (completion-table-dynamic 'geiser-completion--module-list)))
 
 (defvar geiser-completion-symbol-list-func
   (if (< emacs-major-version 25)
       (completion-table-dynamic 'geiser-completion--symbol-list t)))
-
-(defvar geiser-completion-module-list-func
-  (if (< emacs-major-version 25)
-      (completion-table-dynamic 'geiser-completion--module-list)
-    (completion-table-dynamic 'geiser-completion--module-list t)))
 
 (defun geiser-completion--complete (prefix modules)
   (if modules (geiser-completion--module-list prefix)
