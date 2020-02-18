@@ -48,6 +48,9 @@
 @iftex
 @ref{\TLINK\}\TRAIL\
 @end iftex
+@ifdocbook
+@ref{\TLINK\}\TRAIL\
+@end ifdocbook
 @end macro
 
 @macro img{FILE, ALIGN}
@@ -56,6 +59,9 @@
 <img src="img/\FILE\.png" class="float\ALIGN\"/>
 @end html
 @end ifhtml
+@ifdocbook
+@image{img/\FILE\,,,,.png}
+@end ifdocbook
 @end macro
 
 @macro imgc{FILE}
@@ -64,4 +70,7 @@
 <img src="img/\FILE\.png"/>
 @end html
 @end ifhtml
+@ifdocbook
+@image{img/\FILE\,,,,.png}
+@end ifdocbook
 @end macro
