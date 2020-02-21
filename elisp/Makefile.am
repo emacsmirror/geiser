@@ -21,6 +21,7 @@ dist_lisp_LISP = \
    geiser-mit.el \
    geiser-mode.el \
    geiser-racket.el \
+   geiser-gambit.el \
    geiser-chicken.el \
    geiser-chez.el \
    geiser-chibi.el \

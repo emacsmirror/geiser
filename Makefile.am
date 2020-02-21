@@ -27,6 +27,7 @@ elpa: README.elpa info
 
 	$(mkdir_p) $(scheme_dir)/chez/geiser
 	$(mkdir_p) $(scheme_dir)/guile/geiser
+  $(mkdir_p) $(scheme_dir)/gambit/geiser
 	$(mkdir_p) $(scheme_dir)/racket/geiser
 	$(mkdir_p) $(scheme_dir)/chicken/geiser
 	$(mkdir_p) $(scheme_dir)/chibi/geiser
@@ -35,6 +36,8 @@ elpa: README.elpa info
                         $(scheme_dir)/chez/geiser
 	$(INSTALL_DATA) $(abs_top_srcdir)/scheme/guile/geiser/* \
                         $(scheme_dir)/guile/geiser
+	$(INSTALL_DATA) $(abs_top_srcdir)/scheme/gambit/geiser/* \
+                        $(scheme_dir)/gambit/geiser
 	$(INSTALL_DATA) $(abs_top_srcdir)/scheme/racket/geiser/* \
                         $(scheme_dir)/racket/geiser
 	$(INSTALL_DATA) $(abs_top_srcdir)/scheme/chibi/geiser/* \
