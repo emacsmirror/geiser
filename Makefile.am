@@ -27,7 +27,7 @@ elpa: README.elpa info
 
 	$(mkdir_p) $(scheme_dir)/chez/geiser
 	$(mkdir_p) $(scheme_dir)/guile/geiser
-  $(mkdir_p) $(scheme_dir)/gambit/geiser
+	$(mkdir_p) $(scheme_dir)/gambit/geiser
 	$(mkdir_p) $(scheme_dir)/racket/geiser
 	$(mkdir_p) $(scheme_dir)/chicken/geiser
 	$(mkdir_p) $(scheme_dir)/chibi/geiser
