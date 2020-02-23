@@ -84,10 +84,6 @@ And then installing Geiser is as easy as:
 M-x package-install RET geiser RET
 @end example
 
-Alternatively, you can manually download the @uref{@value{PACKAGE},
-package file}, and install from your local disk with @kbd{M-x
-package-install-file}.
-
 @cindex Chicken
 @cindex Chicken installation
 @subsubheading Chicken installation
@@ -230,9 +226,7 @@ go (@pxref{The REPL}).
 @ifnotinfo
 If you obtained the Geiser source tree from a release tarball, you can
 even continue to read this fine manual inside Emacs by opening
-@file{doc/geiser.info} using @kbd{C-u C-h i}.  The manual is also
-available in PDF format @downfile{geiser-manual-@value{VERSION}.pdf,
-here}.
+@file{doc/geiser.info} using @kbd{C-u C-h i}.
 @end ifnotinfo
 
 @cindex byte-compilation

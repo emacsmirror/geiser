@@ -1,4 +1,4 @@
-@set VERSION 0.11
+@set VERSION 0.11.1
 @set VERSION_NICK
 @set RELEASE_DATE February 2020
 @set GUILE_VERSION 2.2
@@ -9,6 +9,7 @@
 @set CHEZ_VERSION 9.4
 @set GAMBIT_VERSION 4.9
 @set EMACS_VERSION 24
+@set RELEASES https://gitlab.com/jaor/geiser/-/releases
 @set DOWN_BASE http://download-mirror.savannah.gnu.org/@/releases/@/geiser
 @set PACKAGE_REPO @value{DOWN_BASE}/@/packages
 @set PACKAGE @value{PACKAGE_REPO}/@/geiser-@value{VERSION}.tar
@@ -18,7 +19,6 @@
 @uref{@value{DOWN_BASE}/@/@value{VERSION}/@/\FILE\, \CAPT\}
 @end macro
 
-@set RELEASES https://gitlab.com/jaor/geiser/-/releases
 
 @macro releasesref{CAPT}
 @uref{@value{RELEASES}, \CAPT\}
