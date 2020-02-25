@@ -84,6 +84,17 @@ And then installing Geiser is as easy as:
 M-x package-install RET geiser RET
 @end example
 
+Unless you are using Gambit or Chicken, with that, you are pretty much
+all set up.  See @ref{The REPL} to start using Geiser.  If you plan to
+use Chicken or Gambit, just keep reading below for a few additional
+instructions to set up the environment.
+
+@ifnotinfo
+And, by the way, if you prefer to keep reading this manual within Emacs,
+@kbd{C-h i m Geiser RET} will bring you to the info version of it that
+you just installed!
+@end ifnotinfo
+
 @cindex Chicken
 @cindex Chicken installation
 @subsubheading Chicken installation
@@ -103,15 +114,6 @@ $ curl https://3e8.org/pub/chicken-doc/chicken-doc-repo-5.tgz | sudo tar zx
 @end example
 
 (see also @uref{https://wiki.call-cc.org/emacs#geiser, Chicken's wiki}).
-
-With that, you are pretty much all set up.  See @ref{The REPL} to start
-using Geiser.
-
-@ifnotinfo
-And, by the way, if you prefer to keep reading this manual within Emacs,
-@kbd{C-h i m Geiser RET} will bring you to the info version of it that
-you just installed!
-@end ifnotinfo
 
 @cindex Gambit
 @cindex Gambit installation
