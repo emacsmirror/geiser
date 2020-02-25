@@ -10,6 +10,7 @@
 ;; Start date: Sun Feb 08, 2009 19:44
 
 
+;;; Code:
 
 (require 'geiser-eval)
 (require 'geiser-syntax)

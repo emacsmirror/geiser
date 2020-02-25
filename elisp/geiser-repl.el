@@ -8,6 +8,7 @@
 ;; not, see <http://www.xfree86.org/3.3.6/COPYRIGHT2.html#5>.
 
 
+;;; Code:
 
 (require 'geiser-company)
 (require 'geiser-doc)

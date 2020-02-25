@@ -10,6 +10,7 @@
 ;; Start date: Sat Feb 14, 2009 14:09
 
 
+;;; Code:
 
 (require 'geiser-edit)
 (require 'geiser-impl)

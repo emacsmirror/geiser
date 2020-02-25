@@ -13,6 +13,7 @@
 ;; code.
 
 
+;;; Code:
 
 (require 'geiser-impl)
 (require 'geiser-connection)

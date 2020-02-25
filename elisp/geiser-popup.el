@@ -9,6 +9,9 @@
 
 ;; Start date: Sat Feb 07, 2009 14:05
 
+
+;;; Code:
+
 (require 'view)
 
 

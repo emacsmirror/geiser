@@ -10,6 +10,7 @@
 ;; Start date: Mon Feb 23, 2009 22:34
 
 
+;;; Code:
 
 (require 'geiser-edit)
 (require 'geiser-autodoc)

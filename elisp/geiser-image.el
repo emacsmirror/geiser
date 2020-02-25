@@ -11,6 +11,7 @@
 ;; Start date: Sun Sep 02, 2012 00:00
 
 
+;;; Code:
 
 (require 'geiser-custom)
 (require 'geiser-base)

@@ -10,6 +10,7 @@
 ;; Start date: Mon Feb 09, 2009 22:21
 
 
+;;; Code:
 
 (require 'geiser-impl)
 (require 'geiser-eval)

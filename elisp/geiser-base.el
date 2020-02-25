@@ -10,6 +10,8 @@
 ;; Settings and vars shared by all geiser modules, including little
 ;; utilities and emacsen compatibility bits.
 
+
+;;; Code:
 ;;; Emacs compatibility:
 
 (require 'ring)

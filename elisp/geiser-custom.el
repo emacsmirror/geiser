@@ -10,6 +10,7 @@
 ;; Start date: Sat Feb 14, 2009 21:49
 
 
+;;; Code:
 
 (require 'font-lock)
 (require 'geiser-base)

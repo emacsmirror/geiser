@@ -10,6 +10,7 @@
 ;; Start date: Wed Feb 11, 2009 00:16
 
 
+;;; Code:
 
 (require 'geiser-debug)
 (require 'geiser-autodoc)

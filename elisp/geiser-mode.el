@@ -10,6 +10,7 @@
 ;; Start date: Sun Feb 08, 2009 15:13
 
 
+;;; Code:
 
 (require 'geiser-repl)
 (require 'geiser-menu)

@@ -10,6 +10,7 @@
 ;; Start date: Mon Aug 24, 2009 12:44
 
 
+;;; Code:
 
 (require 'geiser-autodoc)
 (require 'geiser-completion)

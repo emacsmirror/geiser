@@ -10,6 +10,7 @@
 ;; Start date: Sat Mar 07, 2009 23:32
 
 
+;;; Code:
 
 (require 'geiser-custom)
 (require 'geiser-base)

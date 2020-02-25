@@ -10,6 +10,7 @@
 ;; Start date: Wed Feb 11, 2009 21:07
 
 
+;;; Code:
 
 (require 'geiser-completion)
 (require 'geiser-eval)

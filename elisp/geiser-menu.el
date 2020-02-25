@@ -8,7 +8,9 @@
 ;; not, see <http://www.xfree86.org/3.3.6/COPYRIGHT2.html#5>.
 
 ;; Start date: Sat Jun 12, 2010 03:01
+
 
+;;; Code:
 
 (require 'geiser-custom)
 (require 'geiser-base)

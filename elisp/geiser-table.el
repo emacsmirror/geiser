@@ -10,6 +10,7 @@
 ;; Start date: Tue Jan 06, 2009 13:44
 
 
+;;; Code:
 
 (defun geiser-table--col-widths (rows)
   (let* ((col-no (length (car rows)))

@@ -9,10 +9,13 @@
 
 ;; Start date: Sat Feb 07, 2009 12:07
 
-
+;;; Commentary:
 
 ;; Some utilities for maintaining a simple log buffer, mainly for
 ;; debugging purposes.
+
+
+;;; Code:
 
 (require 'geiser-custom)
 (require 'geiser-popup)

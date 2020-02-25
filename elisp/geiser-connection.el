@@ -9,10 +9,13 @@
 
 ;; Start date: Sat Feb 07, 2009 21:11
 
-
+;;; Commentary:
 
 ;; Connection datatype and functions for managing request queues
 ;; between emacs and inferior guile processes.
+
+
+;;; Code:
 
 (require 'geiser-log)
 (require 'geiser-syntax)

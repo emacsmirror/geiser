@@ -10,6 +10,7 @@
 ;; Start date: Sun Feb 08, 2009 15:03
 
 
+;;; Code:
 
 (require 'geiser-impl)
 (require 'geiser-popup)

@@ -10,6 +10,7 @@
 ;; Start date: Sat Aug 22, 2009 23:04
 
 
+;;; Code:
 
 (require 'geiser-repl)
 (require 'geiser-mode)
