@@ -48,7 +48,7 @@
          (symbol (make-symbol id))
          (ds (geiser-doc--get-docstring symbol module)))
     (if (or (not ds) (not (listp ds)))
-	(progn
+        (progn
           (message "No documentation available for '%s'" symbol)
           nil)
       (with-current-buffer (get-buffer-create "*company-documentation*")
@@ -131,8 +131,8 @@
          ('sorted t)))
      (defun geiser-company--setup-company (enable)
        (when enable
-	 (set (make-local-variable 'company-backends)
-	      (add-to-list 'company-backends 'geiser-company-backend)))
+         (set (make-local-variable 'company-backends)
+              (add-to-list 'company-backends 'geiser-company-backend)))
        (company-mode (if enable 1 -1)))
      (add-hook 'company-completion-finished-hook
                'geiser-company--restore-autodoc)

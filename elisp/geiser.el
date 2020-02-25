@@ -162,9 +162,9 @@
         geiser-image
         geiser-racket
         geiser-chicken
-	geiser-chez
-	geiser-chibi
-	geiser-mit
+        geiser-chez
+        geiser-chibi
+        geiser-mit
         geiser-implementation
         geiser-xref))
 

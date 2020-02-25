@@ -66,9 +66,9 @@
   (add-hook 'after-change-functions
             '(lambda (b e len)
                (when geiser-log-autoscroll-buffer-p
-		 (let ((my-window (get-buffer-window (geiser-log--buffer) t)))
-		   (when (window-live-p my-window)
-		     (set-window-point my-window (point))))))
+                 (let ((my-window (get-buffer-window (geiser-log--buffer) t)))
+                   (when (window-live-p my-window)
+                     (set-window-point my-window (point))))))
             nil t)
   (setq buffer-read-only t))
 

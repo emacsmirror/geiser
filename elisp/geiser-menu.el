@@ -19,9 +19,9 @@
 ;;; Customization:
 
 (geiser-custom--defcustom geiser-global-menu-always-on-p nil
-   "Whether the Geiser menu is always visible."
-   :type 'boolean
-   :group 'geiser)
+  "Whether the Geiser menu is always visible."
+  :type 'boolean
+  :group 'geiser)
 
 
 ;;; Top-level menu
@@ -30,7 +30,7 @@
   (cond ((or (eq '-- kd) (eq 'line kd)) `(geiser-menu--add-line ,map))
         ((stringp (car kd)) `(geiser-menu--add-basic-item ,keymap ,map ,kd))
         ((eq 'menu (car kd)) `(geiser-menu--add-submenu ,(cadr kd)
-                                ,keymap ,map ,(cddr kd)))
+							,keymap ,map ,(cddr kd)))
         ((eq 'custom (car kd)) `(geiser-menu--add-custom ,(nth 1 kd)
                                                          ,(nth 2 kd)
                                                          ,keymap
@@ -87,12 +87,12 @@
 
 (defmacro geiser-menu--add-custom (title group keymap map)
   `(geiser-menu--add-item ,keymap ,map
-     (,title nil (lambda () (interactive) (customize-group ',group)))))
+			  (,title nil (lambda () (interactive) (customize-group ',group)))))
 
 (defmacro geiser-menu--mode-toggle (title bindings mode keymap map)
   `(geiser-menu--add-item ,keymap ,map
-     (,title ,bindings ,mode
-             :button (:toggle . (and (boundp ',mode) ,mode)))))
+			  (,title ,bindings ,mode
+				  :button (:toggle . (and (boundp ',mode) ,mode)))))
 
 (defmacro geiser-menu--defmenu (name keymap &rest keys)
   (let ((mmap (make-symbol "mmap")))

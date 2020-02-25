@@ -147,7 +147,7 @@ when `geiser-autodoc-display-module-p' is on."
         (args (cdr (assoc "args" signature)))
         (module (cdr (assoc "module" signature))))
     (if (not args)
-      (geiser-autodoc--value-str proc module (cdr (assoc "value" signature)))
+	(geiser-autodoc--value-str proc module (cdr (assoc "value" signature)))
       (save-current-buffer
         (set-buffer (geiser-syntax--font-lock-buffer))
         (erase-buffer)

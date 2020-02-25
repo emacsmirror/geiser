@@ -97,7 +97,7 @@ determine its scheme flavour."
     (setq geiser-impl--method-docs
           (sort geiser-impl--method-docs
                 (lambda (a b) (string< (symbol-name (car a))
-                                  (symbol-name (car b))))))
+                                       (symbol-name (car b))))))
     (put method 'function-documentation doc)))
 
 (defun geiser-implementation-help ()

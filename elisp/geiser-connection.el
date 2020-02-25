@@ -72,7 +72,7 @@
 (defun geiser-con--tq-create (process)
   (let ((tq (tq-create process)))
     (set-process-filter process
-			`(lambda (p s) (geiser-con--tq-filter ',tq s)))
+                        `(lambda (p s) (geiser-con--tq-filter ',tq s)))
     tq))
 
 (defun geiser-con--tq-filter (tq in)

@@ -408,9 +408,9 @@ module command as a string")
   (add-text-properties
    start end
    '(font-lock-fontified t
-     fontified t
-     font-lock-multiline t
-     font-lock-face geiser-font-lock-repl-output)))
+			 fontified t
+			 font-lock-multiline t
+			 font-lock-face geiser-font-lock-repl-output)))
 
 (defun geiser-repl--narrow-to-prompt ()
   "Narrow to active prompt region and return t, otherwise returns nil."
@@ -572,9 +572,9 @@ module command as a string")
 
 (defun geiser-repl--connection* ()
   (let ((buffer (geiser-repl--set-up-repl geiser-impl--implementation)))
-   (and (buffer-live-p buffer)
-        (get-buffer-process buffer)
-        (with-current-buffer buffer geiser-repl--connection))))
+    (and (buffer-live-p buffer)
+         (get-buffer-process buffer)
+         (with-current-buffer buffer geiser-repl--connection))))
 
 (defun geiser-repl--connection ()
   (or (geiser-repl--connection*)
@@ -701,7 +701,7 @@ If SAVE-HISTORY is non-nil, save CMD in the REPL history."
 (defun geiser-repl--module-function (&optional module)
   (if (and module geiser-eval--get-impl-module)
       (funcall geiser-eval--get-impl-module module)
-      :f))
+    :f))
 
 (defun geiser-repl--doc-module ()
   (interactive)
@@ -936,7 +936,7 @@ If no REPL is running, execute `run-geiser' to start a fresh one."
            (geiser-connect impl (geiser-repl--host) (geiser-repl--port)))
           ((geiser-repl--local-p)
            (geiser-connect-local impl geiser-repl--address))
-	  (impl (run-geiser impl))
+          (impl (run-geiser impl))
           (t (call-interactively 'run-geiser)))
     (geiser-repl--maybe-remember-scm-buffer buffer)))
 

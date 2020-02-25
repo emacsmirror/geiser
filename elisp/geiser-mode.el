@@ -163,11 +163,11 @@ With a prefix, revert the effect of `geiser-mode-eval-last-sexp-to-buffer' "
                                  (setq bosexp (point))
                                  (forward-sexp)
                                  (point)))
-	 (ret-transformer (or geiser-mode-eval-to-buffer-transformer
-			      (lambda (msg is-error?)
-				(format "%s%s%s"
+         (ret-transformer (or geiser-mode-eval-to-buffer-transformer
+                              (lambda (msg is-error?)
+                                (format "%s%s%s"
                                         geiser-mode-eval-to-buffer-prefix
-					(if is-error? "ERROR" "")
+                                        (if is-error? "ERROR" "")
                                         msg))))
          (ret (save-excursion
                 (geiser-eval-region bosexp ;beginning of sexp
@@ -175,17 +175,17 @@ With a prefix, revert the effect of `geiser-mode-eval-last-sexp-to-buffer' "
                                     nil
                                     t
                                     print-to-buffer-p)))
-	 (err (geiser-eval--retort-error ret))
-	 (will-eval-to-buffer (if print-to-buffer-p
-				  (not geiser-mode-eval-last-sexp-to-buffer)
-				geiser-mode-eval-last-sexp-to-buffer))
-	 (str (geiser-eval--retort-result-str ret
+         (err (geiser-eval--retort-error ret))
+         (will-eval-to-buffer (if print-to-buffer-p
+                                  (not geiser-mode-eval-last-sexp-to-buffer)
+                                geiser-mode-eval-last-sexp-to-buffer))
+         (str (geiser-eval--retort-result-str ret
                                               (when will-eval-to-buffer ""))))
     (cond  ((not will-eval-to-buffer) str)
-	   (err (insert (funcall ret-transformer
+           (err (insert (funcall ret-transformer
                                  (geiser-eval--error-str err) t)))
-	   ((string= "" str))
-	   (t (push-mark)
+           ((string= "" str))
+           (t (push-mark)
               (insert (funcall ret-transformer str nil))))))
 
 (defun geiser-compile-definition (&optional and-go)

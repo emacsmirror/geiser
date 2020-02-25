@@ -191,10 +191,10 @@ help (e.g. browse an HTML page) implementing this method.")
 (defun geiser-doc--insert-xbutton (&optional manual)
   (let ((label (if manual "[manual]" "[source]"))
         (help (if manual "Look up in Scheme manual" "Go to definition")))
-  (insert-text-button label
-                      :type 'geiser-doc--xbutton
-                      'help-echo help
-                      'x-kind (if manual 'manual 'source))))
+    (insert-text-button label
+			:type 'geiser-doc--xbutton
+			'help-echo help
+			'x-kind (if manual 'manual 'source))))
 
 (defun geiser-doc--insert-xbuttons (impl)
   (when (geiser-impl--method 'external-help impl)
@@ -348,8 +348,7 @@ help (e.g. browse an HTML page) implementing this method.")
                                                           impl)
                                       impl))))
 
-(defun geiser-doc--render-docstring
-  (docstring symbol &optional module impl)
+(defun geiser-doc--render-docstring (docstring symbol &optional module impl)
   (erase-buffer)
   (geiser-doc--insert-title
    (geiser-autodoc--str* (cdr (assoc "signature" docstring))))
