@@ -1,9 +1,11 @@
-@node Installation, The REPL, Introduction, Top
+@node Installation
 @chapter Installation
 
 @menu
 * Must needs::
 * The easy and quick way::
+* Chicken installation::
+* Gambit installation::
 * From the source's mouth::
 * Friends::
 @end menu
@@ -47,7 +49,7 @@ ELPA package, as described in the next section.  If you prefer to use
 the source code directly, it's not that difficult either: just keep on
 reading.
 
-@node The easy and quick way, From the source's mouth, Must needs, Installation
+@node The easy and quick way, Chicken installation, Must needs, Installation
 @section The easy and quick way
 
 @cindex quick install
@@ -87,7 +89,7 @@ M-x package-install RET geiser RET
 Unless you are using Gambit or Chicken, with that, you are pretty much
 all set up.  See @ref{The REPL} to start using Geiser.  If you plan to
 use Chicken or Gambit, just keep reading below for a few additional
-instructions to set up the environment.
+instructions to set up your environment.
 
 @ifnotinfo
 And, by the way, if you prefer to keep reading this manual within Emacs,
@@ -97,7 +99,9 @@ you just installed!
 
 @cindex Chicken
 @cindex Chicken installation
-@subsubheading Chicken installation
+@node Chicken installation, Gambit installation, The easy and quick way, Installation
+@section Chicken installation
+
 If you plan to use Chicken, you'll need also to fire a terminal and
 configure a couple of Chicken eggs.  For Chicken 4 that would be:
 @example
@@ -117,14 +121,17 @@ $ curl https://3e8.org/pub/chicken-doc/chicken-doc-repo-5.tgz | sudo tar zx
 
 @cindex Gambit
 @cindex Gambit installation
-@subsubheading Gambit installation
+@node Gambit installation, From the source's mouth, Chicken installation, Installation
+@section Gambit installation
 
 If you plan to use Gambit, you'll also need to open a terminal and
 configure a couple of awesome Gambit's features:
 
-  SETUP :
-    1 - clone the last version of gambit and of this repo
-    2 - configure gambit using --enable-rtlib-debug-source to activate autodoc
+@enumerate
+@item
+Clone the last version of gambit and of this repo
+@item
+Configure Gambit using @code{--enable-rtlib-debug-source} to activate autodoc
 @example
     $ cd ~/
     $ git clone "the gambit repo current address"
@@ -135,43 +142,48 @@ configure a couple of awesome Gambit's features:
     $ make -j
     $ make install
 @end example
-    3 - put a link to geiser/elisp/geiser.el in your init file
-    in your init file paste :
+@item
+Put a link to @code{geiser/elisp/geiser.el} in your init file in your
+    init file paste :
 @example
     (load-file "~/geiser/elisp/geiser.el")
 @end example
     (the path is your path to geiser.el.)
+@end enumerate
 
-  # setup REMOTE CONNECT TO A GAMBIT REPL
-    1 - you need to enable the gambit/geiser module
-    ( if you can't,  substitute the command below
-      with the PS: at the end of the readme )
+And, if you also want to use a remote Gambit REPL:
+
+@enumerate
+@item
+Enable the gambit/geiser module:
 @example
     $ mkdir ~/gambit/lib/gambit/geiser
     $ cp ~/geiser/geiser-module/* ~/gambit/lib/geiser/
 @end example
-    2 - now that you have the module you start gsi with it and using the -:d@
+@item
+Now that you have the module you start gsi with it and using the
+@code{-:d} option:
 @example
-    $ gsi -:d gambit/geiser -
+    $ gsi -:d@ gambit/geiser -
 @end example
-    3 - you can now open emacs and write
+@item
+You can now open emacs and call
 @example
     M-x geiser-connect gambit
 @end example
-  Enjoy !
+  Enjoy!
+@end enumerate
 
-By the way,
-if you are unable to use gambit modules, open gsi with
-the @file{gambit.scm} file located in
-@file{geiser/scheme/gambit/geiser/gambit.scm}
-something like :
+By the way, if you are unable to use gambit modules, open gsi with the
+@file{gambit.scm} file located in
+@file{geiser/scheme/gambit/geiser/gambit.scm}; something like:
 @example
         gsi -:d@ ~/geiser/scheme/gambit/geiser/gambit.scm -
 @end example
 (Keep in mind that these paths may be a little different for you.)
 
 
-@node From the source's mouth, Friends, The easy and quick way, Installation
+@node From the source's mouth, Friends, Gambit installation, Installation
 @section Installing from source
 
 @subsubheading Downloading Geiser
