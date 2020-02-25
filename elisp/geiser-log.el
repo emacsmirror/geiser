@@ -1,4 +1,4 @@
-;; geiser-log.el -- logging utilities
+;;; geiser-log.el -- logging utilities
 
 ;; Copyright (C) 2009, 2010, 2012, 2019 Jose Antonio Ortega Ruiz
 

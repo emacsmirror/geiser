@@ -1,4 +1,4 @@
-;; geiser-mode.el -- minor mode for scheme buffers
+;;; geiser-mode.el -- minor mode for scheme buffers
 
 ;; Copyright (C) 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2020 Jose Antonio Ortega Ruiz
 

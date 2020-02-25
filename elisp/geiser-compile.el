@@ -1,4 +1,4 @@
-;; geiser-compile.el -- compile/load scheme files
+;;; geiser-compile.el -- compile/load scheme files
 
 ;; Copyright (C) 2009, 2010, 2011, 2012, 2013, 2016, 2018 Jose Antonio Ortega Ruiz
 

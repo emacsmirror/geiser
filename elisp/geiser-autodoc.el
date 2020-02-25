@@ -1,4 +1,4 @@
-;; geiser-autodoc.el -- autodoc mode
+;;; geiser-autodoc.el -- autodoc mode
 
 ;; Copyright (C) 2009, 2010, 2011, 2012, 2015, 2016 Jose Antonio Ortega Ruiz
 

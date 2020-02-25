@@ -1,4 +1,4 @@
-;; geiser-company.el -- integration with company-mode
+;;; geiser-company.el -- integration with company-mode
 
 ;; Copyright (C) 2009, 2010, 2011, 2012, 2013, 2014, 2016 Jose Antonio Ortega Ruiz
 

@@ -1,4 +1,4 @@
-;; geiser-xref.el -- utilities for cross-referencing
+;;; geiser-xref.el -- utilities for cross-referencing
 
 ;; Copyright (C) 2009, 2010, 2012 Jose Antonio Ortega Ruiz
 

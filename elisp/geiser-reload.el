@@ -1,4 +1,4 @@
-;; geiser-reload.el -- unload/load geiser packages
+;;; geiser-reload.el -- unload/load geiser packages
 
 ;; Copyright (C) 2009, 2010, 2012 Jose Antonio Ortega Ruiz
 
