@@ -61,7 +61,7 @@
 (defsubst geiser-completion--module-list (prefix)
   (geiser-eval--send/result `(:eval (:ge module-completions ,prefix))))
 
-(defvar geiser-completion--module-list-func
+(defvar geiser-completion-module-list-func
   (if (= emacs-major-version 25)
       (completion-table-dynamic 'geiser-completion--module-list t)
     (completion-table-dynamic 'geiser-completion--module-list)))
