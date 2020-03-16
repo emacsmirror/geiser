@@ -221,7 +221,7 @@ switcher (switch-to-NAME), and provides geiser-NAME."
                                 name))
           (ask (make-symbol "ask")))
       `(progn
-         (geiser-impl--define ,load-file-name ',name ',parent ',methods)
+         (geiser-impl--define load-file-name ',name ',parent ',methods)
          (require 'geiser-repl)
          (require 'geiser-menu)
          (defun ,runner ()
