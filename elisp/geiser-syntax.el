@@ -18,7 +18,7 @@
 
 (require 'scheme)
 
-(eval-when-compile (require 'cl))
+(eval-when-compile (require 'cl-lib))
 
 
 ;;; Indentation:
@@ -197,14 +197,14 @@ implementation-specific entries for font-lock-keywords.")
 (defun geiser-syntax--read/next-token ()
   (skip-syntax-forward "->")
   (if (geiser-syntax--read/eos) '(eob)
-    (case (char-after)
+    (cl-case (char-after)
       (?\; (geiser-syntax--read/skip-comment))
       ((?\( ?\[) (geiser-syntax--read/token 'lparen))
       ((?\) ?\]) (geiser-syntax--read/token 'rparen))
       (?. (if (memq (car (syntax-after (1+ (point)))) '(0 11 12))
               (geiser-syntax--read/token 'dot)
             (cons 'atom (geiser-syntax--read/elisp))))
-      (?\# (case (geiser-syntax--read/next-char)
+      (?\# (cl-case (geiser-syntax--read/next-char)
              ('nil '(eob))
              (?| (geiser-syntax--read/skip-comment))
              (?: (if (geiser-syntax--read/next-char)
@@ -219,7 +219,7 @@ implementation-specific entries for font-lock-keywords.")
                         ((equal (symbol-name tok) "f") '(boolean . :f))
                         (tok (cons 'atom tok))
                         (t (geiser-syntax--read/next-token)))))))
-      (?| (case (geiser-syntax--read/next-char) ;; gambit style block comments
+      (?| (cl-case (geiser-syntax--read/next-char) ;; gambit style block comments
             ('nil '(eob))
             (?# (geiser-syntax--read/skip-comment))
             (t (let ((tok (geiser-syntax--read/symbol)))
@@ -267,7 +267,7 @@ implementation-specific entries for font-lock-keywords.")
 (defun geiser-syntax--read ()
   (let ((token (geiser-syntax--read/next-token))
         (max-lisp-eval-depth (max max-lisp-eval-depth 3000)))
-    (case (car token)
+    (cl-case (car token)
       (eob nil)
       (lparen (geiser-syntax--read/list))
       (vectorb (apply 'vector (geiser-syntax--read/list)))
@@ -294,7 +294,7 @@ implementation-specific entries for font-lock-keywords.")
 
 (defsubst geiser-syntax--form-after-point (&optional boundary)
   (let ((geiser-syntax--read/buffer-limit (and (numberp boundary) boundary)))
-    (save-excursion (values (geiser-syntax--read) (point)))))
+    (save-excursion (list (geiser-syntax--read) (point)))))
 
 (defun geiser-syntax--mapconcat (fun lst sep)
   (cond ((null lst) "")
@@ -453,7 +453,7 @@ implementation-specific entries for font-lock-keywords.")
         (let ((boundary (point))
               (nesting (geiser-syntax--nesting-level)))
           (geiser-syntax--pop-to-top)
-          (multiple-value-bind (form end)
+          (cl-destructuring-bind (form end)
               (geiser-syntax--form-after-point boundary)
             (delete sym
                     (geiser-syntax--scan-locals bfs

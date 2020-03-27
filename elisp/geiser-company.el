@@ -18,7 +18,7 @@
 (require 'geiser-base)
 (require 'geiser-doc)
 
-(eval-when-compile (require 'cl))
+(eval-when-compile (require 'cl-lib))
 
 
 ;;; Helpers:
@@ -120,7 +120,7 @@
      (defun geiser-company-backend (command &optional arg &rest ignored)
        "A `company-mode' completion back-end for `geiser-mode'."
        (interactive (list 'interactive))
-       (case command
+       (cl-case command
          ('interactive (company-begin-backend 'geiser-company-backend))
          ('prefix (geiser-company--prefix-at-point))
          ('candidates (geiser-company--candidates arg))
