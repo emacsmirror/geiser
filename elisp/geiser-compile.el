@@ -17,6 +17,8 @@
 (require 'geiser-eval)
 (require 'geiser-base)
 
+(declare-function geiser-restart-repl "geiser-mode" ())
+
 
 ;;; Auxiliary functions:
 
