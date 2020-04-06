@@ -194,7 +194,11 @@ buffer.")
       (save-excursion
         (goto-char (/ (+ end start) 2))
         (geiser-autodoc--clean-cache))
-      (unless nomsg (message "%s" res)))
+      (unless nomsg
+        (save-match-data
+          (when (string-match "\\(?:[ \t\n\r]+\\)\\'" res)
+            (setq res (replace-match "" t t res))))
+        (message "%s" res)))
     (geiser-debug--display-retort (geiser-syntax--scheme-str str) ret res)
     ret))
 
