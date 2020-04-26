@@ -39,7 +39,7 @@ or following links in error buffers.")
   'link geiser-debug "links in error buffers")
 
 
-;;; Auxiliar functions:
+;;; Auxiliary functions:
 
 (defun geiser-edit--visit-file (file method)
   (cond ((eq method 'window) (pop-to-buffer (find-file-noselect file t)))

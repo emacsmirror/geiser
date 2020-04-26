@@ -1,7 +1,7 @@
 ## How to support a new Scheme implementation
 
 Geiser works by running an instance of a REPL, or remotely connecting
-to one, and evaluating the scheme code it sees there. Then, everytime
+to one, and evaluating the scheme code it sees there. Then, every time
 it needs to perform some operation (like, say, printing autodoc,
 jumping to a source location or expanding a macro), it asks the
 running scheme instance for that information.

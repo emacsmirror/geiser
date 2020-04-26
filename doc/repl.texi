@@ -418,7 +418,7 @@ not the case, the variables to tweak are (depending on which Scheme you choose):
 They should be set to a string with the full path to the requisite binary.
 
 @cindex Version checking
-Before starting the REPL, Geiser will check wether the version of your
+Before starting the REPL, Geiser will check whether the version of your
 Scheme interpreter is good enough.  This means that it will spend a
 couple tenths of a second launching and quickly discarding a Scheme
 process, but also that the error message you'll get if you're on the

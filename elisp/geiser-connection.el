@@ -220,7 +220,7 @@
         (buffer (or (geiser-con--request-buffer req) (current-buffer)))
         (con (geiser-con--request-connection req)))
     (if (not cont)
-        (geiser-log--warn "<%s> Droping result for request %S: %s"
+        (geiser-log--warn "<%s> Dropping result for request %S: %s"
                           id rstr form)
       (condition-case cerr
           (with-current-buffer buffer

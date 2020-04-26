@@ -159,7 +159,7 @@ third key not modified by @key{Control}; e.g.,
 @tab Go to previous error in the REPL buffer
 @item M-TAB
 @tab @code{completion-at-point}
-@tab Complete indentifier at point
+@tab Complete identifier at point
 @item M-`, C-.
 @tab @code{geiser-completion--complete-module}
 @tab Complete module name at point
