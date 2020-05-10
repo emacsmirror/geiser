@@ -1,6 +1,6 @@
 ;;; geiser-syntax.el -- utilities for parsing scheme syntax
 
-;; Copyright (C) 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2019 Jose Antonio Ortega Ruiz
+;; Copyright (C) 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2019, 2020 Jose Antonio Ortega Ruiz
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the Modified BSD License. You should
@@ -235,7 +235,8 @@ implementation-specific entries for font-lock-keywords.")
                `(splice . ,backquote-splice-symbol))
             `(unquote . ,backquote-unquote-symbol)))
       (?\" (cons 'string (geiser-syntax--read/elisp)))
-      (t (cons 'atom (geiser-syntax--read/symbol))))))
+      (t (let ((x (geiser-syntax--read/elisp)))
+           (cons 'atom (if (atom x) x (geiser-syntax--read/symbol))))))))
 
 (defsubst geiser-syntax--read/match (&rest tks)
   (let ((token (geiser-syntax--read/next-token)))
