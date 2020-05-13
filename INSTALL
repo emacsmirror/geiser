@@ -63,7 +63,7 @@ package-install-file.
     You're ready to go!
 
 * Gambit Addendum
-  These steps are necessary to fully support all Gambit Scheme functionnalities,
+  These steps are necessary to fully support all Gambit Scheme functionalities,
   but are not required for any other scheme.
 
   # SETUP :
