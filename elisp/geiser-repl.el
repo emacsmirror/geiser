@@ -281,6 +281,10 @@ module command as a string")
 (defsubst geiser-repl--set-this-buffer-project (p)
   (setq geiser-repl--project p))
 
+(defsubst geiser-repl--current-project ()
+  (or (funcall geiser-repl-current-project-function)
+      'no-project))
+
 (defun geiser-repl--live-p ()
   (and geiser-repl--repl
        (get-buffer-process geiser-repl--repl)))
@@ -318,10 +322,6 @@ module command as a string")
 
 (defsubst geiser-repl--buffer-name (impl)
   (funcall geiser-repl-buffer-name-function impl))
-
-(defsubst geiser-repl--current-project ()
-  (or (funcall geiser-repl-current-project-function)
-      'no-project))
 
 (defun geiser-repl-buffer-name (impl)
   "Return default name of the REPL buffer for implementation IMPL."
