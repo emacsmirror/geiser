@@ -45,6 +45,15 @@ symbol (e.g., `guile', `chicken', etc.)."
                  (function :tag "Other function"))
   :group 'geiser-repl)
 
+(geiser-custom--defcustom geiser-repl-current-project-function
+    'geiser-repl-current-project
+  "Function used to determine the current project.
+The function is called from both source and REPL buffers, and
+should return a value which uniquely identifies the project."
+  :type '(choice (function-item geiser-repl-current-project)
+                 (function :tag "Other function"))
+  :group 'geiser-repl)
+
 (geiser-custom--defcustom geiser-repl-use-other-window t
   "Whether to Use a window other than the current buffer's when
 switching to the Geiser REPL buffer."
@@ -261,19 +270,26 @@ module command as a string")
 (make-variable-buffer-local
  (defvar geiser-repl--repl nil))
 
+(make-variable-buffer-local
+ (defvar geiser-repl--project nil))
+
 (defsubst geiser-repl--set-this-buffer-repl (r)
   (setq geiser-repl--repl r))
+
+(defsubst geiser-repl--set-this-buffer-project (p)
+  (setq geiser-repl--project p))
 
 (defun geiser-repl--live-p ()
   (and geiser-repl--repl
        (get-buffer-process geiser-repl--repl)))
 
-(defun geiser-repl--repl/impl (impl &optional repls)
+(defun geiser-repl--repl/impl (impl proj &optional repls)
   (catch 'repl
     (dolist (repl (or repls geiser-repl--repls))
       (when (buffer-live-p repl)
         (with-current-buffer repl
-          (when (eq geiser-impl--implementation impl)
+          (when (and (eq geiser-impl--implementation impl)
+                     (eq geiser-repl--project proj))
             (throw 'repl repl)))))))
 
 (defun geiser-repl--set-up-repl (impl)
@@ -281,8 +297,10 @@ module command as a string")
       (setq geiser-repl--repl
             (let ((impl (or impl
                             geiser-impl--implementation
-                            (geiser-impl--guess))))
-              (when impl (geiser-repl--repl/impl impl))))))
+                            (geiser-impl--guess)))
+                  (proj (or geiser-repl--project
+                            (geiser-repl--current-project))))
+              (when impl (geiser-repl--repl/impl impl proj))))))
 
 (defun geiser-repl--active-impls ()
   (let ((act))
@@ -300,6 +318,16 @@ module command as a string")
   "Return default name of the REPL buffer for implementation IMPL."
   (format "* %s *" (geiser-repl--repl-name impl)))
 
+(defsubst geiser-repl--current-project ()
+  (funcall geiser-repl-current-project-function))
+
+(defun geiser-repl-current-project ()
+  "Return the current project for REPL association."
+  (cond ((bound-and-true-p projectile-mode)
+         (projectile-project-root))
+        ((require 'project nil 'noerror)
+         (project-current))))
+
 (defun geiser-repl--switch-to-buffer (buffer)
   (unless (eq buffer (current-buffer))
     (let ((pop-up-windows geiser-repl-window-allow-split))
@@ -311,7 +339,8 @@ module command as a string")
   (unless (and (eq major-mode 'geiser-repl-mode)
                (eq geiser-impl--implementation impl)
                (not (get-buffer-process (current-buffer))))
-    (let* ((old (geiser-repl--repl/impl impl geiser-repl--closed-repls))
+    (let* ((proj (geiser-repl--current-project))
+           (old (geiser-repl--repl/impl impl proj geiser-repl--closed-repls))
            (old (and (buffer-live-p old)
                      (not (get-buffer-process old))
                      old)))
@@ -320,6 +349,7 @@ module command as a string")
       (unless old
         (geiser-repl-mode)
         (geiser-impl--set-buffer-implementation impl)
+        (geiser-repl--set-this-buffer-project proj)
         (geiser-syntax--add-kws t)))))
 
 (defun geiser-repl--read-impl (prompt &optional active)
@@ -921,11 +951,12 @@ With prefix argument, ask for which one if more than one is running.
 If no REPL is running, execute `run-geiser' to start a fresh one."
   (interactive "P")
   (let* ((impl (or impl geiser-impl--implementation))
+         (proj (geiser-repl--current-project))
          (in-repl (eq major-mode 'geiser-repl-mode))
          (in-live-repl (and in-repl (get-buffer-process (current-buffer))))
          (repl (unless ask
                  (if impl
-                     (geiser-repl--repl/impl impl)
+                     (geiser-repl--repl/impl impl proj)
                    (or geiser-repl--repl (car geiser-repl--repls))))))
     (cond (in-live-repl
            (when (and (not (eq repl buffer))
