@@ -46,11 +46,13 @@ symbol (e.g., `guile', `chicken', etc.)."
   :group 'geiser-repl)
 
 (geiser-custom--defcustom geiser-repl-current-project-function
-    'geiser-repl-current-project
+    'ignore
   "Function used to determine the current project.
 The function is called from both source and REPL buffers, and
 should return a value which uniquely identifies the project."
-  :type '(choice (function-item geiser-repl-current-project)
+  :type '(choice (function-item :doc "Ignore projects" ignore)
+                 (function-item :doc "Use Project.el" project-current)
+                 (function-item :doc "Use Projectile" projectile-project-root)
                  (function :tag "Other function"))
   :group 'geiser-repl)
 
@@ -294,7 +296,7 @@ module command as a string")
         (when (buffer-live-p repl)
           (with-current-buffer repl
             (when (and (eq geiser-impl--implementation impl)
-                       (eq geiser-repl--project proj))
+                       (equal geiser-repl--project proj))
               (throw 'repl repl))))))))
 
 (defun geiser-repl--set-up-repl (impl)
@@ -317,19 +319,13 @@ module command as a string")
 (defsubst geiser-repl--buffer-name (impl)
   (funcall geiser-repl-buffer-name-function impl))
 
+(defsubst geiser-repl--current-project ()
+  (or (funcall geiser-repl-current-project-function)
+      'no-project))
+
 (defun geiser-repl-buffer-name (impl)
   "Return default name of the REPL buffer for implementation IMPL."
   (format "* %s *" (geiser-repl--repl-name impl)))
-
-(defsubst geiser-repl--current-project ()
-  (funcall geiser-repl-current-project-function))
-
-(defun geiser-repl-current-project ()
-  "Return the current project for REPL association."
-  (cond ((bound-and-true-p projectile-mode)
-         (projectile-project-root))
-        ((require 'project nil 'noerror)
-         (project-current))))
 
 (defun geiser-repl--switch-to-buffer (buffer)
   (unless (eq buffer (current-buffer))
