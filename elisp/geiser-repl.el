@@ -50,9 +50,9 @@ symbol (e.g., `guile', `chicken', etc.)."
   "Function used to determine the current project.
 The function is called from both source and REPL buffers, and
 should return a value which uniquely identifies the project."
-  :type '(choice (function-item :doc "Ignore projects" ignore)
-                 (function-item :doc "Use Project.el" project-current)
-                 (function-item :doc "Use Projectile" projectile-project-root)
+  :type '(choice (function-item :tag "Ignore projects" ignore)
+                 (function-item :tag "Use Project.el" project-current)
+                 (function-item :tag "Use Projectile" projectile-project-root)
                  (function :tag "Other function"))
   :group 'geiser-repl)
 
