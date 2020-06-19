@@ -283,24 +283,27 @@ module command as a string")
   (and geiser-repl--repl
        (get-buffer-process geiser-repl--repl)))
 
-(defun geiser-repl--repl/impl (impl proj &optional repls)
-  (catch 'repl
-    (dolist (repl (or repls geiser-repl--repls))
-      (when (buffer-live-p repl)
-        (with-current-buffer repl
-          (when (and (eq geiser-impl--implementation impl)
-                     (eq geiser-repl--project proj))
-            (throw 'repl repl)))))))
+(defun geiser-repl--repl/impl (impl &optional proj repls)
+  (let ((proj (or proj
+                  geiser-repl--project
+                  (geiser-repl--current-project)))
+        (repls (or repls
+                   geiser-repl--repls)))
+    (catch 'repl
+      (dolist (repl repls)
+        (when (buffer-live-p repl)
+          (with-current-buffer repl
+            (when (and (eq geiser-impl--implementation impl)
+                       (eq geiser-repl--project proj))
+              (throw 'repl repl))))))))
 
 (defun geiser-repl--set-up-repl (impl)
   (or (and (not impl) geiser-repl--repl)
       (setq geiser-repl--repl
             (let ((impl (or impl
                             geiser-impl--implementation
-                            (geiser-impl--guess)))
-                  (proj (or geiser-repl--project
-                            (geiser-repl--current-project))))
-              (when impl (geiser-repl--repl/impl impl proj))))))
+                            (geiser-impl--guess))))
+              (when impl (geiser-repl--repl/impl impl))))))
 
 (defun geiser-repl--active-impls ()
   (let ((act))
@@ -951,12 +954,11 @@ With prefix argument, ask for which one if more than one is running.
 If no REPL is running, execute `run-geiser' to start a fresh one."
   (interactive "P")
   (let* ((impl (or impl geiser-impl--implementation))
-         (proj (geiser-repl--current-project))
          (in-repl (eq major-mode 'geiser-repl-mode))
          (in-live-repl (and in-repl (get-buffer-process (current-buffer))))
          (repl (unless ask
                  (if impl
-                     (geiser-repl--repl/impl impl proj)
+                     (geiser-repl--repl/impl impl)
                    (or geiser-repl--repl (car geiser-repl--repls))))))
     (cond (in-live-repl
            (when (and (not (eq repl buffer))
