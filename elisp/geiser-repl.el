@@ -850,7 +850,7 @@ buffer."
   ("Previous input" "\C-c\M-p" comint-previous-input)
   ("Next input" "\C-c\M-n" comint-next-input)
   --
-  ("Interrupt evaluation" ("\C-c\C-k" "\C-c\C-c" "\C-ck")
+  ("Interrupt evaluation" ("\C-c\C-k" "\C-c\C-c")
    geiser-repl-interrupt)
   --
   (mode "Autodoc mode" ("\C-c\C-da" "\C-c\C-d\C-a") geiser-autodoc-mode)
