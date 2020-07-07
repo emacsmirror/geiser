@@ -204,6 +204,28 @@ A final tip: if you want Geiser to start automatically a REPL for you if
 it notices that there's no one active when it enters @i{geiser-mode},
 you can customize @code{geiser-mode-start-repl-p} to @code{t}.
 
+@subsubheading Managing multiple scheme projects
+@cindex dir-locals
+@cindex project.el
+@cindex projectile
+@anchor{repl-per-project} By default, Geiser will re-use a single REPL
+for all buffers sharing the same scheme implementation.  This works well
+enough in many cases, but may become problematic (or at least annoying)
+when working on multiple projects with separate dependencies and include
+paths.
+
+Geiser provides optional support for using separate REPLs for each
+project, which can be enabled by customizing
+@code{geiser-repl-current-project-function} and selecting your Emacs
+project-management library of choice (eg. @code{project.el} or
+@code{projectile}).  With this configured, new REPLs will automatically
+associate themselves with the current project, and all Geiser commands
+will ignore REPLs that are not associated with the project.
+
+This can be very convenient when used with a @file{.dir-locals.el} in
+the project root to set include paths, ensuring that Geiser REPLs will
+always know where to find your project's modules or dependencies.
+
 @subsubheading Switching between source files and the REPL
 @cindex switching to REPL
 @cindex switching to source
