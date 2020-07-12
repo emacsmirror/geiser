@@ -169,10 +169,10 @@ buffer.")
       (when (or geiser-debug-jump-to-debug-p geiser-debug-show-debug-p)
         (if geiser-debug-jump-to-debug-p
             (geiser-debug--pop-to-buffer)
-          (display-buffer (geiser-debug--buffer))
-          (when dbg
-            (ignore-errors (next-error))
-            (message "=> %s" dbg)))))))
+          (display-buffer (geiser-debug--buffer))))
+      (when err
+        (ignore-errors (next-error))
+        (message "=> %s" output)))))
 
 (defsubst geiser-debug--wrap-region (str)
   (format "(begin %s\n)" str))
