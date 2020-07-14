@@ -1,4 +1,4 @@
-@set VERSION 0.11.2
+@set VERSION 0.12
 @set VERSION_NICK
 @set RELEASE_DATE February 2020
 @set GUILE_VERSION 2.2

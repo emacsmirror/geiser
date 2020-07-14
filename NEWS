@@ -1,3 +1,12 @@
+* Version 0.12 (July 2020)
+
+  - New project.el and projectile support (Andrew Whatson)
+  - Improved Chez support (Jay Xu, Aaron Marks, Julian Herrera)
+  - Improved Chicken support (Ricardo G. Herdt, Noam Postavsky)
+  - Bug fixes (Philip K, spellcard199)
+  - Linting and clean ups (Jonas Bernoulli)
+  - Documentation updates
+
 * Version 0.11.2 (February 2020)
 
   - Bug fixes
