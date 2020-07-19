@@ -1,6 +1,6 @@
 ;;; geiser.el --- GNU Emacs and Scheme talk to each other
 
-;; Copyright (C) 2009, 2010, 2011, 2012, 2013, 2015, 2018 Jose Antonio Ortega Ruiz
+;; Copyright (C) 2009, 2010, 2011, 2012, 2013, 2015, 2018, 2020 Jose Antonio Ortega Ruiz
 ;; URL: http://www.nongnu.org/geiser/
 
 ;; This program is free software; you can redistribute it and/or
@@ -157,14 +157,7 @@
         geiser-debug
         geiser-faces
         geiser-mode
-        geiser-guile
-        geiser-gambit
         geiser-image
-        geiser-racket
-        geiser-chicken
-        geiser-chez
-        geiser-chibi
-        geiser-mit
         geiser-implementation
         geiser-xref))
 
@@ -173,10 +166,8 @@
 
 ;;;###autoload
 (add-hook 'scheme-mode-hook 'geiser-mode--maybe-activate)
-;;;###autoload
-(add-to-list 'auto-mode-alist '("\\.rkt\\'" . scheme-mode))
 
-
+
 (provide 'geiser)
 
 ;;; geiser.el ends here
