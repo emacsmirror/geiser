@@ -4,8 +4,6 @@
 @menu
 * Must needs::
 * The easy and quick way::
-* Chicken installation::
-* Gambit installation::
 * From the source's mouth::
 * Friends::
 @end menu
@@ -97,92 +95,6 @@ And, by the way, if you prefer to keep reading this manual within Emacs,
 you just installed!
 @end ifnotinfo
 
-@cindex Chicken
-@cindex Chicken installation
-@node Chicken installation, Gambit installation, The easy and quick way, Installation
-@section Chicken installation
-
-If you plan to use Chicken, you'll need also to fire a terminal and
-configure a couple of Chicken eggs.  For Chicken 4 that would be:
-@example
-$ chicken-install -s apropos chicken-doc
-$ cd `csi -p '(chicken-home)'`
-$ curl http://3e8.org/pub/chicken-doc/chicken-doc-repo.tgz | sudo tar zx
-@end example
-
-while Chicken 5 prefers:
-@example
-$ chicken-install -s apropos chicken-doc srfi-18 srfi-1
-$ cd `csi -R chicken.platform -p '(chicken-home)'`
-$ curl https://3e8.org/pub/chicken-doc/chicken-doc-repo-5.tgz | sudo tar zx
-@end example
-
-(see also @uref{https://wiki.call-cc.org/emacs#geiser, Chicken's wiki}).
-
-@cindex Gambit
-@cindex Gambit installation
-@node Gambit installation, From the source's mouth, Chicken installation, Installation
-@section Gambit installation
-
-If you plan to use Gambit, you'll also need to open a terminal and
-configure a couple of awesome Gambit's features:
-
-@enumerate
-@item
-Clone the last version of gambit and of this repo
-@item
-Configure Gambit using @code{--enable-rtlib-debug-source} to activate autodoc
-@example
-    $ cd ~/
-    $ git clone "the gambit repo current address"
-    $ cd gambit
-    $ ./configure --enable-single-host --enable-debug --enable-rtlib-debug-source
-    $ make bootstrap
-    $ make bootclean
-    $ make -j
-    $ make install
-@end example
-@item
-Put a link to @code{geiser/elisp/geiser.el} in your init file in your
-    init file paste :
-@example
-    (load-file "~/geiser/elisp/geiser.el")
-@end example
-    (the path is your path to geiser.el.)
-@end enumerate
-
-And, if you also want to use a remote Gambit REPL:
-
-@enumerate
-@item
-Enable the gambit/geiser module:
-@example
-    $ mkdir ~/gambit/lib/gambit/geiser
-    $ cp ~/geiser/geiser-module/* ~/gambit/lib/geiser/
-@end example
-@item
-Now that you have the module you start gsi with it and using the
-@code{-:d} option:
-@example
-    $ gsi -:d@ gambit/geiser -
-@end example
-@item
-You can now open emacs and call
-@example
-    M-x geiser-connect gambit
-@end example
-  Enjoy!
-@end enumerate
-
-By the way, if you are unable to use gambit modules, open gsi with the
-@file{gambit.scm} file located in
-@file{geiser/scheme/gambit/geiser/gambit.scm}; something like:
-@example
-        gsi -:d@ ~/geiser/scheme/gambit/geiser/gambit.scm -
-@end example
-(Keep in mind that these paths may be a little different for you.)
-
-
 @node From the source's mouth, Friends, Gambit installation, Installation
 @section Installing from source
 
@@ -236,76 +148,6 @@ just to start using Geiser, would you?).  That's it: you're ready to
 @ifnothtml
 go (@pxref{The REPL}).
 @end ifnothtml
-
-@ifnotinfo
-If you obtained the Geiser source tree from a release tarball, you can
-even continue to read this fine manual inside Emacs by opening
-@file{doc/geiser.info} using @kbd{C-u C-h i}.
-@end ifnotinfo
-
-@cindex byte-compilation
-What?  You still here?  I promise the above is all that's needed to start
-using Geiser.  But, in case you are missing your @t{configure/make all
-install} routine, by all means, you can go through those motions to byte
-compile and install Geiser too.  That is, you enter the source directory
-and (since we grabbed the development tree) run the customary
-@i{autogen} script:
-
-@example
-$ cd ~/lisp/geiser
-$ ./autogen.sh
-@end example
-
-@noindent
-I recommend that you compile Geiser in a separate directory:
-
-@example
-$ mkdir build && cd build
-$ ../configure
-<some drivel here>
-$ make all
-<more of the above>
-@end example
-
-Now you have two options: loading the byte-compiled Geiser from the
-@file{elisp} subdirectory, or installing it system-wide.  To load the
-byte-code from here, add this line to your initialisation file:
-
-@example
-(load "~/lisp/geiser/build/elisp/geiser-load")
-@end example
-
-@noindent
-and eval that form and you're done (you could also restart Emacs, but
-killing your friends is widely considered bad form).  Yes, that's
-@code{load} and @file{geiser-load} instead of @code{load-file} and
-@file{geiser.el}.
-
-If you prefer a system-wide installation, just type:
-
-@example
-$ sudo make install
-@end example
-
-With the above spell, Geiser will be compiled and installed in a safe
-place inside Emacs' load path.  To load it into Emacs you'll need,
-@i{instead} of the @code{load-file} form above, the following line in
-your initialisation file:
-
-@example
-(require 'geiser-install)
-@end example
-
-@noindent
-Please note that we're requiring @code{geiser-install}, and @i{not}
-@code{geiser}, and that there's no @code{load-file} to be seen this
-time.  There are some ways of fine-tuning this process, mainly by
-providing additional arguments in the call to @t{configure}: you'll find
-those gory details in the file called @file{INSTALL}, right at the root
-of the source tree.  The installation will also take care of placing this
-manual, in Info format, where Emacs can find it, so you can continue to
-learn about Geiser inside its natural habitat.  See you there and into
-the next chapter!
 
 @node Friends,  , From the source's mouth, Installation
 @section Friends

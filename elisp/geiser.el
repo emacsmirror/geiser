@@ -21,14 +21,6 @@
   "Directory containing Geiser's Elisp files.")
 
 ;;;###autoload
-(defconst geiser-scheme-dir
-  (let ((d (expand-file-name "./scheme/" geiser-elisp-dir)))
-    (if (file-directory-p d)
-        d
-      (expand-file-name "../scheme/" geiser-elisp-dir)))
-  "Directory containing Geiser's Scheme files.")
-
-;;;###autoload
 (add-to-list 'load-path (directory-file-name geiser-elisp-dir))
 
 

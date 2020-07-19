@@ -43,56 +43,7 @@
   The easiest way is to use MELPA, and just type
   =M-x package-install RET geiser= inside emacs.
 
-  Geiser can be used either directly from its uninstalled source tree
-  or byte-compiled and installed after performing the standard
-  configure/make/make install dance.  See the INSTALL file for more details.
-
-** Chicken 5 Addendum
-    These steps are necessary to fully support Chicken Scheme, but are
-    not required for any other scheme.
-
-    - Install the necessary support eggs:
-      #+BEGIN_EXAMPLE
-      $ chicken-install -s apropos chicken-doc srfi-18 srfi-1
-      #+END_EXAMPLE
-    - Update the Chicken documentation database:
-      #+BEGIN_EXAMPLE
-      $ cd `csi -R chicken.platform -p '(chicken-home)'`
-      $ curl https://3e8.org/pub/chicken-doc/chicken-doc-repo-5.tgz | sudo tar zx
-      #+END_EXAMPLE
-
-** Chicken 4 Addendum
-    These steps are necessary to fully support Chicken Scheme, but are
-    not required for any other scheme.
-
-    - Install the necessary support eggs:
-
-#+BEGIN_EXAMPLE
-     $ chicken-install -s apropos chicken-doc
-#+END_EXAMPLE
-
-    - Update the Chicken documentation database:
-
-#+BEGIN_EXAMPLE
-     $ cd `csi -p '(chicken-home)'`
-     $ curl http://3e8.org/pub/chicken-doc/chicken-doc-repo.tgz | sudo tar zx
-#+END_EXAMPLE
-
-** Gambit Addendum
-    These steps are necessary to fully support Gambit Scheme.
-
-    1 - clone the last version of gambit
-    2 - configure gambit using --enable-rtlib-debug-source to activate autodoc
-#+BEGIN_EXAMPLE
-    $ cd ~/
-    $ git clone "the gambit repo address"
-    $ cd gambit
-    $ ./configure --enable-single-host --enable-debug --enable-rtlib-debug-source
-    $ make bootstrap
-    $ make bootclean
-    $ make -j
-    $ make install
-#+END_EXAMPLE
+  Geiser can be used either directly from its source tree.
 
 * Basic configuration
 
