@@ -50,6 +50,12 @@
   (add-to-list 'geiser-custom--memoized-vars name))
 
 (defmacro geiser-custom--defcustom (name &rest body)
+  "Like `defcustom' but also put NAME on an internal list.
+That list is used by `geiser-reload' to preserve the values
+of the listed variables.  It is not used for anything else."
+  ;; FIXME Remembering the value like this is not actually
+  ;; necessary.  Evaluting `defcustom' always preserves the
+  ;; existing value, if any.
   (declare (doc-string 3) (debug (name body)))
   `(progn
      (geiser-custom--memoize ',name)
