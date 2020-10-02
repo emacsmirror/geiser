@@ -822,6 +822,70 @@ buffer."
       (goto-char (geiser-repl--last-prompt-end)))
     (recenter t)))
 
+(defvar geiser-repl-mode-map
+  (let ((map (make-sparse-keymap)))
+    (set-keymap-parent map comint-mode-map)
+
+    (define-key map "\C-d" 'delete-char)
+    (define-key map "\C-m" 'geiser-repl--maybe-send)
+    (define-key map [return] 'geiser-repl--maybe-send)
+    (define-key map "\C-j" 'geiser-repl--newline-and-indent)
+    (define-key map (kbd "TAB") 'geiser-repl-tab-dwim)
+    (define-key map [backtab] 'geiser-repl--previous-error)
+
+    (define-key map "\C-a" 'geiser-repl--bol)
+    (define-key map (kbd "<home>") 'geiser-repl--bol)
+
+    (geiser-menu--defmenu repl map
+      ("Complete symbol" ((kbd "M-TAB"))
+       completion-at-point :enable (geiser--symbol-at-point))
+      ("Complete module name" ((kbd "C-.") (kbd "M-`"))
+       geiser-completion--complete-module :enable (geiser--symbol-at-point))
+      ("Edit symbol" "\M-." geiser-edit-symbol-at-point
+       :enable (geiser--symbol-at-point))
+      --
+      ("Load scheme file..." "\C-c\C-l" geiser-load-file)
+      ("Switch to module..." "\C-c\C-m" switch-to-geiser-module)
+      ("Import module..." "\C-c\C-i" geiser-repl-import-module)
+      ("Add to load path..." "\C-c\C-r" geiser-add-to-load-path)
+      --
+      ("Previous matching input" "\M-p" comint-previous-matching-input-from-input
+       "Previous input matching current")
+      ("Next matching input" "\M-n" comint-next-matching-input-from-input
+       "Next input matching current")
+      ("Previous prompt" "\C-c\C-p" geiser-repl-previous-prompt)
+      ("Next prompt" "\C-c\C-n" geiser-repl-next-prompt)
+      ("Previous input" "\C-c\M-p" comint-previous-input)
+      ("Next input" "\C-c\M-n" comint-next-input)
+      --
+      ("Interrupt evaluation" ("\C-c\C-k" "\C-c\C-c")
+       geiser-repl-interrupt)
+      --
+      (mode "Autodoc mode" ("\C-c\C-da" "\C-c\C-d\C-a") geiser-autodoc-mode)
+      ("Symbol documentation" ("\C-c\C-dd" "\C-c\C-d\C-d")
+       geiser-doc-symbol-at-point
+       "Documentation for symbol at point" :enable (geiser--symbol-at-point))
+      ("Lookup symbol in manual" ("\C-c\C-di" "\C-c\C-d\C-i")
+       geiser-doc-look-up-manual
+       "Documentation for symbol at point" :enable (geiser--symbol-at-point))
+      ("Module documentation" ("\C-c\C-dm" "\C-c\C-d\C-m") geiser-repl--doc-module
+       "Documentation for module at point" :enable (geiser--symbol-at-point))
+      --
+      ("Clear buffer" "\C-c\M-o" geiser-repl-clear-buffer
+       "Clean up REPL buffer, leaving just a lonely prompt")
+      ("Toggle ()/[]" ("\C-c\C-e\C-[" "\C-c\C-e[") geiser-squarify)
+      ("Insert λ" ("\C-c\\" "\C-c\C-\\") geiser-insert-lambda)
+      --
+      ("Kill Scheme interpreter" "\C-c\C-q" geiser-repl-exit
+       :enable (geiser-repl--live-p))
+      ("Restart" "\C-c\C-z" switch-to-geiser :enable (not (geiser-repl--live-p)))
+
+      --
+      (custom "REPL options" geiser-repl))
+
+    (define-key map [menu-bar completion] 'undefined)
+    map))
+
 (define-derived-mode geiser-repl-mode comint-mode "REPL"
   "Major mode for interacting with an inferior scheme repl process.
 \\{geiser-repl-mode-map}"
@@ -852,65 +916,6 @@ buffer."
 
   ;; enabling compilation-shell-minor-mode without the annoying highlighter
   (compilation-setup t))
-
-(define-key geiser-repl-mode-map "\C-d" 'delete-char)
-(define-key geiser-repl-mode-map "\C-m" 'geiser-repl--maybe-send)
-(define-key geiser-repl-mode-map [return] 'geiser-repl--maybe-send)
-(define-key geiser-repl-mode-map "\C-j" 'geiser-repl--newline-and-indent)
-(define-key geiser-repl-mode-map (kbd "TAB") 'geiser-repl-tab-dwim)
-(define-key geiser-repl-mode-map [backtab] 'geiser-repl--previous-error)
-
-(define-key geiser-repl-mode-map "\C-a" 'geiser-repl--bol)
-(define-key geiser-repl-mode-map (kbd "<home>") 'geiser-repl--bol)
-
-(geiser-menu--defmenu repl geiser-repl-mode-map
-  ("Complete symbol" ((kbd "M-TAB"))
-   completion-at-point :enable (geiser--symbol-at-point))
-  ("Complete module name" ((kbd "C-.") (kbd "M-`"))
-   geiser-completion--complete-module :enable (geiser--symbol-at-point))
-  ("Edit symbol" "\M-." geiser-edit-symbol-at-point
-   :enable (geiser--symbol-at-point))
-  --
-  ("Load scheme file..." "\C-c\C-l" geiser-load-file)
-  ("Switch to module..." "\C-c\C-m" switch-to-geiser-module)
-  ("Import module..." "\C-c\C-i" geiser-repl-import-module)
-  ("Add to load path..." "\C-c\C-r" geiser-add-to-load-path)
-  --
-  ("Previous matching input" "\M-p" comint-previous-matching-input-from-input
-   "Previous input matching current")
-  ("Next matching input" "\M-n" comint-next-matching-input-from-input
-   "Next input matching current")
-  ("Previous prompt" "\C-c\C-p" geiser-repl-previous-prompt)
-  ("Next prompt" "\C-c\C-n" geiser-repl-next-prompt)
-  ("Previous input" "\C-c\M-p" comint-previous-input)
-  ("Next input" "\C-c\M-n" comint-next-input)
-  --
-  ("Interrupt evaluation" ("\C-c\C-k" "\C-c\C-c")
-   geiser-repl-interrupt)
-  --
-  (mode "Autodoc mode" ("\C-c\C-da" "\C-c\C-d\C-a") geiser-autodoc-mode)
-  ("Symbol documentation" ("\C-c\C-dd" "\C-c\C-d\C-d")
-   geiser-doc-symbol-at-point
-   "Documentation for symbol at point" :enable (geiser--symbol-at-point))
-  ("Lookup symbol in manual" ("\C-c\C-di" "\C-c\C-d\C-i")
-   geiser-doc-look-up-manual
-   "Documentation for symbol at point" :enable (geiser--symbol-at-point))
-  ("Module documentation" ("\C-c\C-dm" "\C-c\C-d\C-m") geiser-repl--doc-module
-   "Documentation for module at point" :enable (geiser--symbol-at-point))
-  --
-  ("Clear buffer" "\C-c\M-o" geiser-repl-clear-buffer
-   "Clean up REPL buffer, leaving just a lonely prompt")
-  ("Toggle ()/[]" ("\C-c\C-e\C-[" "\C-c\C-e[") geiser-squarify)
-  ("Insert λ" ("\C-c\\" "\C-c\C-\\") geiser-insert-lambda)
-  --
-  ("Kill Scheme interpreter" "\C-c\C-q" geiser-repl-exit
-   :enable (geiser-repl--live-p))
-  ("Restart" "\C-c\C-z" switch-to-geiser :enable (not (geiser-repl--live-p)))
-
-  --
-  (custom "REPL options" geiser-repl))
-
-(define-key geiser-repl-mode-map [menu-bar completion] 'undefined)
 
 
 ;;; User commands

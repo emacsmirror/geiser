@@ -53,6 +53,12 @@
 
 ;;; Log buffer and mode:
 
+(defvar geiser-messages-mode-map
+  (let ((map (make-sparse-keymap)))
+    (define-key map "c" 'geiser-log-clear)
+    (define-key map "Q" 'geiser-log--deactivate)
+    map))
+
 (define-derived-mode geiser-messages-mode fundamental-mode "Geiser Messages"
   "Simple mode for Geiser log messages buffer."
   (buffer-disable-undo)
@@ -125,9 +131,6 @@ With prefix, activates all logging levels."
   (interactive)
   (setq geiser-log-verbose-p nil)
   (when (eq (current-buffer) (geiser-log--buffer)) (View-quit)))
-
-(define-key geiser-messages-mode-map "c" 'geiser-log-clear)
-(define-key geiser-messages-mode-map "Q" 'geiser-log--deactivate)
 
 
 (provide 'geiser-log)
