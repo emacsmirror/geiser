@@ -63,8 +63,7 @@ switching to the Geiser REPL buffer."
   :group 'geiser-repl)
 
 (geiser-custom--defcustom geiser-repl-window-allow-split t
-  "Whether to allow window splitting when switching to the Geiser
-REPL buffer."
+  "Whether to allow window splitting when switching to the Geiser REPL buffer."
   :type 'boolean
   :group 'geiser-repl)
 
@@ -157,8 +156,7 @@ expression, if any."
 
 When set, Geiser won't check the version of the Scheme
 interpreter when starting a REPL, saving a few tenths of a
-second.
-"
+second."
   :type 'boolean
   :group 'geiser-repl)
 

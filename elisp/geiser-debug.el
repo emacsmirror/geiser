@@ -32,7 +32,7 @@
   "Whether to always display the sexp whose evaluation caused an
 error after the error message in the debug pop-up. If nil,
 expressions shorter than `geiser-debug-long-sexp-lines` lines are
-show before the error message."
+shown before the error message."
   :group 'geiser-debug
   :type 'boolean)
 
@@ -46,7 +46,7 @@ has no effect."
 
 (geiser-custom--defcustom geiser-debug-jump-to-debug-p t
   "When set to t (the default), jump to the debug pop-up buffer
-  in case of evaluation errors.
+in case of evaluation errors.
 
 See also `geiser-debug-show-debug-p`. "
   :group 'geiser-debug
@@ -54,7 +54,7 @@ See also `geiser-debug-show-debug-p`. "
 
 (geiser-custom--defcustom geiser-debug-show-debug-p t
   "When set to t (the default), show the debug pop-up buffer in
-  case of evaluation errors.
+case of evaluation errors.
 
 This option takes effect even if `geiser-debug-jump-to-debug-p`
 is set."

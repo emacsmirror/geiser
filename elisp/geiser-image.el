@@ -38,7 +38,7 @@
 (geiser-custom--defcustom geiser-image-cache-dir nil
   "Default directory where generated images are stored.
 
-If nil,the system wide tmp dir will be used."
+If nil, then the system wide tmp dir will be used."
   :type 'path
   :group 'geiser-image)
 
@@ -46,8 +46,8 @@ If nil,the system wide tmp dir will be used."
   'button geiser-image "image buttons in terminal buffers")
 
 (geiser-impl--define-caller geiser-image--cache-dir image-cache-dir ()
-  "Directory where generated images are stored.  If this function
-returns nil, no images are generated.")
+  "Directory where generated images are stored.
+If this function returns nil, then no images are generated.")
 
 
 

@@ -38,8 +38,8 @@
 (geiser-custom--defcustom geiser-implementations-alist nil
   "A map from regular expressions or directories to implementations.
 When opening a new file, its full path will be matched against
-each one of the regular expressions or directories in this map in order to
-determine its scheme flavour."
+each one of the regular expressions or directories in this map
+in order to determine its scheme flavour."
   :type '(repeat (list (choice (group :tag "Regular expression"
                                       (const regexp) regexp)
                                (group :tag "Directory"
