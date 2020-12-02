@@ -518,9 +518,13 @@ module command as a string")
 (defun geiser-repl--start-repl (impl address)
   (message "Starting Geiser REPL ...")
   (when (not address) (geiser-repl--check-version impl))
-  (let ((buffer (current-buffer)))
+  (let ((buffer (current-buffer))
+        (binary (geiser-repl--binary impl))
+        (arglist (geiser-repl--arglist impl)))
     (geiser-repl--to-repl-buffer impl)
-    (setq geiser-repl--last-scm-buffer buffer))
+    (setq geiser-repl--last-scm-buffer buffer
+          geiser-repl--binary binary
+          geiser-repl--arglist arglist))
   (sit-for 0)
   (goto-char (point-max))
   (geiser-repl--autodoc-mode -1)
@@ -556,9 +560,9 @@ module command as a string")
          (buff (current-buffer))
          (args (cond ((consp address) (list address))
                      ((stringp address) '(()))
-                     (t `(,(geiser-repl--binary impl)
+                     (t `(,(geiser-repl--get-binary impl)
                           nil
-                          ,@(geiser-repl--arglist impl))))))
+                          ,@(geiser-repl--get-arglist impl))))))
     (condition-case err
         (if (and address (stringp address))
             ;; Connect over a Unix-domain socket.
@@ -939,6 +943,18 @@ over a Unix-domain socket."
              (eq 'scheme-mode (with-current-buffer buffer major-mode))
              (eq major-mode 'geiser-repl-mode))
     (setq geiser-repl--last-scm-buffer buffer)))
+
+(make-variable-buffer-local
+ (defvar geiser-repl--binary nil))
+
+(make-variable-buffer-local
+ (defvar geiser-repl--arglist nil))
+
+(defun geiser-repl--get-binary (impl)
+  (or geiser-repl--binary (geiser-repl--binary impl)))
+
+(defun geiser-repl--get-arglist (impl)
+  (or geiser-repl--arglist (geiser-repl--arglist impl)))
 
 (defun switch-to-geiser (&optional ask impl buffer)
   "Switch to running Geiser REPL.
