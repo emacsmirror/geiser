@@ -136,6 +136,8 @@ buffer.")
         (newline 2)
         (and no (> no 0))))))
 
+(declare-function switch-to-geiser "geiser-repl")
+
 (defun geiser-debug--display-retort (what ret &optional res auto-p)
   (let* ((err (geiser-eval--retort-error ret))
          (key (geiser-eval--error-key err))

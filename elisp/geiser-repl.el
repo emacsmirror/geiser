@@ -515,6 +515,8 @@ module command as a string")
       (when (and v r (geiser--version< v r))
         (error "Geiser requires %s version %s but detected %s" impl r v)))))
 
+(defvar geiser-repl--last-scm-buffer)
+
 (defun geiser-repl--start-repl (impl address)
   (message "Starting Geiser REPL ...")
   (when (not address) (geiser-repl--check-version impl))
