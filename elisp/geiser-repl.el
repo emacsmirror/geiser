@@ -694,7 +694,9 @@ If SAVE-HISTORY is non-nil, save CMD in the REPL history."
           (when geiser-repl-delete-last-output-on-exit-p
             (comint-kill-region comint-last-input-start (point)))
           (insert "\nIt's been nice interacting with you!\n")
-          (insert "Press C-c C-z to bring me back.\n"))))))
+          (insert
+           (substitute-command-keys
+            "Press \\[switch-to-geiser] to bring me back.\n")))))))
 
 (defun geiser-repl--on-kill ()
   (geiser-repl--on-quit)
