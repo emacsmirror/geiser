@@ -63,18 +63,18 @@
   "Simple mode for Geiser log messages buffer."
   (buffer-disable-undo)
   (add-hook 'after-change-functions
-            '(lambda (b e len)
-               (let ((inhibit-read-only t))
-                 (when (> b geiser-log--max-buffer-size)
-                   (delete-region (point-min) b))))
+            (lambda (b e len)
+              (let ((inhibit-read-only t))
+                (when (> b geiser-log--max-buffer-size)
+                  (delete-region (point-min) b))))
             nil t)
   ;; Maybe this feature would better be implemented as a revert-buffer function?
   (add-hook 'after-change-functions
-            '(lambda (b e len)
-               (when geiser-log-autoscroll-buffer-p
-                 (let ((my-window (get-buffer-window (geiser-log--buffer) t)))
-                   (when (window-live-p my-window)
-                     (set-window-point my-window (point))))))
+            (lambda (b e len)
+              (when geiser-log-autoscroll-buffer-p
+                (let ((my-window (get-buffer-window (geiser-log--buffer) t)))
+                  (when (window-live-p my-window)
+                    (set-window-point my-window (point))))))
             nil t)
   (setq buffer-read-only t))
 
