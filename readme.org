@@ -27,49 +27,60 @@
 
 * Requirements
 
-    Geiser needs Emacs 24 or better, and at least one of the supported
-    scheme implementations:
+    Geiser needs Emacs 24 or better, and installing also at least one
+    of the supported scheme implementations.
 
-      - Guile 2.2 or better.
-      - Chicken 4.8.0 or better.
-      - MIT/GNU Scheme 9.1.1 or better.
-      - Chibi 0.7.3 or better.
-      - Gambit 4.9.3 or better.
-      - Racket 6.0 or better.
-      - Chez 9.4 or better.
+    The following schemes are supported via an independent package,
+    installable from MELPA:
+
+      - Chez 9.4 or better, via [[https://gitlab.com/emacs-geiser/chez][geiser-chez]]
+      - Chibi 0.7.3 or better, via [[https://gitlab.com/emacs-geiser/chibi][geiser-chibi]]
+      - Chicken 4.8.0 or better, via  [[https://gitlab.com/emacs-geiser/chicken][geiser-chicken]]
+      - Gambit 4.9.3 or better, via [[https://gitlab.com/emacs-geiser/gambit][geiser-gambit]]
+      - Gauche 0.9.6 or better, via [[https://gitlab.com/emacs-geiser/gauche][geiser-gauche]]
+      - Guile 2.2 or better, via  [[https://gitlab.com/emacs-geiser/guile][geiser-guile]]
+      - Kawa 3.1, via [[https://gitlab.com/emacs-geiser/kawa][geiser-kawa]]
+      - MIT/GNU Scheme, via  [[https://gitlab.com/emacs-geiser/mit][geiser-mit]]
+      - Racket 6.0 or better, via [[https://gitlab.com/emacs-geiser/racket][geiser-racket]]
+      - Stklos 1.50, via [[https://gitlab.com/emacs-geiser/stklos][geiser-stklos]]
 
 * Installation
 
   The easiest way is to use MELPA, and just type
-  =M-x package-install RET geiser= inside emacs.
 
-  Geiser can be used either directly from its source tree.
+  =M-x package-install RET geiser-<implementation>=
+
+  inside emacs, or the corresponding =use-package= stanza, for, say
+
+  #+begin_src emacs-lisp
+    (use-package geiser-mit :ensure t)
+  #+end_src
+
+  All the concrete implementation packages depend on the base =geiser=
+  package, so it'll be installed for you.
+
+  Some scheme implementations need additional installation steps to
+  fully support all geiser operations, so please do check their
+  corresponding web pages.
 
 * Basic configuration
 
-  The loading invocations above install all supported Scheme
-  implementations. You can list explicitly the ones that you want by
-  setting the variable =geiser-active-implementations= *before* loading
-  geiser.el. For instance:
-
-#+BEGIN_SRC elisp
-    (setq geiser-active-implementations '(chicken guile))
-#+END_SRC
-
-  On opening a scheme file, Geiser will try to guess its Scheme,
-  defaulting to the first in the list. Use =C-c C-s= to select the
+  When opening a scheme file, Geiser will try to guess its Scheme,
+  defaulting to the first in the list
+  =geiser-active-implementations=. If you've installed more than one
+  geiser package, you can also use =C-c C-s= to select the
   implementation by hand (on a per file basis).
 
-  Check the geiser customization group for some options with:
+  Check the geiser customization group for some other options with:
 
-#+BEGIN_EXAMPLE
+  #+begin_example
       M-x customize-group RET geiser RET
-#+END_EXAMPLE
+  #+end_example
 
   In particular, customize =geiser-<impl>-binary=, which should point
   to an executable in your path.
 
-  To start a REPL, =M-x geiser=.
+  To start a REPL, run =M-x geiser=.
 
 ** Completion with company-mode
 
@@ -81,6 +92,12 @@
     [[http://company-mode.github.io/][company mode]] installed, Geiser's completion will use it. Just
     require company-mode and, from then on, any new scheme buffer or
     REPL will use it.
+
+** Macro expansion with macrostep-geiser
+
+   Geiser offers basic macro expansion in a dedicated buffer.  If you
+   prefer in-buffer, step by step expansion, please take a look at
+   Nikita Bloshchanevich's [[https://github.com/nbfalcon/macrostep-geiser][macrostep-geiser]].
 
 * Quick key reference
 
