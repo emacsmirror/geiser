@@ -49,10 +49,6 @@
 ;; See http://www.nongnu.org/geiser/ for the full manual in HTML form, or
 ;; the the info manual installed by this package.
 
-;;; Commentary:
-
-;; Autoloads and basic setup for geiser.
-
 
 ;;; Code:
 ;;; Locations:
