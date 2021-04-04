@@ -18,14 +18,6 @@ GNU Emacs @value{EMACS_VERSION} (or better: i regularly use it with a
 recent Emacs snapshot) and at least one of the supported Schemes,
 namely:
 
-@set GITLAB https://gitlab.com/emacs-geiser/
-
-@macro supimpl{NAME,URL,VERS,NM}
-@item
-@uref{\VERS\, \NAME\} \VERS\ or better, via @uref{@value{GITLAB}\NM\, geiser-\NM\}
-@end macro
-
-
 @itemize @bullet
 @supimpl{Chez, http://www.scheme.com, 9.4,chez}
 @supimpl{Chibi, http://synthcode.com/scheme/chibi, 0.7.3,chez}
