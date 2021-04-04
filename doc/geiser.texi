@@ -4,55 +4,7 @@
 @settitle Geiser User Manual
 @c %**end of header
 
-@set VERSION 0.13
-@set VERSION_NICK
-@set RELEASE_DATE April 2021
-@set EMACS_VERSION 24.4
-@set GITLAB https://gitlab.com/emacs-geiser/
-
-@macro supimpl{NAME,URL,VERS,NM}
-@item
-@uref{\VERS\, \NAME\} \VERS\ or better, via @uref{@value{GITLAB}\NM\, geiser-\NM\}
-@end macro
-
-@macro altr{LINK, TXT, TLINK, TRAIL}
-@ifhtml
-@ref{\LINK\,,\TXT\}\TRAIL\
-@end ifhtml
-@ifinfo
-@pxref{\LINK\,\TXT\}\TRAIL\
-@end ifinfo
-@iftex
-@ref{\TLINK\}\TRAIL\
-@end iftex
-@ifdocbook
-@ref{\TLINK\}\TRAIL\
-@end ifdocbook
-@end macro
-
-@macro img{FILE, ALIGN}
-@ifhtml
-@html
-<img src="img/\FILE\.png" class="float\ALIGN\"/>
-@end html
-@end ifhtml
-@ifdocbook
-@image{img/\FILE\,,,,.png}
-@end ifdocbook
-@end macro
-
-@macro imgc{FILE}
-@ifhtml
-@html
-<img src="img/\FILE\.png"/>
-@end html
-@end ifhtml
-@ifdocbook
-@image{img/\FILE\,,,,.png}
-@end ifdocbook
-@end macro
-
-
+@include macros.texi
 
 @copying
 This manual documents Geiser, an Emacs environment to hack in Scheme.
