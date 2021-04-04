@@ -1,4 +1,4 @@
-# Copyright (C) 2010, 2020 Jose Antonio Ortega Ruiz
+# Copyright (C) 2010, 2020, 2021 Jose Antonio Ortega Ruiz
 #
 # This file is free software; as a special exception the author gives
 # unlimited permission to copy and/or distribute it, with or without
@@ -10,6 +10,10 @@
 
 top_srcdir=..
 output_dir=html
+port ?= 8082
+
+clean:
+	rm -f $(output_dir)/*.html
 
 web:
 	rm -f $(output_dir)/*.html
@@ -22,3 +26,6 @@ web:
                   $(top_srcdir)/doc/web.texi
 	cp $(top_srcdir)/doc/geiser.css ${output_dir}
 	cp -r $(top_srcdir)/doc/img ${output_dir}
+
+http: web
+	cd $(output_dir) && python -m http.server $(port)
