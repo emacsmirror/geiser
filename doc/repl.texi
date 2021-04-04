@@ -1,4 +1,4 @@
-@node The REPL
+@node The REPL, Between the parens, Installation, Top
 @chapter The REPL
 @anchor{quick-start}
 If you've followed the instructions in @ref{Installation}, your Emacs is

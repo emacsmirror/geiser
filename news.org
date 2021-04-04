@@ -1,3 +1,8 @@
+
+* Version 0.13 (March, 2021)
+
+  - Split into per-scheme projects
+
 * Version 0.12 (July 2020)
 
   - New project.el and projectile support (Andrew Whatson)
