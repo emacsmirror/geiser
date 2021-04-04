@@ -20,9 +20,6 @@
 (defconst geiser-elisp-dir (file-name-directory load-file-name)
   "Directory containing Geiser's Elisp files.")
 
-;;;###autoload
-(add-to-list 'load-path (directory-file-name geiser-elisp-dir))
-
 
 ;;; Autoloads:
 
@@ -91,7 +88,5 @@
 ;;;###autoload
 (add-hook 'scheme-mode-hook 'geiser-mode--maybe-activate)
 
-
 (provide 'geiser)
-
 ;;; geiser.el ends here
