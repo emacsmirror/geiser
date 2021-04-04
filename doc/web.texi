@@ -7,7 +7,6 @@
 @node Top, Introduction, (dir), (dir)
 
 @include top.texi
-@vblurb{}
 
 @menu
 * Introduction::
@@ -22,8 +21,8 @@
 @html
 <br/>
 <div class="navigation" align="right">
-<a class="navlink" href="https://gitlab.com/jaor/geiser/issues">Bugs</a>&nbsp;&nbsp;&nbsp;&nbsp;
-<a class="navlink" href="https://gitlab.com/jaor/geiser.git">Source</a>&nbsp;&nbsp;&nbsp;&nbsp;
+<a class="navlink" href="https://gitlab.com/groups/emacs-geiser/-/issues">Bugs</a>&nbsp;&nbsp;&nbsp;&nbsp;
+<a class="navlink" href="https://gitlab.com/emacs-geiser">Source</a>&nbsp;&nbsp;&nbsp;&nbsp;
 <a class="navlink" href="http://lists.nongnu.org/mailman/listinfo/geiser-users">Mailing list</a>&nbsp;
 </div>
 @end html

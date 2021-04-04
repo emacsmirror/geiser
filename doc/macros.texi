@@ -1,42 +1,7 @@
-@set VERSION 0.12
+@set VERSION 0.13
 @set VERSION_NICK
-@set RELEASE_DATE February 2020
-@set GUILE_VERSION 2.2
-@set RACKET_VERSION 6.0
-@set CHICKEN_VERSION 4.8.0
-@set MIT_VERSION 9.1
-@set CHIBI_VERSION 0.7
-@set CHEZ_VERSION 9.4
-@set GAMBIT_VERSION 4.9
-@set EMACS_VERSION 24
-@set RELEASES https://gitlab.com/jaor/geiser/-/releases
-@set DOWN_BASE http://download-mirror.savannah.gnu.org/@/releases/@/geiser
-@set PACKAGE_REPO @value{DOWN_BASE}/@/packages
-@set PACKAGE @value{PACKAGE_REPO}/@/geiser-@value{VERSION}.tar
-@set TARBALL geiser-@value{VERSION}.tar.gz
-
-@macro downfile{FILE, CAPT}
-@uref{@value{DOWN_BASE}/@/@value{VERSION}/@/\FILE\, \CAPT\}
-@end macro
-
-
-@macro releasesref{CAPT}
-@uref{@value{RELEASES}, \CAPT\}
-@end macro
-
-@macro vblurb{}
-@html
-<div class="version" align="right">
-@end html
-@uref{@value{RELEASES}, Version @value{VERSION} @value{VERSION_NICK}
-(@value{RELEASE_DATE}) for Guile @value{GUILE_VERSION} Chicken
-@value{CHICKEN_VERSION} GNU/MIT  @value{MIT_VERSION} Chez
-@value{CHEZ_VERSION} Chibi @value{CHIBI_VERSION} Gambit
-@value{GAMBIT_VERSION} and Racket @value{RACKET_VERSION}}
-@html
-</div>
-@end html
-@end macro
+@set RELEASE_DATE April 2021
+@set EMACS_VERSION 24.4
 
 @macro altr{LINK, TXT, TLINK, TRAIL}
 @ifhtml

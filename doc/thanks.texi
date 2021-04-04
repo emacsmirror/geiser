@@ -70,14 +70,8 @@ gmane.lisp.scheme.geiser}.
 @item
 @cindex bug tracker
 You can submit bug reports either to the mailing list or to
-@uref{https://gitlab.com/@/jaor/geiser/issues, our bug tracker} over at
+@uref{https://gitlab.com/groups/emacs-geiser/-/issues, our bug tracker} over at
 Gitlab.
-@item
-@cindex news feed
-If you only need to hear about Geiser on new releases,
-@uref{http://savannah.nongnu.org/@/news/?group=geiser, the News page} and
-its @uref{https://savannah.nongnu.org/@/news/atom.php?group=geiser, Atom
-feed} are probably what you're looking for.
 @item
 @cindex IRC channel
 The Freenode IRC channel @i{#geiser} is the Geiserati's meeting point in

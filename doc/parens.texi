@@ -35,7 +35,7 @@ process giving you the REPL, make those Scheme buffers come to life.
 @cindex geiser-mode
 @img{geiser-mode, right}
 With Geiser installed following any of the
-procedures described in @ref{The easy and quick way} or @ref{From the
+procedures described in @ref{The quick and easy way} or @ref{From the
 source's mouth}, Emacs will automatically activate @i{geiser-mode} when
 opening a Scheme buffer.  Geiser also instructs Emacs to consider files
 with the extension @file{rkt} part of the family, so that, in principle,

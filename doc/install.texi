@@ -3,12 +3,12 @@
 
 @menu
 * Must needs::
-* The easy and quick way::
+* The quick and easy way::
 * From the source's mouth::
 * Friends::
 @end menu
 
-@node Must needs, The easy and quick way, Installation, Installation
+@node Must needs, The quick and easy way, Installation, Installation
 @section Must needs
 
 @cindex supported versions
@@ -18,37 +18,36 @@ GNU Emacs @value{EMACS_VERSION} (or better: i regularly use it with a
 recent Emacs snapshot) and at least one of the supported Schemes,
 namely:
 
+@set GITLAB https://gitlab.com/emacs-geiser/
+
+@macro supimpl{NAME,URL,VERS,NM}
+@item
+@uref{\VERS\, \NAME\} \VERS\ or better, via @uref{@value{GITLAB}\NM\, geiser-\NM\}
+@end macro
+
+
 @itemize @bullet
-@item
-@uref{http://www.gnu.org/software/guile, Guile} @value{GUILE_VERSION} or
-better
-@item
-@uref{http://call-cc.org, Chicken} @value{CHICKEN_VERSION} or better
-@item
-@uref{https://www.gnu.org/software/mit-scheme/, MIT/GNU Scheme}
-@value{MIT_VERSION} or better
-@item
-@uref{http://synthcode.com/scheme/chibi/, Chibi Scheme}
-@value{CHIBI_VERSION} or better
-@item
-@uref{http://www.scheme.com, Chez Scheme} @value{CHEZ_VERSION} or better
-@item
-@uref{http://gambitscheme.org/wiki/index.php/Main_Page, Gambit}
-@value{GAMBIT_VERSION} or better
-@item
-@uref{http://www.racket-lang.org, Racket} @value{RACKET_VERSION} or better
+@supimpl{Chez, http://www.scheme.com, 9.4,chez}
+@supimpl{Chibi, http://synthcode.com/scheme/chibi, 0.7.3,chez}
+@supimpl{Chicken, http://call-cc.org, 4.8.0, chicken}
+@supimpl{Gambit, http://gambitscheme.org/wiki/index.php/Main_Page, 4.9.3, gambit}
+@supimpl{Gauche, http://practical-scheme.net/gauche/, 0.9.6, gauche}
+@supimpl{Guile, http://www.gnu.org/software/guile, 2.2, guile}
+@supimpl{GNU Kawa, http://www.gnu.org/software/kawa/index.html, 3.1, kawa}
+@supimpl{MIT/GNU Scheme, https://www.gnu.org/software/mit-scheme, 9.0, mit}
+@supimpl{Racket, http://www.racket-lang.org, 7.0, racket}
+@supimpl{Stklos, https://stklos.net/, 1.50, stklos}
 @end itemize
 
 Since Geiser supports multiple REPLs, having all of them will just add
 to the fun.
 
-You'll also need Geiser itself.  The quickest installation is via its
-ELPA package, as described in the next section.  If you prefer to use
-the source code directly, it's not that difficult either: just keep on
-reading.
+You'll also need Geiser itself.  The quickest installation is via your
+favourite implementation's ELPA packages (as of this writing, they're
+all available in MELPA).
 
-@node The easy and quick way, Chicken installation, Must needs, Installation
-@section The easy and quick way
+@node The quick and easy way, From the source's mouth, Must needs, Installation
+@section The quick and easy way
 
 @cindex quick install
 @cindex ELPA
@@ -78,16 +77,20 @@ repo).  To tell Emacs that an ELPA repo exists, you add it to
 (package-initialize)
 @end example
 
-And then installing Geiser is as easy as:
+And then installing your favourite Geiser is as easy as (if, say, you're
+a MIT aficionado):
 
 @example
-M-x package-install RET geiser RET
+M-x package-install RET geiser-mit RET
 @end example
 
-Unless you are using Gambit or Chicken, with that, you are pretty much
-all set up.  See @ref{The REPL} to start using Geiser.  If you plan to
-use Chicken or Gambit, just keep reading below for a few additional
-instructions to set up your environment.
+Rinse and repeat for each of the scheme implementations that you would
+like to use.  Some of them (e.g. Gambit or Chicken) have a bit of
+additional setup, specific to them, so make sure you also check their
+respective package documentation.
+
+With that, you are pretty much all set up.  See @ref{The REPL} to start
+using Geiser.
 
 @ifnotinfo
 And, by the way, if you prefer to keep reading this manual within Emacs,
@@ -95,59 +98,28 @@ And, by the way, if you prefer to keep reading this manual within Emacs,
 you just installed!
 @end ifnotinfo
 
-@node From the source's mouth, Friends, Gambit installation, Installation
+@node From the source's mouth, Friends, The quick and easy way, Installation
 @section Installing from source
 
-@subsubheading Downloading Geiser
-
-@cindex use the source, Luke
-The latest release tarballs can be found @releasesref{here}.
-
-If you feel like living on the bleeding edge, just grab Geiser from its
-Git repository @uref{http://git.savannah.nongnu.org/cgit/geiser.git/, over
-at Savannah}, either with the following incantation:
-
-@example
-git clone git://git.sv.gnu.org/geiser.git
-@end example
-
-@noindent or, if you happen to live behind a firewall, with the alternative:
-
-@example
-git clone http://git.sv.gnu.org/r/geiser.git
-@end example
-
-@noindent
-You can also follow Geiser's development in
-@uref{https://gitlab.com/jaor/geiser, one}
-@uref{http://repo.or.cz/w/geiser.git, or}
-@uref{http://gitorious.org/geiser, three} mirrors that are kept
-synchronized with the one at Savannah.
-
-Either way, you'll now be in possession of a copy of Geiser's libre
-code.  I'll follow you into its directory and the next section.
-
-@subsubheading Setting it up
-
-Geiser is ready to be used out of the box without much more ado.  For the
-sake of concreteness, let's assume you put its source in the directory
-@file{~/lisp/geiser}.  All you need to do is to add the following
-line to your Emacs initialisation file (be it @file{~/.emacs},
+All Geiser packages are ready to be used out of the box without much
+more ado.  For the sake of concreteness, let's assume you put its source
+in the directory @file{~/lisp/geiser}.  All you need to do is to add the
+following line to your Emacs initialisation file (be it @file{~/.emacs},
 @file{~/.emacs.d/init.el} or any of its moral equivalents):
 
 @example
-(load-file "~/lisp/geiser/elisp/geiser.el")
+(add-to-list 'load-path "~/lisp/geiser/elisp")
 @end example
 
-@noindent
-or simply evaluate that form inside Emacs (you wouldn't kill a friend
-just to start using Geiser, would you?).  That's it: you're ready to
-@ifhtml
-@ref{quick-start,,go}.
-@end ifhtml
-@ifnothtml
-go (@pxref{The REPL}).
-@end ifnothtml
+and, if your, say, @code{geiser-gambit} checkout lives in
+@file{~/lisp/geiser-mit} add to that:
+
+@example
+(add-to-list 'load-path "~/lisp/geiser-gambit")
+@end example
+
+The autoloads defined in those packages should be enough to start
+scheming.
 
 @node Friends,  , From the source's mouth, Installation
 @section Friends
@@ -159,7 +131,7 @@ by) the following Emacs packages:
 @cindex autocomplete
 @cindex paredit
 @cindex company
-@cindex quack
+@cindex macrostep
 @itemize @bullet
 @item @uref{http://www.emacswiki.org/emacs/ParEdit, Paredit}.
 @anchor{paredit}
@@ -170,6 +142,9 @@ editing mode.
 Nikolaj Schumacher's and Dmitry Gutov's @code{company-mode} provides a
 generic front-end for completion engines (such as Geiser's), with pretty
 and automatic completion lists.
+@item @uref{https://github.com/nbfalcon/macrostep-geiser, macrostep-geiser}
+provides support for in-buffer macro expansion, using the
+@uref{https://github.com/joddie/macrostep, macrostep} package.
 @item @uref{https://github.com/xiaohanyu/ac-geiser/, ac-geiser}
 If you prefer @code{auto-complete-mode} to @code{company-mode}, Xiao
 Hanyu's @code{ac-geiser}, which provides a Geiser plugin for the
