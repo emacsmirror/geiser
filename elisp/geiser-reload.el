@@ -1,6 +1,6 @@
 ;;; geiser-reload.el -- unload/load geiser packages
 
-;; Copyright (C) 2009, 2010, 2012, 2020 Jose Antonio Ortega Ruiz
+;; Copyright (C) 2009, 2010, 2012, 2020, 2021 Jose Antonio Ortega Ruiz
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the Modified BSD License. You should
@@ -17,7 +17,6 @@
 (require 'geiser-custom)
 (require 'geiser-base)
 (require 'geiser)
-(require 'geiser-install nil t)
 
 
 ;;; Reload:
@@ -46,7 +45,6 @@
            geiser-popup
            geiser-base
            geiser-version
-           geiser-install
            geiser
            )))
 
