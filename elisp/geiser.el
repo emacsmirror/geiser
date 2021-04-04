@@ -1,6 +1,6 @@
 ;;; geiser.el --- GNU Emacs and Scheme talk to each other
 
-;; Copyright (C) 2009, 2010, 2011, 2012, 2013, 2015, 2018, 2020 Jose Antonio Ortega Ruiz
+;; Copyright (C) 2009, 2010, 2011, 2012, 2013, 2015, 2018, 2020, 2021 Jose Antonio Ortega Ruiz
 ;; URL: http://www.nongnu.org/geiser/
 
 ;; This program is free software; you can redistribute it and/or
@@ -54,74 +54,6 @@
 ;;;###autoload
 (autoload 'switch-to-geiser "geiser-repl"
   "Switch to a running one Geiser REPL." t)
-
-;;;###autoload
-(autoload 'run-chez "geiser-chez" "Start a Geiser Chez REPL." t)
-
-;;;###autoload
-(autoload 'switch-to-chez "geiser-chez"
-  "Start a Geiser Chez REPL, or switch to a running one." t)
-
-;;;###autoload
-(autoload 'run-guile "geiser-guile" "Start a Geiser Guile REPL." t)
-
-;;;###autoload
-(autoload 'switch-to-guile "geiser-guile"
-  "Start a Geiser Guile REPL, or switch to a running one." t)
-
-;;;###autoload
-(autoload 'connect-to-guile "geiser-guile"
-  "Connect to a remote Geiser Guile REPL." t)
-
-;;;###autoload
-(autoload 'run-gambit "geiser-gambit" "Start a Geiser Gambit REPL." t)
-
-;;;###autoload
-(autoload 'switch-to-gambit "geiser-gambit"
-  "Start a Geiser Gambit REPL, or switch to a running one." t)
-
-;;;###autoload
-(autoload 'connect-to-gambit "geiser-gambit"
-  "Connect to a remote Geiser Gambit REPL." t)
-
-;;;###autoload
-(autoload 'run-racket "geiser-racket" "Start a Geiser Racket REPL." t)
-
-;;;###autoload
-(autoload 'run-gracket "geiser-racket" "Start a Geiser GRacket REPL." t)
-
-;;;###autoload
-(autoload 'switch-to-racket "geiser-racket"
-  "Start a Geiser Racket REPL, or switch to a running one." t)
-
-;;;###autoload
-(autoload 'connect-to-racket "geiser-racket"
-  "Connect to a remote Geiser Racket REPL." t)
-
-;;;###autoload
-(autoload 'run-chicken "geiser-chicken" "Start a Geiser Chicken REPL." t)
-
-;;;###autoload
-(autoload 'switch-to-chicken "geiser-chicken"
-  "Start a Geiser Chicken REPL, or switch to a running one." t)
-
-;;;###autoload
-(autoload 'connect-to-chicken "geiser-chicken"
-  "Connect to a remote Geiser Chicken REPL." t)
-
-;;;###autoload
-(autoload 'run-mit "geiser-mit" "Start a Geiser MIT/GNU Scheme REPL." t)
-
-;;;###autoload
-(autoload 'switch-to-mit "geiser-mit"
-  "Start a Geiser MIT/GNU Scheme REPL, or switch to a running one." t)
-
-;;;###autoload
-(autoload 'run-chibi "geiser-chibi" "Start a Geiser Chibi Scheme REPL." t)
-
-;;;###autoload
-(autoload 'switch-to-chibi "geiser-chibi"
-  "Start a Geiser Chibi Scheme REPL, or switch to a running one." t)
 
 ;;;###autoload
 (autoload 'geiser-mode "geiser-mode"
