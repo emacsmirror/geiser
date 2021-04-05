@@ -105,6 +105,9 @@
 (autoload 'geiser-mode--maybe-activate "geiser-mode")
 
 ;;;###autoload
+(autoload 'geiser-activate-implementation "geiser-impl")
+
+;;;###autoload
 (mapc (lambda (group)
         (custom-add-load group (symbol-name group))
         (custom-add-load 'geiser (symbol-name group)))

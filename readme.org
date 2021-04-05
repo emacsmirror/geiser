@@ -22,8 +22,8 @@
     - Support for inline images in schemes, such as Racket, that treat
       them as first order values.
 
-   NOTE: if you're not in a hurry, [[http://www.nongnu.org/geiser/][Geiser's website]] contains a much
-   nicer manual.
+   If you're not in a hurry, [[http://www.nongnu.org/geiser/][Geiser's website]] contains a much nicer
+   manual.
 
 * Requirements
 
