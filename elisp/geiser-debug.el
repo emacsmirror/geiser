@@ -1,6 +1,6 @@
 ;;; geiser-debug.el -- displaying debug information and evaluation results
 
-;; Copyright (C) 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2020 Jose Antonio Ortega Ruiz
+;; Copyright (C) 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2020, 2021 Jose Antonio Ortega Ruiz
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the Modified BSD License. You should
@@ -21,6 +21,8 @@
 (require 'geiser-base)
 (require 'geiser-image)
 
+(require 'ansi-color)
+
 
 ;;; Customization:
 
@@ -33,7 +35,6 @@
 error after the error message in the debug pop-up. If nil,
 expressions shorter than `geiser-debug-long-sexp-lines` lines are
 shown before the error message."
-  :group 'geiser-debug
   :type 'boolean)
 
 (geiser-custom--defcustom geiser-debug-long-sexp-lines 6
@@ -41,7 +42,6 @@ shown before the error message."
 of the debug pop-up (after the error message). If
 `geiser-debug-always-display-sexp-after-p` is t, this variable
 has no effect."
-  :group 'geiser-debug
   :type 'int)
 
 (geiser-custom--defcustom geiser-debug-jump-to-debug-p t
@@ -49,7 +49,6 @@ has no effect."
 in case of evaluation errors.
 
 See also `geiser-debug-show-debug-p`. "
-  :group 'geiser-debug
   :type 'boolean)
 
 (geiser-custom--defcustom geiser-debug-show-debug-p t
@@ -58,7 +57,6 @@ case of evaluation errors.
 
 This option takes effect even if `geiser-debug-jump-to-debug-p`
 is set."
-  :group 'geiser-debug
   :type 'boolean)
 
 (geiser-custom--defcustom geiser-debug-auto-display-images-p t
@@ -66,8 +64,22 @@ is set."
 images when they're evaluated.
 
 See also `geiser-repl-auto-display-images-p'."
-  :group 'geiser-debug
   :type 'boolean)
+
+(geiser-custom--defcustom geiser-debug-treat-ansi-colors nil
+  "Colorize ANSI escape sequences produced by the scheme process.
+
+Some schemes are able to colorize their evaluation or error
+results using ANSI color sequences (e.g. when using the the
+colorized module in Guile).
+
+If set to `nil', no special treatment is applied to output.  The
+symbol colors indicates colorizing the display of the Geiser dbg
+buffer using any color escape, and the symbol remove to remove
+all ANSI sequences."
+  :type '(choice (const :tag "No special treatment" nil)
+                 (const :tag "Use font lock for colors" colors)
+                 (const :tag "Remove all ANSI codes" remove)))
 
 
 ;;; Debug buffer mode:
@@ -166,6 +178,9 @@ buffer.")
         (goto-char (point-max))
         (insert "\nExpression evaluated was:\n\n")
         (geiser-debug--display-error impl module nil what))
+      (case geiser-debug-treat-ansi-colors
+        (colors (ansi-color-apply-on-region (point-min) (point)))
+        (remove (ansi-color-filter-region (point-min) (point))))
       (goto-char (point-min)))
     (when (or img dbg)
       (when (or geiser-debug-jump-to-debug-p geiser-debug-show-debug-p)
