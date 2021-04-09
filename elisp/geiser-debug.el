@@ -12,6 +12,8 @@
 
 ;;; Code:
 
+(eval-when-compile (require 'cl-macs))
+
 (require 'geiser-edit)
 (require 'geiser-autodoc)
 (require 'geiser-impl)
@@ -178,7 +180,7 @@ buffer.")
         (goto-char (point-max))
         (insert "\nExpression evaluated was:\n\n")
         (geiser-debug--display-error impl module nil what))
-      (case geiser-debug-treat-ansi-colors
+      (cl-case geiser-debug-treat-ansi-colors
         (colors (ansi-color-apply-on-region (point-min) (point)))
         (remove (ansi-color-filter-region (point-min) (point))))
       (goto-char (point-min)))
