@@ -13,7 +13,7 @@
 ;; Homepage: https://gitlab.com/emacs-geiser/
 ;; Package-Requires: ((emacs "24.4"))
 ;; SPDX-License-Identifier: BSD-3-Clause
-;; Version: 0.13
+;; Version: 0.14
 
 ;;; Commentary:
 
