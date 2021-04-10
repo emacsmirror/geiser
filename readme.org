@@ -25,7 +25,7 @@
    If you're not in a hurry, [[http://www.nongnu.org/geiser/][Geiser's website]] contains a much nicer
    manual.
 
-* Requirements
+* Supported schemes
 
     Geiser needs Emacs 24 or better, and installing also at least one
     of the supported scheme implementations.
@@ -46,22 +46,36 @@
 
 * Installation
 
-  The easiest way is to use MELPA, and just type
+*** Using MELPA
 
-  =M-x package-install RET geiser-<implementation>=
+    The easiest way is to use MELPA, and just type
 
-  inside emacs, or the corresponding =use-package= stanza, for, say
+    =M-x package-install RET geiser-<implementation>=
 
-  #+begin_src emacs-lisp
-    (use-package geiser-mit :ensure t)
-  #+end_src
+    inside emacs, or the corresponding =use-package= stanza, for, say
 
-  All the concrete implementation packages depend on the base =geiser=
-  package, so it'll be installed for you.
+    #+begin_src emacs-lisp
+      (use-package geiser-mit :ensure t)
+    #+end_src
 
-  Some scheme implementations need additional installation steps to
-  fully support all geiser operations, so please do check their
-  corresponding web pages.
+    All the concrete implementation packages depend on the base =geiser=
+    package, so it'll be installed for you.
+
+*** From a repository checkout
+
+    If you are not using MELPA, just put this repository's ~elisp~
+    directory and the target's scheme directory in your load path and
+    require the latter:
+
+    #+begin_src emacs-lisp
+      (add-to-list 'load-path "<geiser checkout dir>/elisp")
+      (add-to-list 'load-path "<geiser-mit checkout dir>")
+      (require 'geiser-mit)
+    #+end_src
+
+    Some scheme implementations need additional installation steps to
+    fully support all geiser operations, so please do check their
+    corresponding web pages.
 
 * Basic configuration
 
@@ -181,24 +195,21 @@
     - =q= to bury buffer.
 
 * How to support a new scheme implementation
-  Geiser works by running an instance of a REPL, or remotely connecting
-  to one, and evaluating the scheme code it sees there. Then, every time
-  it needs to perform some operation (like, say, printing autodoc,
-  jumping to a source location or expanding a macro), it asks the
-  running scheme instance for that information.
+  Geiser works by running an instance of a REPL, or remotely
+  connecting to one, and evaluating the scheme code it sees
+  there. Then, every time it needs to perform some operation (like,
+  say, printing autodoc, jumping to a source location or expanding a
+  macro), it asks the running scheme instance for that information.
 
   So supporting a new scheme usually means writing a small scheme
   library that provides that information on demand, and then some
-  standard elisp functions that invoke the procedures in that
-  library.
+  standard elisp functions that invoke the procedures in that library.
 
   To see what elisp functions one needs to implement, just execute the
   command `M-x geiser-implementation-help` inside emacs with a recent
   version of geiser installed. And then take a look at, say,
-  geiser-guile.el or geiser-racket.el for examples of how those
-  functions are implemented for concrete schemes (those are the most
-  featureful implementations we have, so perhaps it's easier to begin
-  with something like geiser-chicken.el or geiser-chibi.el).
+  [[https://gitlab.com/emacs-geiser/guile/-/blob/master/geiser-guile.el][geiser-guile.el]] for examples of how those functions are implemented
+  for concrete schemes.
 
   Not all schemes can provide introspective information to implement all
   the functionality that geiser tries to offer.  That is okay: you can
