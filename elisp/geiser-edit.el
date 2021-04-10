@@ -1,6 +1,6 @@
 ;;; geiser-edit.el -- scheme edit locations
 
-;; Copyright (C) 2009, 2010, 2012, 2013, 2019, 2020 Jose Antonio Ortega Ruiz
+;; Copyright (C) 2009, 2010, 2012, 2013, 2019, 2020, 2021 Jose Antonio Ortega Ruiz
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the Modified BSD License. You should
@@ -110,8 +110,8 @@ or following links in error buffers.")
         (file (geiser-edit--location-file loc))
         (line (geiser-edit--location-line loc))
         (col (geiser-edit--location-column loc)))
-    (unless file (error "Couldn't find edit location for '%s'" symbol))
-    (unless (file-readable-p file) (error "Couldn't open '%s' for read" file))
+    (unless file (error "Couldn't find edit location for %s" symbol))
+    (unless (file-readable-p file) (error "%s is not readable" file))
     (geiser-edit--visit-file file (or method geiser-edit-symbol-method))
     (geiser-edit--goto-line symbol line)
     (when col
@@ -238,14 +238,16 @@ With prefix, asks for the symbol to edit."
                      (geiser-completion--read-symbol "Edit symbol: ")))
          (cmd `(:eval (:ge symbol-location ',symbol)))
          (marker (point-marker)))
-    (condition-case-unless-debug err-of-sym
+    (condition-case-unless-debug sym-err
         (progn (geiser-edit--try-edit symbol (geiser-eval--send/wait cmd))
                (when marker (xref-push-marker-stack marker)))
-      (error (condition-case-unless-debug err-of-mod
+      (error (condition-case-unless-debug  mod-err
                  (geiser-edit-module-at-point)
-               (error (error "Geiser:cannot edit symbol at point\nSymbol error message:%s\nModule error message:%s"
-                             (error-message-string err-of-sym)
-                             (error-message-string err-of-mod))))))))
+               (error
+                (geiser-log--warn "Error in symbol lookup (%s, %s)"
+                                  (error-message-string sym-err)
+                                  (error-message-string mod-err))
+                (error "Symbol not found (%s)" symbol)))))))
 
 (defun geiser-pop-symbol-stack ()
   "Pop back to where \\[geiser-edit-symbol-at-point] was last invoked."
