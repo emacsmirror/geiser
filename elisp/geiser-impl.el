@@ -239,6 +239,10 @@ switcher (switch-to-NAME), and provides geiser-NAME."
   (add-to-list 'geiser-implementations-alist
                (list (list kind what) impl) append))
 
+(defun geiser-implementation-extension (impl ext)
+  "Add to `geiser-implementations-alist' an entry for extension EXT."
+  (geiser-impl--add-to-alist 'regexp (format "\\.%s$" ext) impl t))
+
 
 ;;; Trying to guess the scheme implementation:
 

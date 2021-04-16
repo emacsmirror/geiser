@@ -105,7 +105,12 @@
 (autoload 'geiser-mode--maybe-activate "geiser-mode")
 
 ;;;###autoload
-(autoload 'geiser-activate-implementation "geiser-impl")
+(autoload 'geiser-activate-implementation "geiser-impl"
+  "Register the given implementation as active.")
+
+;;;###autoload
+(autoload 'geiser-implementation-extension "geiser-impl"
+  "Register a file extension as handled by a given implementation.")
 
 ;;;###autoload
 (mapc (lambda (group)
