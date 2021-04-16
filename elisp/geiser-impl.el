@@ -234,6 +234,7 @@ switcher (switch-to-NAME), and provides geiser-NAME."
            (switch-to-geiser ,ask ',name))
          (geiser-menu--add-impl ',name ',runner ',switcher)))))
 
+;;;###autoload
 (defun geiser-impl--add-to-alist (kind what impl &optional append)
   (add-to-list 'geiser-implementations-alist
                (list (list kind what) impl) append))
