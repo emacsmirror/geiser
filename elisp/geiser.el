@@ -13,7 +13,7 @@
 ;; Homepage: https://gitlab.com/emacs-geiser/
 ;; Package-Requires: ((emacs "24.4"))
 ;; SPDX-License-Identifier: BSD-3-Clause
-;; Version: 0.14
+;; Version: 0.15
 
 ;;; Commentary:
 
@@ -102,9 +102,6 @@
   "Disable Geiser's mode (useful in Scheme buffers)." t)
 
 ;;;###autoload
-(autoload 'geiser-mode--maybe-activate "geiser-mode")
-
-;;;###autoload
 (autoload 'geiser-activate-implementation "geiser-impl"
   "Register the given implementation as active.")
 
@@ -129,6 +126,9 @@
 
 
 ;;; Setup:
+
+;;;###autoload
+(autoload 'geiser-mode--maybe-activate "geiser-mode")
 
 ;;;###autoload
 (add-hook 'scheme-mode-hook 'geiser-mode--maybe-activate)
