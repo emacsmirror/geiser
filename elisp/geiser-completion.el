@@ -176,9 +176,8 @@ we're looking for a module name.")
 
 ;;; Smart tab mode:
 
-(make-variable-buffer-local
- (defvar geiser-smart-tab-mode-string " SmartTab"
-   "Modeline indicator for geiser-smart-tab-mode"))
+(defvar-local geiser-smart-tab-mode-string " SmartTab"
+  "Modeline indicator for geiser-smart-tab-mode")
 
 (define-minor-mode geiser-smart-tab-mode
   "Toggle smart tab mode.

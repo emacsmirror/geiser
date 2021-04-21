@@ -57,8 +57,7 @@ in order to determine its scheme flavour."
 
 (geiser-custom--memoize 'geiser-impl--load-files)
 
-(make-variable-buffer-local
- (defvar geiser-impl--implementation nil))
+(defvar-local geiser-impl--implementation nil)
 
 (defsubst geiser-impl--impl-str (&optional impl)
   (let ((impl (or impl geiser-impl--implementation)))
@@ -246,10 +245,9 @@ switcher (switch-to-NAME), and provides geiser-NAME."
 
 ;;; Trying to guess the scheme implementation:
 
-(make-variable-buffer-local
- (defvar geiser-scheme-implementation nil
-   "Set this buffer local variable to specify the Scheme
-implementation to be used by Geiser."))
+(defvar-local geiser-scheme-implementation nil
+  "Set this buffer local variable to specify the Scheme
+implementation to be used by Geiser.")
 
 (put 'geiser-scheme-implementation 'safe-local-variable 'symbolp)
 

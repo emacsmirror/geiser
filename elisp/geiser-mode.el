@@ -340,9 +340,8 @@ With prefix, try to enter the current buffer's module."
 
 ;;; Geiser mode:
 
-(make-variable-buffer-local
- (defvar geiser-mode-string nil
-   "Modeline indicator for geiser-mode"))
+(defvar-local geiser-mode-string nil
+  "Modeline indicator for geiser-mode")
 
 (defun geiser-mode--lighter ()
   (or geiser-mode-string

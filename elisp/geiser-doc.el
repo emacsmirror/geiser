@@ -131,8 +131,7 @@ help (e.g. browse an HTML page) implementing this method.")
           (let ((geiser-eval--get-module-function (lambda (x) module)))
             (geiser-doc-symbol target module impl)))))))
 
-(make-variable-buffer-local
- (defvar geiser-doc--buffer-link nil))
+(defvar-local geiser-doc--buffer-link nil)
 
 (defsubst geiser-doc--implementation ()
   (geiser-doc--link-impl geiser-doc--buffer-link))

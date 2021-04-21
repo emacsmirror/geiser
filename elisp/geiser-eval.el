@@ -24,8 +24,7 @@
 
 ;;; Plug-able functions:
 
-(make-variable-buffer-local
- (defvar geiser-eval--get-module-function nil))
+(defvar-local geiser-eval--get-module-function nil)
 (set-default 'geiser-eval--get-module-function nil)
 
 (defvar geiser-eval--get-impl-module nil)

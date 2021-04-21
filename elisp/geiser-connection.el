@@ -27,8 +27,7 @@
 
 ;;; Buffer connections:
 
-(make-variable-buffer-local
- (defvar geiser-con--connection nil))
+(defvar-local geiser-con--connection nil)
 
 (defun geiser-con--get-connection (buffer/proc)
   (if (processp buffer/proc)

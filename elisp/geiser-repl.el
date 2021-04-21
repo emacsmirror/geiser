@@ -267,11 +267,9 @@ module command as a string")
 (defvar geiser-repl--last-output-start nil)
 (defvar geiser-repl--last-output-end nil)
 
-(make-variable-buffer-local
- (defvar geiser-repl--repl nil))
+(defvar-local geiser-repl--repl nil)
 
-(make-variable-buffer-local
- (defvar geiser-repl--project nil))
+(defvar-local geiser-repl--project nil)
 
 (defsubst geiser-repl--set-this-buffer-repl (r)
   (setq geiser-repl--repl r))
@@ -383,11 +381,9 @@ module command as a string")
 
 ;;; REPL connections
 
-(make-variable-buffer-local
- (defvar geiser-repl--address nil))
+(defvar-local geiser-repl--address nil)
 
-(make-variable-buffer-local
- (defvar geiser-repl--connection nil))
+(defvar-local geiser-repl--connection nil)
 
 (defun geiser-repl--local-p ()
   "Return non-nil, if current REPL is local (connected to socket)."
@@ -942,8 +938,7 @@ over a Unix-domain socket."
          (expand-file-name (read-file-name "Socket file name: "))))
   (geiser-repl--start-repl impl socket))
 
-(make-variable-buffer-local
- (defvar geiser-repl--last-scm-buffer nil))
+(defvar-local geiser-repl--last-scm-buffer nil)
 
 (defun geiser-repl--maybe-remember-scm-buffer (buffer)
   (when (and buffer
@@ -951,11 +946,9 @@ over a Unix-domain socket."
              (eq major-mode 'geiser-repl-mode))
     (setq geiser-repl--last-scm-buffer buffer)))
 
-(make-variable-buffer-local
- (defvar geiser-repl--binary nil))
+(defvar-local geiser-repl--binary nil)
 
-(make-variable-buffer-local
- (defvar geiser-repl--arglist nil))
+(defvar-local geiser-repl--arglist nil)
 
 (defun geiser-repl--get-binary (impl)
   (or geiser-repl--binary (geiser-repl--binary impl)))

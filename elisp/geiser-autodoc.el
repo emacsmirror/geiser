@@ -53,8 +53,7 @@ when `geiser-autodoc-display-module-p' is on."
 
 ;;; Procedure arguments:
 
-(make-variable-buffer-local
- (defvar geiser-autodoc--cached-signatures nil))
+(defvar-local geiser-autodoc--cached-signatures nil)
 
 (defsubst geiser-autodoc--clean-cache ()
   (setq geiser-autodoc--cached-signatures nil))
@@ -175,8 +174,7 @@ when `geiser-autodoc-display-module-p' is on."
 
 ;;; Autodoc functions:
 
-(make-variable-buffer-local
- (defvar geiser-autodoc--inhibit-function nil))
+(defvar-local geiser-autodoc--inhibit-function nil)
 
 (defsubst geiser-autodoc--inhibit ()
   (and geiser-autodoc--inhibit-function
@@ -204,9 +202,8 @@ when `geiser-autodoc-display-module-p' is on."
 
 ;;; Autodoc mode:
 
-(make-variable-buffer-local
- (defvar geiser-autodoc-mode-string " A"
-   "Modeline indicator for geiser-autodoc-mode"))
+(defvar-local geiser-autodoc-mode-string " A"
+  "Modeline indicator for geiser-autodoc-mode")
 
 (define-minor-mode geiser-autodoc-mode
   "Toggle Geiser's Autodoc mode.

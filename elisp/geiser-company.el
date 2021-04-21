@@ -23,14 +23,11 @@
 
 ;;; Helpers:
 
-(make-variable-buffer-local
- (defvar geiser-company--enabled-flag nil))
+(defvar-local geiser-company--enabled-flag nil)
 
-(make-variable-buffer-local
- (defvar geiser-company--autodoc-flag nil))
+(defvar-local geiser-company--autodoc-flag nil)
 
-(make-variable-buffer-local
- (defvar geiser-company--completions nil))
+(defvar-local geiser-company--completions nil)
 
 (defun geiser-company--candidates (prefix)
   (and (equal prefix (car geiser-company--completions))
