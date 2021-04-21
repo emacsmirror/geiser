@@ -1,3 +1,8 @@
+* Version 0.16 (April, 201)
+
+  - Bug fix: display of evaluation outputs in schemes with no special
+    error display handler.
+
 * Version 0.14 and 0.15 (April, 2021)
 
   - Fixes for autoloads in some distributions
