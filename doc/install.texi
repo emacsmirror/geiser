@@ -36,13 +36,15 @@ to the fun.
 
 You'll also need Geiser itself.  The quickest installation is via your
 favourite implementation's ELPA packages (as of this writing, they're
-all available in MELPA).
+all available in MELPA and (most of them) also in NonGNU ELPA, which
+comes included with the batteries of Emacs 28 or better).
 
 @node The quick and easy way, From the source's mouth, Must needs, Installation
 @section The quick and easy way
 
 @cindex quick install
 @cindex ELPA
+@cindex NonGNU ELPA
 Did i mention that the easiest way of installing Geiser is using its
 @uref{http://emacswiki.org/emacs/ELPA, ELPA} package?  If you're using
 Emacs 24, @uref{http://emacswiki.org/emacs/ELPA, ELPA} is already there;
@@ -51,20 +53,18 @@ where to find the goodies.
 
 ELPA packages live in repositories accessible via HTTP.  You can find
 Geiser's package in either
-@uref{http://stable.melpa.org/#/geiser, MELPA stable} or, if you
-like living on the bleeding edge,
-@uref{http://melpa.org/#/geiser, MELPA} (directly from the git
-repo).  To tell Emacs that an ELPA repo exists, you add it to
-@code{package-archives}:
+@uref{https://elpa.nongnu.org/nongnu/geiser.html}{NonGNU ELPA} or, if
+you like living on the bleeding edge, @uref{http://melpa.org/#/geiser,
+MELPA} (directly from the git repo).  To tell Emacs that an ELPA repo
+exists, you add it to @code{package-archives}@footnote{If you're using
+Emacs 28 or better, @code{package-archives} already comes with the
+non-gnu archive preconfigured, so you're lucky in more than one way.}:
 
 @example
 (require 'package)
-;;; either the stable version:
 
 (add-to-list 'package-archives
-  ;; choose either the stable or the latest git version:
-  ;; '("melpa-stable" . "http://stable.melpa.org/packages/")
-  '("melpa-unstable" . "http://melpa.org/packages/"))
+  '("nongnu" . "https://elpa.nongnu.org/nongnu/"))
 
 (package-initialize)
 @end example

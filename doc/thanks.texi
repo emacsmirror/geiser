@@ -32,6 +32,14 @@ and the mailing list has been a far less lonely place since he came.
 Aleix Conchillo has been my favourite spammer, beta tester and patch
 sender during more years and for more projects than i can remember.
 
+Philip K. prepared the NonGNU ELPA packages for Geiser, making them
+available by default starting in Emacs 28, very generously volunteering
+all the work (i just had to update the docs!).
+
+Jonas Bernoulli, as it's his indefatigable wont, has improved Geiser's
+compliance to current Emacs packaging standards, making it a respectful
+member of the ELPA community.
+
 Eduardo Cavazos' contagious enthusiasm has helped in many ways to keep
 Geiser alive, and he's become its best evangelist in R6RS circles.
 
