@@ -1,4 +1,9 @@
-* Version 0.16 (April, 201)
+* Version 0.17 (August, 2021)
+
+  - Package available in NonGNU ELPA (doc update)
+  - Linting and minor fixes
+
+* Version 0.16 (April, 2021)
 
   - Bug fix: display of evaluation outputs in schemes with no special
     error display handler.
