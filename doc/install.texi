@@ -53,7 +53,7 @@ where to find the goodies.
 
 ELPA packages live in repositories accessible via HTTP.  You can find
 Geiser's package in either
-@uref{https://elpa.nongnu.org/nongnu/geiser.html}{NonGNU ELPA} or, if
+@uref{https://elpa.nongnu.org/nongnu/geiser.html, NonGNU ELPA} or, if
 you like living on the bleeding edge, @uref{http://melpa.org/#/geiser,
 MELPA} (directly from the git repo).  To tell Emacs that an ELPA repo
 exists, you add it to @code{package-archives}@footnote{If you're using
