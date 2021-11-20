@@ -163,34 +163,35 @@ buffer.")
          (dir default-directory)
          (buffer (current-buffer))
          (debug (eq key 'geiser-debugger))
+         (debug-entered (when debug
+                          (switch-to-geiser nil nil buffer)
+                          (geiser-debug--enter-debugger impl)))
          (after (geiser-debug--display-after what)))
-    (when debug
-      (switch-to-geiser nil nil buffer)
-      (geiser-debug--enter-debugger impl))
-    (geiser-debug--with-buffer
-      (erase-buffer)
-      (when dir (setq default-directory dir))
-      (unless after (insert what "\n\n"))
-      (setq img (when (and res (not err)) (geiser-debug--insert-res res)))
-      (when (or err key output)
-        (or (geiser-debug--display-error impl module key output)
-            (insert "\n" (if key (format "%s\n" key) "") output "\n")))
-      (when after
-        (goto-char (point-max))
-        (insert "\nExpression evaluated was:\n\n")
-        (insert what "\n"))
-      (cl-case geiser-debug-treat-ansi-colors
-        (colors (ansi-color-apply-on-region (point-min) (point-max)))
-        (remove (ansi-color-filter-region (point-min) (point-max))))
-      (goto-char (point-min)))
-    (when (or img err output)
-      (when (or geiser-debug-jump-to-debug-p geiser-debug-show-debug-p)
-        (if geiser-debug-jump-to-debug-p
-            (geiser-debug--pop-to-buffer)
-          (display-buffer (geiser-debug--buffer))))
-      (when err
-        (ignore-errors (next-error))
-        (message "=> %s" output)))))
+    (unless debug-entered
+      (geiser-debug--with-buffer
+        (erase-buffer)
+        (when dir (setq default-directory dir))
+        (unless after (insert what "\n\n"))
+        (setq img (when (and res (not err)) (geiser-debug--insert-res res)))
+        (when (or err key output)
+          (or (geiser-debug--display-error impl module key output)
+              (insert "\n" (if key (format "%s\n" key) "") output "\n")))
+        (when after
+          (goto-char (point-max))
+          (insert "\nExpression evaluated was:\n\n")
+          (insert what "\n"))
+        (cl-case geiser-debug-treat-ansi-colors
+          (colors (ansi-color-apply-on-region (point-min) (point-max)))
+          (remove (ansi-color-filter-region (point-min) (point-max))))
+        (goto-char (point-min)))
+      (when (or img err output)
+        (when (or geiser-debug-jump-to-debug-p geiser-debug-show-debug-p)
+          (if geiser-debug-jump-to-debug-p
+              (geiser-debug--pop-to-buffer)
+            (display-buffer (geiser-debug--buffer))))
+        (when err
+          (ignore-errors (next-error))
+          (message "=> %s" output))))))
 
 (defsubst geiser-debug--wrap-region (str)
   (format "(begin %s\n)" str))
