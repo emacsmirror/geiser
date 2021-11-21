@@ -273,6 +273,11 @@ With prefix, try to enter the current buffer's module."
     (goto-char (point-max))
     (pop-to-buffer b)))
 
+(defun geiser-exit-repl ()
+  "Issues the command `geiser-repl-exit' in this buffer's associated REPL."
+  (interactive)
+  (geiser-repl--call-in-repl #'geiser-repl-exit))
+
 
 ;;; Keys:
 
@@ -312,6 +317,7 @@ With prefix, try to enter the current buffer's module."
       ("Switch to REPL and enter module" "\C-c\C-a"
        geiser-mode-switch-to-repl-and-enter)
       ("Set Scheme..." "\C-c\C-s" geiser-set-scheme)
+      ("Exit REPL or debugger" "\C-c\C-q" geiser-exit-repl)
       --
       ("Edit symbol at point" "\M-." geiser-edit-symbol-at-point
        :enable (geiser--symbol-at-point))
