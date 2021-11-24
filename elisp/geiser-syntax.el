@@ -1,6 +1,6 @@
 ;;; geiser-syntax.el -- utilities for parsing scheme syntax
 
-;; Copyright (C) 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2019, 2020 Jose Antonio Ortega Ruiz
+;; Copyright (C) 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2019, 2020, 2021 Jose Antonio Ortega Ruiz
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the Modified BSD License. You should
@@ -56,6 +56,7 @@
  (test-eq 1)
  (test-equal 1)
  (test-eqv 1)
+ (test-group 1)
  (test-group-with-cleanup 1)
  (test-runner-on-bad-count! 1)
  (test-runner-on-bad-end-name! 1)
