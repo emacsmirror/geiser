@@ -53,6 +53,13 @@ in case of evaluation errors.
 See also `geiser-debug-show-debug-p`. "
   :type 'boolean)
 
+(geiser-custom--defcustom geiser-debug-auto-next-error-p nil
+  "When set, automatically invoke `next-error' on of evaluation errors.
+
+This will make point jump to the location of an error if the output
+of the evaluation contains any."
+  :type 'boolean)
+
 (geiser-custom--defcustom geiser-debug-show-debug-p t
   "When set to t (the default), show the debug pop-up buffer in
 case of evaluation errors.
@@ -189,7 +196,7 @@ buffer.")
           (if geiser-debug-jump-to-debug-p
               (geiser-debug--pop-to-buffer)
             (display-buffer (geiser-debug--buffer))))
-        (when err
+        (when (and err geiser-debug-auto-next-error-p)
           (ignore-errors (next-error))
           (message "=> %s" output))))))
 
