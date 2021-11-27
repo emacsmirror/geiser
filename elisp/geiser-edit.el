@@ -146,7 +146,7 @@ or following links in error buffers.")
                'help-echo "Go to error location"))
 
 (defconst geiser-edit--default-file-rx
-  "^[ \t]*\\([^<>:\n\"]+\\):\\([0-9]+\\):\\([0-9]+\\)")
+  "^[ \t]*\\([^<>:\n\"]+\\):\\([0-9]+\\)\\(?:\\([0-9]+\\)\\)?")
 
 (defun geiser-edit--buttonize-files (&optional rx no-fill)
   (let ((rx (or rx geiser-edit--default-file-rx))
@@ -157,7 +157,7 @@ or following links in error buffers.")
                                 (match-end 1)
                                 (match-string 1)
                                 (match-string 2)
-                                (match-string 3)
+                                (or (match-string 3) 0)
                                 'window)
         (unless no-fill (fill-region (match-end 0) (point-at-eol)))))))
 
