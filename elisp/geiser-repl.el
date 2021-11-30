@@ -464,37 +464,31 @@ module command as a string")
       (let ((font-lock-dont-widen t))
         (font-lock-default-unfontify-region (point-min) (point-max))))))
 
-(defun geiser-repl--output-filter (txt)
-  (let ((mark-output nil))
+(defun geiser-repl--find-output-region ()
+  (save-excursion
+    (goto-char (point-max))
+    (re-search-backward comint-prompt-regexp)
+    (move-to-column 0)
+    (set-marker geiser-repl--last-output-end (point))
     (save-excursion
-      (goto-char (point-max))
-      (re-search-backward comint-prompt-regexp)
-      ;; move to start of line to prevent accidentally marking a REPL prompt
-      (move-to-column 0)
-      ;; Only mark output which:
-      ;; a) is not on the REPL output line
-      ;; b) has at least one character
-      ;;
-      ;; This makes the magic number for distance 3 -- as the newline
-      ;; after executing expression is also counted. This is due to the point
-      ;; being set before comint-send-input.
-      ;;
-      ;; Restriction a) applies due to our inability to distinguish between
-      ;; output from the REPL, and the REPL prompt output.
-      (let ((distance (- (point) geiser-repl--last-output-start)))
-        (when (> distance 2)
-          (setq mark-output t)
-          (set-marker geiser-repl--last-output-end (point)))))
-    (when mark-output
-      (with-silent-modifications
-        (add-text-properties (1+ geiser-repl--last-output-start)
-                             geiser-repl--last-output-end
-                             `(read-only ,geiser-repl-read-only-output-p))
-        (geiser-repl--fontify-output-region geiser-repl--last-output-start
-                                            geiser-repl--last-output-end)
-        (geiser--font-lock-ensure geiser-repl--last-output-start
-                                  geiser-repl--last-output-end))))
+      (when (re-search-backward comint-prompt-regexp nil t)
+        (forward-line)
+        (when (> (point) geiser-repl--last-output-start)
+          (set-marker geiser-repl--last-output-start (point)))))
+    (> (- geiser-repl--last-output-end geiser-repl--last-output-start) 2)))
 
+(defun geiser-repl--treat-output-region ()
+  (with-silent-modifications
+    (add-text-properties (1- geiser-repl--last-output-start)
+                         geiser-repl--last-output-end
+                         `(read-only ,geiser-repl-read-only-output-p))
+    (geiser-repl--fontify-output-region geiser-repl--last-output-start
+                                        geiser-repl--last-output-end)
+    (geiser--font-lock-ensure geiser-repl--last-output-start
+                              geiser-repl--last-output-end)))
+
+(defun geiser-repl--output-filter (txt)
+  (when (geiser-repl--find-output-region) (geiser-repl--treat-output-region))
   (geiser-con--connection-update-debugging geiser-repl--connection txt)
   (geiser-image--replace-images geiser-repl-inline-images-p
                                 geiser-repl-auto-display-images-p)

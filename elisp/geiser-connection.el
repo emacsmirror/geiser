@@ -1,6 +1,6 @@
 ;;; geiser-connection.el -- talking to a scheme process
 
-;; Copyright (C) 2009, 2010, 2011, 2013 Jose Antonio Ortega Ruiz
+;; Copyright (C) 2009, 2010, 2011, 2013, 2021 Jose Antonio Ortega Ruiz
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the Modified BSD License. You should
@@ -92,11 +92,11 @@
             (tq-queue-pop tq)))))))
 
 (defun geiser-con--combined-prompt (prompt debug)
-  (format "\\(%s%s\\)" prompt (if debug (format "\\|%s" debug) "")))
+  (if debug (format "\\(%s\\)\\|\\(%s\\)" prompt debug) prompt))
 
 (defun geiser-con--connection-eot-re (prompt debug)
-  (geiser-con--combined-prompt (format "\n%s" prompt)
-                               (and debug (format "\n%s" debug))))
+  (geiser-con--combined-prompt (format "\n\\(%s\\)" prompt)
+                               (and debug (format "\n\\(%s\\)" debug))))
 
 (defun geiser-con--make-connection (proc prompt debug-prompt)
   (list t
