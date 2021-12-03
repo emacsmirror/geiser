@@ -1,6 +1,6 @@
 ;;; geiser-completion.el -- tab completion
 
-;; Copyright (C) 2009, 2010, 2011, 2012, 2018, 2020 Jose Antonio Ortega Ruiz
+;; Copyright (C) 2009, 2010, 2011, 2012, 2018, 2020, 2021 Jose Antonio Ortega Ruiz
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the Modified BSD License. You should
@@ -157,7 +157,7 @@ we're looking for a module name.")
 (defun geiser-completion--for-filename ()
   (when (geiser-syntax--in-string-p)
     (let ((comint-completion-addsuffix "\""))
-      (comint-dynamic-complete-filename))))
+      (ignore-errors (comint-filename-completion)))))
 
 (defun geiser-completion--setup (enable)
   (set (make-local-variable 'completion-at-point-functions)
