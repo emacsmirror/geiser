@@ -149,14 +149,14 @@ help (e.g. browse an HTML page) implementing this method.")
                       'help-echo help)))
 
 (defun geiser-doc--insert-button (target module impl &optional sign)
-  (let ((link (geiser-doc--make-link target module impl))
-        (text (format "%s" (or (and sign
-                                    (geiser-autodoc--str* sign))
-                               target
-                               module)))
-        (help (format "%smodule %s"
-                      (if target (format "%s in " target) "")
-                      (or module "<unknown>"))))
+  (let* ((link (geiser-doc--make-link target module impl))
+         (sign (when sign (if (listp sign) sign (list target))))
+         (text (format "%s" (or (and sign (geiser-autodoc--str* sign))
+                                target
+                                module)))
+         (help (format "%smodule %s"
+                       (if target (format "%s in " target) "")
+                       (or module "<unknown>"))))
     (insert-text-button text
                         :type 'geiser-doc--button
                         'face 'geiser-font-lock-doc-link

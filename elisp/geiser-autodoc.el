@@ -1,6 +1,6 @@
 ;;; geiser-autodoc.el -- autodoc mode
 
-;; Copyright (C) 2009, 2010, 2011, 2012, 2015, 2016 Jose Antonio Ortega Ruiz
+;; Copyright (C) 2009, 2010, 2011, 2012, 2015, 2016, 2021 Jose Antonio Ortega Ruiz
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the Modified BSD License. You should
@@ -134,8 +134,9 @@ when `geiser-autodoc-display-module-p' is on."
     (propertize str 'face 'geiser-font-lock-autodoc-identifier)))
 
 (defun geiser-autodoc--str* (full-signature)
-  (let ((geiser-font-lock-autodoc-current-arg 'default))
-    (geiser-autodoc--str (list (car full-signature)) full-signature)))
+  (let ((geiser-font-lock-autodoc-current-arg 'default)
+        (sign (if (listp full-signature) full-signature (list full-signature))))
+    (geiser-autodoc--str (list (car sign)) sign)))
 
 (defsubst geiser-autodoc--value-str (proc module value)
   (let ((name (geiser-autodoc--id-name proc module)))
