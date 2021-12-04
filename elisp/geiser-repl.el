@@ -762,9 +762,8 @@ If SAVE-HISTORY is non-nil, save CMD in the REPL history."
          (intxt (and pmark (buffer-substring pmark (point))))
          (eob (point-max)))
     (when intxt
-      (and geiser-repl-forget-old-errors-p
-           (not (geiser-repl--is-debugging))
-           (compilation-forget-errors))
+      (when geiser-repl-forget-old-errors-p
+        (compilation-forget-errors))
       (geiser-repl--prepare-send)
       (comint-send-input)
       (when (string-match "^\\s-*$" intxt)

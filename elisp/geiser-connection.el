@@ -200,7 +200,8 @@
 
 (defun geiser-con--req-form (req answer)
   (let ((con (geiser-con--request-connection req)))
-    (if (geiser-con--has-entered-debugger con answer)
+    (if (or (geiser-con--connection-is-debugging con)
+            (geiser-con--has-entered-debugger con answer))
         `((error (key . geiser-debugger))
           (output . ,answer))
       (condition-case err
