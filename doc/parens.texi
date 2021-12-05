@@ -222,9 +222,16 @@ project-management library of choice (eg. @code{project.el} or
 associate themselves with the current project, and all Geiser commands
 will ignore REPLs that are not associated with the project.
 
+@cindex geiser-repl-add-project-path-p
 This can be very convenient when used with a @file{.dir-locals.el} in
 the project root to set include paths, ensuring that Geiser REPLs will
 always know where to find your project's modules or dependencies.
+Geiser automatically handles the common case of the project root
+belonging to the load path: unless you tell it otherwise (using the
+customisable flag @code{geiser-repl-add-project-path-p}, which defaults
+to @code{t}), will add the result of calling
+@code{geiser-repl-current-project-function} to the REPLs load path on
+startup.
 
 @subsubheading Switching between source files and the REPL
 @cindex switching to REPL

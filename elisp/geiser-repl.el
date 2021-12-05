@@ -180,6 +180,12 @@ images popping up in the REPL.
 See also `geiser-debug-auto-display-images-p'."
   :type 'boolean)
 
+(geiser-custom--defcustom geiser-repl-add-project-path-p t
+  "Whether to automatically add current project's root to load path on startup.
+For this option to take effect,
+`geiser-repl-current-project-function' must be set appropriately."
+  :type 'boolean)
+
 (geiser-custom--defface repl-input
   'comint-highlight-input geiser-repl "evaluated input highlighting")
 
@@ -511,6 +517,9 @@ module command as a string")
     (geiser-repl--startup impl address)
     (geiser-repl--autodoc-mode 1)
     (geiser-company--setup geiser-repl-company-p)
+    (when geiser-repl-add-project-path-p
+      (when-let (root (funcall geiser-repl-current-project-function))
+        (geiser-add-to-load-path (cdr root))))
     (add-hook 'comint-output-filter-functions
               'geiser-repl--output-filter
               nil
