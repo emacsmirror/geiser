@@ -46,7 +46,7 @@ symbol (e.g., `guile', `chicken', etc.)."
   :group 'geiser-repl)
 
 (geiser-custom--defcustom geiser-repl-current-project-function
-    'ignore
+    (if (featurep 'project) #'project-current 'ignore)
   "Function used to determine the current project.
 The function is called from both source and REPL buffers, and
 should return a value which uniquely identifies the project."
