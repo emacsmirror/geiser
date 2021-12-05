@@ -18,6 +18,7 @@
 (require 'geiser-syntax)
 (require 'geiser-impl)
 (require 'geiser-eval)
+(require 'geiser-compile)
 (require 'geiser-connection)
 (require 'geiser-menu)
 (require 'geiser-image)
@@ -180,11 +181,20 @@ images popping up in the REPL.
 See also `geiser-debug-auto-display-images-p'."
   :type 'boolean)
 
-(geiser-custom--defcustom geiser-repl-add-project-path-p t
+(geiser-custom--defcustom geiser-repl-add-project-paths t
   "Whether to automatically add current project's root to load path on startup.
-For this option to take effect,
-`geiser-repl-current-project-function' must be set appropriately."
-  :type 'boolean)
+
+If set to `t' (the default), the directory returned by
+`geiser-repl-current-project-function' is added to the load path.
+
+If set to a list of sudirectories (e.g. (\".\" \"src\" \"tests\")),
+their full path (starting with the project's root, is added
+instead.
+
+This variable is a good candidate for .dir-locals.el.
+
+This option has no effect if no project root is found."
+  :type '(choice boolean (list string)))
 
 (geiser-custom--defface repl-input
   'comint-highlight-input geiser-repl "evaluated input highlighting")
@@ -517,9 +527,12 @@ module command as a string")
     (geiser-repl--startup impl address)
     (geiser-repl--autodoc-mode 1)
     (geiser-company--setup geiser-repl-company-p)
-    (when geiser-repl-add-project-path-p
-      (when-let (root (funcall geiser-repl-current-project-function))
-        (geiser-add-to-load-path (cdr root))))
+    (when geiser-repl-add-project-paths
+      (when-let (root (cdr (funcall geiser-repl-current-project-function)))
+        (dolist (p (cond ((eq t geiser-repl-add-project-paths) '("."))
+                         ((listp geiser-repl-add-project-paths)
+                          geiser-repl-add-project-paths)))
+          (geiser-add-to-load-path (expand-file-name p root)))))
     (add-hook 'comint-output-filter-functions
               'geiser-repl--output-filter
               nil
