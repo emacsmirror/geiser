@@ -1,7 +1,8 @@
+* Version 0.19 (December, 2021)
+  - Bug fixes
 * Version 0.18 (October, 2021)
 
   - Documentation fix
-
 * Version 0.17 (August, 2021)
 
   - Package available in NonGNU ELPA (doc update)
