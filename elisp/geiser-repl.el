@@ -496,6 +496,14 @@ module command as a string")
 
 (defvar geiser-repl--last-scm-buffer)
 
+(defun geiser-repl--set-up-load-path ()
+  (when geiser-repl-add-project-paths
+    (when-let (root (cdr (funcall geiser-repl-current-project-function)))
+      (dolist (p (cond ((eq t geiser-repl-add-project-paths) '("."))
+                       ((listp geiser-repl-add-project-paths)
+                        geiser-repl-add-project-paths)))
+        (geiser-add-to-load-path (expand-file-name p root))))))
+
 (defun geiser-repl--start-repl (impl address)
   (message "Starting Geiser REPL ...")
   (when (not address) (geiser-repl--check-version impl))
@@ -527,12 +535,7 @@ module command as a string")
     (geiser-repl--startup impl address)
     (geiser-repl--autodoc-mode 1)
     (geiser-company--setup geiser-repl-company-p)
-    (when geiser-repl-add-project-paths
-      (when-let (root (cdr (funcall geiser-repl-current-project-function)))
-        (dolist (p (cond ((eq t geiser-repl-add-project-paths) '("."))
-                         ((listp geiser-repl-add-project-paths)
-                          geiser-repl-add-project-paths)))
-          (geiser-add-to-load-path (expand-file-name p root)))))
+    (geiser-repl--set-up-load-path)
     (add-hook 'comint-output-filter-functions
               'geiser-repl--output-filter
               nil
