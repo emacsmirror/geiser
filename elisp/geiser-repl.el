@@ -42,8 +42,7 @@
 The function is called with a single argument - an implementation
 symbol (e.g., `guile', `chicken', etc.)."
   :type '(choice (function-item geiser-repl-buffer-name)
-                 (function :tag "Other function"))
-  :group 'geiser-repl)
+                 (function :tag "Other function")))
 
 (geiser-custom--defcustom geiser-repl-current-project-function
     (if (featurep 'project) #'project-current 'ignore)
@@ -53,19 +52,16 @@ should return a value which uniquely identifies the project."
   :type '(choice (function-item :tag "Ignore projects" ignore)
                  (function-item :tag "Use Project.el" project-current)
                  (function-item :tag "Use Projectile" projectile-project-root)
-                 (function :tag "Other function"))
-  :group 'geiser-repl)
+                 (function :tag "Other function")))
 
 (geiser-custom--defcustom geiser-repl-use-other-window t
   "Whether to Use a window other than the current buffer's when
 switching to the Geiser REPL buffer."
-  :type 'boolean
-  :group 'geiser-repl)
+  :type 'boolean)
 
 (geiser-custom--defcustom geiser-repl-window-allow-split t
   "Whether to allow window splitting when switching to the Geiser REPL buffer."
-  :type 'boolean
-  :group 'geiser-repl)
+  :type 'boolean)
 
 (geiser-custom--defcustom geiser-repl-history-filename
     (expand-file-name "~/.geiser_history")
@@ -73,18 +69,15 @@ switching to the Geiser REPL buffer."
 
 This is actually the base name: the concrete Scheme
 implementation name gets appended to it."
-  :type 'file
-  :group 'geiser-repl)
+  :type 'file)
 
 (geiser-custom--defcustom geiser-repl-history-size comint-input-ring-size
   "Maximum size of the saved REPL input history."
-  :type 'integer
-  :group 'geiser-repl)
+  :type 'integer)
 
 (geiser-custom--defcustom geiser-repl-history-no-dups-p t
   "Whether to skip duplicates when recording history."
-  :type 'boolean
-  :group 'geiser-repl)
+  :type 'boolean)
 
 (geiser-custom--defcustom geiser-repl-save-debugging-history-p nil
   "Whether to skip debugging input in REPL history.
@@ -92,38 +85,31 @@ implementation name gets appended to it."
 By default, REPL interactions while scheme is in the debugger are
 not added to the REPL command history.  Set this variable to t to
 change that."
-  :type 'boolean
-  :group 'geiser-repl)
+  :type 'boolean)
 
 (geiser-custom--defcustom geiser-repl-autodoc-p t
   "Whether to enable `geiser-autodoc-mode' in the REPL by default."
-  :type 'boolean
-  :group 'geiser-repl)
+  :type 'boolean)
 
 (geiser-custom--defcustom geiser-repl-company-p t
   "Whether to use company-mode for completion, if available."
-  :group 'geiser-mode
   :type 'boolean)
 
 (geiser-custom--defcustom geiser-repl-read-only-prompt-p t
   "Whether the REPL's prompt should be read-only."
-  :type 'boolean
-  :group 'geiser-repl)
+  :type 'boolean)
 
 (geiser-custom--defcustom geiser-repl-read-only-output-p t
   "Whether the REPL's output should be read-only."
-  :type 'boolean
-  :group 'geiser-repl)
+  :type 'boolean)
 
 (geiser-custom--defcustom geiser-repl-highlight-output-p nil
   "Whether to syntax highlight REPL output."
-  :type 'boolean
-  :group 'geiser-repl)
+  :type 'boolean)
 
 (geiser-custom--defcustom geiser-repl-auto-indent-p t
   "Whether newlines for incomplete sexps are autoindented."
-  :type 'boolean
-  :group 'geiser-repl)
+  :type 'boolean)
 
 (geiser-custom--defcustom geiser-repl-send-on-return-p t
   "Sends input to REPL when ENTER is pressed in a balanced S-expression,
@@ -138,8 +124,7 @@ arguments inside an existing expression.
 When on (the default), pressing ENTER inside a balanced S-expression
 will send the input to the inferior Scheme process regardless of the
 cursor placement."
-  :type 'boolean
-  :group 'geiser-repl)
+  :type 'boolean)
 
 (geiser-custom--defcustom geiser-repl-forget-old-errors-p t
   "Whether to forget old errors upon entering a new expression.
@@ -148,8 +133,7 @@ When on (the default), every time a new expression is entered in
 the REPL old error messages are flushed, and using \\[next-error]
 afterwards will jump only to error locations produced by the new
 expression, if any."
-  :type 'boolean
-  :group 'geiser-repl)
+  :type 'boolean)
 
 (geiser-custom--defcustom geiser-repl-skip-version-check-p nil
   "Whether to skip version checks for the Scheme executable.
@@ -157,53 +141,44 @@ expression, if any."
 When set, Geiser won't check the version of the Scheme
 interpreter when starting a REPL, saving a few tenths of a
 second."
-  :type 'boolean
-  :group 'geiser-repl)
+  :type 'boolean)
 
 (geiser-custom--defcustom geiser-repl-query-on-exit-p nil
   "Whether to prompt for confirmation on \\[geiser-repl-exit]."
-  :type 'boolean
-  :group 'geiser-repl)
+  :type 'boolean)
 
 (geiser-custom--defcustom geiser-repl-delete-last-output-on-exit-p nil
   "Whether to delete partial outputs when the REPL's process exits."
-  :type 'boolean
-  :group 'geiser-repl)
+  :type 'boolean)
 
 (geiser-custom--defcustom geiser-repl-query-on-kill-p t
   "Whether to prompt for confirmation when killing a REPL buffer with
 a life process."
-  :type 'boolean
-  :group 'geiser-repl)
+  :type 'boolean)
 
 (geiser-custom--defcustom geiser-repl-default-host "localhost"
   "Default host when connecting to remote REPLs."
-  :type 'string
-  :group 'geiser-repl)
+  :type 'string)
 
 (geiser-custom--defcustom geiser-repl-default-port 37146
   "Default port for connecting to remote REPLs."
-  :type 'integer
-  :group 'geiser-repl)
+  :type 'integer)
 
 (geiser-custom--defcustom geiser-repl-startup-time 10000
   "Time, in milliseconds, to wait for Racket to startup.
 If you have a slow system, try to increase this time."
-  :type 'integer
-  :group 'geiser-repl)
+  :type 'integer)
 
 (geiser-custom--defcustom geiser-repl-inline-images-p t
   "Whether to display inline images in the REPL."
-  :type 'boolean
-  :group 'geiser-repl)
+  :type 'boolean)
 
 (geiser-custom--defcustom geiser-repl-auto-display-images-p t
   "Whether to automatically invoke the external viewer to display
 images popping up in the REPL.
 
 See also `geiser-debug-auto-display-images-p'."
-  :type 'boolean
-  :group 'geiser-repl)
+  :type 'boolean)
 
 (geiser-custom--defface repl-input
   'comint-highlight-input geiser-repl "evaluated input highlighting")
