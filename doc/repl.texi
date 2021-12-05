@@ -431,22 +431,22 @@ configuration.
 @cindex scheme init file
 @cindex GUILE_LOAD_PATH
 @cindex GUILE_LOAD_COMPILED_PATH
-@cindex PLTCOLLECTS
-You can also specify a couple more initialisation parameters.  For
-Guile, @code{geiser-guile-load-path} is a list of paths to add to its
-load path (and its compiled load path) when it's started, while
-@code{geiser-guile-init-file} is the path to an initialisation file to
-be loaded on start-up.  The equivalent variables for Racket are
-@code{geiser-racket-collects} and @code{geiser-racket-init-file}.
+@cindex geiser-add-to-load-path
+@cindex geiser-repl-add-project-paths
+@subsubheading Init files and load paths
+The startup behaviour of the REPL can be also fine tuned with a couple
+more initialisation parameters.
 
-Note, however, that specifying @code{geiser-guile-init-file} is @i{not}
-equivalent to changing Guile's initialization file (@file{~/.guile}),
-because the former is loaded using the @code{-l} flag, together with
-@code{-q} to disable loading the second.  But there are subtle
-differences in the way Guile loads the initialization file versus how it
-loads a file specified via the @code{-l} flag.  If what you want is just
-loading @file{~/.guile}, leave @code{geiser-guile-init-file} alone and
-set @code{geiser-guile-load-init-file-p} to @code{t} instead.
+Many Scheme implementations provide a configuration variable to specify
+a Geiser-specific init file (e.g., @code{geiser-guile-init-file} for
+Guile), and, sometimes a global list of paths to add to the
+interpreter's load path (that'd be @code{geiser-guile-load-path} for
+Guile).
+
+There is also a generic mechanism to specify how to add directories to
+the initial load path when @code{geiser-repl-current-project-function}
+is set: you can then customize @code{geiser-repl-add-project-paths} to a
+list of subdirectories of the project's root to add to the load path.
 
 These variables controlling your scheme's initialisation process are
 good candidates for an entry in a project's @file{.dir-locals.el} file,
