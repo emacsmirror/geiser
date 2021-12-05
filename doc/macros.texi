@@ -1,6 +1,6 @@
-@set VERSION 0.13
+@set VERSION 0.20
 @set VERSION_NICK
-@set RELEASE_DATE April 2021
+@set RELEASE_DATE December 2021
 @set EMACS_VERSION 24.4
 @set GITLAB https://gitlab.com/emacs-geiser/
 

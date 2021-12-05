@@ -229,7 +229,7 @@ always know where to find your project's modules or dependencies.
 Geiser automatically handles the common case of the project root
 belonging to the load path: unless you tell it otherwise (using the
 customisable flag @code{geiser-repl-add-project-path-p}, which defaults
-to @code{t}), will add the result of calling
+to @code{t}), it will add the result of calling
 @code{geiser-repl-current-project-function} to the REPLs load path on
 startup.
 
