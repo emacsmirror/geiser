@@ -255,6 +255,12 @@ module command as a string")
 (geiser-impl--define-caller geiser-repl--min-version minimum-version ()
   "A variable providing the minimum required scheme version, as a string.")
 
+(geiser-impl--define-caller geiser-repl--connection-address connection-address ()
+  "If this implementation supports a parallel connection, return its address.
+The implementation is responsible of setting up the listening REPL on
+startup.  When this function returns a non-nil address, a connection
+will be set up using `geiser-connect-local' when a REPL is started.")
+
 
 ;;; Geiser REPL buffers and processes:
 
@@ -511,6 +517,8 @@ module command as a string")
                         geiser-repl-add-project-paths)))
         (geiser-add-to-load-path (expand-file-name p root))))))
 
+(defvar-local geiser-repl--repl-buffer nil)
+
 (defun geiser-repl--start-repl (impl address)
   (message "Starting Geiser REPL ...")
   (when (not address) (geiser-repl--check-version impl))
@@ -536,9 +544,7 @@ module command as a string")
     (add-to-list 'geiser-repl--repls (current-buffer))
     (geiser-repl--set-this-buffer-repl (current-buffer))
     (setq geiser-repl--connection
-          (geiser-con--make-connection (get-buffer-process (current-buffer))
-                                       prompt-rx
-                                       deb-prompt-rx))
+          (geiser-repl--connection-setup impl address prompt-rx deb-prompt-rx))
     (geiser-repl--startup impl address)
     (geiser-repl--autodoc-mode 1)
     (geiser-company--setup geiser-repl-company-p)
@@ -551,6 +557,36 @@ module command as a string")
                                     geiser-repl-query-on-kill-p)
     (message "%s up and running!" (geiser-repl--repl-name impl))))
 
+(defvar-local geiser-repl--connection-buffer nil)
+
+(defun geiser-repl--connection-buffer (addr)
+  (when addr (get-buffer-create (format " %s  <%s>" (buffer-name) addr))))
+
+(defun geiser-repl--connection-setup (impl address prompt-rx deb-prompt-rx)
+  (let* ((addr (unless address (geiser-repl--connection-address impl)))
+         (buff (or (geiser-repl--connection-buffer addr) (current-buffer))))
+    (when addr
+      (setq geiser-repl--connection-buffer buff)
+      (geiser-repl--comint-local-connect buff addr))
+    (geiser-con--make-connection (get-buffer-process buff)
+                                 prompt-rx
+                                 deb-prompt-rx)))
+
+(defun geiser-repl--comint-local-connect (buff address)
+  "Connect over a Unix-domain socket."
+  (with-current-buffer buff
+    (let ((proc (make-network-process :name (buffer-name buff)
+                                      :buffer buff
+                                      :family 'local
+                                      :remote address)))
+      ;; brittleness warning: this is stuff
+      ;; make-comint-in-buffer sets up, via comint-exec, when
+      ;; it creates its own process, something we're doing
+      ;; here by ourselves.
+      (set-process-filter proc 'comint-output-filter)
+      (goto-char (point-max))
+      (set-marker (process-mark proc) (point)))))
+
 (defun geiser-repl--start-scheme (impl address prompt)
   (setq comint-prompt-regexp prompt)
   (let* ((name (geiser-repl--repl-name impl))
@@ -562,22 +598,9 @@ module command as a string")
                           ,@(geiser-repl--get-arglist impl))))))
     (condition-case err
         (if (and address (stringp address))
-            ;; Connect over a Unix-domain socket.
-            (let ((proc (make-network-process :name (buffer-name buff)
-                                              :buffer buff
-                                              :family 'local
-                                              :remote address)))
-              ;; brittleness warning: this is stuff
-              ;; make-comint-in-buffer sets up, via comint-exec, when
-              ;; it creates its own process, something we're doing
-              ;; here by ourselves.
-              (set-process-filter proc 'comint-output-filter)
-              (goto-char (point-max))
-              (set-marker (process-mark proc) (point)))
+            (geiser-repl--comint-local-connect buff address)
           (apply 'make-comint-in-buffer `(,name ,buff ,@args)))
-      (error (insert "Unable to start REPL:\n"
-                     (error-message-string err)
-                     "\n")
+      (error (insert "Unable to start REPL:\n" (error-message-string err) "\n")
              (error "Couldn't start Geiser: %s" err)))
     (geiser-repl--wait-for-prompt geiser-repl-startup-time)))
 
@@ -671,6 +694,10 @@ If SAVE-HISTORY is non-nil, save CMD in the REPL history."
     (geiser-con--connection-deactivate geiser-repl--connection t)
     (geiser-con--connection-close geiser-repl--connection)
     (setq geiser-repl--repls (remove cb geiser-repl--repls))
+    (unless (eq cb geiser-repl--connection-buffer)
+      (when (buffer-live-p geiser-repl--connection-buffer)
+        (setq geiser-repl--connection-buffer nil)
+        (kill-buffer geiser-repl--connection-buffer)))
     (dolist (buffer (buffer-list))
       (when (buffer-live-p buffer)
         (with-current-buffer buffer
