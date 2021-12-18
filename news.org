@@ -2,7 +2,8 @@
   - New option to add current project's root to load path or any of
     its subdirectories, ~geiser-repl-add-project-paths~.
   - Defaulting ~geiser-repl-current-project-function~ to ~project-current~
-    in emacsen having it available.
+    in emacsen having it available, and using the new
+    ~geiser-repl-per-project-p~ to decide whether to use it.
 * Version 0.19 (December, 2021)
   - Bug fixes
 * Version 0.18 (October, 2021)

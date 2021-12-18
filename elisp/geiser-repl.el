@@ -45,6 +45,12 @@ symbol (e.g., `guile', `chicken', etc.)."
   :type '(choice (function-item geiser-repl-buffer-name)
                  (function :tag "Other function")))
 
+(geiser-custom--defcustom geiser-repl-per-project-p nil
+  "Whether to spawn a separate REPL per project.
+See also `geiser-repl-current-project-function' for the function
+used to discover a buffer's project."
+  :type 'boolean)
+
 (geiser-custom--defcustom geiser-repl-current-project-function
     (if (featurep 'project) #'project-current 'ignore)
   "Function used to determine the current project.
@@ -269,7 +275,8 @@ module command as a string")
   (setq geiser-repl--project p))
 
 (defsubst geiser-repl--current-project ()
-  (or (funcall geiser-repl-current-project-function)
+  (or (when geiser-repl-per-project-p
+        (funcall geiser-repl-current-project-function))
       'no-project))
 
 (defun geiser-repl--live-p ()
