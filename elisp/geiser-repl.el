@@ -694,8 +694,11 @@ If SAVE-HISTORY is non-nil, save CMD in the REPL history."
     (setq geiser-repl--repls (remove cb geiser-repl--repls))
     (unless (eq cb geiser-repl--connection-buffer)
       (when (buffer-live-p geiser-repl--connection-buffer)
+        (kill-buffer geiser-repl--connection-buffer)
         (setq geiser-repl--connection-buffer nil)
-        (kill-buffer geiser-repl--connection-buffer)))
+        (when-let (a (geiser-repl--connection-address
+                      geiser-impl--implementation))
+          (delete-file a))))
     (dolist (buffer (buffer-list))
       (when (buffer-live-p buffer)
         (with-current-buffer buffer

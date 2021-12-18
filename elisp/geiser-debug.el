@@ -23,6 +23,7 @@
 (require 'geiser-base)
 (require 'geiser-image)
 
+(require 'transient)
 (require 'ansi-color)
 
 
@@ -112,11 +113,39 @@ all ANSI sequences."
   (let ((m (funcall (if nextp 'next-button 'previous-button) (point))))
     (and m (funcall (if nextp '< '>) (point) (marker-position m)))))
 
+(defvar-local geiser-debug--debugger-active-p nil)
+(defvar-local geiser-debug--sender-buffer nil)
+
 (geiser-menu--defmenu debug geiser-debug-mode-map
   ("Next error" "n" forward-button :enable (geiser-debug--button-p t))
   ("Previous error" "p" backward-button :enable (geiser-debug--button-p t))
+  ("Debugger command" ","
+   geiser-debug--debugger-transient :enable geiser-debug--debugger-active-p)
   --
   ("Quit" nil View-quit))
+
+(defun geiser-debug--send-to-repl (thing)
+  (unless geiser-debug--sender-buffer (error "Debugger not active"))
+  (with-current-buffer geiser-debug--sender-buffer
+    (let* ((ret (geiser-eval--send/wait (list :debug thing)))
+           (res (geiser-eval--retort-result-str ret nil)))
+      (geiser-debug--display-retort "" ret res))))
+
+(defun geiser-debug-debugger-quit ()
+  "Quit the current debugging session level"
+  (interactive)
+  (geiser-debug--send-to-repl ",q"))
+
+(defun geiser-debug-debugger-backtrace ()
+  "Quit the current debugging session level"
+  (interactive)
+  (geiser-debug--send-to-repl ",bt"))
+
+(transient-define-prefix geiser-debug--debugger-transient ()
+  "Debugging meta-commands"
+  ["Debugger"
+   ("q" "Quit current debugger level" geiser-debug-debugger-quit)
+   ("bt" "Display backtrace" geiser-debug-debugger-quit)])
 
 
 ;;; Buffer for displaying evaluation results:
@@ -182,6 +211,8 @@ buffer.")
          (after (geiser-debug--display-after what)))
     (unless debug-entered
       (geiser-debug--with-buffer
+        (setq geiser-debug--debugger-active-p debug
+              geiser-debug--sender-buffer buffer)
         (erase-buffer)
         (when dir (setq default-directory dir))
         (unless after (insert what "\n\n"))

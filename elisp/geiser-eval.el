@@ -69,6 +69,10 @@ module-exports, autodoc, callers, callees and generic-methods.")
 
 ;;; Code formatting:
 
+(defsubst geiser-eval--debug (cmd)
+  (geiser-eval--form 'debug
+                     (geiser-eval--scheme-str file)))
+
 (defsubst geiser-eval--load-file (file)
   (geiser-eval--form 'load-file
                      (geiser-eval--scheme-str file)))
@@ -103,7 +107,8 @@ module-exports, autodoc, callers, callees and generic-methods.")
         ((eq code :f) "#f")
         ((eq code :t) "#t")
         ((listp code)
-         (cond ((eq (car code) :eval) (geiser-eval--eval (cdr code)))
+         (cond ((eq (car code) :debug) (geiser-eval--debug (cdr code)))
+               ((eq (car code) :eval) (geiser-eval--eval (cdr code)))
                ((eq (car code) :comp) (geiser-eval--comp (cdr code)))
                ((eq (car code) :load-file)
                 (geiser-eval--load-file (cadr code)))
