@@ -562,15 +562,13 @@ will be set up using `geiser-connect-local' when a REPL is started.")
 (defun geiser-repl--connection-buffer (addr)
   (when addr (get-buffer-create (format " %s  <%s>" (buffer-name) addr))))
 
-(defun geiser-repl--connection-setup (impl address prompt-rx deb-prompt-rx)
+(defun geiser-repl--connection-setup (impl address prompt deb-prompt)
   (let* ((addr (unless address (geiser-repl--connection-address impl)))
          (buff (or (geiser-repl--connection-buffer addr) (current-buffer))))
     (when addr
       (setq geiser-repl--connection-buffer buff)
       (geiser-repl--comint-local-connect buff addr))
-    (geiser-con--make-connection (get-buffer-process buff)
-                                 prompt-rx
-                                 deb-prompt-rx)))
+    (geiser-con--make-connection (get-buffer-process buff) prompt deb-prompt)))
 
 (defun geiser-repl--comint-local-connect (buff address)
   "Connect over a Unix-domain socket."
