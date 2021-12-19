@@ -107,45 +107,57 @@ all ANSI sequences."
   (buffer-disable-undo)
   (set-syntax-table scheme-mode-syntax-table)
   (setq next-error-function 'geiser-edit--open-next)
+  (compilation-minor-mode 1)
   (setq buffer-read-only t))
-
-(defun geiser-debug--button-p (nextp)
-  (let ((m (funcall (if nextp 'next-button 'previous-button) (point))))
-    (and m (funcall (if nextp '< '>) (point) (marker-position m)))))
 
 (defvar-local geiser-debug--debugger-active-p nil)
 (defvar-local geiser-debug--sender-buffer nil)
 
 (geiser-menu--defmenu debug geiser-debug-mode-map
-  ("Next error" "n" forward-button :enable (geiser-debug--button-p t))
-  ("Previous error" "p" backward-button :enable (geiser-debug--button-p t))
-  ("Debugger command" ","
-   geiser-debug--debugger-transient :enable geiser-debug--debugger-active-p)
+  ("Next error" "n" compilation-next-error)
+  ("Previous error" "p" compilation-previous-error)
+  ("Debugger command" "," geiser-debug--debugger-transient
+   :enable geiser-debug--debugger-active-p)
+  ("Source buffer" ("z" (kbd "C-c C-z")) geiser-debug-switch-to-buffer)
   --
   ("Quit" nil View-quit))
 
 (defun geiser-debug--send-to-repl (thing)
-  (unless geiser-debug--sender-buffer (error "Debugger not active"))
-  (with-current-buffer geiser-debug--sender-buffer
-    (let* ((ret (geiser-eval--send/wait (list :debug thing)))
-           (res (geiser-eval--retort-result-str ret nil)))
-      (geiser-debug--display-retort "" ret res))))
+  (unless (and geiser-debug--debugger-active-p geiser-debug--sender-buffer)
+    (error "Debugger not active"))
+  (save-window-excursion
+    (with-current-buffer geiser-debug--sender-buffer
+      (let* ((ret (geiser-eval--send/wait (cons :debug thing)))
+             (res (geiser-eval--retort-result-str ret nil)))
+        (geiser-debug--display-retort (format ",%s" thing) ret res)))))
+
+(defun geiser-debug-switch-to-buffer ()
+  "Return to the scheme buffer that pooped this debug window."
+  (interactive)
+  (when geiser-debug--sender-buffer
+    (geiser-repl--switch-to-buffer geiser-debug--sender-buffer)))
 
 (defun geiser-debug-debugger-quit ()
   "Quit the current debugging session level"
   (interactive)
-  (geiser-debug--send-to-repl ",q"))
+  (geiser-debug--send-to-repl 'quit))
 
 (defun geiser-debug-debugger-backtrace ()
   "Quit the current debugging session level"
   (interactive)
-  (geiser-debug--send-to-repl ",bt"))
+  (geiser-debug--send-to-repl 'bt))
 
 (transient-define-prefix geiser-debug--debugger-transient ()
   "Debugging meta-commands"
-  ["Debugger"
+  [:description (lambda () (format "%s debugger" (geiser-impl--impl-str)))
+   :if (lambda () geiser-debug--debugger-active-p)
    ("q" "Quit current debugger level" geiser-debug-debugger-quit)
-   ("bt" "Display backtrace" geiser-debug-debugger-quit)])
+   ("bt" "Display backtrace" geiser-debug-debugger-backtrace)])
+
+
+;;; Implementation-dependent functionality
+(geiser-impl--define-caller geiser-debug--clean-up-output clean-up-output (output)
+  "Clean up output from an evaluation for display.")
 
 
 ;;; Buffer for displaying evaluation results:
@@ -188,31 +200,28 @@ buffer.")
 
 (declare-function switch-to-geiser "geiser-repl")
 
-(defun geiser-debug--remove-prompt (impl str)
-  (replace-regexp-in-string (or (geiser-repl--debugger-prompt-regexp impl) "^$")
-                            ""
-                            str))
-
 (defun geiser-debug--display-retort (what ret &optional res auto-p)
   (let* ((err (geiser-eval--retort-error ret))
          (key (geiser-eval--error-key err))
-         (output (geiser-eval--retort-output ret))
-         (output (and (stringp output) (not (string= output "")) output))
+         (debug (alist-get 'debug ret))
          (impl geiser-impl--implementation)
+         (output (geiser-eval--retort-output ret))
+         (output (and (stringp output)
+                      (not (string= output ""))
+                      (or (geiser-debug--clean-up-output impl output) output)))
          (module (geiser-eval--get-module))
          (img nil)
          (dir default-directory)
          (buffer (current-buffer))
-         (debug (eq key 'geiser-debugger))
-         (output (if debug (geiser-debug--remove-prompt impl output) output))
-         (debug-entered (when debug
-                          (switch-to-geiser nil nil buffer)
-                          (geiser-debug--enter-debugger impl)))
+         (debug-entered (when debug (geiser-debug--enter-debugger impl)))
          (after (geiser-debug--display-after what)))
     (unless debug-entered
       (geiser-debug--with-buffer
+        (when (and (not debug) geiser-debug--debugger-active-p)
+          (message "Debugger exited"))
         (setq geiser-debug--debugger-active-p debug
-              geiser-debug--sender-buffer buffer)
+              geiser-debug--sender-buffer buffer
+              geiser-impl--implementation impl)
         (erase-buffer)
         (when dir (setq default-directory dir))
         (unless after (insert what "\n\n"))

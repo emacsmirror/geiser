@@ -157,9 +157,9 @@
     new))
 
 (defun geiser-con--has-entered-debugger (con answer)
-  (and (not (geiser-con--connection-is-debugging con))
-       (let ((p (car (last (split-string answer "\n" t)))))
-         (and p (geiser-con--connection-update-debugging con p)))))
+  (when-let ((p (car (last (split-string answer "\n" t)))))
+    (geiser-con--connection-update-debugging con p))
+  (geiser-con--connection-is-debugging con))
 
 (defun geiser-con--connection-eot-p (con txt)
   (and txt
@@ -199,17 +199,18 @@
 ;;; Requests handling:
 
 (defun geiser-con--req-form (req answer)
-  (let ((con (geiser-con--request-connection req)))
-    (if (geiser-con--has-entered-debugger con answer)
-        `((error (key . geiser-debugger))
-          (output . ,answer))
-      (condition-case err
-          (let ((start (string-match "((\\(?:result)?\\|error\\) " answer)))
-            (or (and start (car (read-from-string answer start)))
-                `((error (key . retort-syntax)) (output . ,answer))))
-        (error `((error (key . geiser-con-error))
-                 (output . ,(format "%s\n(%s)"
-                                    answer (error-message-string err)))))))))
+  (let* ((con (geiser-con--request-connection req))
+         (debugging (geiser-con--has-entered-debugger con answer)))
+    (condition-case err
+        (let ((start (string-match "((\\(?:result)?\\|error\\) " answer)))
+          (or (and start (car (read-from-string answer start)))
+              `((error (key . retort-syntax))
+                (output . ,answer)
+                (debug . ,debugging))))
+      (error `((error (key . geiser-con-error))
+               (debug . debugging)
+               (output . ,(format "%s\n(%s)"
+                                  answer (error-message-string err))))))))
 
 (defun geiser-con--process-completed-request (req answer)
   (let ((cont (geiser-con--request-continuation req))

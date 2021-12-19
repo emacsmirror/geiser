@@ -1,6 +1,6 @@
 ;;; geiser-eval.el -- sending scheme code for evaluation
 
-;; Copyright (C) 2009, 2010, 2011, 2012, 2013, 2015 Jose Antonio Ortega Ruiz
+;; Copyright (C) 2009, 2010, 2011, 2012, 2013, 2015, 2021 Jose Antonio Ortega Ruiz
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the Modified BSD License. You should
@@ -35,9 +35,11 @@ an optional argument, for cases where we want to force its
 value.")
 
 (defun geiser-eval--get-module (&optional module)
-  (if geiser-eval--get-module-function
-      (funcall geiser-eval--get-module-function module)
-    (funcall geiser-eval--get-impl-module module)))
+  (cond (geiser-eval--get-module-function
+         (funcall geiser-eval--get-module-function module))
+        (geiser-eval--get-impl-module
+         (funcall geiser-eval--get-impl-module module))
+        (t module)))
 
 (defvar geiser-eval--geiser-procedure-function)
 (geiser-impl--register-local-method
@@ -70,16 +72,13 @@ module-exports, autodoc, callers, callees and generic-methods.")
 ;;; Code formatting:
 
 (defsubst geiser-eval--debug (cmd)
-  (geiser-eval--form 'debug
-                     (geiser-eval--scheme-str file)))
+  (geiser-eval--form 'debug (geiser-eval--scheme-str cmd)))
 
 (defsubst geiser-eval--load-file (file)
-  (geiser-eval--form 'load-file
-                     (geiser-eval--scheme-str file)))
+  (geiser-eval--form 'load-file (geiser-eval--scheme-str file)))
 
 (defsubst geiser-eval--comp-file (file)
-  (geiser-eval--form 'compile-file
-                     (geiser-eval--scheme-str file)))
+  (geiser-eval--form 'compile-file (geiser-eval--scheme-str file)))
 
 (defsubst geiser-eval--module (code)
   (geiser-eval--scheme-str
@@ -99,8 +98,7 @@ module-exports, autodoc, callers, callees and generic-methods.")
                      (geiser-eval--scheme-str (nth 0 code))))
 
 (defsubst geiser-eval--ge (proc args)
-  (apply 'geiser-eval--form (cons proc
-                                  (mapcar 'geiser-eval--scheme-str args))))
+  (apply 'geiser-eval--form (cons proc (mapcar 'geiser-eval--scheme-str args))))
 
 (defun geiser-eval--scheme-str (code)
   (cond ((null code) "'()")
