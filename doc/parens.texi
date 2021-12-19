@@ -208,19 +208,23 @@ you can customize @code{geiser-mode-start-repl-p} to @code{t}.
 @cindex dir-locals
 @cindex project.el
 @cindex projectile
+@cindex projects
 @anchor{repl-per-project} By default, Geiser will re-use a single REPL
 for all buffers sharing the same scheme implementation.  This works well
 enough in many cases, but may become problematic (or at least annoying)
 when working on multiple projects with separate dependencies and include
 paths.
 
+@cindex geiser-repl-per-project-p
 Geiser provides optional support for using separate REPLs for each
 project, which can be enabled by customizing
 @code{geiser-repl-current-project-function} and selecting your Emacs
 project-management library of choice (eg. @code{project.el} or
-@code{projectile}).  With this configured, new REPLs will automatically
-associate themselves with the current project, and all Geiser commands
-will ignore REPLs that are not associated with the project.
+@code{projectile}).  With this configured, if you want new REPLs to
+automatically associate themselves with the current project, so that all
+Geiser commands will ignore REPLs that are not associated with the
+project, customize the toggle @code{geiser-repl-per-project-p} to
+@code{t} and you're all set up.
 
 @cindex geiser-repl-add-project-path-p
 This can be very convenient when used with a @file{.dir-locals.el} in
