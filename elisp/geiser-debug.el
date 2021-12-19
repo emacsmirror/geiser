@@ -97,7 +97,6 @@ all ANSI sequences."
 (defvar geiser-debug-mode-map
   (let ((map (make-sparse-keymap)))
     (suppress-keymap map)
-    (set-keymap-parent map button-buffer-map)
     map)
   "Keymap for `geiser-debug-mode'.")
 
@@ -112,15 +111,6 @@ all ANSI sequences."
 
 (defvar-local geiser-debug--debugger-active-p nil)
 (defvar-local geiser-debug--sender-buffer nil)
-
-(geiser-menu--defmenu debug geiser-debug-mode-map
-  ("Next error" "n" compilation-next-error)
-  ("Previous error" "p" compilation-previous-error)
-  ("Debugger command" "," geiser-debug--debugger-transient
-   :enable geiser-debug--debugger-active-p)
-  ("Source buffer" ("z" (kbd "C-c C-z")) geiser-debug-switch-to-buffer)
-  --
-  ("Quit" nil View-quit))
 
 (defun geiser-debug--send-to-repl (thing)
   (unless (and geiser-debug--debugger-active-p geiser-debug--sender-buffer)
@@ -166,11 +156,26 @@ all ANSI sequences."
   "Debugging meta-commands."
   [:description (lambda () (format "%s debugger" (geiser-impl--impl-str)))
    :if (lambda () geiser-debug--debugger-active-p)
-   ("x" "Quit current debugger level" geiser-debug-debugger-quit)
-   ("e" "Display error" geiser-debug-debugger-error)
-   ("b" "Display backtrace" geiser-debug-debugger-backtrace)
-   ("l" "Display locals" geiser-debug-debugger-locals)
-   ("r" "Display registers" geiser-debug-debugger-registers)])
+   ["Display"
+    ("b" "backtrace" geiser-debug-debugger-backtrace)
+    ("e" "error" geiser-debug-debugger-error)
+    ("l" "locals" geiser-debug-debugger-locals)
+    ("r" " registers" geiser-debug-debugger-registers)]
+   ["Go"
+    ("jn" "Jump to next error" next-error)
+    ("jp" "Jump to previous error" previous-error)
+    ("x" "Exit debug level" geiser-debug-debugger-quit)]])
+
+(geiser-menu--defmenu debug geiser-debug-mode-map
+  ("Next error" ("n" [?\t]) compilation-next-error)
+  ("Previous error" ("p" "\e\t" [backtab]) compilation-previous-error)
+  ("Next error location" ((kbd "M-n")) next-error)
+  ("Previous error location" ((kbd "M-p")) previous-error)
+  ("Debugger command ..." "," geiser-debug--debugger-transient
+   :enable geiser-debug--debugger-active-p)
+  ("Source buffer" ("z" (kbd "C-c C-z")) geiser-debug-switch-to-buffer)
+  --
+  ("Quit" nil View-quit))
 
 
 ;;; Implementation-dependent functionality
