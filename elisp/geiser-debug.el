@@ -107,7 +107,7 @@ all ANSI sequences."
   (buffer-disable-undo)
   (set-syntax-table scheme-mode-syntax-table)
   (setq next-error-function 'geiser-edit--open-next)
-  (compilation-minor-mode 1)
+  (compilation-setup t)
   (setq buffer-read-only t))
 
 (defvar-local geiser-debug--debugger-active-p nil)
@@ -138,21 +138,39 @@ all ANSI sequences."
     (geiser-repl--switch-to-buffer geiser-debug--sender-buffer)))
 
 (defun geiser-debug-debugger-quit ()
-  "Quit the current debugging session level"
+  "Quit the current debugging session level."
   (interactive)
   (geiser-debug--send-to-repl 'quit))
 
 (defun geiser-debug-debugger-backtrace ()
-  "Quit the current debugging session level"
+  "Quit the current debugging session level."
   (interactive)
-  (geiser-debug--send-to-repl 'bt))
+  (geiser-debug--send-to-repl 'backtrace))
+
+(defun geiser-debug-debugger-locals ()
+  "Show local variables."
+  (interactive)
+  (geiser-debug--send-to-repl 'locals))
+
+(defun geiser-debug-debugger-registers ()
+  "Show register values."
+  (interactive)
+  (geiser-debug--send-to-repl 'registers))
+
+(defun geiser-debug-debugger-error ()
+  "Show error message."
+  (interactive)
+  (geiser-debug--send-to-repl 'error))
 
 (transient-define-prefix geiser-debug--debugger-transient ()
-  "Debugging meta-commands"
+  "Debugging meta-commands."
   [:description (lambda () (format "%s debugger" (geiser-impl--impl-str)))
    :if (lambda () geiser-debug--debugger-active-p)
-   ("q" "Quit current debugger level" geiser-debug-debugger-quit)
-   ("bt" "Display backtrace" geiser-debug-debugger-backtrace)])
+   ("x" "Quit current debugger level" geiser-debug-debugger-quit)
+   ("e" "Display error" geiser-debug-debugger-error)
+   ("b" "Display backtrace" geiser-debug-debugger-backtrace)
+   ("l" "Display locals" geiser-debug-debugger-locals)
+   ("r" "Display registers" geiser-debug-debugger-registers)])
 
 
 ;;; Implementation-dependent functionality
