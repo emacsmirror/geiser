@@ -1,4 +1,4 @@
-* Version 0.20 (unreleased)
+* Version 0.20 (December, 2021)
 
   - Improved support for debugging sessions (for implementations
     supporting them, as usual).
