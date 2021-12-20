@@ -112,14 +112,21 @@ all ANSI sequences."
 (defvar-local geiser-debug--debugger-active-p nil)
 (defvar-local geiser-debug--sender-buffer nil)
 
+(defun geiser-debug--send-dbg (thing)
+  (geiser-eval--send/wait (cons :debug (if (listp thing) thing (list thing)))))
+
+(defun geiser-debug--debugger-display (thing ret)
+  (geiser-debug--display-retort (format ",%s" thing)
+                                ret
+                                (geiser-eval--retort-result-str ret nil)))
+
 (defun geiser-debug--send-to-repl (thing)
   (unless (and geiser-debug--debugger-active-p geiser-debug--sender-buffer)
     (error "Debugger not active"))
   (save-window-excursion
     (with-current-buffer geiser-debug--sender-buffer
-      (let* ((ret (geiser-eval--send/wait (cons :debug thing)))
-             (res (geiser-eval--retort-result-str ret nil)))
-        (geiser-debug--display-retort (format ",%s" thing) ret res)))))
+      (when-let (ret (geiser-debug--send-dbg thing))
+        (geiser-debug--debugger-display thing ret)))))
 
 (defun geiser-debug-switch-to-buffer ()
   "Return to the scheme buffer that pooped this debug window."

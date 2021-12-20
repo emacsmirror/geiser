@@ -96,6 +96,9 @@ module-exports, autodoc, callers, callees and generic-methods.")
 (defsubst geiser-eval--ge (proc args)
   (apply 'geiser-eval--form (cons proc (mapcar 'geiser-eval--scheme-str args))))
 
+(defsubst geiser-eval--debug (args)
+  (geiser-eval--ge 'debug args))
+
 (defun geiser-eval--scheme-str (code)
   (cond ((null code) "'()")
         ((eq code :f) "#f")
