@@ -254,6 +254,12 @@
 (defvar geiser-connection-timeout 30000
   "Time limit, in msecs, blocking on synchronous evaluation requests")
 
+(defun geiser-con--interrupt (con)
+  "Interrupt any request being currently in process."
+  (when-let (proc (and con (geiser-con--connection-process con)))
+    (when (process-live-p proc)
+      (interrupt-process proc))))
+
 (defun geiser-con--send-string/wait (con str cont &optional timeout sbuf)
   (save-current-buffer
     (let ((proc (and con (geiser-con--connection-process con))))

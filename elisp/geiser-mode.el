@@ -297,6 +297,8 @@ With prefix, try to enter the current buffer's module."
       ("Eval buffer" "\C-c\C-b" geiser-eval-buffer)
       ("Eval buffer and go" "\C-c\M-b" geiser-eval-buffer-and-go)
       ("Load scheme file..." "\C-c\C-l" geiser-load-file)
+      ("Abort evaluation" ("\C-c\C-i" "\C-c\C-e\C-i" "\C-c\C-ei")
+       geiser-eval-interrupt)
       (menu "Macroexpand"
             ("Sexp before point" ("\C-c\C-m\C-e" "\C-c\C-me")
              geiser-expand-last-sexp)

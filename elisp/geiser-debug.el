@@ -1,4 +1,4 @@
-;;; geiser-debug.el -- displaying debug information and evaluation results
+;;; geiser-debug.el -- displaying debug and eval info  -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2020, 2021 Jose Antonio Ortega Ruiz
 
@@ -289,37 +289,42 @@ buffer.")
   (let* ((str (buffer-substring-no-properties start end))
          (wrapped (if wrap (geiser-debug--wrap-region str) str))
          (code `(,(if compile :comp :eval) (:scm ,wrapped)))
-         (ret (geiser-eval--send/wait code))
-         (res (geiser-eval--retort-result-str ret nil))
-         (err (geiser-eval--retort-error ret)))
-    (when and-go (funcall and-go))
-    (when (not err)
-      (save-excursion
-        (goto-char (/ (+ end start) 2))
-        (geiser-autodoc--clean-cache))
-      (unless nomsg
-        (save-match-data
-          (when (string-match "\\(?:[ \t\n\r]+\\)\\'" res)
-            (setq res (replace-match "" t t res))))
-        (message "%s" res)))
-    (geiser-debug--display-retort (geiser-syntax--scheme-str str) ret res)
-    ret))
+         (cont (lambda (ret)
+                 (let ((res (geiser-eval--retort-result-str ret nil))
+                       (err (geiser-eval--retort-error ret))
+                       (scstr (geiser-syntax--scheme-str str)))
+                   (when and-go (funcall and-go))
+                   (when (not err)
+                     (save-excursion
+                       (goto-char (/ (+ end start) 2))
+                       (geiser-autodoc--clean-cache))
+                     (unless nomsg
+                       (save-match-data
+                         (when (string-match "\\(?:[ \t\n\r]+\\)\\'" res)
+                           (setq res (replace-match "" t t res))))
+                       (message "%s" res)))
+                   (geiser-debug--display-retort scstr ret res)))))
+    (geiser-eval--send code cont (current-buffer))))
 
 (defun geiser-debug--expand-region (start end all wrap)
   (let* ((str (buffer-substring-no-properties start end))
          (wrapped (if wrap (geiser-debug--wrap-region str) str))
-         (code `(:eval (:ge macroexpand (quote (:scm ,wrapped))
-                            ,(if all :t :f))))
-         (ret (geiser-eval--send/wait code))
-         (err (geiser-eval--retort-error ret))
-         (result (geiser-eval--retort-result ret)))
-    (if err
-        (geiser-debug--display-retort str ret)
-      (geiser-debug--with-buffer
-        (erase-buffer)
-        (insert (format "%s" (if wrap (geiser-debug--unwrap result) result)))
-        (goto-char (point-min)))
-      (geiser-debug--pop-to-buffer))))
+         (code
+          `(:eval (:ge macroexpand (quote (:scm ,wrapped)) ,(if all :t :f))))
+         (cont (lambda (ret)
+                 (let ((err (geiser-eval--retort-error ret))
+                       (result (geiser-eval--retort-result ret)))
+                   (if err
+                       (geiser-debug--display-retort str ret)
+                     (geiser-debug--with-buffer
+                       (erase-buffer)
+                       (insert (format "%s"
+                                       (if wrap
+                                           (geiser-debug--unwrap result)
+                                         result)))
+                       (goto-char (point-min)))
+                     (geiser-debug--pop-to-buffer))))))
+    (geiser-eval--send code cont (current-buffer))))
 
 
 (provide 'geiser-debug)

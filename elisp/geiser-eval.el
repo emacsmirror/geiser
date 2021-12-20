@@ -156,6 +156,11 @@ module-exports, autodoc, callers, callees and generic-methods.")
                                 buffer)
   geiser-eval--sync-retort)
 
+(defun geiser-eval-interrupt ()
+  "Interrupt on-going evaluation, if any."
+  (interactive)
+  (geiser-con--interrupt (geiser-eval--connection)))
+
 
 ;;; Retort parsing:
 
