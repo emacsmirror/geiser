@@ -163,20 +163,28 @@ help (e.g. browse an HTML page) implementing this method.")
                         'geiser-link link
                         'help-echo help)))
 
+(defun geiser-doc-goto-source ()
+  "Go to the definition of this item."
+  (interactive)
+  (when-let (link geiser-doc--buffer-link)
+    (with--geiser-implementation (geiser-doc--link-impl link)
+      (if-let (target (geiser-doc--link-target link))
+          (geiser-edit-symbol target nil (point-marker))
+        (geiser-edit-module (geiser-doc--link-module link))))))
+
+(defun geiser-doc-goto-manual ()
+  "Go to the manual for this item."
+  (interactive)
+  (when-let (link geiser-doc--buffer-link)
+    (let ((tm (geiser-doc--link-target link))
+          (mod (geiser-doc--link-module link))
+          (impl (geiser-doc--link-impl link)))
+      (geiser-doc--external-help impl (or tm mod) mod))))
+
 (defun geiser-doc--xbutton-action (button)
-  (when geiser-doc--buffer-link
-    (let ((kind (or (button-get button 'x-kind) 'source))
-          (target (geiser-doc--link-target geiser-doc--buffer-link))
-          (module (geiser-doc--link-module geiser-doc--buffer-link))
-          (impl (geiser-doc--link-impl geiser-doc--buffer-link)))
-      (with--geiser-implementation impl
-        (cond ((eq kind 'source)
-               (if target (geiser-edit-symbol target nil (point-marker))
-                 (geiser-edit-module module)))
-              ((eq kind 'manual)
-               (geiser-doc--external-help impl
-                                          (or target module)
-                                          module)))))))
+  (let ((k (button-get button 'x-kind)))
+    (cond ((eq 'source k) (geiser-doc-goto-source))
+          ((eq 'manual k) (geiser-doc-goto-manual)))))
 
 (define-button-type 'geiser-doc--xbutton
   'action 'geiser-doc--xbutton-action
@@ -305,6 +313,8 @@ help (e.g. browse an HTML page) implementing this method.")
   --
   ("Edit symbol" ("." "\M-.") geiser-doc-edit-symbol-at-point
    :enable (geiser--symbol-at-point))
+  ("View source" ("s") geiser-doc-goto-source)
+  ("View manual" ("m" "h") geiser-doc-goto-manual)
   --
   ("Kill item" "k" geiser-doc-kill-page "Kill this page")
   ("Clear history" "c" geiser-doc-clean-history)
