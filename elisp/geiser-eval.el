@@ -25,7 +25,6 @@
 ;;; Plug-able functions:
 
 (defvar-local geiser-eval--get-module-function nil)
-(set-default 'geiser-eval--get-module-function nil)
 
 (defvar geiser-eval--get-impl-module nil)
 (geiser-impl--register-local-method
@@ -41,7 +40,7 @@ value.")
          (funcall geiser-eval--get-impl-module module))
         (t module)))
 
-(defvar geiser-eval--geiser-procedure-function)
+(defvar geiser-eval--geiser-procedure-function nil)
 (geiser-impl--register-local-method
  'geiser-eval--geiser-procedure-function 'marshall-procedure 'identity
  "Function to translate a bare procedure symbol to one executable
@@ -66,13 +65,10 @@ module-exports, autodoc, callers, callees and generic-methods.")
   (when (not (geiser-eval--supported-p (car args)))
     (error "Sorry, the %s scheme implementation does not support Geiser's %s"
            geiser-impl--implementation (car args)))
-  (apply geiser-eval--geiser-procedure-function args))
+  (apply (or geiser-eval--geiser-procedure-function 'ignore) args))
 
 
 ;;; Code formatting:
-
-(defsubst geiser-eval--debug (cmd)
-  (geiser-eval--form 'debug (geiser-eval--scheme-str cmd)))
 
 (defsubst geiser-eval--load-file (file)
   (geiser-eval--form 'load-file (geiser-eval--scheme-str file)))

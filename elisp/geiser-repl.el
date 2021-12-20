@@ -86,8 +86,8 @@ implementation name gets appended to it."
   "Whether to skip duplicates when recording history."
   :type 'boolean)
 
-(geiser-custom--defcustom geiser-repl-save-debugging-history-p nil
-  "Whether to skip debugging input in REPL history.
+(geiser-custom--defcustom geiser-repl-save-debugging-history-p t
+  "Whether to save debugging input in REPL history.
 
 By default, REPL interactions while scheme is in the debugger are
 not added to the REPL command history.  Set this variable to t to
@@ -483,8 +483,8 @@ will be set up using `geiser-connect-local' when a REPL is started.")
 
 (defun geiser-repl--treat-output-region ()
   (with-silent-modifications
-    (add-text-properties (1- geiser-repl--last-output-start)
-                         geiser-repl--last-output-end
+    (add-text-properties (max (point-min) (1- geiser-repl--last-output-start))
+                         (min geiser-repl--last-output-end (point-max))
                          `(read-only ,geiser-repl-read-only-output-p))
     (geiser-repl--fontify-output-region geiser-repl--last-output-start
                                         geiser-repl--last-output-end)
