@@ -46,6 +46,9 @@ third key not modified by @key{Control}; e.g.,
 @tab @code{geiser-insert-lambda}
 @tab Insert greek lambda or, with prefix, a lambda form
 @item @tab @tab
+@item C-c C-i
+@tab @code{geiser-eval-interrupt}
+@tab Interrupt ongoing evaluation
 @item C-M-x
 @tab @code{geiser-eval-definition}
 @tab Eval definition around point

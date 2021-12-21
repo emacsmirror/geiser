@@ -444,10 +444,10 @@ manual page for the symbol at point with the command
 
 @cindex philosophy
 @cindex incremental development
-One of Geiser's main goals is to facilitate incremental development.  You
-might have noticed that i've made a big fuss of Geiser's ability to
-recognize context, by being aware of the namespace where its operations
-happen.
+One of Geiser's main goals is to facilitate incremental development.
+You might have noticed that i've made a big fuss of Geiser's ability to
+recognize context, by dint of being aware of the namespace where its
+operations happen.
 
 That awareness is especially important when evaluating code in your
 scheme buffers, using the commands described below.  They allow you to
@@ -478,7 +478,7 @@ contents.
 
 @cindex evaluation
 @cindex incremental development, not evil
-For all of you bearded old lispers still with me, here are some of the
+For all of you auld bearded lispers still with me, here are some of the
 commands performing incremental evaluation in Geiser.
 
 @code{geiser-eval-last-sexp}, bound to @kbd{C-x C-e}, will eval the
@@ -506,7 +506,7 @@ perchance to debug}), or, for schemes supporting them (such as Racket),
 the evaluation yields an image, in which case you'll see it in popping
 up in the Geiser debug buffer (if your Emacs runs under the auspices of
 a graphical toolkit), or via an external viewer if you set
-@c{geiser-image-viewer} to the path of an appropriate visualization
+@code{geiser-image-viewer} to the path of an appropriate visualization
 program (see also @ref{Seeing is believing} for more on image support).
 
 At the risk of repeating myself, i'll remind you that all these
@@ -522,6 +522,21 @@ macro-expand them.  The corresponding key bindings start with the prefix
 @kbd{C-r}.  The result of the macro expansion always appears in a pop up
 buffer.
 
+@cindex interrupt evaluation
+All the evaluations and expansions performed by the commands above are
+asynchronous@footnote{For local REPLs, where we can easily send an
+interrupt signal to the scheme process; remote REPLs are another kettle
+of fish in this regard, and generally interruptions are supported:
+you'll just have to kill the connection if caught in a loop.}, so that
+you can move around while the answer is being computed.  The command
+@code{geiser-eval-interrupt}, bound to @kbd{C-c C-i} will interrupt any
+on-going evaluation and, when the scheme implementation supports a
+debugger, bring you to a buffer where you can perform buffer actions in
+the interrupted evaluation's context.
+
+Oh, didn't i mention we have support for debuggers?  Let's talk about
+that next.
+
 @node To err perchance to debug, Jumping around, To eval or not to eval, Between the parens
 @section To err: perchance to debug
 
@@ -531,47 +546,31 @@ When an error occurs during evaluation, it will be reported according to
 the capabilities of the underlying Scheme REPL.
 
 @cindex error buffer
-In Racket, you'll be presented with a backtrace, in a new buffer where
-file paths locating the origin of the error are click-able (you can
-navigate them using the @key{TAB} key, and use @key{RET} or the mouse to
-jump to the offending spot; or invoke Emacs' stock commands
+In most schemes, you'll be presented with a backtrace, in a new buffer
+where file paths locating the origin of the error are click-able (you
+can navigate them using the @key{TAB} key, and use @key{RET} or the
+mouse to jump to the offending spot; or invoke Emacs' stock commands
 @code{next-error} and @code{previous-error}, bound to @kbd{M-g n} and
 @kbd{M-g p} by default).
 
 @imgc{eval-error}
 
-The Racket backtrace also highlights the exception type, making it
-click-able.  Following the link will open the documentation corresponding
-to said exception type.  Both the error and exception link faces are
-customizable (@code{geiser-font-lock-error-link} and
-@code{geiser-font-lock-doc-link}).
-
 By default, Geiser will tele-transport your pointer to the debug buffer:
 if you prefer to stay in the source buffer, set
-@code{geiser-debug-jump-to-debug-p} to nil.  And if, in addition, you
-don't even want to see the error trace, customize
-@code{geiser-debug-show-debug-p}, again, to nil.
+@code{geiser-debug-jump-to-debug-p} to nil.
 
-On the other hand, Guile's reaction to evaluation errors is different:
-it enters the debugger in its REPL.  Accordingly, the REPL buffer will
-pop up if your evaluation fails in a Guile file, and the error message
-and backtrace will be displayed in there, again click-able and all.  But
-there you have the debugger at your disposal, with the REPL's current
-module set to that of the offender, and a host of special debugging
-commands that are described in Guile's fine documentation.
+For schemes with good debug support (Guile is one), the debug buffers
+offer a @i{debugging menu}, accesible via the @code{,} (that's a comma)
+key.  If you press it, a transient menu will appear, offering you a
+variety of actions, including showing local variable values or a more
+detailed backtrace or frame display.  This is the same interface you'll
+encounter the in case of interrupted evaluations, either by your
+explicit @kbd{C-c C-i} command or because a breakpoint has been
+previosuly set.
 
-@imgc{guile-eval-error}
-
-In addition, Guile will sometimes report warnings for otherwise
-successful evaluations.  In those cases, it won't enter the debugger, and
-Geiser will report the warnings in a debug buffer, as it does for
-Racket.  You can control how picky Guile is reporting warnings by
-customizing the variable @code{geiser-guile-warning-level}, whose
-detailed docstring (which see, using, e.g. @kbd{C-h v}) allows me to
-offer no further explanation here.  The customization group
-@i{geiser-guile} is also worth a glance, for a couple of options to
-fine-tune how Geiser interacts with Guile's debugger (and more).  Same
-thing for racketeers and @i{geiser-racket}.
+In addition, Geiser will sometimes report warnings for otherwise
+successful evaluations.  In those cases, it won't enter the debugger,
+just report the warnings in a debug buffer.
 
 @node Jumping around, Geiser writes for you, To err perchance to debug, Between the parens
 @section Jumping around
