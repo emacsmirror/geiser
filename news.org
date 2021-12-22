@@ -1,3 +1,5 @@
+* Version 0.21 (December, 2021)
+  - Asynchronous, interruptible evaluation and compilation
 * Version 0.20 (December, 2021)
 
   - Improved support for debugging sessions (for implementations
