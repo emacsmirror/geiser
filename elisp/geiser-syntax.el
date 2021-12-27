@@ -286,10 +286,11 @@ implementation-specific entries for font-lock-keywords.")
     (let* ((start (or start 0))
            (end (or end (length string)))
            (max-lisp-eval-depth (min 20000
-                                     (max max-lisp-eval-depth (- end start)))))
+                                     (max max-lisp-eval-depth (- end start))))
+           (max-specpdl-size (* 2 max-lisp-eval-depth)))
       (with-temp-buffer
         (save-excursion (insert string))
-        (cons (ignore-errors (geiser-syntax--read)) (point))))))
+        (cons (geiser-syntax--read) (point))))))
 
 (defun geiser-syntax--form-from-string (s)
   (car (geiser-syntax--read-from-string s)))
