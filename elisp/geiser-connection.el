@@ -260,19 +260,25 @@
     (when (process-live-p proc)
       (interrupt-process proc))))
 
+(defun geiser-con--wait (req timeout)
+  "Wait for the given request REQ to finish, up to TIMEOUT secs, returning its result."
+  (let* ((con (geiser-con--request-connection req))
+         (id (geiser-con--request-id req))
+         (timeout (/ (or timeout geiser-connection-timeout) 1000.0))
+         (step (/ timeout 10)))
+    (with-timeout (timeout (geiser-con--request-deactivate req))
+      (condition-case nil
+          (while (and (geiser-con--connection-process con)
+                      (not (geiser-con--connection-completed-p con id)))
+            (accept-process-output proc step))
+        (error (geiser-con--request-deactivate req))))))
+
 (defun geiser-con--send-string/wait (con str cont &optional timeout sbuf)
   (save-current-buffer
     (let ((proc (and con (geiser-con--connection-process con))))
       (unless proc (error "Geiser connection not active"))
-      (let* ((req (geiser-con--send-string con str cont sbuf))
-             (id (geiser-con--request-id req))
-             (timeout (/ (or timeout geiser-connection-timeout) 1000.0)))
-        (with-timeout (timeout (geiser-con--request-deactivate req))
-          (condition-case nil
-              (while (and (geiser-con--connection-process con)
-                          (not (geiser-con--connection-completed-p con id)))
-                (accept-process-output proc (/ timeout 10)))
-            (error (geiser-con--request-deactivate req))))))))
+      (let ((req (geiser-con--send-string con str cont sbuf)))
+        (geiser-con--wait req timeout)))))
 
 
 (provide 'geiser-connection)
