@@ -110,7 +110,9 @@ individual sexps."
 With prefix, goes to the REPL buffer afterwards (as
 `geiser-eval-region-and-go').  The evaluation is performed
 asynchronously: this function's return value can be used to wait
-for its completion using `geiser-eval-wait'."
+for its completion using `geiser-eval-wait'.  See also
+`geiser-eval-region/wait' if you just need to eval a region
+programmatically in a synchronous way."
   (interactive "rP")
   (save-restriction
     (narrow-to-region start end)
@@ -121,6 +123,12 @@ for its completion using `geiser-eval-wait'."
                              (and and-go 'geiser--go-to-repl)
                              (not raw)
                              nomsg))
+
+(defun geiser-eval-region/wait (start end &optional timeout)
+  "Like `geiser-eval-region', but waiting for the evaluation to finish.
+Returns its raw result, rather than displaying it. TIMEOUT is the
+number of seconds to wait for the evaluation to finish."
+  (geiser-debug--send-region/wait nil start end (* 1000 (or timeout 10))))
 
 (defun geiser-eval-region-and-go (start end)
   "Eval the current region in the Geiser REPL and visit it afterwads."

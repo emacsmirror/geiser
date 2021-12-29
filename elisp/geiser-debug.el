@@ -286,6 +286,12 @@ buffer.")
     str))
 
 (defun geiser-debug--send-region (compile start end and-go wrap &optional nomsg)
+  "Evaluate (or COMPILE) the region delimited by START and END.
+The result of the evaluation is reported asynchronously, so this
+call is not blocking. If AND-GO is t, also jump to the repl
+buffer.  If WRAP is t, the region's content is wrapped in a begin
+form.  The flag NOMSG can be used to avoid reporting of the
+result in the minibuffer."
   (let* ((str (buffer-substring-no-properties start end))
          (wrapped (if wrap (geiser-debug--wrap-region str) str))
          (code `(,(if compile :comp :eval) (:scm ,wrapped)))
@@ -305,6 +311,14 @@ buffer.")
                        (message "%s" res)))
                    (geiser-debug--display-retort scstr ret res)))))
     (geiser-eval--send code cont (current-buffer))))
+
+(defun geiser-debug--send-region/wait (compile start end timeout)
+  "Synchronous version of `geiser-debug--send-region', waiting and returning its result."
+  (let* ((str (buffer-substring-no-properties start end))
+         (wrapped (geiser-debug--wrap-region str))
+         (code `(,(if compile :comp :eval) (:scm ,wrapped))))
+    (message "evaluating: %s" code)
+    (geiser-eval--send/wait code timeout)))
 
 (defun geiser-debug--expand-region (start end all wrap)
   (let* ((str (buffer-substring-no-properties start end))
