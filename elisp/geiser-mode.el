@@ -102,7 +102,7 @@ TIMEOUT is the number of seconds to wait for evaluation
 completion.  Functions returning a waitable REQ are
 `geiser-eval-region' and its derivatives evaluating buffers or
 individual sexps."
-  (geiser-eval--wait req timeout))
+  (geiser-eval--wait req (* 1000 timeout)))
 
 (defun geiser-eval-region (start end &optional and-go raw nomsg)
   "Eval the current region in the Geiser REPL.
