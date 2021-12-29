@@ -262,12 +262,14 @@
 
 (defun geiser-con--wait (req timeout)
   "Wait for the given request REQ to finish, up to TIMEOUT secs, returning its result."
-  (let* ((con (geiser-con--request-connection req))
+  (let* ((con (or (geiser-con--request-connection req)
+                  (error "Geiser connection not active")))
+         (proc (geiser-con--connection-process con))
          (id (geiser-con--request-id req))
          (timeout (/ (or timeout geiser-connection-timeout) 1000.0))
          (step (/ timeout 10)))
     (with-timeout (timeout (geiser-con--request-deactivate req))
-      (condition-case nil
+      (condition-case e
           (while (and (geiser-con--connection-process con)
                       (not (geiser-con--connection-completed-p con id)))
             (accept-process-output proc step))

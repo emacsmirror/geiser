@@ -1,4 +1,4 @@
-;;; geiser-eval.el -- sending scheme code for evaluation
+;;; geiser-eval.el -- sending scheme code for evaluation  -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2009, 2010, 2011, 2012, 2013, 2015, 2021 Jose Antonio Ortega Ruiz
 
@@ -137,11 +137,18 @@ module-exports, autodoc, callers, callees and generic-methods.")
 (defsubst geiser-eval--code-str (code)
   (if (stringp code) code (geiser-eval--scheme-str code)))
 
+(defvar geiser-eval--async-retort nil)
 (defsubst geiser-eval--send (code cont &optional buffer)
+  (setq geiser-eval--async-retort nil)
   (geiser-con--send-string (geiser-eval--connection)
                            (geiser-eval--code-str code)
-                           cont
+                           (lambda (s)
+                             (setq geiser-eval--async-retort s)
+                             (funcall cont s))
                            buffer))
+
+(defun geiser-eval--wait (req timeout)
+  (or (geiser-con--wait req timeout) geiser-eval--async-retort))
 
 (defvar geiser-eval--sync-retort nil)
 (defun geiser-eval--set-sync-retort (s)

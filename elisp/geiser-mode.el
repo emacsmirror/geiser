@@ -95,14 +95,14 @@ result is an error msg."
   (push-mark)
   (goto-char (point-max)))
 
-(defun geiser-eval-wait (req timeout)
+(defun geiser-wait-eval (req timeout)
   "Use REQ, the result of computing an evaluation, to wait for its result.
 
 TIMEOUT is the number of seconds to wait for evaluation
 completion.  Functions returning a waitable REQ are
 `geiser-eval-region' and its derivatives evaluating buffers or
 individual sexps."
-  (geiser-con--wait req timeout))
+  (geiser-eval--wait req timeout))
 
 (defun geiser-eval-region (start end &optional and-go raw nomsg)
   "Eval the current region in the Geiser REPL.
