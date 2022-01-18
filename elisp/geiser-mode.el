@@ -1,6 +1,6 @@
 ;;; geiser-mode.el -- minor mode for scheme buffers
 
-;; Copyright (C) 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2020 Jose Antonio Ortega Ruiz
+;; Copyright (C) 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2020, 2022 Jose Antonio Ortega Ruiz
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the Modified BSD License. You should
@@ -194,6 +194,7 @@ With a prefix, revert the effect of `geiser-mode-eval-last-sexp-to-buffer' "
                                     nil
                                     t
                                     print-to-buffer-p)))
+         (ret (geiser-wait-eval ret 30))
          (err (geiser-eval--retort-error ret))
          (will-eval-to-buffer (if print-to-buffer-p
                                   (not geiser-mode-eval-last-sexp-to-buffer)
