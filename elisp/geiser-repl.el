@@ -1,6 +1,6 @@
 ;;; geiser-repl.el --- Geiser's REPL
 
-;; Copyright (C) 2009, 2010, 2011, 2012, 2013, 2015, 2016, 2018, 2019, 2020, 2021 Jose Antonio Ortega Ruiz
+;; Copyright (C) 2009-2022 Jose Antonio Ortega Ruiz
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the Modified BSD License. You should
@@ -51,13 +51,19 @@ See also `geiser-repl-current-project-function' for the function
 used to discover a buffer's project."
   :type 'boolean)
 
+(declare project-root "project.el")
+(declare project-current "project.el")
+
+(defun geiser-repl--project ()
+  (when-let (p (project-current)) (project-root p)))
+
 (geiser-custom--defcustom geiser-repl-current-project-function
-    (if (featurep 'project) #'project-current 'ignore)
+    (if (featurep 'project) #'geiser-repl--project 'ignore)
   "Function used to determine the current project.
 The function is called from both source and REPL buffers, and
 should return a value which uniquely identifies the project."
   :type '(choice (function-item :tag "Ignore projects" ignore)
-                 (function-item :tag "Use Project.el" project-current)
+                 (function-item :tag "Use Project.el" geiser-repl--project)
                  (function-item :tag "Use Projectile" projectile-project-root)
                  (function :tag "Other function")))
 
@@ -511,7 +517,7 @@ will be set up using `geiser-connect-local' when a REPL is started.")
 
 (defun geiser-repl--set-up-load-path ()
   (when geiser-repl-add-project-paths
-    (when-let (root (cdr (funcall geiser-repl-current-project-function)))
+    (when-let (root (funcall geiser-repl-current-project-function))
       (dolist (p (cond ((eq t geiser-repl-add-project-paths) '("."))
                        ((listp geiser-repl-add-project-paths)
                         geiser-repl-add-project-paths)))

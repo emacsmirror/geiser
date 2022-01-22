@@ -1,5 +1,6 @@
 * Version 0.22.1
   - Fix for C-u C-x C-e (in-buffer printing of evaluated expression)
+  - Fix for project functions other than project-current
 * Version 0.22 (December, 2021)
   - New functions geiser-wait-eval and geiser-eval-region/wait for
     synchronous clients like ob-scheme.
