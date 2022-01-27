@@ -1,4 +1,4 @@
-;;; geiser-impl.el -- generic support for scheme implementations
+;;; geiser-impl.el -- generic support for scheme implementations  -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2009, 2010, 2012, 2013, 2015, 2016, 2019, 2021 Jose Antonio Ortega Ruiz
 
@@ -26,13 +26,11 @@
 
 (geiser-custom--defcustom geiser-default-implementation nil
   "Symbol naming the default Scheme implementation."
-  :type 'symbol
-  :group 'geiser-implementation)
+  :type 'symbol)
 
 (geiser-custom--defcustom geiser-active-implementations ()
   "List of active installed Scheme implementations."
-  :type '(repeat symbol)
-  :group 'geiser-implementation)
+  :type '(repeat symbol))
 
 (geiser-custom--defcustom geiser-implementations-alist nil
   "A map from regular expressions or directories to implementations.
@@ -43,8 +41,7 @@ in order to determine its scheme flavour."
                                       (const regexp) regexp)
                                (group :tag "Directory"
                                       (const dir) directory))
-                       symbol))
-  :group 'geiser-implementation)
+                       symbol)))
 
 
 ;;; Implementation registry:
@@ -81,7 +78,7 @@ in order to determine its scheme flavour."
     (cadr (assq method (geiser-impl--methods impl)))))
 
 (defun geiser-impl--default-method (method)
-  (cadr (assoc method (mapcar 'cdr geiser-impl--local-methods))))
+  (cadr (assoc method (mapcar #'cdr geiser-impl--local-methods))))
 
 (defun geiser-impl--call-method (method impl &rest args)
   (let ((fun (or (geiser-impl--method method impl)
@@ -99,7 +96,7 @@ in order to determine its scheme flavour."
     (put method 'function-documentation doc)))
 
 (defun geiser-implementation-help ()
-  "Shows a buffer with help on defining new supported Schemes."
+  "Show a buffer with help on defining new supported Schemes."
   (interactive)
   (help-setup-xref (list #'geiser-implementation-help) t)
   (save-excursion
@@ -160,11 +157,13 @@ in order to determine its scheme flavour."
   (when (and (listp m)
              (= 2 (length m))
              (symbolp (car m)))
-    (if (functionp (cadr m)) m
-      `(,(car m) (lambda (&rest args) ,(cadr m))))))
+    (let ((v (cadr m)))
+      (if (functionp v) m
+        `(,(car m)
+          ,(lambda (&rest _) v))))))
 
 (defun geiser-impl--define (file name parent methods)
-  (let* ((methods (mapcar 'geiser-impl--normalize-method methods))
+  (let* ((methods (mapcar #'geiser-impl--normalize-method methods))
          (methods (delq nil methods))
          (inherited-methods (and parent (geiser-impl--methods parent)))
          (methods (append methods
@@ -174,7 +173,7 @@ in order to determine its scheme flavour."
     (geiser-impl--register file name methods)))
 
 (defmacro define-geiser-implementation (name &rest methods)
-  "Defines a new supported Scheme implementation.
+  "Define a new supported Scheme implementation.
 NAME can be either an unquoted symbol naming the implementation,
 or a two-element list (NAME PARENT), with PARENT naming another
 registered implementation from which to borrow methods not
@@ -240,16 +239,15 @@ switcher (switch-to-NAME), and provides geiser-NAME."
 
 (defun geiser-implementation-extension (impl ext)
   "Add to `geiser-implementations-alist' an entry for extension EXT."
-  (geiser-impl--add-to-alist 'regexp (format "\\.%s$" ext) impl t))
+  (geiser-impl--add-to-alist 'regexp (format "\\.%s\\'" ext) impl t))
 
 
 ;;; Trying to guess the scheme implementation:
 
 (defvar-local geiser-scheme-implementation nil
-  "Set this buffer local variable to specify the Scheme
-implementation to be used by Geiser.")
+  "The Scheme implementation to be used by Geiser.")
 
-(put 'geiser-scheme-implementation 'safe-local-variable 'symbolp)
+(put 'geiser-scheme-implementation 'safe-local-variable #'symbolp)
 
 (defun geiser-impl--match-impl (desc bn)
   (let ((rx (if (eq (car desc) 'regexp)
@@ -261,7 +259,7 @@ implementation to be used by Geiser.")
 
 (defun geiser-impl--read-impl (&optional prompt impls non-req)
   (let* ((impls (or impls geiser-active-implementations))
-         (impls (mapcar 'symbol-name impls))
+         (impls (mapcar #'symbol-name impls))
          (prompt (or prompt "Scheme implementation: ")))
     (intern (completing-read prompt impls nil (not non-req) nil
                              geiser-impl--impl-prompt-history
@@ -319,6 +317,7 @@ buffer contains Scheme code of the given implementation.")
              (geiser-impl--registered-value impl (nth 1 m) (nth 2 m)))))))
 
 (defmacro with--geiser-implementation (impl &rest body)
+  (declare (indent 1))
   (let* ((mbindings (mapcar (lambda (m)
                               `(,(nth 0 m)
                                 (geiser-impl--registered-method ,impl
@@ -334,7 +333,6 @@ buffer contains Scheme code of the given implementation.")
          (ibindings `((geiser-impl--implementation ,impl)))
          (bindings (append ibindings mbindings vbindings)))
     `(let* ,bindings ,@body)))
-(put 'with--geiser-implementation 'lisp-indent-function 1)
 
 
 ;;; Reload support:
@@ -347,3 +345,4 @@ buffer contains Scheme code of the given implementation.")
 
 
 (provide 'geiser-impl)
+;;; geiser-impl.el ends here
