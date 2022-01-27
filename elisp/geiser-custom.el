@@ -1,4 +1,4 @@
-;;; geiser-custom.el -- customization utilities
+;;; geiser-custom.el -- customization utilities  -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2009, 2010, 2012 Jose Antonio Ortega Ruiz
 
@@ -31,22 +31,21 @@
   :group 'faces)
 
 (defmacro geiser-custom--defface (face def group doc)
-  (declare (doc-string 4))
+  (declare (doc-string 4) (indent 1))
   (let ((face (intern (format "geiser-font-lock-%s" face))))
     `(defface ,face (face-default-spec ,def)
        ,(format "Face for %s." doc)
        :group ',group
        :group 'geiser-faces)))
-
-(put 'geiser-custom--defface 'lisp-indent-function 1)
-
-
 
 ;;; Reload support:
 
 (defvar geiser-custom--memoized-vars nil)
 
 (defun geiser-custom--memoize (name)
+  ;; FIXME: Why not build this list with mapatoms, filtering on a "\\`'geiser-"
+  ;; prefix and checking that it's a `defcustom', so we don't need
+  ;; `geiser-custom--defcustom'?
   (add-to-list 'geiser-custom--memoized-vars name))
 
 (defmacro geiser-custom--defcustom (name &rest body)
@@ -56,7 +55,7 @@ of the listed variables.  It is not used for anything else."
   ;; FIXME Remembering the value like this is not actually
   ;; necessary.  Evaluting `defcustom' always preserves the
   ;; existing value, if any.
-  (declare (doc-string 3) (debug (name body)))
+  (declare (doc-string 3) (debug (name body)) (indent 2))
   `(progn
      (geiser-custom--memoize ',name)
      (defcustom ,name ,@body)))
@@ -66,9 +65,6 @@ of the listed variables.  It is not used for anything else."
     (dolist (name geiser-custom--memoized-vars result)
       (when (boundp name)
         (push (cons name (symbol-value name)) result)))))
-
-
-(put 'geiser-custom--defcustom 'lisp-indent-function 2)
 
 
 (defconst geiser-custom-font-lock-keywords
