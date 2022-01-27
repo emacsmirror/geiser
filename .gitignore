@@ -47,3 +47,6 @@ Makefile.in
 /scheme/mit/geiser/geiser-w32.fre
 /scheme/mit/geiser/geiser-w32.pkd
 /doc/html
+/geiser-autoloads.el
+/elisp/geiser-autoloads.el
+/geiser-pkg.el
