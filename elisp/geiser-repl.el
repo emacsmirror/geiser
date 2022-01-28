@@ -1,6 +1,6 @@
 ;;; geiser-repl.el --- Geiser's REPL
 
-;; Copyright (C) 2009-2022 Jose Antonio Ortega Ruiz
+;; Copyright (C) 2009-2013, 2015-2016, 2018-2022 Jose Antonio Ortega Ruiz
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the Modified BSD License. You should
@@ -54,16 +54,18 @@ used to discover a buffer's project."
 (declare project-root "project.el")
 (declare project-current "project.el")
 
-(defun geiser-repl--project ()
-  (when-let (p (project-current)) (project-root p)))
+(defun geiser-repl-project-root ()
+  "Use project.el, when available, to determine a buffer's project root."
+  (when (featurep 'project)
+    (when-let (p (project-current)) (project-root p))))
 
 (geiser-custom--defcustom geiser-repl-current-project-function
-    (if (featurep 'project) #'geiser-repl--project 'ignore)
+    #'geiser-repl-project-root
   "Function used to determine the current project.
 The function is called from both source and REPL buffers, and
 should return a value which uniquely identifies the project."
   :type '(choice (function-item :tag "Ignore projects" ignore)
-                 (function-item :tag "Use Project.el" geiser-repl--project)
+                 (function-item :tag "Use Project.el" geiser-repl-project-root)
                  (function-item :tag "Use Projectile" projectile-project-root)
                  (function :tag "Other function")))
 
