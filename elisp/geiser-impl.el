@@ -1,6 +1,6 @@
 ;;; geiser-impl.el -- generic support for scheme implementations  -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2009, 2010, 2012, 2013, 2015, 2016, 2019, 2021 Jose Antonio Ortega Ruiz
+;; Copyright (C) 2009, 2010, 2012, 2013, 2015, 2016, 2019, 2021, 2022 Jose Antonio Ortega Ruiz
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the Modified BSD License. You should
@@ -158,9 +158,7 @@ in order to determine its scheme flavour."
              (= 2 (length m))
              (symbolp (car m)))
     (let ((v (cadr m)))
-      (if (functionp v) m
-        `(,(car m)
-          ,(lambda (&rest _) v))))))
+      (if (functionp v) m `(,(car m) (lambda (&rest _) ,v))))))
 
 (defun geiser-impl--define (file name parent methods)
   (let* ((methods (mapcar #'geiser-impl--normalize-method methods))
