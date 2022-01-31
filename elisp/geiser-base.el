@@ -26,8 +26,9 @@
 
 (when (not (fboundp 'looking-at-p))
   (defsubst looking-at-p (regexp)
-    (let ((inhibit-changing-match-data t))
-      (looking-at regexp))))
+    (with-no-warnings
+      (let ((inhibit-changing-match-data t))
+        (looking-at regexp)))))
 
 (defalias 'geiser--font-lock-ensure
   (if (fboundp 'font-lock-ensure)

@@ -25,6 +25,9 @@
 
 (require 'transient)
 (require 'ansi-color)
+(require 'compile)
+
+(declare-function geiser-repl--switch-to-buffer "geiser-repl" (buffer))
 
 
 ;;; Customization:
@@ -230,7 +233,7 @@ buffer.")
 
 (declare-function switch-to-geiser "geiser-repl")
 
-(defun geiser-debug--display-retort (what ret &optional res auto-p)
+(defun geiser-debug--display-retort (what ret &optional res _auto-p)
   (let* ((err (geiser-eval--retort-error ret))
          (key (geiser-eval--error-key err))
          (debug (alist-get 'debug ret))

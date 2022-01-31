@@ -38,7 +38,6 @@
 
 (defun geiser-compile--file-op (path compile-p msg)
   (let* ((b/p (geiser-compile--buffer/path path))
-         (buffer (car b/p))
          (path (cdr b/p))
          (msg (format "%s %s ..." msg path))
          (code `(,(if compile-p :comp-file :load-file) ,path))
