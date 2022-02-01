@@ -860,7 +860,7 @@ buffer."
 
     (define-key map "\C-d" 'delete-char)
     (define-key map "\C-m" 'geiser-repl--maybe-send)
-    (define-key map [return] 'geiser-repl--maybe-send)
+    (define-key map "\r" 'geiser-repl--maybe-send)
     (define-key map "\C-j" 'geiser-repl--newline-and-indent)
     (define-key map (kbd "TAB") 'geiser-repl-tab-dwim)
     (define-key map [backtab] 'geiser-repl--previous-error)
