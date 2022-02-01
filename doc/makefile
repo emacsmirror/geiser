@@ -1,4 +1,4 @@
-# Copyright (C) 2010, 2020, 2021 Jose Antonio Ortega Ruiz
+# Copyright (C) 2010, 2020, 2021, 2022 Jose Antonio Ortega Ruiz
 #
 # This file is free software; as a special exception the author gives
 # unlimited permission to copy and/or distribute it, with or without
@@ -19,12 +19,12 @@ clean:
 web:
 	rm -f $(output_dir)/*.html
 	texi2html --output=$(output_dir) \
-				  --split=chapter \
-				  --noheader \
-				  --nonumber-section \
-				  --init-file=$(top_srcdir)/doc/site.conf \
-				  --top-file=index.html \
-				  $(top_srcdir)/doc/web.texi
+                  --split=chapter \
+                  --noheader \
+                  --nonumber-section \
+                  --init-file=$(top_srcdir)/doc/site.conf \
+                  --top-file=index.html \
+                  $(top_srcdir)/doc/web.texi
 	cp $(top_srcdir)/doc/geiser.css ${output_dir}
 	cp -r $(top_srcdir)/doc/img ${output_dir}
 
