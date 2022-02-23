@@ -443,10 +443,15 @@ Guile), and, sometimes a global list of paths to add to the
 interpreter's load path (that'd be @code{geiser-guile-load-path} for
 Guile).
 
+@cindex default directory
 There is also a generic mechanism to specify how to add directories to
 the initial load path when @code{geiser-repl-current-project-function}
 is set: you can then customize @code{geiser-repl-add-project-paths} to a
 list of subdirectories of the project's root to add to the load path.
+When this option is set, the working directory of the REPL's buffer
+(i.e., the value of the elisp variable @code{default-directory}) will be
+set to the directory returned by
+@code{geiser-repl-current-project-function}).
 
 These variables controlling your scheme's initialisation process are
 good candidates for an entry in a project's @file{.dir-locals.el} file,

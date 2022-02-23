@@ -1,4 +1,8 @@
 
+* Version 0.23 (unreleased)
+
+  - Set REPL's default directory to project's root
+
 * Version 0.22.2 (February, 2022)
 
   - Bug fixes (byte-compiler warnings, corfu compatibility).

@@ -520,6 +520,7 @@ will be set up using `geiser-connect-local' when a REPL is started.")
 (defun geiser-repl--set-up-load-path ()
   (when geiser-repl-add-project-paths
     (when-let (root (funcall geiser-repl-current-project-function))
+      (setq-local default-directory root)
       (dolist (p (cond ((eq t geiser-repl-add-project-paths) '("."))
                        ((listp geiser-repl-add-project-paths)
                         geiser-repl-add-project-paths)))
