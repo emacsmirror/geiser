@@ -517,10 +517,13 @@ will be set up using `geiser-connect-local' when a REPL is started.")
 
 (defvar geiser-repl--last-scm-buffer)
 
+(defun geiser-repl--set-default-directory ()
+  (when-let (root (funcall geiser-repl-current-project-function))
+    (setq-local default-directory root)))
+
 (defun geiser-repl--set-up-load-path ()
   (when geiser-repl-add-project-paths
     (when-let (root (funcall geiser-repl-current-project-function))
-      (setq-local default-directory root)
       (dolist (p (cond ((eq t geiser-repl-add-project-paths) '("."))
                        ((listp geiser-repl-add-project-paths)
                         geiser-repl-add-project-paths)))
@@ -546,6 +549,7 @@ will be set up using `geiser-connect-local' when a REPL is started.")
          (prompt (geiser-con--combined-prompt prompt-rx deb-prompt-rx)))
     (unless prompt-rx
       (error "Sorry, I don't know how to start a REPL for %s" impl))
+    (geiser-repl--set-default-directory)
     (geiser-repl--save-remote-data address)
     (geiser-repl--start-scheme impl address prompt)
     (geiser-repl--quit-setup)
