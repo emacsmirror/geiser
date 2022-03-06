@@ -1,6 +1,6 @@
 ;;; geiser-debug.el -- displaying debug and eval info  -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2020, 2021 Jose Antonio Ortega Ruiz
+;; Copyright (C) 2009-2016, 2020-2022 Jose Antonio Ortega Ruiz
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the Modified BSD License. You should
@@ -87,7 +87,7 @@ results using ANSI color sequences (e.g. when using the the
 colorized module in Guile).
 
 If set to `nil', no special treatment is applied to output.  The
-symbol colors indicates colorizing the display of the Geiser dbg
+symbol colors indicates colorizing the display of the Geiser debug
 buffer using any color escape, and the symbol remove to remove
 all ANSI sequences."
   :type '(choice (const :tag "No special treatment" nil)
@@ -103,7 +103,7 @@ all ANSI sequences."
     map)
   "Keymap for `geiser-debug-mode'.")
 
-(define-derived-mode geiser-debug-mode nil "Geiser DBG"
+(define-derived-mode geiser-debug-mode nil "Geiser Debug"
   "A major mode for displaying Scheme compilation and evaluation results.
 \\{geiser-debug-mode-map}"
   (buffer-disable-undo)
@@ -195,7 +195,7 @@ all ANSI sequences."
 
 ;;; Buffer for displaying evaluation results:
 
-(geiser-popup--define debug "*Geiser dbg*" geiser-debug-mode)
+(geiser-popup--define debug "*Geiser Debug*" geiser-debug-mode)
 
 
 ;;; Displaying retorts
@@ -316,7 +316,7 @@ result in the minibuffer."
     (geiser-eval--send code cont (current-buffer))))
 
 (defun geiser-debug--send-region/wait (compile start end timeout)
-  "Synchronous version of `geiser-debug--send-region', waiting and returning its result."
+  "Synchronous version of `geiser-debug--send-region', returning its result."
   (let* ((str (buffer-substring-no-properties start end))
          (wrapped (geiser-debug--wrap-region str))
          (code `(,(if compile :comp :eval) (:scm ,wrapped))))

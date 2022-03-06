@@ -2,8 +2,9 @@
 * Version 0.23 (unreleased)
 
   - Set REPL's default directory to project's root.
-  - Depending on ELPA's project 0.8.1 to ensure compatibility
+  - Depend on ELPA's project 0.8.1 to ensure compatibility
     with emacs < 28.
+  - Harmonize buffer names (follow ~*Geiser ...*~ format)
 
 * Version 0.22.2 (February, 2022)
 

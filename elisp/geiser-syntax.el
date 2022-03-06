@@ -1,6 +1,6 @@
 ;;; geiser-syntax.el -- utilities for parsing scheme syntax
 
-;; Copyright (C) 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2019, 2020, 2021 Jose Antonio Ortega Ruiz
+;; Copyright (C) 2009-2016, 2019-2022 Jose Antonio Ortega Ruiz
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the Modified BSD License. You should
@@ -484,7 +484,7 @@ implementation-specific entries for font-lock-keywords.")
                  (geiser-syntax--mapconcat 'geiser-syntax--display a " ")))
         (t (format "%s" a))))
 
-(defconst geiser-syntax--font-lock-buffer-name " *geiser font lock*")
+(defconst geiser-syntax--font-lock-buffer-name " *Geiser font-lock*")
 
 (defun geiser-syntax--font-lock-buffer-p (&optional buffer)
   (equal (buffer-name buffer) geiser-syntax--font-lock-buffer-name))
@@ -515,7 +515,7 @@ implementation-specific entries for font-lock-keywords.")
         (buffer-undo-list t)
         (geiser-buffer (current-buffer)))
     (with-current-buffer
-        (get-buffer-create " *geiser-repl-fontification*")
+        (get-buffer-create " *Geiser repl fontification*")
       (let ((inhibit-modification-hooks nil))
         (erase-buffer)
         ;; Add string and a final space to ensure property change.

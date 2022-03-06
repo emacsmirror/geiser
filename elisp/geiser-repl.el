@@ -333,7 +333,7 @@ will be set up using `geiser-connect-local' when a REPL is started.")
 
 (defun geiser-repl-buffer-name (impl)
   "Return default name of the REPL buffer for implementation IMPL."
-  (format "* %s *" (geiser-repl--repl-name impl)))
+  (format "*Geiser %s*" (geiser-repl--repl-name impl)))
 
 (defun geiser-repl--switch-to-buffer (buffer)
   (unless (eq buffer (current-buffer))

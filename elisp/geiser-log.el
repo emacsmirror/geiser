@@ -1,6 +1,6 @@
 ;;; geiser-log.el -- logging utilities
 
-;; Copyright (C) 2009, 2010, 2012, 2019, 2021 Jose Antonio Ortega Ruiz
+;; Copyright (C) 2009, 2010, 2012, 2019, 2021, 2022 Jose Antonio Ortega Ruiz
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the Modified BSD License. You should
@@ -27,11 +27,11 @@
 ;;; Customization:
 
 (geiser-custom--defcustom geiser-log-autoscroll-buffer-p nil
-  "Set this so than the buffer *geiser messages* always shows the last message"
+  "Set this so than the buffer *Geiser Messages* always shows the last message"
   :group 'geiser
   :type 'boolean)
 
-(defvar geiser-log--buffer-name "*geiser messages*"
+(defvar geiser-log--buffer-name "*Geiser Messages*"
   "Name of the Geiser log buffer.")
 
 (defvar geiser-log--max-buffer-size 320000

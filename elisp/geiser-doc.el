@@ -1,6 +1,6 @@
 ;;; geiser-doc.el -- accessing scheme-provided documentation
 
-;; Copyright (C) 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2021 Jose Antonio Ortega Ruiz
+;; Copyright (C) 2009-2016, 2021-2022 Jose Antonio Ortega Ruiz
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the Modified BSD License. You should
@@ -332,7 +332,7 @@ help (e.g. browse an HTML page) implementing this method.")
   (setq geiser-eval--get-module-function 'geiser-doc--module)
   (setq buffer-read-only t))
 
-(geiser-popup--define doc "*Geiser documentation*" geiser-doc-mode)
+(geiser-popup--define doc "*Geiser Documentation*" geiser-doc-mode)
 
 
 ;;; Commands:
