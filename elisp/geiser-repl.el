@@ -29,6 +29,7 @@
 (require 'compile)
 (require 'scheme)
 (require 'font-lock)
+(require 'project)
 
 
 ;;; Customization:
@@ -55,9 +56,8 @@ used to discover a buffer's project."
 (declare project-current "project.el")
 
 (defun geiser-repl-project-root ()
-  "Use project.el, when available, to determine a buffer's project root."
-  (when (featurep 'project)
-    (when-let (p (project-current)) (project-root p))))
+  "Use project.el, to determine a buffer's project root."
+  (when-let (p (project-current)) (project-root p)))
 
 (geiser-custom--defcustom geiser-repl-current-project-function
     #'geiser-repl-project-root
@@ -65,8 +65,8 @@ used to discover a buffer's project."
 The function is called from both source and REPL buffers, and
 should return a value which uniquely identifies the project."
   :type '(choice (function-item :tag "Ignore projects" ignore)
-                 (function-item :tag "Use Project.el" geiser-repl-project-root)
-                 (function-item :tag "Use Projectile" projectile-project-root)
+                 (function-item :tag "Use project.el" geiser-repl-project-root)
+                 (function-item :tag "Use projectile" projectile-project-root)
                  (function :tag "Other function")))
 
 (geiser-custom--defcustom geiser-repl-use-other-window t

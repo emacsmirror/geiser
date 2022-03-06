@@ -1,7 +1,9 @@
 
 * Version 0.23 (unreleased)
 
-  - Set REPL's default directory to project's root
+  - Set REPL's default directory to project's root.
+  - Depending on ELPA's project 0.8.1 to ensure compatibility
+    with emacs < 28.
 
 * Version 0.22.2 (February, 2022)
 
