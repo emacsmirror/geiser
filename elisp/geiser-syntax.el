@@ -515,7 +515,7 @@ implementation-specific entries for font-lock-keywords.")
         (buffer-undo-list t)
         (geiser-buffer (current-buffer)))
     (with-current-buffer
-        (get-buffer-create " *Geiser repl fontification*")
+        (get-buffer-create " *Geiser REPL fontification*")
       (let ((inhibit-modification-hooks nil))
         (erase-buffer)
         ;; Add string and a final space to ensure property change.
