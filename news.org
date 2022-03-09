@@ -1,5 +1,5 @@
 
-* Version 0.23 (unreleased)
+* Version 0.23 (March, 2022)
 
   - Set REPL's default directory to project's root.
   - Depend on ELPA's project 0.8.1 to ensure compatibility
