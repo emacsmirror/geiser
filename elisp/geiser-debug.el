@@ -109,7 +109,7 @@ all ANSI sequences."
   (buffer-disable-undo)
   (set-syntax-table scheme-mode-syntax-table)
   (setq next-error-function 'geiser-edit--open-next)
-  (compilation-setup t)
+  (compilation-setup nil)
   (setq buffer-read-only t))
 
 (defvar-local geiser-debug--debugger-active-p nil)
