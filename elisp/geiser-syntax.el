@@ -190,6 +190,13 @@ implementation-specific entries for font-lock-keywords.")
   (geiser-syntax--read/token
    (cons 'unprintable (geiser-syntax--read/matching "<" ">"))))
 
+(defun geiser-syntax--read/ex-symbol ()  ;; #{foo bar}# style symbols
+  (let ((tk (geiser-syntax--read/matching "{" "}")))
+    (when-let (c (geiser-syntax--read/next-char))
+      (when (char-equal ?\# c)
+        (geiser-syntax--read/next-char)
+        (cons 'atom (make-symbol (format "#{%s}#" tk)))))))
+
 (defun geiser-syntax--read/skip-comment ()
   (while (and (geiser-syntax--read/next-char)
               (nth 8 (syntax-ppss))))
@@ -215,6 +222,7 @@ implementation-specific entries for font-lock-keywords.")
              (?\( (geiser-syntax--read/token 'vectorb))
              (?\< (geiser-syntax--read/unprintable))
              ((?' ?` ?,) (geiser-syntax--read/next-token))
+             (?\{ (geiser-syntax--read/ex-symbol))
              (t (let ((tok (geiser-syntax--read/symbol)))
                   (cond ((equal (symbol-name tok) "t") '(boolean . :t))
                         ((equal (symbol-name tok) "f") '(boolean . :f))
