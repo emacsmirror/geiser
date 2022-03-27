@@ -261,7 +261,7 @@
       (interrupt-process proc))))
 
 (defun geiser-con--wait (req timeout)
-  "Wait for the given request REQ to finish, up to TIMEOUT msecs, returning its result."
+  "Wait up to TIMEOUT msecs for request REQ to finish, returning its result."
   (let* ((con (or (geiser-con--request-connection req)
                   (error "Geiser connection not active")))
          (proc (geiser-con--connection-process con))
