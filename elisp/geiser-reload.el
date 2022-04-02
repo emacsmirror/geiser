@@ -29,7 +29,6 @@
            geiser-xref
            geiser-compile
            geiser-debug
-           geiser-company
            geiser-edit
            geiser-completion
            geiser-autodoc

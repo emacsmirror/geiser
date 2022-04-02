@@ -99,16 +99,17 @@
 
   To start a REPL, run =M-x geiser=.
 
-** Completion with company-mode
+** Completion at point
 
     Geiser offers identifier and module name completion, bound to
     =M-TAB= and =M-`= respectively. Only names visible in the current
     module are offered.
 
-    While that is cool and all, things are even better: if you have
-    [[http://company-mode.github.io/][company mode]] installed, Geiser's completion will use it. Just
-    require company-mode and, from then on, any new scheme buffer or
-    REPL will use it.
+    While that is cool and all, things are even better: if you have [[http://company-mode.github.io/][Company]] or
+    [[https://github.com/minad/corfu][Corfu]] installed, Geiser's completion will integrate with it. Just enable
+    global-company-mode/corfu-global-mode and, from then on, any new scheme
+    buffer or REPL will use it. Alternatively you can activate company-mode or
+    corfu-mode individually only in some buffers.
 
 ** Macro expansion with macrostep-geiser
 

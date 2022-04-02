@@ -10,7 +10,6 @@
 
 ;;; Code:
 
-(require 'geiser-company)
 (require 'geiser-doc)
 (require 'geiser-autodoc)
 (require 'geiser-edit)
@@ -104,10 +103,6 @@ change that."
 
 (geiser-custom--defcustom geiser-repl-autodoc-p t
   "Whether to enable `geiser-autodoc-mode' in the REPL by default."
-  :type 'boolean)
-
-(geiser-custom--defcustom geiser-repl-company-p t
-  "Whether to use company-mode for completion, if available."
   :type 'boolean)
 
 (geiser-custom--defcustom geiser-repl-read-only-prompt-p t
@@ -560,7 +555,6 @@ will be set up using `geiser-connect-local' when a REPL is started.")
           (geiser-repl--connection-setup impl address prompt-rx deb-prompt-rx))
     (geiser-repl--startup impl address)
     (geiser-repl--autodoc-mode 1)
-    (geiser-company--setup geiser-repl-company-p)
     (geiser-repl--set-up-load-path)
     (add-hook 'comint-output-filter-functions
               'geiser-repl--output-filter

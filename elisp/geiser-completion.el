@@ -17,6 +17,8 @@
 (require 'geiser-log)
 (require 'geiser-syntax)
 (require 'geiser-base)
+;; (require 'geiser-edit) TODO untangle cyclic dependency
+;; (require 'geiser-doc) TODO untangle cyclic dependency
 
 (require 'comint)
 (require 'minibuffer)
@@ -132,6 +134,30 @@ we're looking for a module name.")
               (point)))
         (scan-error pos)))))
 
+(defun geiser-completion--company-docsig (id)
+  (ignore-errors
+    (when (not (geiser-autodoc--inhibit))
+      (let ((help (geiser-autodoc--autodoc `((,id 0)))))
+        (and help (substring-no-properties help))))))
+
+(defun geiser-completion--company-doc-buffer (id)
+  (let* ((impl geiser-impl--implementation)
+         (module (geiser-eval--get-module))
+         (symbol (make-symbol id))
+         (ds (geiser-doc--get-docstring symbol module)))
+    (when (consp ds)
+      (with-current-buffer (get-buffer-create "*company-documentation*")
+        (geiser-doc--render-docstring ds symbol module impl)
+        (current-buffer)))))
+
+(defun geiser-completion--company-location (id)
+  (ignore-errors
+    (when (not (geiser-autodoc--inhibit))
+      (let ((id (make-symbol id)))
+        (condition-case nil
+            (geiser-edit-module id 'noselect)
+          (error (geiser-edit-symbol id 'noselect)))))))
+
 (defun geiser-completion--thing-at-point (module &optional predicate)
   (with-syntax-table scheme-mode-syntax-table
     (let* ((beg (geiser-completion--symbol-begin module))
@@ -142,7 +168,11 @@ we're looking for a module name.")
                             (match-string 1 prefix)
                           prefix)))
            (cmps (and prefix (geiser-completion--complete prefix module))))
-      (and cmps (list beg end cmps)))))
+      (when cmps
+        (list beg end cmps
+              :company-docsig #'geiser-completion--company-docsig
+              :company-doc-buffer #'geiser-completion--company-doc-buffer
+              :company-location #'geiser-completion--company-location)))))
 
 (defun geiser-completion--for-symbol (&optional predicate)
   (geiser-completion--thing-at-point nil predicate))
