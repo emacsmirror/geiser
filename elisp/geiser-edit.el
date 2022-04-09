@@ -51,7 +51,9 @@ or following links in error buffers.")
   (cdr (assoc "name" loc)))
 
 (defsubst geiser-edit--location-file (loc)
-  (cdr (assoc "file" loc)))
+  (when-let ((file-name (cdr (assoc "file" loc))))
+    (concat (or (file-remote-p default-directory) "")
+            file-name)))
 
 (defsubst geiser-edit--to-number (x)
   (cond ((numberp x) x)
