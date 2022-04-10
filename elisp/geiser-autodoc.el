@@ -1,6 +1,6 @@
-;;; geiser-autodoc.el -- autodoc mode
+;;; geiser-autodoc.el -- autodoc mode  -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2009, 2010, 2011, 2012, 2015, 2016, 2021 Jose Antonio Ortega Ruiz
+;; Copyright (C) 2009, 2010, 2011, 2012, 2015, 2016, 2021, 2022 Jose Antonio Ortega Ruiz
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the Modified BSD License. You should
@@ -58,22 +58,22 @@ when `geiser-autodoc-display-module-p' is on."
 (defsubst geiser-autodoc--clean-cache ()
   (setq geiser-autodoc--cached-signatures nil))
 
-(defun geiser-autodoc--show-signatures (ret)
+(defun geiser-autodoc--show-signatures (ret callback)
   (let ((res (geiser-eval--retort-result ret))
         (signs))
     (when res
       (dolist (item res)
         (push (cons (format "%s" (car item)) (cdr item)) signs))
-      (let ((str (geiser-autodoc--autodoc (geiser-syntax--scan-sexps) signs)))
-        (when (not (string-equal str eldoc-last-message))
-          (eldoc-message str)))
+      (let ((str (geiser-autodoc--autodoc (geiser-syntax--scan-sexps) nil signs)))
+        (funcall callback str))
       (setq geiser-autodoc--cached-signatures signs))))
 
-(defun geiser-autodoc--get-signatures (funs)
+(defun geiser-autodoc--get-signatures (funs callback)
   (when funs
     (let ((m (format "'(%s)" (mapconcat 'identity funs " "))))
       (geiser-eval--send `(:eval (:ge autodoc (:scm ,m)))
-                         'geiser-autodoc--show-signatures)))
+                         (lambda (r)
+                           (geiser-autodoc--show-signatures r callback)))))
   (and (or (assoc (car funs) geiser-autodoc--cached-signatures)
            (assoc (cadr funs) geiser-autodoc--cached-signatures))
        geiser-autodoc--cached-signatures))
@@ -147,7 +147,7 @@ when `geiser-autodoc-display-module-p' is on."
         (args (cdr (assoc "args" signature)))
         (module (cdr (assoc "module" signature))))
     (if (not args)
-	(geiser-autodoc--value-str proc module (cdr (assoc "value" signature)))
+        (geiser-autodoc--value-str proc module (cdr (assoc "value" signature)))
       (save-current-buffer
         (set-buffer (geiser-syntax--font-lock-buffer))
         (erase-buffer)
@@ -162,15 +162,18 @@ when `geiser-autodoc-display-module-p' is on."
         (insert ")")
         (buffer-substring (point-min) (point))))))
 
-(defun geiser-autodoc--autodoc (path &optional signs)
-  (let ((signs (or signs (geiser-autodoc--get-signatures (mapcar 'car path))))
+(defun geiser-autodoc--autodoc (path callback &optional signs)
+  (let ((signs (or signs
+                   (geiser-autodoc--get-signatures (mapcar 'car path) callback)))
         (p (car path))
         (s))
-    (while (and p (not s))
-      (unless (setq s (cdr (assoc (car p) signs)))
-        (setq p (car path))
-        (setq path (cdr path))))
-    (when s (geiser-autodoc--str p s))))
+    (if callback
+        t
+      (while (and p (not s))
+        (unless (setq s (cdr (assoc (car p) signs)))
+          (setq p (car path))
+          (setq path (cdr path))))
+      (when s (geiser-autodoc--str p s)))))
 
 
 ;;; Autodoc functions:
@@ -187,18 +190,18 @@ when `geiser-autodoc-display-module-p' is on."
 (defsubst geiser-autodoc--disinhibit-autodoc ()
   (setq geiser-autodoc--inhibit-function nil))
 
-(defsubst geiser-autodoc--autodoc-at-point ()
-  (geiser-autodoc--autodoc (geiser-syntax--scan-sexps)))
+(defsubst geiser-autodoc--autodoc-at-point (callback)
+  (geiser-autodoc--autodoc (geiser-syntax--scan-sexps) callback))
 
-(defun geiser-autodoc--eldoc-function ()
+(defun geiser-autodoc--eldoc-function (callback)
   (ignore-errors
     (when (not (geiser-autodoc--inhibit))
-      (geiser-autodoc--autodoc-at-point))))
+      (geiser-autodoc--autodoc-at-point callback))))
 
 (defun geiser-autodoc-show ()
   "Show the signature or value of the symbol at point in the echo area."
   (interactive)
-  (message (geiser-autodoc--autodoc-at-point)))
+  (message (geiser-autodoc--autodoc-at-point nil)))
 
 
 ;;; Autodoc mode:
@@ -218,25 +221,17 @@ displayed in the minibuffer."
   :lighter geiser-autodoc-mode-string
   :group 'geiser-autodoc
 
-  (set (make-local-variable 'eldoc-documentation-function)
-       (when geiser-autodoc-mode 'geiser-autodoc--eldoc-function))
+  (if geiser-autodoc-mode
+      (add-hook 'eldoc-documentation-functions
+                #'geiser-autodoc--eldoc-function nil t)
+    (remove-hook 'eldoc-documentation-functions
+                 #'geiser-autodoc--eldoc-function t))
   (set (make-local-variable 'eldoc-minor-mode-string) nil)
   (set (make-local-variable 'eldoc-idle-delay) geiser-autodoc-delay)
   (eldoc-mode (if geiser-autodoc-mode 1 -1))
   (when (called-interactively-p nil)
     (message "Geiser Autodoc %s"
              (if geiser-autodoc-mode "enabled" "disabled"))))
-
-(defadvice eldoc-display-message-no-interference-p
-  (after geiser-autodoc--message-ok-p)
-  (when geiser-autodoc-mode
-    (setq ad-return-value
-          (and ad-return-value
-               ;; Display arglist only when the minibuffer is
-               ;; inactive, e.g. not on `C-x C-f'. Lifted from slime.
-               (not (active-minibuffer-window)))))
-  ad-return-value)
-
 
 
 (provide 'geiser-autodoc)
