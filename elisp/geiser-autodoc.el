@@ -193,10 +193,10 @@ when `geiser-autodoc-display-module-p' is on."
 (defsubst geiser-autodoc--autodoc-at-point (callback)
   (geiser-autodoc--autodoc (geiser-syntax--scan-sexps) callback))
 
-(defun geiser-autodoc--eldoc-function (callback)
+(defun geiser-autodoc--eldoc-function (&optional callback)
   (ignore-errors
     (when (not (geiser-autodoc--inhibit))
-      (geiser-autodoc--autodoc-at-point callback))))
+      (geiser-autodoc--autodoc-at-point (or callback 'eldoc-message)))))
 
 (defun geiser-autodoc-show ()
   "Show the signature or value of the symbol at point in the echo area."
@@ -221,11 +221,14 @@ displayed in the minibuffer."
   :lighter geiser-autodoc-mode-string
   :group 'geiser-autodoc
 
-  (if geiser-autodoc-mode
-      (add-hook 'eldoc-documentation-functions
-                #'geiser-autodoc--eldoc-function nil t)
-    (remove-hook 'eldoc-documentation-functions
-                 #'geiser-autodoc--eldoc-function t))
+  (if (boundp 'eldoc-documentation-functions)
+      (if geiser-autodoc-mode
+          (add-hook 'eldoc-documentation-functions
+                    #'geiser-autodoc--eldoc-function nil t)
+        (remove-hook 'eldoc-documentation-functions
+                     #'geiser-autodoc--eldoc-function t))
+    (set (make-local-variable 'eldoc-documentation-function)
+         (when geiser-autodoc-mode 'geiser-autodoc--eldoc-function)))
   (set (make-local-variable 'eldoc-minor-mode-string) nil)
   (set (make-local-variable 'eldoc-idle-delay) geiser-autodoc-delay)
   (eldoc-mode (if geiser-autodoc-mode 1 -1))
