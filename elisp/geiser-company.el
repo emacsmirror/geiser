@@ -36,7 +36,7 @@
 (defun geiser-company--doc (id)
   (ignore-errors
     (when (not (geiser-autodoc--inhibit))
-      (let ((help (geiser-autodoc--autodoc `((,id 0)))))
+      (let ((help (geiser-autodoc--autodoc `((,id 0)) nil)))
         (and help (substring-no-properties help))))))
 
 (defun geiser-company--doc-buffer (id)

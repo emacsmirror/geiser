@@ -91,6 +91,8 @@ when `geiser-autodoc-display-module-p' is on."
            (format "(#%s)" (car a))))
         (t (geiser-syntax--display a))))
 
+(defvar geiser-autodoc--arg-face 'geiser-font-lock-autodoc-current-arg)
+
 (defun geiser-autodoc--insert-arg-group (args current &optional pos)
   (when args (insert " "))
   (dolist (a (geiser-autodoc--sanitize-args args))
@@ -103,8 +105,7 @@ when `geiser-autodoc-display-module-p' is on."
                 (and (geiser-syntax--keywordp current)
                      (listp a)
                      (geiser-syntax--symbol-eq current (car a))))
-        (put-text-property p (point)
-                           'face 'geiser-font-lock-autodoc-current-arg)
+        (put-text-property p (point) 'face geiser-autodoc--arg-face)
         (setq pos nil current nil)))
     (insert " "))
   (when args (backward-char))
@@ -134,7 +135,7 @@ when `geiser-autodoc-display-module-p' is on."
     (propertize str 'face 'geiser-font-lock-autodoc-identifier)))
 
 (defun geiser-autodoc--str* (full-signature)
-  (let ((geiser-font-lock-autodoc-current-arg 'default)
+  (let ((geiser-autodoc--arg-face 'default)
         (sign (if (listp full-signature) full-signature (list full-signature))))
     (geiser-autodoc--str (list (car sign)) sign)))
 
