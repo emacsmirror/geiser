@@ -13,6 +13,7 @@
 ;;; Code:
 
 (require 'geiser-repl)
+(require 'geiser-capf)
 (require 'geiser-menu)
 (require 'geiser-doc)
 (require 'geiser-compile)
@@ -341,7 +342,7 @@ With prefix, try to enter the current buffer's module."
       ("Complete symbol" ((kbd "M-TAB")) completion-at-point
        :enable (geiser--symbol-at-point))
       ("Complete module name" ((kbd "M-`") (kbd "C-."))
-       geiser-completion--complete-module)
+       geiser-capf-complete-module)
       ("Edit module" ("\C-c\C-e\C-m" "\C-c\C-em") geiser-edit-module)
       ("Add to load path..." ("\C-c\C-e\C-l" "\C-c\C-el") geiser-add-to-load-path)
       ("Toggle ()/[]" ("\C-c\C-e\C-[" "\C-c\C-e[") geiser-squarify)
@@ -385,7 +386,7 @@ interacting with the Geiser REPL is at your disposal.
   (when geiser-mode (geiser-impl--set-buffer-implementation nil t))
   (setq geiser-autodoc-mode-string "/A")
   (setq geiser-smart-tab-mode-string "/T")
-  (geiser-completion--setup geiser-mode)
+  (geiser-capf-setup geiser-mode)
   (when geiser-mode-autodoc-p
     (geiser-autodoc-mode (if geiser-mode 1 -1)))
   (when geiser-mode-smart-tab-p

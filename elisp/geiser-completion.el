@@ -1,6 +1,6 @@
 ;;; geiser-completion.el -- tab completion
 
-;; Copyright (C) 2009, 2010, 2011, 2012, 2018, 2020, 2021 Jose Antonio Ortega Ruiz
+;; Copyright (C) 2009, 2010, 2011, 2012, 2018, 2020, 2021, 2022 Jose Antonio Ortega Ruiz
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the Modified BSD License. You should
@@ -17,8 +17,6 @@
 (require 'geiser-log)
 (require 'geiser-syntax)
 (require 'geiser-base)
-;; (require 'geiser-edit) TODO untangle cyclic dependency
-;; (require 'geiser-doc) TODO untangle cyclic dependency
 
 (require 'comint)
 (require 'minibuffer)
@@ -133,71 +131,6 @@ we're looking for a module name.")
             (when (>= (point) pos)
               (point)))
         (scan-error pos)))))
-
-(defun geiser-completion--company-docsig (id)
-  (ignore-errors
-    (when (not (geiser-autodoc--inhibit))
-      (let ((help (geiser-autodoc--autodoc `((,id 0)))))
-        (and help (substring-no-properties help))))))
-
-(defun geiser-completion--company-doc-buffer (id)
-  (let* ((impl geiser-impl--implementation)
-         (module (geiser-eval--get-module))
-         (symbol (make-symbol id))
-         (ds (geiser-doc--get-docstring symbol module)))
-    (when (consp ds)
-      (with-current-buffer (get-buffer-create "*company-documentation*")
-        (geiser-doc--render-docstring ds symbol module impl)
-        (current-buffer)))))
-
-(defun geiser-completion--company-location (id)
-  (ignore-errors
-    (when (not (geiser-autodoc--inhibit))
-      (let ((id (make-symbol id)))
-        (condition-case nil
-            (geiser-edit-module id 'noselect)
-          (error (geiser-edit-symbol id 'noselect)))))))
-
-(defun geiser-completion--thing-at-point (module &optional predicate)
-  (with-syntax-table scheme-mode-syntax-table
-    (let* ((beg (geiser-completion--symbol-begin module))
-           (end (or (geiser-completion--prefix-end beg module) beg))
-           (prefix (and (> end beg) (buffer-substring-no-properties beg end)))
-           (prefix (and prefix
-                        (if (string-match "\\([^-]+\\)-" prefix)
-                            (match-string 1 prefix)
-                          prefix)))
-           (cmps (and prefix (geiser-completion--complete prefix module))))
-      (when cmps
-        (list beg end cmps
-              :company-docsig #'geiser-completion--company-docsig
-              :company-doc-buffer #'geiser-completion--company-doc-buffer
-              :company-location #'geiser-completion--company-location)))))
-
-(defun geiser-completion--for-symbol (&optional predicate)
-  (geiser-completion--thing-at-point nil predicate))
-
-(defun geiser-completion--for-module (&optional predicate)
-  (geiser-completion--thing-at-point t predicate))
-
-(defun geiser-completion--for-filename ()
-  (when (geiser-syntax--in-string-p)
-    (let ((comint-completion-addsuffix "\""))
-      (ignore-errors (comint-filename-completion)))))
-
-(defun geiser-completion--setup (enable)
-  (set (make-local-variable 'completion-at-point-functions)
-       (if enable
-           '(geiser-completion--for-symbol
-             geiser-completion--for-module
-             geiser-completion--for-filename)
-         (default-value 'completion-at-point-functions))))
-
-(defun geiser-completion--complete-module ()
-  "Complete module name at point."
-  (interactive)
-  (let ((completion-at-point-functions '(geiser-completion--for-module)))
-    (call-interactively 'completion-at-point)))
 
 
 ;;; Smart tab mode:

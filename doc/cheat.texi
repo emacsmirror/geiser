@@ -127,7 +127,7 @@ third key not modified by @key{Control}; e.g.,
 @tab @code{completion-at-point}
 @tab Complete identifier at point
 @item M-`, C-.
-@tab @code{geiser-completion--complete-module}
+@tab @code{geiser-capf-complete-module}
 @tab Complete module name at point
 @end multitable
 
@@ -164,7 +164,7 @@ third key not modified by @key{Control}; e.g.,
 @tab @code{completion-at-point}
 @tab Complete identifier at point
 @item M-`, C-.
-@tab @code{geiser-completion--complete-module}
+@tab @code{geiser-capf-complete-module}
 @tab Complete module name at point
 @item C-c [, C-c C-[
 @tab @code{geiser-squarify}

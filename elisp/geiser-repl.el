@@ -10,6 +10,7 @@
 
 ;;; Code:
 
+(require 'geiser-capf)
 (require 'geiser-doc)
 (require 'geiser-autodoc)
 (require 'geiser-edit)
@@ -871,7 +872,7 @@ buffer."
       ("Complete symbol" ((kbd "M-TAB"))
        completion-at-point :enable (geiser--symbol-at-point))
       ("Complete module name" ((kbd "C-.") (kbd "M-`"))
-       geiser-completion--complete-module :enable (geiser--symbol-at-point))
+       geiser-capf-complete-module :enable (geiser--symbol-at-point))
       ("Edit symbol" "\M-." geiser-edit-symbol-at-point
        :enable (geiser--symbol-at-point))
       --
@@ -936,7 +937,7 @@ buffer."
   (set (make-local-variable 'comint-input-ignoredups)
        geiser-repl-history-no-dups-p)
   (setq geiser-eval--get-module-function 'geiser-repl--module-function)
-  (geiser-completion--setup t)
+  (geiser-capf-setup t)
   (setq geiser-smart-tab-mode-string "")
   (geiser-smart-tab-mode t)
 

@@ -1,6 +1,6 @@
 ;;; geiser-reload.el -- unload/load geiser packages
 
-;; Copyright (C) 2009, 2010, 2012, 2020, 2021 Jose Antonio Ortega Ruiz
+;; Copyright (C) 2009, 2010, 2012, 2020, 2021, 2022 Jose Antonio Ortega Ruiz
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the Modified BSD License. You should
@@ -25,6 +25,7 @@
   (quote '(
            geiser-mode
            geiser-repl
+           geiser-capf
            geiser-doc
            geiser-xref
            geiser-compile
