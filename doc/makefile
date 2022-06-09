@@ -18,15 +18,14 @@ clean:
 
 web:
 	rm -f $(output_dir)/*.html
-	texi2html --output=$(output_dir) \
-                  --split=chapter \
-                  --noheader \
-                  --nonumber-section \
-                  --init-file=$(top_srcdir)/doc/site.conf \
-                  --top-file=index.html \
-                  $(top_srcdir)/doc/web.texi
-	cp $(top_srcdir)/doc/geiser.css ${output_dir}
-	cp -r $(top_srcdir)/doc/img ${output_dir}
+	makeinfo --output=$(output_dir) \
+	  --html \
+	  --css-include=$(CURDIR)/geiser.css \
+	  --no-headers \
+	  --no-number-sections \
+	  --split=chapter \
+	  $(CURDIR)/geiser.texi && \
+	cp -r $(CURDIR)/img ${output_dir}
 
 http: web
 	cd $(output_dir) && python -m http.server $(port)
