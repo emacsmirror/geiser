@@ -46,8 +46,6 @@ The document was typeset with
 @node Top, Introduction, (dir), (dir)
 @top Geiser
 
-@insertcopying
-
 @menu
 * Introduction::
 * Installation::
