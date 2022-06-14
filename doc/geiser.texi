@@ -1,7 +1,6 @@
 \input texinfo   @c -*-texinfo-*-
 @c %**start of header
 @setfilename geiser.info
-@settitle Geiser User Manual
 @c %**end of header
 
 @include macros.texi
