@@ -23,6 +23,7 @@ web:
 	  --css-include=$(CURDIR)/geiser.css \
 	  --no-headers \
 	  --no-number-sections \
+	  --no-node-files \
 	  --split=chapter \
 	  $(CURDIR)/geiser.texi && \
 	cp -r $(CURDIR)/img ${output_dir}
