@@ -21,36 +21,36 @@
 
 ;;; Reload:
 
-(defmacro geiser--features-list ()
-  (quote '(
-           geiser-mode
-           geiser-repl
-           geiser-capf
-           geiser-doc
-           geiser-xref
-           geiser-compile
-           geiser-debug
-           geiser-completion
-           geiser-autodoc
-           geiser-edit
-           geiser-eval
-           geiser-connection
-           geiser-syntax
-           geiser-menu
-           geiser-inf
-           geiser-impl
-           geiser-image
-           geiser-custom
-           geiser-log
-           geiser-popup
-           geiser-base
-           geiser
-           )))
+(defconst geiser--features-list
+  '(
+    geiser-mode
+    geiser-repl
+    geiser-capf
+    geiser-doc
+    geiser-xref
+    geiser-compile
+    geiser-debug
+    geiser-edit
+    geiser-completion
+    geiser-autodoc
+    geiser-eval
+    geiser-connection
+    geiser-syntax
+    geiser-menu
+    geiser-inf
+    geiser-impl
+    geiser-image
+    geiser-custom
+    geiser-log
+    geiser-popup
+    geiser-base
+    geiser
+    ))
 
 (defun geiser-unload ()
   "Unload all Geiser modules."
   (interactive)
-  (let ((fs (geiser--features-list)))
+  (let ((fs geiser--features-list))
     (unload-feature 'geiser-reload t)
     (dolist (f fs)
       (when (featurep f) (unload-feature f t)))
