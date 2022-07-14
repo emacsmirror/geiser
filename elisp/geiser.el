@@ -54,7 +54,8 @@
 ;;; Locations:
 
 ;;;###autoload
-(defconst geiser-elisp-dir (file-name-directory load-file-name)
+(defconst geiser-elisp-dir
+  (file-name-directory (or load-file-name buffer-file-name))
   "Directory containing Geiser's Elisp files.")
 
 
