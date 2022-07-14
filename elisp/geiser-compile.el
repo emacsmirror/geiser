@@ -1,4 +1,4 @@
-;;; geiser-compile.el -- compile/load scheme files  -*- lexical-binding: t; -*-
+;;; geiser-compile.el --- Compile/load scheme files  -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2009-2013, 2016, 2018, 2021-2022 Jose Antonio Ortega Ruiz
 

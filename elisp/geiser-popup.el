@@ -1,4 +1,4 @@
-;;; geiser-popup.el -- popup windows  -*- lexical-binding: t; -*-
+;;; geiser-popup.el --- Popup windows  -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2009, 2010, 2012, 2013 Jose Antonio Ortega Ruiz
 

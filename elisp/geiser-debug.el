@@ -1,4 +1,4 @@
-;;; geiser-debug.el -- displaying debug and eval info  -*- lexical-binding: t; -*-
+;;; geiser-debug.el --- Displaying debug and eval info  -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2009-2016, 2020-2022 Jose Antonio Ortega Ruiz
 

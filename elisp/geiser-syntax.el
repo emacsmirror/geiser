@@ -1,4 +1,4 @@
-;;; geiser-syntax.el -- utilities for parsing scheme syntax  -*- lexical-binding: t; -*-
+;;; geiser-syntax.el --- Utilities for parsing scheme syntax  -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2009-2016, 2019-2022 Jose Antonio Ortega Ruiz
 

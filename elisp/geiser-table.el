@@ -1,4 +1,4 @@
-;;; geiser-table.el -- table creation  -*- lexical-binding: t; -*-
+;;; geiser-table.el --- Table creation  -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2009, 2010, 2012 Jose Antonio Ortega Ruiz
 

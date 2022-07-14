@@ -1,4 +1,4 @@
-;;; geiser-completion.el -- tab completion  -*- lexical-binding: t; -*-
+;;; geiser-completion.el --- Tab completion  -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2009-2012, 2018, 2020-2022 Jose Antonio Ortega Ruiz
 

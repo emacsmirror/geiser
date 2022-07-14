@@ -1,4 +1,4 @@
-;;; geiser-capf.el -- Setup for Geiser's CAPFs  -*- lexical-binding: t; -*-
+;;; geiser-capf.el --- Setup for Geiser's CAPFs  -*- lexical-binding: t; -*-
 
 ;; Copyright (c) 2022  Jose Antonio Ortega Ruiz
 
@@ -10,6 +10,7 @@
 ;; Start date: Sat Apr 23, 2022 18:39
 
 
+;;; Code:
 
 (require 'geiser-autodoc)
 (require 'geiser-impl)

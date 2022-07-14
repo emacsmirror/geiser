@@ -1,4 +1,4 @@
-;;; geiser-image.el -- support for image display  -*- lexical-binding: t; -*-
+;;; geiser-image.el --- Support for image display  -*- lexical-binding: t; -*-
 
 ;; Copyright (c) 2012, 2015 Jose Antonio Ortega Ruiz
 

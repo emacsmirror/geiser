@@ -1,4 +1,4 @@
-;;; geiser-impl.el -- generic support for scheme implementations  -*- lexical-binding: t; -*-
+;;; geiser-impl.el --- Generic support for scheme implementations  -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2009-2010, 2012-2013, 2015-2016, 2019, 2021-2022 Jose Antonio Ortega Ruiz
 

@@ -1,4 +1,4 @@
-;;; geiser-mode.el -- minor mode for scheme buffers  -*- lexical-binding: t; -*-
+;;; geiser-mode.el --- Minor mode for scheme buffers  -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2009-2017, 2020, 2022, 2024 Jose Antonio Ortega Ruiz
 

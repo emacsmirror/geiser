@@ -1,4 +1,4 @@
-;;; geiser-xref.el -- utilities for cross-referencing  -*- lexical-binding: t; -*-
+;;; geiser-xref.el --- Utilities for cross-referencing  -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2009, 2010, 2012, 2022 Jose Antonio Ortega Ruiz
 
@@ -24,6 +24,7 @@
 
 
 ;;; Customization:
+
 (defgroup geiser-xref nil
   "Options for cross-referencing commands."
   :group 'geiser)

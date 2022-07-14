@@ -1,4 +1,4 @@
-;;; geiser-log.el -- logging utilities  -*- lexical-binding: t; -*-
+;;; geiser-log.el --- Logging utilities  -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2009, 2010, 2012, 2019, 2021, 2022 Jose Antonio Ortega Ruiz
 

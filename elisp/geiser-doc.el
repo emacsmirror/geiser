@@ -1,4 +1,4 @@
-;;; geiser-doc.el -- accessing scheme-provided documentation  -*- lexical-binding: t; -*-
+;;; geiser-doc.el --- Accessing scheme-provided documentation  -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2009-2016, 2021-2022 Jose Antonio Ortega Ruiz
 

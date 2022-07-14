@@ -1,4 +1,4 @@
-;;; geiser-eval.el -- sending scheme code for evaluation  -*- lexical-binding: t; -*-
+;;; geiser-eval.el --- Sending scheme code for evaluation  -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2009, 2010, 2011, 2012, 2013, 2015, 2021, 2023 Jose Antonio Ortega Ruiz
 
@@ -8,6 +8,8 @@
 ;; not, see <http://www.xfree86.org/3.3.6/COPYRIGHT2.html#5>.
 
 ;; Start date: Sat Feb 07, 2009 22:35
+
+;;; Commentary:
 
 ;; Functions, building on top of geiser-connection, to evaluate scheme
 ;; code.

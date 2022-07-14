@@ -1,4 +1,4 @@
-;;; geiser-base.el --- shared bits  -*- lexical-binding: t -*-
+;;; geiser-base.el --- Shared bits  -*- lexical-binding: t -*-
 
 ;; Copyright (C) 2009, 2010, 2012, 2013, 2015, 2016, 2019, 2024  Jose Antonio Ortega Ruiz
 
@@ -7,8 +7,10 @@
 ;; have received a copy of the license along with this program. If
 ;; not, see <http://www.xfree86.org/3.3.6/COPYRIGHT2.html#5>.
 
-;; Settings and vars shared by all geiser modules, including little
-;; utilities and emacsen compatibility bits.
+;;; Commentary:
+
+;; Settings and variables shared by all geiser modules, including
+;; little utilities and emacsen compatibility bits.
 
 
 ;;; Code:
@@ -64,7 +66,6 @@
   (let ((p (point)))
     (insert str)
     (put-text-property p (point) 'face face)))
-
 
 (defmacro geiser--save-msg (&rest body)
   (let ((msg (make-symbol "msg")))

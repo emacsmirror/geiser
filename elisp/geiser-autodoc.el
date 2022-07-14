@@ -1,4 +1,4 @@
-;;; geiser-autodoc.el -- autodoc mode  -*- lexical-binding: t; -*-
+;;; geiser-autodoc.el --- Autodoc mode  -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2009, 2010, 2011, 2012, 2015, 2016, 2021, 2022 Jose Antonio Ortega Ruiz
 

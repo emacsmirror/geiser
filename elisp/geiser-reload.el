@@ -1,4 +1,4 @@
-;;; geiser-reload.el -- unload/load geiser packages  -*- lexical-binding: t; -*-
+;;; geiser-reload.el --- Unload/load geiser packages  -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2009, 2010, 2012, 2020, 2021, 2022, 2024 Jose Antonio Ortega Ruiz
 

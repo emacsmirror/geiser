@@ -1,4 +1,4 @@
-;;; geiser-edit.el -- scheme edit locations  -*- lexical-binding: t; -*-
+;;; geiser-edit.el --- Scheme edit locations  -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2009, 2010, 2012, 2013, 2019-2024 Jose Antonio Ortega Ruiz
 

@@ -1,4 +1,4 @@
-;;; geiser-connection.el -- talking to a scheme process  -*- lexical-binding: t; -*-
+;;; geiser-connection.el --- Talking to a scheme process  -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2009-2011, 2013, 2021-2022 Jose Antonio Ortega Ruiz
 

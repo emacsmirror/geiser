@@ -1,4 +1,4 @@
-;;; geiser-menu.el -- menu and keymaps definition  -*- lexical-binding: t; -*-
+;;; geiser-menu.el --- Menu and keymaps definition  -*- lexical-binding: t; -*-
 
 ;; Copyright (c) 2010, 2012 Jose Antonio Ortega Ruiz
 
