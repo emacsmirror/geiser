@@ -16,15 +16,14 @@
 
 (require 'ring)
 
-(eval-after-load "ring"
-  '(when (not (fboundp 'ring-member))
-     (defun ring-member (ring item)
-       (catch 'found
-         (dotimes (ind (ring-length ring))
-           (when (equal item (ring-ref ring ind))
-             (throw 'found ind)))))))
+(unless (fboundp 'ring-member)
+  (defun ring-member (ring item)
+    (catch 'found
+      (dotimes (ind (ring-length ring))
+        (when (equal item (ring-ref ring ind))
+          (throw 'found ind))))))
 
-(when (not (fboundp 'looking-at-p))
+(unless (fboundp 'looking-at-p)
   (defsubst looking-at-p (regexp)
     (with-no-warnings
       (let ((inhibit-changing-match-data t))
