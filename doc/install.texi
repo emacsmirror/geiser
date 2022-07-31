@@ -20,7 +20,7 @@ namely:
 
 @itemize @bullet
 @supimpl{Chez, http://www.scheme.com, 9.4,chez}
-@supimpl{Chibi, http://synthcode.com/scheme/chibi, 0.7.3,chez}
+@supimpl{Chibi, http://synthcode.com/scheme/chibi, 0.7.3,chibi}
 @supimpl{Chicken, http://call-cc.org, 4.8.0, chicken}
 @supimpl{Gambit, http://gambitscheme.org/wiki/index.php/Main_Page, 4.9.3, gambit}
 @supimpl{Gauche, http://practical-scheme.net/gauche/, 0.9.6, gauche}
