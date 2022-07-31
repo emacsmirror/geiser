@@ -83,7 +83,7 @@ add, defaulting to the current buffer's directory."
   (interactive "DDirectory to add: ")
   (let* ((c `(:eval (:ge add-to-load-path ,(expand-file-name path))))
          (r (geiser-eval--send/result c)))
-    (message "%s%s added to load path" path (if r "" "couldn't be"))))
+    (message "%s%s added to load path" path (if r "" " couldn't be"))))
 
 
 (provide 'geiser-compile)
