@@ -439,9 +439,9 @@ will be set up using `geiser-connect-local' when a REPL is started.")
   (add-text-properties
    start end
    '(font-lock-fontified t
-			 fontified t
-			 font-lock-multiline t
-			 font-lock-face geiser-font-lock-repl-output)))
+                         fontified t
+                         font-lock-multiline t
+                         font-lock-face geiser-font-lock-repl-output)))
 
 (defun geiser-repl--narrow-to-prompt ()
   "Narrow to active prompt region and return t, otherwise returns nil."
@@ -922,6 +922,7 @@ buffer."
   "Major mode for interacting with an inferior scheme repl process.
 \\{geiser-repl-mode-map}"
   (scheme-mode-variables)
+  (hack-dir-local-variables-non-file-buffer)
   (set (make-local-variable 'geiser-repl--last-output-start) (point-marker))
   (set (make-local-variable 'geiser-repl--last-output-end) (point-marker))
   (set (make-local-variable 'face-remapping-alist)
