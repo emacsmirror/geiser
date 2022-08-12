@@ -1,4 +1,4 @@
-;;; geiser-repl.el --- Geiser's REPL
+;;; geiser-repl.el --- Geiser's REPL  -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2009-2013, 2015-2016, 2018-2022 Jose Antonio Ortega Ruiz
 
@@ -205,6 +205,20 @@ This variable is a good candidate for .dir-locals.el.
 
 This option has no effect if no project root is found."
   :type '(choice boolean (list string)))
+
+(geiser-custom--defcustom geiser-repl-startup-hook nil
+  "Functions run right after a REPL has started and is fully set up.
+
+See also `geiser-repl-startup-forms'."
+  :type 'hook)
+
+(geiser-custom--defcustom geiser-repl-startup-forms nil
+  "List scheme forms, as strings, sent to a REPL on start-up.
+
+This variable is a good candidate for .dir-locals.el.
+
+See also `geiser-repl-startup-hook'."
+  :type '(repeat string))
 
 (geiser-custom--defface repl-input
   'comint-highlight-input geiser-repl "evaluated input highlighting")
@@ -563,6 +577,10 @@ will be set up using `geiser-connect-local' when a REPL is started.")
               t)
     (set-process-query-on-exit-flag (get-buffer-process (current-buffer))
                                     geiser-repl-query-on-kill-p)
+    (dolist (f geiser-repl-startup-forms)
+      (geiser-log--info "Evaluating startup form %s..." f)
+      (geiser-eval--send/wait `(:eval (:scm ,f))))
+    (run-hooks geiser-repl-startup-hook)
     (message "%s up and running!" (geiser-repl--repl-name impl))))
 
 (defvar-local geiser-repl--connection-buffer nil)

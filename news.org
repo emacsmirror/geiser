@@ -1,3 +1,9 @@
+* Version 0.25 (unreleased)
+
+  - Fix: support for .dir-locals.el in REPL buffers
+  - New customizable variables: geiser-repl-startup-hook and
+    geiser-repl-startup-forms.
+
 * Version 0.24 (May, 2022)
 
   - Support for #{...}# extended symbol syntax
