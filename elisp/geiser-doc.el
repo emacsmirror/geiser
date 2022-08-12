@@ -149,14 +149,14 @@ value if the default action should be skipped.")
   (let ((link (button-get button 'geiser-link)))
     (when link (geiser-doc--follow-link link))))
 
-(define-button-type 'geiser-doc--button
+(define-button-type 'geiser-doc
   'action 'geiser-doc--button-action
   'follow-link t)
 
 (defun geiser-doc--make-module-button (beg end module impl)
   (let ((link (geiser-doc--make-link nil module impl))
         (help (format "Help for module %s" module)))
-    (make-text-button beg end :type 'geiser-doc--button
+    (make-text-button beg end :type 'geiser-doc
                       'face 'geiser-font-lock-doc-link
                       'geiser-link link
                       'help-echo help)))
@@ -171,7 +171,7 @@ value if the default action should be skipped.")
                        (if target (format "%s in " target) "")
                        (or module "<unknown>"))))
     (insert-text-button text
-                        :type 'geiser-doc--button
+                        :type 'geiser-doc
                         'face 'geiser-font-lock-doc-link
                         'geiser-link link
                         'help-echo help)))

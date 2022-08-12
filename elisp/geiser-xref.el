@@ -61,7 +61,7 @@
 
 ;;; Ref button:
 
-(define-button-type 'geiser-xref--button
+(define-button-type 'geiser-xref
   'action 'geiser-xref--button-action
   'face 'geiser-font-lock-xref-link
   'follow-link t)
@@ -85,7 +85,7 @@
       (insert "   - ")
       (if (stringp file)
           (insert-text-button signature-txt
-                              :type 'geiser-xref--button
+                              :type 'geiser-xref
                               'location location
                               'name (car signature)
                               'help-echo (format "%s in %s"

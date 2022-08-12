@@ -164,7 +164,7 @@ or following links in error buffers.")
 
 ;;; Links
 
-(define-button-type 'geiser-edit--button
+(define-button-type 'geiser-edit
   'action 'geiser-edit--button-action
   'face 'geiser-font-lock-error-link
   'follow-link t)
@@ -176,7 +176,7 @@ or following links in error buffers.")
 
 (defun geiser-edit--make-link (beg end file line col &optional method)
   (make-button beg end
-               :type 'geiser-edit--button
+               :type 'geiser-edit
                'geiser-method method
                'geiser-location
                (geiser-edit--make-location 'error file line col)
@@ -210,7 +210,7 @@ or following links in error buffers.")
     (while (> n 0)
       (let ((b (ignore-errors (funcall nxt 1))))
         (unless b (setq n 0))
-        (when (and b (eq (button-type b) 'geiser-edit--button))
+        (when (and b (eq (button-type b) 'geiser-edit))
           (setq n (- n 1))
           (when (<= n 0)
             (setq found t)
