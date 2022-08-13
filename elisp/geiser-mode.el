@@ -279,12 +279,14 @@ With prefix, try to enter the current buffer's module."
 (defun geiser-restart-repl ()
   "Restarts the REPL associated with the current buffer."
   (interactive)
-  (let ((b (current-buffer)))
-    (geiser-mode-switch-to-repl nil)
-    (comint-kill-subjob)
-    (sit-for 0.1) ;; ugly hack; but i don't care enough to fix it
-    (call-interactively 'run-geiser)
-    (sit-for 0.2) ;; ditto
+  (let ((b (current-buffer))
+        (impl geiser-impl--implementation))
+    (when (buffer-live-p geiser-repl--repl)
+      (geiser-mode-switch-to-repl nil)
+      (comint-kill-subjob)
+      (sit-for 0.1)) ;; ugly hack; but i don't care enough to fix it
+    (run-geiser impl)
+    (sit-for 0.2)
     (goto-char (point-max))
     (pop-to-buffer b)))
 
