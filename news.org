@@ -1,8 +1,9 @@
 * Version 0.25 (unreleased)
 
-  - Fix: support for .dir-locals.el in REPL buffers
   - New customizable variables: geiser-repl-startup-hook and
     geiser-repl-startup-forms.
+  - Fix: support for .dir-locals.el in REPL buffers
+  - Fix: geiser-restart-repl: don't start a REPL to just restart it
 
 * Version 0.24 (May, 2022)
 
