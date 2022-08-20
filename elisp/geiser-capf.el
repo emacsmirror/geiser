@@ -70,13 +70,15 @@
     (let ((comint-completion-addsuffix "\""))
       (ignore-errors (comint-filename-completion)))))
 
+(defconst geiser-capf--capfs
+  '(geiser-capf--for-filename geiser-capf--for-module geiser-capf--for-symbol))
+
 (defun geiser-capf-setup (enable)
-  (set (make-local-variable 'completion-at-point-functions)
-       (if enable
-           '(geiser-capf--for-symbol
-             geiser-capf--for-module
-             geiser-capf--for-filename)
-         (default-value 'completion-at-point-functions))))
+  (if enable
+      (dolist (f geiser-capf--capfs)
+        (add-hook 'completion-at-point-functions f nil t))
+    (dolist (f geiser-capf--capfs)
+      (remove-hook 'completion-at-point-functions f t))))
 
 (defun geiser-capf-complete-module ()
   "Complete module name at point."
