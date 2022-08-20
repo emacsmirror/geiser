@@ -474,13 +474,13 @@ will be set up using `geiser-connect-local' when a REPL is started.")
       (narrow-to-region prompt-beg prompt-end)
       t)))
 
-(defun geiser-repl--wrap-fontify-region-function (beg end &optional loudly)
+(defun geiser-repl--wrap-fontify-region-function (_beg _end &optional _loudly)
   (save-restriction
     (when (geiser-repl--narrow-to-prompt)
       (let ((font-lock-dont-widen t))
         (font-lock-default-fontify-region (point-min) (point-max) nil)))))
 
-(defun geiser-repl--wrap-unfontify-region-function (beg end &optional loudly)
+(defun geiser-repl--wrap-unfontify-region-function (_beg _end &optional _loudly)
   (save-restriction
     (when (geiser-repl--narrow-to-prompt)
       (let ((font-lock-dont-widen t))
@@ -540,6 +540,10 @@ will be set up using `geiser-connect-local' when a REPL is started.")
         (geiser-add-to-load-path (expand-file-name p root))))))
 
 (defvar-local geiser-repl--repl-buffer nil)
+
+(defvar-local geiser-repl--binary nil)
+
+(defvar-local geiser-repl--arglist nil)
 
 (defun geiser-repl--start-repl (impl address)
   (message "Starting Geiser REPL ...")
@@ -732,7 +736,7 @@ If SAVE-HISTORY is non-nil, save CMD in the REPL history."
                      (equal cb geiser-repl--repl))
             (geiser-repl--set-up-repl geiser-impl--implementation)))))))
 
-(defun geiser-repl--sentinel (proc event)
+(defun geiser-repl--sentinel (proc _event)
   (let ((pb (process-buffer proc)))
     (when (buffer-live-p pb)
       (with-current-buffer pb
@@ -820,8 +824,7 @@ If SAVE-HISTORY is non-nil, save CMD in the REPL history."
 
   (let* ((proc (get-buffer-process (current-buffer)))
          (pmark (and proc (process-mark proc)))
-         (intxt (and pmark (buffer-substring pmark (point))))
-         (eob (point-max)))
+         (intxt (and pmark (buffer-substring pmark (point)))))
     (when intxt
       (when geiser-repl-forget-old-errors-p
         (compilation-forget-errors))
@@ -1000,10 +1003,6 @@ over a Unix-domain socket."
              (eq 'scheme-mode (with-current-buffer buffer major-mode))
              (eq major-mode 'geiser-repl-mode))
     (setq geiser-repl--last-scm-buffer buffer)))
-
-(defvar-local geiser-repl--binary nil)
-
-(defvar-local geiser-repl--arglist nil)
 
 (defun geiser-repl--get-binary (impl)
   (or geiser-repl--binary (geiser-repl--binary impl)))
