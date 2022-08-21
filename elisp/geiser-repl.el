@@ -333,7 +333,8 @@ will be set up using `geiser-connect-local' when a REPL is started.")
   (let ((act))
     (dolist (repl geiser-repl--repls act)
       (with-current-buffer repl
-        (add-to-list 'act geiser-impl--implementation)))))
+        (unless (memq geiser-impl--implementation act)
+          (push geiser-impl--implementation act))))))
 
 (defsubst geiser-repl--repl-name (impl)
   (format "%s REPL" (geiser-impl--impl-str impl)))
