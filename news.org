@@ -1,5 +1,8 @@
-* Version 0.25 (August 2022)
+* Version 0.25.1 (August 2022)
 
+  - Fixes for compilation errors.
+
+* Version 0.25 (August 2022)
   - New customizable variables: geiser-repl-startup-hook and
     geiser-repl-startup-forms.
   - Fix: support for .dir-locals.el in REPL buffers.
