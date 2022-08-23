@@ -267,9 +267,7 @@ With prefix, recursively macro-expand the resulting expression."
 
 With prefix, try to enter the current buffer's module."
   (interactive "P")
-  (if arg
-      (switch-to-geiser-module (geiser-eval--get-module) (current-buffer))
-    (switch-to-geiser nil nil (current-buffer))))
+  (geiser-repl--switch-to-repl arg))
 
 (defun geiser-mode-switch-to-repl-and-enter ()
   "Switches to Geiser REPL and enters current buffer's module."

@@ -18,7 +18,6 @@
 (require 'geiser-syntax)
 (require 'geiser-impl)
 (require 'geiser-eval)
-(require 'geiser-compile)
 (require 'geiser-connection)
 (require 'geiser-menu)
 (require 'geiser-image)
@@ -1057,6 +1056,28 @@ If no REPL is running, execute `run-geiser' to start a fresh one."
     (unless (eq major-mode 'geiser-repl-mode)
       (switch-to-geiser nil nil (or buffer (current-buffer))))
     (geiser-repl--send cmd)))
+
+(defun geiser-repl--switch-to-repl (arg)
+  (if arg
+      (switch-to-geiser-module (geiser-eval--get-module) (current-buffer))
+    (switch-to-geiser nil nil (current-buffer))))
+
+(defun geiser-repl--repl-buffer-p ()
+  (and (buffer-live-p geiser-repl--repl) geiser-repl--repl))
+
+(defun geiser-repl-restart-repl ()
+  "Restarts the REPL associated with the current buffer."
+  (interactive)
+  (let ((b (current-buffer))
+        (impl geiser-impl--implementation))
+    (when (geiser-repl--repl-buffer-p)
+      (geiser-repl--switch-to-repl nil)
+      (comint-kill-subjob)
+      (sit-for 0.1)) ;; ugly hack; but i don't care enough to fix it
+    (run-geiser impl)
+    (sit-for 0.2)
+    (goto-char (point-max))
+    (pop-to-buffer b)))
 
 (defun geiser-repl-import-module (&optional module)
   "Import a given module in the current namespace of the REPL."

@@ -16,8 +16,7 @@
 (require 'geiser-autodoc)
 (require 'geiser-eval)
 (require 'geiser-base)
-
-(declare-function geiser-restart-repl "geiser-mode" ())
+(require 'geiser-repl)
 
 
 ;;; Auxiliary functions:
@@ -46,6 +45,12 @@
     (geiser-autodoc--clean-cache)
     (geiser-eval--send code cont)))
 
+(defun geiser-compile--ensure-repl (force)
+  (when (or force
+            (and (not (geiser-repl--repl-buffer-p))
+                 (yes-or-no-p "No REPL is running: start it?")))
+    (geiser-repl-restart-repl)))
+
 
 ;;; User commands:
 
@@ -54,25 +59,26 @@
   (interactive "FScheme file: ")
   (geiser-compile--file-op path t "Compiling"))
 
-(defun geiser-compile-current-buffer (&optional restart-p)
+(defun geiser-compile-current-buffer (&optional restart)
   "Compile and load current Scheme file.
 
 With prefix, restart REPL before compiling the file."
   (interactive "P")
-  (when restart-p (geiser-restart-repl))
+  (geiser-compile--ensure-repl restart)
   (geiser-compile-file (buffer-file-name (current-buffer))))
 
 (defun geiser-load-file (path)
   "Load Scheme file."
   (interactive "FScheme file: ")
+  (geiser-compile--ensure-repl nil)
   (geiser-compile--file-op (file-local-name (expand-file-name path)) nil "Loading"))
 
-(defun geiser-load-current-buffer (&optional restart-p)
+(defun geiser-load-current-buffer (&optional restart)
   "Load current Scheme file.
 
 With prefix, restart REPL before loading the file."
   (interactive "P")
-  (when restart-p (geiser-restart-repl))
+  (geiser-compile--ensure-repl restart)
   (geiser-load-file (buffer-file-name (current-buffer))))
 
 ;;;###autoload
