@@ -834,7 +834,9 @@ If SAVE-HISTORY is non-nil, save CMD in the REPL history."
         (comint-send-string proc (geiser-eval--scheme-str '(:ge no-values)))
         (comint-send-string proc "\n")))))
 
-(defun geiser-repl--maybe-send ()
+(define-obsolete-function-alias 'geiser-repl--maybe-send #'geiser-repl-maybe-send "0.25.2")
+
+(defun geiser-repl-maybe-send ()
   (interactive)
   (let ((p (point)))
     (cond ((< p (geiser-repl--last-prompt-start))
@@ -880,8 +882,8 @@ buffer."
     (set-keymap-parent map comint-mode-map)
 
     (define-key map "\C-d" 'delete-char)
-    (define-key map "\C-m" 'geiser-repl--maybe-send)
-    (define-key map "\r" 'geiser-repl--maybe-send)
+    (define-key map "\C-m" 'geiser-repl-maybe-send)
+    (define-key map "\r" 'geiser-repl-maybe-send)
     (define-key map "\C-j" 'geiser-repl--newline-and-indent)
     (define-key map (kbd "TAB") 'geiser-repl-tab-dwim)
     (define-key map [backtab] 'geiser-repl--previous-error)
