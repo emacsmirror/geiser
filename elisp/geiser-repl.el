@@ -751,7 +751,7 @@ If SAVE-HISTORY is non-nil, save CMD in the REPL history."
           (insert "\nIt's been nice interacting with you!\n")
           (insert
            (substitute-command-keys
-            "Press \\[switch-to-geiser] to bring me back.\n")))))))
+            "Press \\[geiser-repl-switch] to bring me back.\n")))))))
 
 (defun geiser-repl--on-kill ()
   (geiser-repl--on-quit)
@@ -835,7 +835,7 @@ If SAVE-HISTORY is non-nil, save CMD in the REPL history."
         (comint-send-string proc "\n")))))
 
 (define-obsolete-function-alias 'geiser-repl--maybe-send
-  #'geiser-repl-maybe-send "0.25.2")
+  #'geiser-repl-maybe-send "0.26")
 
 (defun geiser-repl-maybe-send ()
   "Handle the current input at the REPL's prompt.
@@ -907,7 +907,7 @@ buffer."
        :enable (geiser--symbol-at-point))
       --
       ("Load scheme file..." "\C-c\C-l" geiser-load-file)
-      ("Switch to module..." "\C-c\C-m" switch-to-geiser-module)
+      ("Switch to module..." "\C-c\C-m" geiser-repl-switch-to-module)
       ("Import module..." "\C-c\C-i" geiser-repl-import-module)
       ("Add to load path..." "\C-c\C-r" geiser-add-to-load-path)
       --
@@ -940,7 +940,8 @@ buffer."
       --
       ("Kill Scheme interpreter" "\C-c\C-q" geiser-repl-exit
        :enable (geiser-repl--live-p))
-      ("Restart" "\C-c\C-z" switch-to-geiser :enable (not (geiser-repl--live-p)))
+      ("Restart" "\C-c\C-z" geiser-repl-switch
+       :enable (not (geiser-repl--live-p)))
 
       --
       (custom "REPL options" geiser-repl))
@@ -1024,7 +1025,9 @@ over a Unix-domain socket."
     (save-window-excursion
       (with-current-buffer b (funcall cmd)))))
 
-(defun switch-to-geiser (&optional ask impl buffer)
+(define-obsolete-function-alias 'switch-to-geiser 'geiser-repl-switch "0.26")
+
+(defun geiser-repl-switch (&optional ask impl buffer)
   "Switch to running Geiser REPL.
 
 If REPL is the current buffer, switch to the previously used
@@ -1053,7 +1056,10 @@ If no REPL is running, execute `run-geiser' to start a fresh one."
           (t (call-interactively 'run-geiser)))
     (geiser-repl--maybe-remember-scm-buffer buffer)))
 
-(defun switch-to-geiser-module (&optional module buffer)
+(define-obsolete-function-alias 'switch-to-geiser-module
+  'geiser-repl-switch-to-module "0.26")
+
+(defun geiser-repl-switch-to-module (&optional module buffer)
   "Switch to running Geiser REPL and try to enter a given module."
   (interactive)
   (let* ((module (or module
@@ -1063,13 +1069,13 @@ If no REPL is running, execute `run-geiser' to start a fresh one."
                    (geiser-repl--enter-cmd geiser-impl--implementation
                                            module))))
     (unless (eq major-mode 'geiser-repl-mode)
-      (switch-to-geiser nil nil (or buffer (current-buffer))))
+      (geiser-repl-switch nil nil (or buffer (current-buffer))))
     (geiser-repl--send cmd)))
 
 (defun geiser-repl--switch-to-repl (arg)
   (if arg
-      (switch-to-geiser-module (geiser-eval--get-module) (current-buffer))
-    (switch-to-geiser nil nil (current-buffer))))
+      (geiser-repl-switch-to-module (geiser-eval--get-module) (current-buffer))
+    (geiser-repl-switch nil nil (current-buffer))))
 
 (defun geiser-repl--repl-buffer-p ()
   (and (buffer-live-p geiser-repl--repl) geiser-repl--repl))
@@ -1096,7 +1102,7 @@ If no REPL is running, execute `run-geiser' to start a fresh one."
          (cmd (and module
                    (geiser-repl--import-cmd geiser-impl--implementation
                                             module))))
-    (switch-to-geiser nil nil (current-buffer))
+    (geiser-repl--switch-to-repl)
     (geiser-repl--send cmd)))
 
 (defun geiser-repl-exit (&optional arg)

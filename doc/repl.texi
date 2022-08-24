@@ -159,7 +159,7 @@ In tune with Geiser's
 evaluations in the REPL take place in the namespace of the current
 module.  As noted above, the REPL's prompt tells you the name of the
 current module.  To switch to a different one, you can use the command
-@command{switch-to-geiser-module}, bound to @kbd{C-c C-m}.  You'll
+@command{geiser-repl-switch-to-module}, bound to @kbd{C-c C-m}.  You'll
 notice that Geiser simply uses a couple of meta-commands provided by
 the Scheme REPL (the stock @command{,m} in Guile and Chicken and the
 (geiser-defined) @command{,enter} in Racket), and that it doesn't even

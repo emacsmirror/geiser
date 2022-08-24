@@ -86,7 +86,7 @@ result is an error msg."
 ;;; Evaluation commands:
 
 (defun geiser--go-to-repl ()
-  (switch-to-geiser nil nil (current-buffer))
+  (geiser-repl--switch-to-repl)
   (push-mark)
   (goto-char (point-max)))
 

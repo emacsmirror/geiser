@@ -137,7 +137,7 @@ third key not modified by @key{Control}; e.g.,
 @multitable @columnfractions .20 .4 .4
 @headitem Key @tab Command @tab Description
 @item C-c C-z
-@tab @code{switch-to-geiser}
+@tab @code{geiser-repl-switch}
 @tab Start Scheme REPL, or jump to previous buffer
 @item C-c M-o
 @tab @code{geiser-repl-clear-buffer}
@@ -182,7 +182,7 @@ third key not modified by @key{Control}; e.g.,
 @tab (comint commands)
 @tab Previous/next prompt inputs
 @item C-c C-m
-@tab @code{switch-to-geiser-module}
+@tab @code{geiser-repl-switch-to-module}
 @tab Set current module
 @item C-c C-i
 @tab @code{geiser-repl-import-module}

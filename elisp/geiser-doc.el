@@ -291,11 +291,11 @@ help (e.g. browse an HTML page) implementing this method.")
     map)
   "Keymap for `geiser-doc-mode'.")
 
-(declare-function switch-to-geiser "geiser-repl")
+(declare-function geiser-repl--switch-to-repl "geiser-repl")
 
 (defun geiser-doc-switch-to-repl ()
   (interactive)
-  (switch-to-geiser nil nil (current-buffer)))
+  (geiser-repl--switch-to-repl))
 
 (geiser-menu--defmenu doc geiser-doc-mode-map
   ("Next link" ("n") forward-button)

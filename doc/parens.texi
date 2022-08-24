@@ -243,7 +243,7 @@ startup.
 @anchor{switching-repl-buff} Once you have a working @i{geiser-mode},
 you can switch from Scheme source buffers to the REPL or @kbd{C-c
 C-z}.  Those shortcuts map to the interactive command
-@code{switch-to-geiser}.
+@code{geiser-repl-switch}.
 
 @cindex switching to module
 If you use a numeric prefix, as in @kbd{C-u C-c C-z}, besides being
@@ -257,7 +257,7 @@ command is also bound to @kbd{C-c C-a}.
 Once you're in the REPL, the same @kbd{C-c C-z} shortcut will bring
 you back to the buffer you jumped from, provided you don't kill the
 Scheme process in between.  This is why the command is called
-@i{switch-to-geiser} instead of @i{switch-to-repl}, and what makes it
+@i{geiser-repl-switch} instead of @i{switch-to-repl}, and what makes it
 really handy, if you ask me.
 
 @cindex switching schemes

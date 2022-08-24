@@ -86,7 +86,7 @@
   t)
 
 ;;;###autoload
-(autoload 'switch-to-geiser "geiser-repl"
+(autoload 'geiser-repl-switch "geiser-repl"
   "Switch to a running one Geiser REPL." t)
 
 ;;;###autoload

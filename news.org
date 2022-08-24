@@ -1,7 +1,9 @@
-* Version 0.25.2 (unreleased)
+* Version 0.26 (unreleased)
 
-  - Ask interactively for REPL startup on C-c C-k as needed
-  - New public command geiser-repl-maybe-send
+  - Ask interactively for REPL startup on C-c C-k as needed.
+  - New public command geiser-repl-maybe-send.
+  - ~switch-to-geiser~ and ~switch-to-geiser-module~ deprecated in favour of
+    ~geiser-repl-switch~ and geiser-~repl-switch-to-module~.
 
 * Version 0.25.1 (August 2022)
 

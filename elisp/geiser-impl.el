@@ -211,7 +211,8 @@ switcher (switch-to-NAME), and provides geiser-NAME."
     (unless (symbolp name)
       (error "Malformed implementation name: %s" name))
     (let ((runner (intern (format "run-%s" name)))
-          (switcher (intern (format "switch-to-%s" name)))
+          (old-switcher (intern (format "switch-to-%s" name)))
+          (switcher (intern (format "geiser-%s-switch" name)))
           (runner-doc (format "Start a new %s REPL." name))
           (switcher-doc (format "Switch to a running %s REPL, or start one."
                                 name))
@@ -224,10 +225,11 @@ switcher (switch-to-NAME), and provides geiser-NAME."
            ,runner-doc
            (interactive)
            (run-geiser ',name))
+         (define-obsolete-function-alias ',old-switcher ',switcher "Geiser 0.26")
          (defun ,switcher (&optional ,ask)
            ,switcher-doc
            (interactive "P")
-           (switch-to-geiser ,ask ',name))
+           (geiser-repl-switch ,ask ',name))
          (geiser-menu--add-impl ',name ',runner ',switcher)))))
 
 ;;;###autoload
