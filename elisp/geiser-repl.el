@@ -122,7 +122,7 @@ change that."
   :type 'boolean)
 
 (geiser-custom--defcustom geiser-repl-send-on-return-p t
-  "Sends input to REPL when ENTER is pressed in a balanced S-expression,
+  "Wheter to Send input to REPL when ENTER is pressed in a balanced S-expression,
 regardless of cursor positioning.
 
 When off, pressing ENTER inside a balance S-expression will
@@ -834,9 +834,16 @@ If SAVE-HISTORY is non-nil, save CMD in the REPL history."
         (comint-send-string proc (geiser-eval--scheme-str '(:ge no-values)))
         (comint-send-string proc "\n")))))
 
-(define-obsolete-function-alias 'geiser-repl--maybe-send #'geiser-repl-maybe-send "0.25.2")
+(define-obsolete-function-alias 'geiser-repl--maybe-send
+  #'geiser-repl-maybe-send "0.25.2")
 
 (defun geiser-repl-maybe-send ()
+  "Handle the current input at the REPL's prompt.
+
+If `geiser-repl-send-on-return-p' is t and the input is a
+complete sexp, send the input to the REPL process; otherwise,
+insert a new line and, if `geiser-repl-auto-indent-p' is t,
+indentation."
   (interactive)
   (let ((p (point)))
     (cond ((< p (geiser-repl--last-prompt-start))
