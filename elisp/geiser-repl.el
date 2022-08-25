@@ -659,7 +659,7 @@ will be set up using `geiser-connect-local' when a REPL is started.")
 
 (defun geiser-repl--connection ()
   (or (geiser-repl--connection*)
-      (error "No Geiser REPL for this buffer (try M-x run-geiser)")))
+      (error "No Geiser REPL for this buffer (try M-x geiser)")))
 
 (setq geiser-eval--default-connection-function 'geiser-repl--connection)
 
@@ -984,13 +984,13 @@ buffer."
 
 ;;; User commands
 
-(defun run-geiser (impl)
+(define-obsolete-function-alias 'geiser 'geiser "0.26")
+
+(defun geiser (impl)
   "Start a new Geiser REPL."
   (interactive
    (list (geiser-repl--get-impl "Start Geiser for scheme implementation: ")))
   (geiser-repl--start-repl impl nil))
-
-(defalias 'geiser 'run-geiser)
 
 (defun geiser-connect (impl &optional host port)
   "Start a new Geiser REPL connected to a remote Scheme process."
@@ -1034,7 +1034,7 @@ If REPL is the current buffer, switch to the previously used
 scheme buffer.
 
 With prefix argument, ask for which one if more than one is running.
-If no REPL is running, execute `run-geiser' to start a fresh one."
+If no REPL is running, execute `geiser' to start a fresh one."
   (interactive "P")
   (let* ((impl (or impl geiser-impl--implementation))
          (in-repl (eq major-mode 'geiser-repl-mode))
@@ -1052,8 +1052,8 @@ If no REPL is running, execute `run-geiser' to start a fresh one."
            (geiser-connect impl (geiser-repl--host) (geiser-repl--port)))
           ((geiser-repl--local-p)
            (geiser-connect-local impl geiser-repl--address))
-          (impl (run-geiser impl))
-          (t (call-interactively 'run-geiser)))
+          (impl (geiser impl))
+          (t (call-interactively 'geiser)))
     (geiser-repl--maybe-remember-scm-buffer buffer)))
 
 (define-obsolete-function-alias 'switch-to-geiser-module
@@ -1089,7 +1089,7 @@ If no REPL is running, execute `run-geiser' to start a fresh one."
       (geiser-repl--switch-to-repl nil)
       (comint-kill-subjob)
       (sit-for 0.1)) ;; ugly hack; but i don't care enough to fix it
-    (run-geiser impl)
+    (geiser impl)
     (sit-for 0.2)
     (goto-char (point-max))
     (pop-to-buffer b)))

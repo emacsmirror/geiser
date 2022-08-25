@@ -2,8 +2,11 @@
 
   - Ask interactively for REPL startup on C-c C-k as needed.
   - New public command geiser-repl-maybe-send.
-  - ~switch-to-geiser~ and ~switch-to-geiser-module~ deprecated in favour of
-    ~geiser-repl-switch~ and geiser-~repl-switch-to-module~.
+  - ~switch-to-geiser~ and ~switch-to-geiser-module~ obsoleted in favour of
+    ~geiser-repl-switch~ and geiser-~repl-switch-to-module~.  For implementations,
+    geiser-IMPL-switch is defined, obsoleting swith-to-IMPL.
+  - ~run-geiser~ obsoleted, just use =M-x geiser=.  For implementations,
+    geiser-IMPL is defined, obsoleting run-IMPL.
 
 * Version 0.25.1 (August 2022)
 

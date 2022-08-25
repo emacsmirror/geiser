@@ -74,7 +74,7 @@
   "Start a Geiser REPL, or switch to a running one." t)
 
 ;;;###autoload
-(autoload 'run-geiser "geiser-repl" "Start a Geiser REPL." t)
+(autoload 'geiser "geiser-repl" "Start a Geiser REPL." t)
 
 ;;;###autoload
 (autoload 'geiser-connect "geiser-repl"

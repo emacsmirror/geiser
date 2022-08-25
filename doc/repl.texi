@@ -21,8 +21,8 @@ ready, just come back here and proceed to the following sections.
 @cindex REPL
 To start a Scheme REPL (meaning, a Scheme process offering you a
 Read-Eval-Print Loop), Geiser provides the generic interactive command
-@command{run-geiser}. If you invoke it (via, as is customary in Emacs,
-@kbd{M-x run-geiser}), you'll be saluted by a prompt asking which one of
+@command{geiser}. If you invoke it (via, as is customary in Emacs,
+@kbd{M-x geiser}), you'll be saluted by a prompt asking which one of
 the supported implementations you want to launch---yes, you can stop the
 asking, see
 @altr{active-implementations,below,Customization and tips,.}
@@ -379,7 +379,7 @@ some related tips.
 @subsubheading Choosing a Scheme implementation
 @cindex scheme implementation, choosing
 @anchor{choosing-impl}
-Instead of using the generic @command{run-geiser} command, you can directly
+Instead of using the generic @command{geiser} command, you can directly
 start your Scheme of choice using any of the following commands:
 @itemize @bullet
 @item @command{run-racket}

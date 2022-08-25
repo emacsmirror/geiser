@@ -94,7 +94,7 @@ how to make sure that that's actually the case.
 
 As i've already mentioned a couple of times, @i{geiser-mode} needs a
 running REPL to be operative.  Thus, a common usage pattern will be
-for you to first call @code{run-geiser}
+for you to first call @code{geiser}
 @ifhtml
 (or @ref{choosing-impl,,one of its variants}),
 @end ifhtml

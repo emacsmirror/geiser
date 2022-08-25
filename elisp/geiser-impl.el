@@ -204,27 +204,29 @@ Here's how a typical call to this macro looks like:
     (keywords geiser-guile--keywords)
     (case-sensitive geiser-guile-case-sensitive-p))
 
-This macro also defines a runner function (run-NAME) and a
-switcher (switch-to-NAME), and provides geiser-NAME."
+This macro also defines a runner function (geiser-NAME) and a
+switcher (geiser-NAME-switch), and provides geiser-NAME."
   (let ((name (if (listp name) (car name) name))
         (parent (and (listp name) (cadr name))))
     (unless (symbolp name)
       (error "Malformed implementation name: %s" name))
-    (let ((runner (intern (format "run-%s" name)))
+    (let ((old-runner (intern (format "run-%s" name)))
+          (runner (intern (format "geiser-%s" name)))
           (old-switcher (intern (format "switch-to-%s" name)))
           (switcher (intern (format "geiser-%s-switch" name)))
           (runner-doc (format "Start a new %s REPL." name))
           (switcher-doc (format "Switch to a running %s REPL, or start one."
                                 name))
-          (ask (make-symbol "ask")))
+          (ask (gensym "ask")))
       `(progn
          (geiser-impl--define load-file-name ',name ',parent ',methods)
          (require 'geiser-repl)
          (require 'geiser-menu)
+         (define-obsolete-function-alias ',old-runner ',runner "Geiser 0.26")
          (defun ,runner ()
            ,runner-doc
            (interactive)
-           (run-geiser ',name))
+           (geiser ',name))
          (define-obsolete-function-alias ',old-switcher ',switcher "Geiser 0.26")
          (defun ,switcher (&optional ,ask)
            ,switcher-doc

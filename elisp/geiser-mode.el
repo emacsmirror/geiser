@@ -283,7 +283,7 @@ With prefix, try to enter the current buffer's module."
       (geiser-mode-switch-to-repl nil)
       (comint-kill-subjob)
       (sit-for 0.1)) ;; ugly hack; but i don't care enough to fix it
-    (run-geiser impl)
+    (geiser impl)
     (sit-for 0.2)
     (goto-char (point-max))
     (pop-to-buffer b)))
@@ -396,7 +396,7 @@ interacting with the Geiser REPL is at your disposal.
              geiser-mode-start-repl-p
              (not (geiser-syntax--font-lock-buffer-p))
              (not (geiser-repl--connection*)))
-    (save-window-excursion (run-geiser geiser-impl--implementation))))
+    (save-window-excursion (geiser geiser-impl--implementation))))
 
 (defun turn-on-geiser-mode ()
   "Enable `geiser-mode' (in a Scheme buffer)."
