@@ -1,4 +1,4 @@
-* Version 0.26 (unreleased)
+* Version 0.26 (August 25 2022)
 
   - Ask interactively for REPL startup on C-c C-k as needed.
   - New public command geiser-repl-maybe-send.
