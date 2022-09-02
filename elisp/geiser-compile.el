@@ -1,6 +1,6 @@
 ;;; geiser-compile.el -- compile/load scheme files  -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2009, 2010, 2011, 2012, 2013, 2016, 2018, 2021 Jose Antonio Ortega Ruiz
+;; Copyright (C) 2009-2013, 2016, 2018, 2021-2022 Jose Antonio Ortega Ruiz
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the Modified BSD License. You should
@@ -81,15 +81,4 @@ With prefix, restart REPL before loading the file."
   (geiser-compile--ensure-repl restart)
   (geiser-load-file (buffer-file-name (current-buffer))))
 
-;;;###autoload
-(defun geiser-add-to-load-path (path)
-  "Add a new directory to running Scheme's load path.
-When called interactively, this function will ask for the path to
-add, defaulting to the current buffer's directory."
-  (interactive "DDirectory to add: ")
-  (let* ((c `(:eval (:ge add-to-load-path ,(expand-file-name path))))
-         (r (geiser-eval--send/result c)))
-    (message "%s%s added to load path" path (if r "" " couldn't be"))))
-
-
 (provide 'geiser-compile)
