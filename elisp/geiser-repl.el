@@ -990,7 +990,7 @@ buffer."
 
 ;;; User commands
 
-(define-obsolete-function-alias 'geiser 'geiser "0.26")
+(define-obsolete-function-alias 'run-geiser 'geiser "Geiser 0.26")
 
 (defun geiser (impl)
   "Start a new Geiser REPL."

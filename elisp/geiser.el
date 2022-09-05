@@ -13,7 +13,7 @@
 ;; Homepage: https://gitlab.com/emacs-geiser/
 ;; Package-Requires: ((emacs "25.1") (transient "0.3") (project "0.8.1"))
 ;; SPDX-License-Identifier: BSD-3-Clause
-;; Version: 0.26
+;; Version: 0.26.1
 
 ;;; Commentary:
 
@@ -75,6 +75,9 @@
 
 ;;;###autoload
 (autoload 'geiser "geiser-repl" "Start a Geiser REPL." t)
+
+;;;###autoload
+(autoload 'run-geiser "geiser-repl" "Start a Geiser REPL." t)
 
 ;;;###autoload
 (autoload 'geiser-connect "geiser-repl"
