@@ -64,8 +64,10 @@ when `geiser-autodoc-display-module-p' is on."
     (when res
       (dolist (item res)
         (push (cons (format "%s" (car item)) (cdr item)) signs))
-      (let ((str (geiser-autodoc--autodoc (geiser-syntax--scan-sexps) nil signs)))
-        (funcall callback str))
+      (when (functionp callback)
+        (let* ((path (geiser-syntax--scan-sexps))
+               (str (geiser-autodoc--autodoc path nil signs)))
+          (funcall callback str)))
       (setq geiser-autodoc--cached-signatures signs))))
 
 (defun geiser-autodoc--get-signatures (funs callback)
