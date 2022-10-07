@@ -1078,8 +1078,8 @@ If no REPL is running, execute `geiser' to start a fresh one."
       (geiser-repl-switch nil nil (or buffer (current-buffer))))
     (geiser-repl--send cmd)))
 
-(defun geiser-repl--switch-to-repl (arg)
-  (if arg
+(defun geiser-repl--switch-to-repl (&optional and-module)
+  (if and-module
       (geiser-repl-switch-to-module (geiser-eval--get-module) (current-buffer))
     (geiser-repl-switch nil nil (current-buffer))))
 
