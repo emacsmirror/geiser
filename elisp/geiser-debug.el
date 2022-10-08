@@ -36,26 +36,34 @@
   "Debugging and error display options."
   :group 'geiser)
 
-(geiser-custom--defcustom geiser-debug-always-display-sexp-after-p nil
+(geiser-custom--defcustom geiser-debug-always-display-sexp-after nil
   "Whether to always display the sexp whose evaluation caused an
-error after the error message in the debug pop-up. If nil,
-expressions shorter than `geiser-debug-long-sexp-lines` lines are
-shown before the error message."
+error after the error message in the debug pop-up.
+
+If nil, expressions shorter than `geiser-debug-long-sexp-lines`
+lines are shown before the error message."
   :type 'boolean)
+
+(define-obsolete-variable-alias 'geiser-debug-always-display-sexp-after-p
+  'geiser-debug-always-display-sexp-after "0.26.2")
 
 (geiser-custom--defcustom geiser-debug-long-sexp-lines 6
   "Length of an expression in order to be relegated to the bottom
-of the debug pop-up (after the error message). If
-`geiser-debug-always-display-sexp-after-p` is t, this variable
+of the debug pop-up (after the error message).
+
+If `geiser-debug-always-display-sexp-after` is t, this variable
 has no effect."
   :type 'int)
 
-(geiser-custom--defcustom geiser-debug-jump-to-debug-p t
+(geiser-custom--defcustom geiser-debug-jump-to-debug t
   "When set to t (the default), jump to the debug pop-up buffer
 in case of evaluation errors.
 
-See also `geiser-debug-show-debug-p`. "
+See also `geiser-debug-show-debug`. "
   :type 'boolean)
+
+(define-obsolete-variable-alias 'geiser-debug-jump-to-debug-p
+  'geiser-debug-jump-to-debug "0.26.2")
 
 (geiser-custom--defcustom geiser-debug-auto-next-error-p nil
   "When set, automatically invoke `next-error' on of evaluation errors.
@@ -64,20 +72,26 @@ This will make point jump to the location of an error if the output
 of the evaluation contains any."
   :type 'boolean)
 
-(geiser-custom--defcustom geiser-debug-show-debug-p t
+(geiser-custom--defcustom geiser-debug-show-debug t
   "When set to t (the default), show the debug pop-up buffer in
 case of evaluation errors.
 
-This option takes effect even if `geiser-debug-jump-to-debug-p`
+This option takes effect even if `geiser-debug-jump-to-debug`
 is set."
   :type 'boolean)
 
-(geiser-custom--defcustom geiser-debug-auto-display-images-p t
+(define-obsolete-variable-alias 'geiser-debug-show-debug-p
+  'geiser-debug-show-debug "0.26.2")
+
+(geiser-custom--defcustom geiser-debug-auto-display-images t
   "Whether to automatically invoke the external viewer to display
 images when they're evaluated.
 
 See also `geiser-repl-auto-display-images-p'."
   :type 'boolean)
+
+(define-obsolete-variable-alias 'geiser-debug-auto-display-images-p
+  'geiser-debug-auto-display-images "0.26.2")
 
 (geiser-custom--defcustom geiser-debug-treat-ansi-colors nil
   "Colorize ANSI escape sequences produced by the scheme process.
@@ -214,7 +228,7 @@ non-null value.")
 buffer.")
 
 (defun geiser-debug--display-after (what)
-  (or geiser-debug-always-display-sexp-after-p
+  (or geiser-debug-always-display-sexp-after
       (>= (with-temp-buffer
             (insert what)
             (count-lines (point-min) (point-max)))
@@ -225,8 +239,8 @@ buffer.")
     (insert res)
     (let ((end (point)))
       (goto-char begin)
-      (let ((no (geiser-image--replace-images
-                 t geiser-debug-auto-display-images-p)))
+      (let ((no (geiser-image--replace-images t
+                                              geiser-debug-auto-display-images)))
         (goto-char end)
         (newline 2)
         (and no (> no 0))))))
@@ -270,9 +284,9 @@ buffer.")
           (remove (ansi-color-filter-region (point-min) (point-max))))
         (goto-char (point-min)))
       (when (or img err output)
-        (cond (geiser-debug-jump-to-debug-p
+        (cond (geiser-debug-jump-to-debug
                (geiser-debug--pop-to-buffer))
-              (geiser-debug-show-debug-p
+              (geiser-debug-show-debug
                (display-buffer (geiser-debug--buffer))))
         (when (and err geiser-debug-auto-next-error-p)
           (ignore-errors (next-error))

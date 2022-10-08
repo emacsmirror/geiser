@@ -557,7 +557,7 @@ mouse to jump to the offending spot; or invoke Emacs' stock commands
 
 By default, Geiser will tele-transport your pointer to the debug buffer:
 if you prefer to stay in the source buffer, set
-@code{geiser-debug-jump-to-debug-p} to nil.
+@code{geiser-debug-jump-to-debug} to nil.
 
 For schemes with good debug support (Guile is one), the debug buffers
 offer a @i{debugging menu}, accesible via the @code{,} (that's a comma)

@@ -187,7 +187,7 @@ If you have a slow system, try to increase this time."
   "Whether to automatically invoke the external viewer to display
 images popping up in the REPL.
 
-See also `geiser-debug-auto-display-images-p'."
+See also `geiser-debug-auto-display-images'."
   :type 'boolean)
 
 (geiser-custom--defcustom geiser-repl-add-project-paths t
