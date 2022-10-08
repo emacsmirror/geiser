@@ -260,7 +260,7 @@ buffer.")
                     (geiser-debug--insert-res res)))
         (when (or err key output)
           (or (geiser-debug--display-error impl module key output)
-              (insert "\n" (if key (format "%s\n" key) "") output "\n")))
+              (insert "\n" (if key (format "%s\n" key) "") (or output "") "\n")))
         (when after
           (goto-char (point-max))
           (insert "\nExpression evaluated was:\n\n")

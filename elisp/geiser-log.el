@@ -1,4 +1,4 @@
-;;; geiser-log.el -- logging utilities
+;;; geiser-log.el -- logging utilities  -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2009, 2010, 2012, 2019, 2021, 2022 Jose Antonio Ortega Ruiz
 
@@ -40,15 +40,23 @@
 (defvar geiser-log--max-message-size 20480
   "Maximum size of individual Geiser log messages.")
 
-(defvar geiser-log-verbose-p nil
-  "Log purely informational messages. Useful for debugging.")
+(defvar geiser-log-verbose nil
+  "Log purely informational messages.")
 
-(defvar geiser-log-verbose-debug-p nil
+(defvar geiser-log-verbose-debug nil
   "Log very verbose informational messages. Useful only for debugging.")
 
 
-(defvar geiser-log--inhibit-p nil
+(defvar geiser-log--inhibit nil
   "Set this to t to inhibit all log messages")
+
+(define-obsolete-variable-alias
+  'geiser-log-verbose-p 'geiser-log-verbose "0.26.2")
+
+(define-obsolete-variable-alias
+  'geiser-log-verbose-debug-p 'geiser-log-verbose-debug "0.26.2")
+
+
 
 
 ;;; Log buffer and mode:
@@ -84,7 +92,7 @@
 ;;; Logging functions:
 
 (defun geiser-log--msg (type &rest args)
-  (unless geiser-log--inhibit-p
+  (unless geiser-log--inhibit
     (geiser-log--with-buffer
       (goto-char (point-max))
       (insert (geiser--shorten-str (format "\n%s: %s\n" type
@@ -98,11 +106,11 @@
   (apply 'geiser-log--msg 'ERROR args))
 
 (defsubst geiser-log--info (&rest args)
-  (when geiser-log-verbose-p
+  (when geiser-log-verbose
     (apply 'geiser-log--msg 'INFO args) ""))
 
 (defsubst geiser-log--debug (&rest args)
-  (when geiser-log-verbose-debug-p
+  (when geiser-log-verbose-debug
     (apply 'geiser-log--msg 'DEBUG args) ""))
 
 
@@ -110,9 +118,12 @@
 
 (defun geiser-show-logs (&optional arg)
   "Show Geiser log messages.
+
 With prefix, activates all logging levels."
   (interactive "P")
-  (when arg (setq geiser-log-verbose-p t))
+  (setq geiser-log-verbose t)
+  (when arg
+    (setq geiser-log-verbose-debug t))
   (geiser-log--pop-to-buffer))
 
 (defun geiser-log-clear ()
@@ -123,13 +134,13 @@ With prefix, activates all logging levels."
 (defun geiser-log-toggle-verbose ()
   "Toggle verbose logs"
   (interactive)
-  (setq geiser-log-verbose-p (not geiser-log-verbose-p))
+  (setq geiser-log-verbose (not geiser-log-verbose))
   (message "Geiser verbose logs %s"
-           (if geiser-log-verbose-p "enabled" "disabled")))
+           (if geiser-log-verbose "enabled" "disabled")))
 
 (defun geiser-log--deactivate ()
   (interactive)
-  (setq geiser-log-verbose-p nil)
+  (setq geiser-log-verbose nil)
   (when (eq (current-buffer) (geiser-log--buffer)) (View-quit)))
 
 

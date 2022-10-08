@@ -130,7 +130,7 @@ module-exports, autodoc, callers, callees and generic-methods.")
   (and geiser-eval--default-connection-function
        (funcall geiser-eval--default-connection-function)))
 
-(defsubst geiser-eval--log (s)
+(defun geiser-eval--log (s)
   (geiser-log--info "RETORT: %S" s)
   s)
 
@@ -143,7 +143,7 @@ module-exports, autodoc, callers, callees and generic-methods.")
   (geiser-con--send-string (geiser-eval--connection)
                            (geiser-eval--code-str code)
                            (lambda (s)
-                             (setq geiser-eval--async-retort s)
+                             (setq geiser-eval--async-retort (geiser-eval--log s))
                              (funcall cont s))
                            buffer))
 
