@@ -1,4 +1,4 @@
-;;; geiser-capf.el -- Setup for Geiser's CAPFs
+;;; geiser-capf.el -- Setup for Geiser's CAPFs  -*- lexical-binding: t; -*-
 
 ;; Copyright (c) 2022  Jose Antonio Ortega Ruiz
 
@@ -83,7 +83,7 @@
 (defun geiser-capf-complete-module ()
   "Complete module name at point."
   (interactive)
-  (let ((completion-at-point-functions '(geiser-completion--for-module)))
+  (let ((completion-at-point-functions '(geiser-capf--for-module)))
     (call-interactively 'completion-at-point)))
 
 
