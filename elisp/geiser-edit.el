@@ -1,6 +1,6 @@
-;;; geiser-edit.el -- scheme edit locations
+;;; geiser-edit.el -- scheme edit locations  -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2009, 2010, 2012, 2013, 2019, 2020, 2021 Jose Antonio Ortega Ruiz
+;; Copyright (C) 2009, 2010, 2012, 2013, 2019-2022 Jose Antonio Ortega Ruiz
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the Modified BSD License. You should
@@ -65,6 +65,9 @@ or following links in error buffers.")
 (defsubst geiser-edit--location-column (loc)
   (geiser-edit--to-number (cdr (assoc "column" loc))))
 
+(defsubst geiser-edit--location-char (loc)
+  (geiser-edit--to-number (cdr (assoc "char" loc))))
+
 (defsubst geiser-edit--make-location (name file line column)
   `(("name" . ,name) ("file" . ,file) ("line" . ,line) ("column" . ,column)))
 
@@ -97,28 +100,28 @@ or following links in error buffers.")
 (defsubst geiser-edit--symbol-re (thing)
   (format "\\_<%s\\_>" (regexp-quote (format "%s" thing))))
 
-(defun geiser-edit--goto-line (symbol line)
+(defun geiser-edit--goto-location (symbol line col pos)
   (goto-char (point-min))
-  (if (numberp line)
-      (forward-line (max 0 (1- line)))
-    (goto-char (point-min))
-    (when (or (re-search-forward (geiser-edit--def-re symbol) nil t)
-              (re-search-forward (geiser-edit--def-re* symbol) nil t)
-              (re-search-forward (geiser-edit--symbol-re symbol) nil t))
-      (goto-char (match-beginning 0)))))
+  (cond ((numberp line) (forward-line (max 0 (1- line))))
+        ((numberp pos) (goto-char pos)))
+  (if (not col)
+      (when (or (re-search-forward (geiser-edit--def-re symbol) nil t)
+                (re-search-forward (geiser-edit--def-re* symbol) nil t)
+                (re-search-forward (geiser-edit--symbol-re symbol) nil t))
+        (goto-char (match-beginning 0)))
+    (beginning-of-line)
+    (forward-char col)))
 
 (defun geiser-edit--try-edit-location (symbol loc &optional method)
   (let ((symbol (or (geiser-edit--location-name loc) symbol))
         (file (geiser-edit--location-file loc))
         (line (geiser-edit--location-line loc))
-        (col (geiser-edit--location-column loc)))
+        (col (geiser-edit--location-column loc))
+        (pos (geiser-edit--location-char loc)))
     (unless file (error "Couldn't find edit location for %s" symbol))
     (unless (file-readable-p file) (error "%s is not readable" file))
     (geiser-edit--visit-file file (or method geiser-edit-symbol-method))
-    (geiser-edit--goto-line symbol line)
-    (when col
-      (beginning-of-line)
-      (forward-char col))
+    (geiser-edit--goto-location symbol line col pos)
     (cons (current-buffer) (point))))
 
 (defsubst geiser-edit--try-edit (symbol ret &optional method)
