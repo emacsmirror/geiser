@@ -112,16 +112,25 @@ or following links in error buffers.")
     (beginning-of-line)
     (forward-char col)))
 
+(defun geiser-edit--try-imenu (symbol)
+  (let* ((s (format "%s" symbol))
+         (imenu-auto-rescan t)
+         (item (assoc s (imenu--make-index-alist t))))
+    (if item (imenu item) (error "Couldn't find location for '%s'" s))))
+
 (defun geiser-edit--try-edit-location (symbol loc &optional method)
   (let ((symbol (or (geiser-edit--location-name loc) symbol))
-        (file (geiser-edit--location-file loc))
+        (file (or (geiser-edit--location-file loc)
+                  (and geiser-mode (buffer-file-name))))
         (line (geiser-edit--location-line loc))
         (col (geiser-edit--location-column loc))
         (pos (geiser-edit--location-char loc)))
-    (unless file (error "Couldn't find edit location for %s" symbol))
+    (unless file (error "Couldn't find location for '%s'" symbol))
     (unless (file-readable-p file) (error "%s is not readable" file))
     (geiser-edit--visit-file file (or method geiser-edit-symbol-method))
-    (geiser-edit--goto-location symbol line col pos)
+    (if (or line col pos)
+        (geiser-edit--goto-location symbol line col pos)
+      (geiser-edit--try-imenu symbol))
     (cons (current-buffer) (point))))
 
 (defsubst geiser-edit--try-edit (symbol ret &optional method)
@@ -242,9 +251,10 @@ With prefix, asks for the symbol to edit."
   (let* ((symbol (or (and (not arg) (geiser--symbol-at-point))
                      (geiser-completion--read-symbol "Edit symbol: ")))
          (cmd `(:eval (:ge symbol-location ',symbol)))
-         (marker (point-marker)))
+         (marker (point-marker))
+         (ret (ignore-errors (geiser-eval--send/wait cmd))))
     (condition-case-unless-debug sym-err
-        (progn (geiser-edit--try-edit symbol (geiser-eval--send/wait cmd))
+        (progn (geiser-edit--try-edit symbol ret)
                (when marker (xref-push-marker-stack marker)))
       (error (condition-case-unless-debug  mod-err
                  (geiser-edit-module-at-point)
@@ -258,7 +268,7 @@ With prefix, asks for the symbol to edit."
   "Pop back to where \\[geiser-edit-symbol-at-point] was last invoked."
   (interactive)
   (condition-case nil
-      (pop-tag-mark)
+      (xref-pop-marker-stack)
     (error "No previous location for find symbol invocation")))
 
 (defun geiser-edit-module (module &optional method)

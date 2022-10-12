@@ -1,6 +1,6 @@
-;;; geiser-mode.el -- minor mode for scheme buffers
+;;; geiser-mode.el -- minor mode for scheme buffers  -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2020, 2022 Jose Antonio Ortega Ruiz
+;; Copyright (C) 2009-2017, 2020, 2022 Jose Antonio Ortega Ruiz
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the Modified BSD License. You should
@@ -14,6 +14,7 @@
 
 (require 'geiser-repl)
 (require 'geiser-capf)
+(require 'geiser-imenu)
 (require 'geiser-menu)
 (require 'geiser-doc)
 (require 'geiser-compile)
@@ -387,6 +388,7 @@ interacting with the Geiser REPL is at your disposal.
   (setq geiser-autodoc-mode-string "/A")
   (setq geiser-smart-tab-mode-string "/T")
   (geiser-capf-setup geiser-mode)
+  (geiser-imenu-setup geiser-mode)
   (when geiser-mode-autodoc-p
     (geiser-autodoc-mode (if geiser-mode 1 -1)))
   (when geiser-mode-smart-tab-p

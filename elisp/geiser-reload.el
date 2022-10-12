@@ -1,4 +1,4 @@
-;;; geiser-reload.el -- unload/load geiser packages
+;;; geiser-reload.el -- unload/load geiser packages  -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2009, 2010, 2012, 2020, 2021, 2022 Jose Antonio Ortega Ruiz
 
@@ -24,6 +24,7 @@
 (defmacro geiser--features-list ()
   (quote '(
            geiser-mode
+           geiser-imenu
            geiser-repl
            geiser-capf
            geiser-doc
