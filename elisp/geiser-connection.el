@@ -1,6 +1,6 @@
-;;; geiser-connection.el -- talking to a scheme process
+;;; geiser-connection.el -- talking to a scheme process  -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2009, 2010, 2011, 2013, 2021 Jose Antonio Ortega Ruiz
+;; Copyright (C) 2009-2011, 2013, 2021-2022 Jose Antonio Ortega Ruiz
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the Modified BSD License. You should
@@ -70,8 +70,7 @@
 
 (defun geiser-con--tq-create (process)
   (let ((tq (tq-create process)))
-    (set-process-filter process
-                        `(lambda (p s) (geiser-con--tq-filter ',tq s)))
+    (set-process-filter process (lambda (_p s) (geiser-con--tq-filter tq s)))
     tq))
 
 (defun geiser-con--tq-filter (tq in)

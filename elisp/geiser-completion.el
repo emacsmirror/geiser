@@ -1,6 +1,6 @@
-;;; geiser-completion.el -- tab completion
+;;; geiser-completion.el -- tab completion  -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2009, 2010, 2011, 2012, 2018, 2020, 2021, 2022 Jose Antonio Ortega Ruiz
+;; Copyright (C) 2009-2012, 2018, 2020-2022 Jose Antonio Ortega Ruiz
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the Modified BSD License. You should
