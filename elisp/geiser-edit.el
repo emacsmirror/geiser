@@ -110,33 +110,36 @@ or following links in error buffers.")
                 (re-search-forward (geiser-edit--symbol-re symbol) nil t))
         (goto-char (match-beginning 0)))
     (beginning-of-line)
-    (forward-char col)))
+    (forward-char col)
+    (cons (current-buffer) (point))))
 
-(defun geiser-edit--try-imenu (symbol)
+(defun geiser-edit--try-imenu (symbol no-error)
   (let* ((s (format "%s" symbol))
          (imenu-auto-rescan t)
          (item (assoc s (imenu--make-index-alist t))))
-    (if item (imenu item) (error "Couldn't find location for '%s'" s))))
+    (unless (or item no-error)
+      (error "Couldn't find location for '%s'" s))
+    (when item
+      (imenu item)
+      (cons (current-buffer) (point)))))
 
-(defun geiser-edit--try-edit-location (symbol loc &optional method)
+(defun geiser-edit--try-edit-location (symbol loc &optional method no-error)
   (let ((symbol (or (geiser-edit--location-name loc) symbol))
-        (file (or (geiser-edit--location-file loc)
-                  (and geiser-mode (buffer-file-name))))
+        (file (geiser-edit--location-file loc))
         (line (geiser-edit--location-line loc))
         (col (geiser-edit--location-column loc))
         (pos (geiser-edit--location-char loc)))
-    (unless file (error "Couldn't find location for '%s'" symbol))
-    (unless (file-readable-p file) (error "%s is not readable" file))
-    (geiser-edit--visit-file file (or method geiser-edit-symbol-method))
-    (if (or line col pos)
+    (when file
+      (geiser-edit--visit-file file (or method geiser-edit-symbol-method)))
+    (if (or file line col pos)
         (geiser-edit--goto-location symbol line col pos)
-      (geiser-edit--try-imenu symbol))
-    (cons (current-buffer) (point))))
+      (geiser-edit--try-imenu symbol no-error))))
 
-(defsubst geiser-edit--try-edit (symbol ret &optional method)
+(defsubst geiser-edit--try-edit (symbol ret &optional method no-error)
   (geiser-edit--try-edit-location symbol
                                   (geiser-eval--retort-result ret)
-                                  method))
+                                  method
+                                  no-error))
 
 
 ;;; Links
@@ -245,24 +248,17 @@ or following links in error buffers.")
     (when marker (xref-push-marker-stack))))
 
 (defun geiser-edit-symbol-at-point (&optional arg)
-  "Opens a new window visiting the definition of the symbol at point.
-With prefix, asks for the symbol to edit."
+  "Visit the definition of the symbol at point.
+With prefix, asks for the symbol to locate."
   (interactive "P")
   (let* ((symbol (or (and (not arg) (geiser--symbol-at-point))
                      (geiser-completion--read-symbol "Edit symbol: ")))
          (cmd `(:eval (:ge symbol-location ',symbol)))
          (marker (point-marker))
          (ret (ignore-errors (geiser-eval--send/wait cmd))))
-    (condition-case-unless-debug sym-err
-        (progn (geiser-edit--try-edit symbol ret)
-               (when marker (xref-push-marker-stack marker)))
-      (error (condition-case-unless-debug  mod-err
-                 (geiser-edit-module-at-point)
-               (error
-                (geiser-log--warn "Error in symbol lookup (%s, %s)"
-                                  (error-message-string sym-err)
-                                  (error-message-string mod-err))
-                (error "Symbol not found (%s)" symbol)))))))
+    (if (geiser-edit--try-edit symbol ret nil t)
+        (when marker (xref-push-marker-stack marker))
+      (geiser-edit-module-at-point))))
 
 (defun geiser-pop-symbol-stack ()
   "Pop back to where \\[geiser-edit-symbol-at-point] was last invoked."
