@@ -18,38 +18,34 @@
 (require 'geiser-completion)
 (require 'geiser-edit)
 
-(defvar geiser-capf--buffer nil)
-
 (defun geiser-capf--company-docsig (id)
-  (ignore-errors
-    (when (and geiser-capf--buffer (not (geiser-autodoc--inhibit)))
-      (with-current-buffer geiser-capf--buffer
+  (condition-case err
+      (when (and geiser-impl--implementation (not (geiser-autodoc--inhibit)))
         (let* ((id (substring-no-properties id))
-               (help (geiser-autodoc--autodoc `((,id 0) (,id 0)) nil)))
-          (and help (substring-no-properties help)))))))
+               (help (geiser-autodoc--autodoc `((,id 0)) nil)))
+          (and help (substring-no-properties help))))
+    (error (geiser-log--warn "Error computing docsig: %s" err))))
 
 (defun geiser-capf--company-doc-buffer (id)
-  (when geiser-capf--buffer
-    (with-current-buffer geiser-capf--buffer
-      (let* ((module (geiser-eval--get-module))
-             (symbol (make-symbol id))
-             (ds (geiser-doc--get-docstring symbol module)))
-        (when (consp ds)
-          (with-current-buffer (get-buffer-create "*company-documentation*")
-            (geiser-doc--render-docstring ds symbol module)
-            (current-buffer)))))))
+  (when geiser-impl--implementation
+    (let* ((module (geiser-eval--get-module))
+           (symbol (make-symbol id))
+           (ds (geiser-doc--get-docstring symbol module)))
+      (when (consp ds)
+        (with-current-buffer (get-buffer-create "*company-documentation*")
+          (geiser-doc--render-docstring ds symbol module)
+          (current-buffer))))))
 
 (defun geiser-capf--company-location (id)
-  (ignore-errors
-    (when (and geiser-capf--buffer (not (geiser-autodoc--inhibit)))
-      (with-current-buffer geiser-capf--buffer
+  (condition-case _err
+      (when (and geiser-impl--implementation (not (geiser-autodoc--inhibit)))
         (let ((id (make-symbol id)))
           (condition-case nil
               (geiser-edit-module id 'noselect)
-            (error (geiser-edit-symbol id 'noselect))))))))
+            (error (geiser-edit-symbol id 'noselect)))))
+    (error (message "Location not found for %s" id))))
 
 (defun geiser-capf--thing-at-point (module &optional _predicate)
-  (setq geiser-capf--buffer (current-buffer))
   (with-syntax-table scheme-mode-syntax-table
     (let* ((beg (geiser-completion--symbol-begin module))
            (end (or (geiser-completion--prefix-end beg module) beg))
@@ -65,7 +61,6 @@
               (and geiser-autodoc-use-docsig #'geiser-capf--company-docsig)
               :company-doc-buffer #'geiser-capf--company-doc-buffer
               :company-location #'geiser-capf--company-location)))))
-
 
 (defun geiser-capf--for-symbol (&optional predicate)
   (geiser-capf--thing-at-point nil predicate))
