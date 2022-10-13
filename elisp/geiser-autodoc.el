@@ -36,19 +36,27 @@
 
 (geiser-custom--defcustom geiser-autodoc-delay 0.3
   "Delay before autodoc messages are fetched and displayed, in seconds."
-  :type 'number
-  :group 'geiser-autodoc)
+  :type 'number)
 
-(geiser-custom--defcustom geiser-autodoc-display-module-p t
+(geiser-custom--defcustom geiser-autodoc-display-module t
   "Whether to display procedure module in autodoc strings."
-  :type 'boolean
-  :group 'geiser-autodoc)
+  :type 'boolean)
 
 (geiser-custom--defcustom geiser-autodoc-identifier-format "%s:%s"
   "Format for displaying module and procedure or variable name, in that order,
-when `geiser-autodoc-display-module-p' is on."
-  :type 'string
-  :group 'geiser-autodoc)
+when `geiser-autodoc-display-module' is on."
+  :type 'string)
+
+(geiser-custom--defcustom geiser-autodoc-use-docsig t
+  "Provide signature docstrings for systems like company or corfu.
+
+With this flag set, the signature of selected completions using
+packages like company, corfu or completion-in-region functions
+will be displayed in the echo area.  For the case of a
+completion-in-region function (e.g. consult's), which collects
+all the docstrings at once, this might have a performace impact:
+you can set this variable to nil to avoid them."
+  :type 'boolean)
 
 
 ;;; Procedure arguments:
@@ -58,7 +66,7 @@ when `geiser-autodoc-display-module-p' is on."
 (defsubst geiser-autodoc--clean-cache ()
   (setq geiser-autodoc--cached-signatures nil))
 
-(defun geiser-autodoc--show-signatures (ret callback)
+(defun geiser-autodoc--update-signatures (ret callback)
   (let ((res (geiser-eval--retort-result ret))
         (signs))
     (when res
@@ -72,10 +80,13 @@ when `geiser-autodoc-display-module-p' is on."
 
 (defun geiser-autodoc--get-signatures (funs callback)
   (when funs
-    (let ((m (format "'(%s)" (mapconcat 'identity funs " "))))
-      (geiser-eval--send `(:eval (:ge autodoc (:scm ,m)))
-                         (lambda (r)
-                           (geiser-autodoc--show-signatures r callback)))))
+    (let* ((m (format "'(%s)" (mapconcat 'identity funs " ")))
+           (str (geiser-eval--scheme-str `(:eval (:ge autodoc (:scm ,m))))))
+      (if callback
+          (geiser-eval--send str
+                             (lambda (r)
+                               (geiser-autodoc--update-signatures r callback)))
+        (geiser-autodoc--update-signatures (geiser-eval--send/wait str) nil))))
   (and (or (assoc (car funs) geiser-autodoc--cached-signatures)
            (assoc (cadr funs) geiser-autodoc--cached-signatures))
        geiser-autodoc--cached-signatures))
@@ -131,7 +142,7 @@ when `geiser-autodoc-display-module-p' is on."
     (geiser-autodoc--insert-arg-group keys prev nil)))
 
 (defsubst geiser-autodoc--id-name (proc module)
-  (let ((str (if module
+  (let ((str (if (and module geiser-autodoc-display-module)
                  (format geiser-autodoc-identifier-format module proc)
                (format "%s" proc))))
     (propertize str 'face 'geiser-font-lock-autodoc-identifier)))

@@ -18,31 +18,38 @@
 (require 'geiser-completion)
 (require 'geiser-edit)
 
+(defvar geiser-capf--buffer nil)
+
 (defun geiser-capf--company-docsig (id)
   (ignore-errors
-    (when (not (geiser-autodoc--inhibit))
-      (let ((help (geiser-autodoc--autodoc `((,id 0)) nil)))
-        (and help (substring-no-properties help))))))
+    (when (and geiser-capf--buffer (not (geiser-autodoc--inhibit)))
+      (with-current-buffer geiser-capf--buffer
+        (let* ((id (substring-no-properties id))
+               (help (geiser-autodoc--autodoc `((,id 0) (,id 0)) nil)))
+          (and help (substring-no-properties help)))))))
 
 (defun geiser-capf--company-doc-buffer (id)
-  (let* ((impl geiser-impl--implementation)
-         (module (geiser-eval--get-module))
-         (symbol (make-symbol id))
-         (ds (geiser-doc--get-docstring symbol module)))
-    (when (consp ds)
-      (with-current-buffer (get-buffer-create "*company-documentation*")
-        (geiser-doc--render-docstring ds symbol module impl)
-        (current-buffer)))))
+  (when geiser-capf--buffer
+    (with-current-buffer geiser-capf--buffer
+      (let* ((module (geiser-eval--get-module))
+             (symbol (make-symbol id))
+             (ds (geiser-doc--get-docstring symbol module)))
+        (when (consp ds)
+          (with-current-buffer (get-buffer-create "*company-documentation*")
+            (geiser-doc--render-docstring ds symbol module)
+            (current-buffer)))))))
 
 (defun geiser-capf--company-location (id)
   (ignore-errors
-    (when (not (geiser-autodoc--inhibit))
-      (let ((id (make-symbol id)))
-        (condition-case nil
-            (geiser-edit-module id 'noselect)
-          (error (geiser-edit-symbol id 'noselect)))))))
+    (when (and geiser-capf--buffer (not (geiser-autodoc--inhibit)))
+      (with-current-buffer geiser-capf--buffer
+        (let ((id (make-symbol id)))
+          (condition-case nil
+              (geiser-edit-module id 'noselect)
+            (error (geiser-edit-symbol id 'noselect))))))))
 
-(defun geiser-capf--thing-at-point (module &optional predicate)
+(defun geiser-capf--thing-at-point (module &optional _predicate)
+  (setq geiser-capf--buffer (current-buffer))
   (with-syntax-table scheme-mode-syntax-table
     (let* ((beg (geiser-completion--symbol-begin module))
            (end (or (geiser-completion--prefix-end beg module) beg))
@@ -54,7 +61,8 @@
            (cmps (and prefix (geiser-completion--complete prefix module))))
       (when cmps
         (list beg end cmps
-              :company-docsig #'geiser-capf--company-docsig
+              :company-docsig
+              (and geiser-autodoc-use-docsig #'geiser-capf--company-docsig)
               :company-doc-buffer #'geiser-capf--company-doc-buffer
               :company-location #'geiser-capf--company-location)))))
 
