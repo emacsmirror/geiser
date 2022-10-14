@@ -1,3 +1,9 @@
+* Version 0.27 (October 13 2022)
+
+  - Fallback to imenu for jumping to symbol definition, as a last resort.
+  - Bug fixes: and-go commands, docsig for completions (now controlled
+    by the new geiser-autodoc-docsig flag).
+
 * Version 0.26.1 (September 6 2022)
 
   - Improve default names for per-project REPLs.

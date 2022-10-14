@@ -46,7 +46,12 @@ value.")
  "Function to translate a bare procedure symbol to one executable
 in the Scheme context. Return NULL for unsupported ones; at the
 very least, EVAL, COMPILE, LOAD-FILE and COMPILE-FILE should be
-supported.")
+supported.  Geiser will also invoke, if defined, the following
+procedures, always wrapped in EVAL (with the current module as
+its context): AUTODOC, SYMBOL-DOCUMENTATION, MODULE-EXPORTS,
+SYMBOL-LOCATION, MODULE-LOCATION, COMPLETIONS,
+MODULE-COMPLETIONS, MACRO-EXPAND ADD-TO-LOAD-PATH, METHOD,
+CALLER, CALLEE and NO-VALUES.")
 
 (defvar geiser-eval--unsupported nil)
 (geiser-impl--register-local-variable
