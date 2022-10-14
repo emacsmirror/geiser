@@ -279,7 +279,7 @@ With prefix, asks for the symbol to locate."
   (let ((marker (point-marker)))
     (geiser-edit-module (or (geiser-completion--module-at-point)
                             (geiser-completion--read-module)))
-    (when marker (xref-push-marker-stack))))
+    (when marker (xref-push-marker-stack marker))))
 
 (defun geiser-insert-lambda (&optional full)
   "Insert λ at point.  With prefix, inserts (λ ())."
