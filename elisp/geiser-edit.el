@@ -97,31 +97,27 @@ or following links in error buffers.")
           geiser-edit--def-re*
           (regexp-quote (format "%s" thing))))
 
+(defun geiser-edit--find-def (symbol)
+  (save-excursion
+    (goto-char (point-min))
+    (when (or (re-search-forward (geiser-edit--def-re symbol) nil t)
+              (re-search-forward (geiser-edit--def-re* symbol) nil t))
+      (cons (match-beginning 0) (match-string-no-properties 0)))))
+
 (defsubst geiser-edit--symbol-re (thing)
   (format "\\_<%s\\_>" (regexp-quote (format "%s" thing))))
 
 (defun geiser-edit--goto-location (symbol line col pos)
-  (goto-char (point-min))
-  (cond ((numberp line) (forward-line (max 0 (1- line))))
+  (cond ((numberp line)
+         (goto-char (point-min))
+         (forward-line (max 0 (1- line))))
         ((numberp pos) (goto-char pos)))
   (if (not col)
-      (when (or (re-search-forward (geiser-edit--def-re symbol) nil t)
-                (re-search-forward (geiser-edit--def-re* symbol) nil t)
-                (re-search-forward (geiser-edit--symbol-re symbol) nil t))
-        (goto-char (match-beginning 0)))
+      (when-let (pos (car (geiser-edit--find-def symbol)))
+        (goto-char pos))
     (beginning-of-line)
     (forward-char col)
     (cons (current-buffer) (point))))
-
-(defun geiser-edit--try-imenu (symbol no-error)
-  (let* ((s (format "%s" symbol))
-         (imenu-auto-rescan t)
-         (item (assoc s (imenu--make-index-alist t))))
-    (unless (or item no-error)
-      (error "Couldn't find location for '%s'" s))
-    (when item
-      (imenu item)
-      (cons (current-buffer) (point)))))
 
 (defun geiser-edit--try-edit-location (symbol loc &optional method no-error)
   (let ((symbol (or (geiser-edit--location-name loc) symbol))
@@ -131,9 +127,8 @@ or following links in error buffers.")
         (pos (geiser-edit--location-char loc)))
     (when file
       (geiser-edit--visit-file file (or method geiser-edit-symbol-method)))
-    (if (or file line col pos)
-        (geiser-edit--goto-location symbol line col pos)
-      (geiser-edit--try-imenu symbol no-error))))
+    (or (geiser-edit--goto-location symbol line col pos)
+        (error "Couldn't find location for symbol at point"))))
 
 (defsubst geiser-edit--try-edit (symbol ret &optional method no-error)
   (geiser-edit--try-edit-location symbol

@@ -14,7 +14,6 @@
 
 (require 'geiser-repl)
 (require 'geiser-capf)
-(require 'geiser-imenu)
 (require 'geiser-menu)
 (require 'geiser-doc)
 (require 'geiser-compile)
@@ -388,7 +387,6 @@ interacting with the Geiser REPL is at your disposal.
   (setq geiser-autodoc-mode-string "/A")
   (setq geiser-smart-tab-mode-string "/T")
   (geiser-capf-setup geiser-mode)
-  (geiser-imenu-setup geiser-mode)
   (when geiser-mode-autodoc-p
     (geiser-autodoc-mode (if geiser-mode 1 -1)))
   (when geiser-mode-smart-tab-p

@@ -24,7 +24,6 @@
 (defmacro geiser--features-list ()
   (quote '(
            geiser-mode
-           geiser-imenu
            geiser-repl
            geiser-capf
            geiser-doc
