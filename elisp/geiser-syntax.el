@@ -1,4 +1,4 @@
-;;; geiser-syntax.el -- utilities for parsing scheme syntax
+;;; geiser-syntax.el -- utilities for parsing scheme syntax  -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2009-2016, 2019-2022 Jose Antonio Ortega Ruiz
 
@@ -213,7 +213,7 @@ implementation-specific entries for font-lock-keywords.")
               (geiser-syntax--read/token 'dot)
             (cons 'atom (geiser-syntax--read/elisp))))
       (?\# (cl-case (geiser-syntax--read/next-char)
-             ('nil '(eob))
+             ((nil quote) '(eob))
              (?| (geiser-syntax--read/skip-comment))
              (?: (if (geiser-syntax--read/next-char)
                      (cons 'kwd (geiser-syntax--read/symbol))
@@ -229,7 +229,7 @@ implementation-specific entries for font-lock-keywords.")
                         (tok (cons 'atom tok))
                         (t (geiser-syntax--read/next-token)))))))
       (?| (cl-case (geiser-syntax--read/next-char) ;; gambit style block comments
-            ('nil '(eob))
+            ((nil quote) '(eob))
             (?# (geiser-syntax--read/skip-comment))
             (t (let ((tok (geiser-syntax--read/symbol)))
                  (cond ((equal (symbol-name tok) "t") '(boolean . :t))
@@ -365,9 +365,8 @@ implementation-specific entries for font-lock-keywords.")
 (defun geiser-syntax--scan-sexps ()
   (let* ((fst (geiser-syntax--symbol-at-point))
          (smth (or fst (not (looking-at-p "[\s \s)\s>\s<\n]"))))
-         (path))
+         (path (and fst `((,fst 0)))))
     (save-excursion
-      (when fst (backward-up-list) (push `(,fst 0) path))
       (while (> (or (geiser-syntax--nesting-level) 0) 0)
         (let ((boundary (point)))
           (geiser-syntax--skip-comment/string)
@@ -465,7 +464,7 @@ implementation-specific entries for font-lock-keywords.")
         (let ((boundary (point))
               (nesting (geiser-syntax--nesting-level)))
           (geiser-syntax--pop-to-top)
-          (cl-destructuring-bind (form end)
+          (cl-destructuring-bind (form _end)
               (geiser-syntax--form-after-point boundary)
             (delete sym
                     (geiser-syntax--scan-locals bfs
