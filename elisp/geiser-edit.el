@@ -128,7 +128,9 @@ or following links in error buffers.")
     (when file
       (geiser-edit--visit-file file (or method geiser-edit-symbol-method)))
     (or (geiser-edit--goto-location symbol line col pos)
-        (error "Couldn't find location for symbol at point"))))
+        file
+        (unless no-error
+          (error "Couldn't find location for '%s'" symbol)))))
 
 (defsubst geiser-edit--try-edit (symbol ret &optional method no-error)
   (geiser-edit--try-edit-location symbol
