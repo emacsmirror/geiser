@@ -88,7 +88,7 @@ or following links in error buffers.")
   (regexp-opt '("define-syntaxes" "define-values")))
 
 (defsubst geiser-edit--def-re (thing)
-  (format "(%s *[( ]\\(%s\\_>[^)]*\\)[ )\n]"
+  (format "(%s *\\([( ]%s\\_>[^)]*[ )\n]\\)"
           geiser-edit--def-re
           (regexp-quote (format "%s" thing))))
 
