@@ -259,7 +259,8 @@ With prefix, asks for the symbol to locate."
     (if (geiser-edit--try-edit symbol ret nil t)
         (when marker (xref-push-marker-stack marker))
       (unless (geiser-edit-module-at-point t)
-        (error "Couldn't find location for '%s'" symbol)))))
+        (error "Couldn't find location for '%s'" symbol)))
+    t))
 
 (defun geiser-pop-symbol-stack ()
   "Pop back to where \\[geiser-edit-symbol-at-point] was last invoked."
@@ -279,7 +280,8 @@ With prefix, asks for the symbol to locate."
     (geiser-edit-module (or (geiser-completion--module-at-point)
                             (geiser-completion--read-module))
                         nil no-error)
-    (when marker (xref-push-marker-stack marker))))
+    (when marker (xref-push-marker-stack marker))
+    t))
 
 (defun geiser-insert-lambda (&optional full)
   "Insert λ at point.  With prefix, inserts (λ ())."
