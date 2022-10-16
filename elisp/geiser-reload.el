@@ -30,9 +30,9 @@
            geiser-xref
            geiser-compile
            geiser-debug
-           geiser-edit
            geiser-completion
            geiser-autodoc
+           geiser-edit
            geiser-eval
            geiser-connection
            geiser-syntax

@@ -12,6 +12,7 @@
 
 ;;; Code:
 
+(require 'geiser-edit)
 (require 'geiser-eval)
 (require 'geiser-syntax)
 (require 'geiser-custom)
@@ -178,16 +179,16 @@ you can set this variable to nil to avoid them."
 
 (defun geiser-autodoc--autodoc (path callback &optional signs)
   (let ((signs (or signs
-                   (geiser-autodoc--get-signatures (mapcar 'car path) callback)))
-        (p (car path))
-        (s))
-    (if callback
-        t
-      (while (and p (not s))
-        (unless (setq s (cdr (assoc (car p) signs)))
-          (setq p (car path))
-          (setq path (cdr path))))
-      (when s (geiser-autodoc--str p s)))))
+                   (geiser-autodoc--get-signatures (mapcar 'car path) callback))))
+    (or (and callback t)
+        (let ((p (car path))
+              (s))
+          (while (and p (not s))
+            (setq s (or (cdr (assoc (car p) signs))
+                        (cdr (geiser-edit--find-def (car p)))))
+            (setq p (car path) path (cdr path)))
+          (cond ((stringp s) s)
+                (s (geiser-autodoc--str p s)))))))
 
 
 ;;; Autodoc functions:
