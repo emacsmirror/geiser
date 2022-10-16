@@ -258,27 +258,27 @@ With prefix, asks for the symbol to locate."
          (ret (ignore-errors (geiser-eval--send/wait cmd))))
     (if (geiser-edit--try-edit symbol ret nil t)
         (when marker (xref-push-marker-stack marker))
-      (geiser-edit-module-at-point))))
+      (unless (geiser-edit-module-at-point t)
+        (error "Couldn't find location for '%s'" symbol)))))
 
 (defun geiser-pop-symbol-stack ()
   "Pop back to where \\[geiser-edit-symbol-at-point] was last invoked."
   (interactive)
-  (condition-case nil
-      (xref-pop-marker-stack)
-    (error "No previous location for find symbol invocation")))
+  (xref-pop-marker-stack))
 
-(defun geiser-edit-module (module &optional method)
+(defun geiser-edit-module (module &optional method no-error)
   "Asks for a module and opens it in a new buffer."
   (interactive (list (geiser-completion--read-module)))
   (let ((cmd `(:eval (:ge module-location '(:module ,module)))))
-    (geiser-edit--try-edit module (geiser-eval--send/wait cmd) method)))
+    (geiser-edit--try-edit module (geiser-eval--send/wait cmd) method no-error)))
 
-(defun geiser-edit-module-at-point ()
+(defun geiser-edit-module-at-point (&optional no-error)
   "Opens a new window visiting the module at point."
   (interactive)
   (let ((marker (point-marker)))
     (geiser-edit-module (or (geiser-completion--module-at-point)
-                            (geiser-completion--read-module)))
+                            (geiser-completion--read-module))
+                        nil no-error)
     (when marker (xref-push-marker-stack marker))))
 
 (defun geiser-insert-lambda (&optional full)
