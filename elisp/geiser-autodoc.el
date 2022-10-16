@@ -186,7 +186,7 @@ you can set this variable to nil to avoid them."
           (while (and p (not s))
             (setq s (or (cdr (assoc (car p) signs))
                         (cdr (geiser-edit--find-def (car p)))))
-            (setq p (car path) path (cdr path)))
+            (unless s (setq p (car path) path (cdr path))))
           (cond ((stringp s) s)
                 (s (geiser-autodoc--str p s)))))))
 
