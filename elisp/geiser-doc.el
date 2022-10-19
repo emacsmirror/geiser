@@ -1,4 +1,4 @@
-;;; geiser-doc.el -- accessing scheme-provided documentation
+;;; geiser-doc.el -- accessing scheme-provided documentation  -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2009-2016, 2021-2022 Jose Antonio Ortega Ruiz
 
@@ -195,9 +195,9 @@ help (e.g. browse an HTML page) implementing this method.")
   (let ((label (if manual "[manual]" "[source]"))
         (help (if manual "Look up in Scheme manual" "Go to definition")))
     (insert-text-button label
-			:type 'geiser-doc--xbutton
-			'help-echo help
-			'x-kind (if manual 'manual 'source))))
+                        :type 'geiser-doc--xbutton
+                        'help-echo help
+                        'x-kind (if manual 'manual 'source))))
 
 (defun geiser-doc--insert-xbuttons (impl)
   (when (geiser-impl--method 'external-help impl)
