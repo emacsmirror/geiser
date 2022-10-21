@@ -89,7 +89,10 @@ or following links in error buffers.")
 
 (defsubst geiser-edit--def-re (thing)
   (let ((sx (regexp-quote (format "%s" thing))))
-    (format "(%s[[:space:]]+\\((%s\\_>[^)]*)\\|\\(\\_<%s\\_>\\) *\\([^\n]*\\))\\)"
+    (format (concat "(%s[[:space:]]+\\("
+                    "(%s\\_>[^)]*)\\|"
+                    "\\(\\_<%s\\_>\\) *\\([^\n]*?\\)[)\n]"
+                    "\\)")
             geiser-edit--def-re sx sx)))
 
 (defsubst geiser-edit--def-re* (thing)
@@ -97,15 +100,21 @@ or following links in error buffers.")
           geiser-edit--def-re*
           (regexp-quote (format "%s" thing))))
 
-(defun geiser-edit--find-def (symbol)
+(defun geiser-edit--find-def (symbol &optional args)
   (save-excursion
     (goto-char (point-min))
     (when (or (re-search-forward (geiser-edit--def-re symbol) nil t)
               (re-search-forward (geiser-edit--def-re* symbol) nil t))
       (cons (match-beginning 0)
-            (if (match-string 2)
-                (concat (match-string 2) " => " (match-string 3))
-              (match-string 1))))))
+            (and args
+                 (if (match-string 2)
+                     (let* ((v (or (match-string 3) ""))
+                            (v (and (not (string-blank-p v)) v)))
+                       (concat (match-string 2)
+                               (and v " => ")
+                               v
+                               (and v (string-prefix-p "(" v) " ...")))
+                   (match-string 1)))))))
 
 (defsubst geiser-edit--symbol-re (thing)
   (format "\\_<%s\\_>" (regexp-quote (format "%s" thing))))

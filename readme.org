@@ -45,7 +45,6 @@
       - Stklos 1.50, via [[https://gitlab.com/emacs-geiser/stklos][geiser-stklos]]
 
 * Installation
-
 *** Using ELPA
 
     Geiser is available in the ELPA repositories [[https://elpa.nongnu.org/nongnu/geiser.html][NonGNU ELPA]]
