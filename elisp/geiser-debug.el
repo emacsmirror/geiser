@@ -275,7 +275,9 @@ buffer.")
         (when (or err key output)
           (let ((msg (or (geiser-eval--error-msg err) output "")))
             (or (geiser-debug--display-error impl module key msg)
-                (insert "\n" (if key (format "Error: %s\n" key) "") msg "\n"))))
+                (insert "\n"
+                        (if key (format "Error: %s\n" key) "")
+                        (format "%s" (or msg "")) "\n"))))
         (when after
           (goto-char (point-max))
           (insert "\nExpression evaluated was:\n\n")
@@ -313,10 +315,9 @@ result in the minibuffer."
          (code `(,(if compile :comp :eval) (:scm ,wrapped)))
          (cont (lambda (ret)
                  (let ((res (geiser-eval--retort-result-str ret nil))
-                       (err (geiser-eval--retort-error ret))
                        (scstr (geiser-syntax--scheme-str str)))
                    (when and-go (funcall and-go))
-                   (when (not err)
+                   (unless (geiser-eval--retort-error ret)
                      (save-excursion
                        (goto-char (/ (+ end start) 2))
                        (geiser-autodoc--clean-cache))
