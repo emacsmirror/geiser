@@ -275,11 +275,12 @@
         (error (geiser-con--request-deactivate req))))))
 
 (defun geiser-con--send-string/wait (con str cont &optional timeout sbuf)
-  (save-current-buffer
-    (let ((proc (and con (geiser-con--connection-process con))))
-      (unless proc (error "Geiser connection not active"))
-      (let ((req (geiser-con--send-string con str cont sbuf)))
-        (geiser-con--wait req timeout)))))
+  (when (and (stringp str) (not (string-blank-p str)))
+    (save-current-buffer
+      (let ((proc (and con (geiser-con--connection-process con))))
+        (unless proc (error "Geiser connection not active"))
+        (let ((req (geiser-con--send-string con str cont sbuf)))
+          (geiser-con--wait req timeout))))))
 
 
 (provide 'geiser-connection)
