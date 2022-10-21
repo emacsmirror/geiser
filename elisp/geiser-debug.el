@@ -126,7 +126,7 @@ all ANSI sequences."
   (compilation-setup nil)
   (setq buffer-read-only t))
 
-(defvar-local geiser-debug--debugger-active-p nil)
+(defvar-local geiser-debug--debugger-active nil)
 (defvar-local geiser-debug--sender-buffer nil)
 
 (defun geiser-debug--send-dbg (thing)
@@ -138,7 +138,7 @@ all ANSI sequences."
                                 (geiser-eval--retort-result-str ret nil)))
 
 (defun geiser-debug--send-to-repl (thing)
-  (unless (and geiser-debug--debugger-active-p geiser-debug--sender-buffer)
+  (unless (and geiser-debug--debugger-active geiser-debug--sender-buffer)
     (error "Debugger not active"))
   (save-window-excursion
     (with-current-buffer geiser-debug--sender-buffer
@@ -179,7 +179,7 @@ all ANSI sequences."
 (transient-define-prefix geiser-debug--debugger-transient ()
   "Debugging meta-commands."
   [:description (lambda () (format "%s debugger" (geiser-impl--impl-str)))
-   :if (lambda () geiser-debug--debugger-active-p)
+   :if (lambda () geiser-debug--debugger-active)
    ["Display"
     ("b" "backtrace" geiser-debug-debugger-backtrace)
     ("e" "error" geiser-debug-debugger-error)
@@ -196,7 +196,7 @@ all ANSI sequences."
   ("Next error location" ((kbd "M-n")) next-error)
   ("Previous error location" ((kbd "M-p")) previous-error)
   ("Debugger command ..." "," geiser-debug--debugger-transient
-   :enable geiser-debug--debugger-active-p)
+   :enable geiser-debug--debugger-active)
   ("Source buffer" ("z" (kbd "C-c C-z")) geiser-debug-switch-to-buffer)
   --
   ("Quit" nil View-quit))
@@ -262,9 +262,9 @@ buffer.")
          (after (geiser-debug--display-after what)))
     (unless debug-entered
       (geiser-debug--with-buffer
-        (when (and (not debug) geiser-debug--debugger-active-p)
+        (when (and (not debug) geiser-debug--debugger-active)
           (message "Debugger exited"))
-        (setq geiser-debug--debugger-active-p debug
+        (setq geiser-debug--debugger-active debug
               geiser-debug--sender-buffer buffer
               geiser-impl--implementation impl)
         (erase-buffer)
