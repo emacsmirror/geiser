@@ -69,7 +69,9 @@ or following links in error buffers.")
   (geiser-edit--to-number (cdr (assoc "char" loc))))
 
 (defsubst geiser-edit--make-location (name file line column)
-  `(("name" . ,name) ("file" . ,file) ("line" . ,line) ("column" . ,column)))
+  (if (equal line "")
+      `(("name" . ,name) ("file" . ,file) ("char" . ,column))
+    `(("name" . ,name) ("file" . ,file) ("line" . ,line) ("column" . ,column))))
 
 (defconst geiser-edit--def-re
   (regexp-opt '("define"

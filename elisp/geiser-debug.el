@@ -129,21 +129,9 @@ all ANSI sequences."
 (defvar-local geiser-debug--debugger-active nil)
 (defvar-local geiser-debug--sender-buffer nil)
 
-(defun geiser-debug--send-dbg (thing)
-  (geiser-eval--send/wait (cons :debug (if (listp thing) thing (list thing)))))
-
-(defun geiser-debug--debugger-display (thing ret)
-  (geiser-debug--display-retort (format ",%s" thing)
-                                ret
-                                (geiser-eval--retort-result-str ret nil)))
-
-(defun geiser-debug--send-to-repl (thing)
-  (unless (and geiser-debug--debugger-active geiser-debug--sender-buffer)
-    (error "Debugger not active"))
-  (save-window-excursion
-    (with-current-buffer geiser-debug--sender-buffer
-      (when-let (ret (geiser-debug--send-dbg thing))
-        (geiser-debug--debugger-display thing ret)))))
+(defun geiser-debug-active-p ()
+  "Check whether debugger has been entered by a scheme buffer operation."
+  (and geiser-debug--debugger-active geiser-debug--sender-buffer))
 
 (defun geiser-debug-switch-to-buffer ()
   "Return to the scheme buffer that pooped this debug window."
@@ -151,52 +139,11 @@ all ANSI sequences."
   (when geiser-debug--sender-buffer
     (geiser-repl--switch-to-buffer geiser-debug--sender-buffer)))
 
-(defun geiser-debug-debugger-quit ()
-  "Quit the current debugging session level."
-  (interactive)
-  (geiser-debug--send-to-repl 'quit))
-
-(defun geiser-debug-debugger-backtrace ()
-  "Quit the current debugging session level."
-  (interactive)
-  (geiser-debug--send-to-repl 'backtrace))
-
-(defun geiser-debug-debugger-locals ()
-  "Show local variables."
-  (interactive)
-  (geiser-debug--send-to-repl 'locals))
-
-(defun geiser-debug-debugger-registers ()
-  "Show register values."
-  (interactive)
-  (geiser-debug--send-to-repl 'registers))
-
-(defun geiser-debug-debugger-error ()
-  "Show error message."
-  (interactive)
-  (geiser-debug--send-to-repl 'error))
-
-(transient-define-prefix geiser-debug--debugger-transient ()
-  "Debugging meta-commands."
-  [:description (lambda () (format "%s debugger" (geiser-impl--impl-str)))
-   :if (lambda () geiser-debug--debugger-active)
-   ["Display"
-    ("b" "backtrace" geiser-debug-debugger-backtrace)
-    ("e" "error" geiser-debug-debugger-error)
-    ("l" "locals" geiser-debug-debugger-locals)
-    ("r" " registers" geiser-debug-debugger-registers)]
-   ["Go"
-    ("jn" "Jump to next error" next-error)
-    ("jp" "Jump to previous error" previous-error)
-    ("x" "Exit debug level" geiser-debug-debugger-quit)]])
-
 (geiser-menu--defmenu debug geiser-debug-mode-map
   ("Next error" ("n" [?\t]) compilation-next-error)
   ("Previous error" ("p" "\e\t" [backtab]) compilation-previous-error)
   ("Next error location" ((kbd "M-n")) next-error)
   ("Previous error location" ((kbd "M-p")) previous-error)
-  ("Debugger command ..." "," geiser-debug--debugger-transient
-   :enable geiser-debug--debugger-active)
   ("Source buffer" ("z" (kbd "C-c C-z")) geiser-debug-switch-to-buffer)
   --
   ("Quit" nil View-quit))
