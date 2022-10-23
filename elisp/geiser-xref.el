@@ -1,4 +1,4 @@
-;;; geiser-xref.el -- utilities for cross-referencing
+;;; geiser-xref.el -- utilities for cross-referencing  -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2009, 2010, 2012, 2022 Jose Antonio Ortega Ruiz
 
@@ -112,7 +112,7 @@
     (newline)
     (let ((last-module))
       (dolist (xref (sort xrefs 'geiser-xref--module<))
-	(let ((module (format "%s" (cdr (assoc "module" xref)))))
+        (let ((module (format "%s" (cdr (assoc "module" xref)))))
           (when (not (equal module last-module))
             (insert "\n  In module ")
             (geiser--insert-with-face (format "%s" module)
