@@ -192,6 +192,11 @@ buffer.")
         (newline 2)
         (and no (> no 0))))))
 
+(defun geiser-debug--default-display-error (key msg)
+  (insert "\n"
+          (if key (format "Error: %s\n" key) "")
+          (format "%s" (or msg "")) "\n"))
+
 (defun geiser-debug--display-retort (what ret &optional res _auto-p)
   (let* ((err (geiser-eval--retort-error ret))
          (key (geiser-eval--error-key err))
@@ -220,11 +225,12 @@ buffer.")
         (setq img (when (and res (not err) (not debug))
                     (geiser-debug--insert-res res)))
         (when (or err key output)
+          (when (fboundp 'next-error-select-buffer)
+            (next-error-select-buffer (current-buffer)))
           (let ((msg (or (geiser-eval--error-msg err) output "")))
             (or (geiser-debug--display-error impl module key msg)
-                (insert "\n"
-                        (if key (format "Error: %s\n" key) "")
-                        (format "%s" (or msg "")) "\n"))))
+                (geiser-debug--default-display-error key msg))
+            (unless err (geiser-edit--buttonize-files))))
         (when after
           (goto-char (point-max))
           (insert "\nExpression evaluated was:\n\n")
