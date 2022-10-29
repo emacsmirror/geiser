@@ -50,6 +50,18 @@ help buffer, after collecting the associated signature and
 docstring. You can provide an alternative function for displaying
 help (e.g. browse an HTML page) implementing this method.")
 
+(geiser-impl--define-caller geiser-doc--display-docstring
+    display-docstring (ret)
+  "This method receives the result of calling the geiser scheme
+procedure symbol-documentation and should display it in the
+current buffer.  By default, geiser looks for the value of the
+key docstring in the result, assumed to be an alist, and inserts
+it verbatim at point if it's a string.  Providing an
+implementation of this method may be useful if displaying the
+info returned by the scheme side (display-docstring) needs more
+elaboration on emacs' side.  This method should return a truthy
+value if the default action should be skipped.")
+
 
 ;;; Documentation browser history:
 
@@ -360,7 +372,8 @@ help (e.g. browse an HTML page) implementing this method.")
   (geiser-doc--insert-title
    (geiser-autodoc--str* (cdr (assoc "signature" docstring))))
   (newline)
-  (insert (or (cdr (assoc "docstring" docstring)) ""))
+  (or (geiser-doc--display-docstring impl docstring)
+      (insert (or (cdr (assoc "docstring" docstring)) "")))
   (geiser-doc--buttonize-modules impl)
   (setq geiser-doc--buffer-link
         (geiser-doc--history-push (geiser-doc--make-link symbol
