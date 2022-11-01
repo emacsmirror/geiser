@@ -23,6 +23,7 @@
 (require 'geiser-impl)
 
 (require 'tq)
+(eval-when-compile (require 'subr-x))
 
 
 ;;; Buffer connections:

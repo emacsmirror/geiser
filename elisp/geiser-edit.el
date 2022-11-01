@@ -18,6 +18,7 @@
 (require 'geiser-base)
 
 (require 'etags)
+(eval-when-compile (require 'subr-x))
 
 
 ;;; Customization:

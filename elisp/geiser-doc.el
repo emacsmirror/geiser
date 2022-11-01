@@ -24,6 +24,7 @@
 (require 'geiser-base)
 
 (require 'button)
+(eval-when-compile (require 'subr-x))
 
 
 ;;; Customization:

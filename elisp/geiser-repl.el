@@ -30,6 +30,8 @@
 (require 'font-lock)
 (require 'project)
 
+(eval-when-compile (require 'subr-x))
+
 
 ;;; Customization:
 
