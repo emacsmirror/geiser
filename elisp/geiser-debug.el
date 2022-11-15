@@ -23,7 +23,6 @@
 (require 'geiser-base)
 (require 'geiser-image)
 
-(require 'transient)
 (require 'ansi-color)
 (require 'compile)
 
