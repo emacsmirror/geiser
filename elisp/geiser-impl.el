@@ -140,7 +140,7 @@ in order to determine its scheme flavour."
       (push (cons impl methods) geiser-impl--registry))
     (push (cons impl file) geiser-impl--load-files)))
 
-(defsubst geiser-activate-implementation (impl)
+(defun geiser-activate-implementation (impl)
   (add-to-list 'geiser-active-implementations impl))
 
 (defsubst geiser-deactivate-implementation (impl)
