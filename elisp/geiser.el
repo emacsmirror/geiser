@@ -70,10 +70,6 @@
 (autoload 'geiser-reload "geiser-reload" "Reload Geiser code." t)
 
 ;;;###autoload
-(autoload 'geiser "geiser-repl"
-  "Start a Geiser REPL, or switch to a running one." t)
-
-;;;###autoload
 (autoload 'geiser "geiser-repl" "Start a Geiser REPL." t)
 
 ;;;###autoload
