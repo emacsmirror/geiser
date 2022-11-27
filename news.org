@@ -1,3 +1,8 @@
+* Version 0.28.1 (November 27 2022)
+
+  - Bug fix: ensure geiser-activate-implementation is autoloaded.
+  - Bug fix: don't require transient, it's not used anymore by geiser core.
+
 * Version 0.28 (November 4 2022)
 
   - Last-result local jumps and autodoc (without using imenu).
