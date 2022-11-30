@@ -100,11 +100,9 @@
 (autoload 'turn-off-geiser-mode "geiser-mode"
   "Disable Geiser's mode (useful in Scheme buffers)." t)
 
-;;;###autoload
 (autoload 'geiser-activate-implementation "geiser-impl"
   "Register the given implementation as active.")
 
-;;;###autoload
 (autoload 'geiser-implementation-extension "geiser-impl"
   "Register a file extension as handled by a given implementation.")
 
@@ -130,7 +128,7 @@
 (autoload 'geiser-mode--maybe-activate "geiser-mode")
 
 ;;;###autoload
-(add-hook 'scheme-mode-hook 'geiser-mode--maybe-activate)
+(add-hook 'scheme-mode-hook #'geiser-mode--maybe-activate)
 
 (provide 'geiser)
 ;;; geiser.el ends here
