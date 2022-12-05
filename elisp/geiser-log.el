@@ -40,8 +40,14 @@
 (defvar geiser-log--max-message-size 20480
   "Maximum size of individual Geiser log messages.")
 
+(define-obsolete-variable-alias
+  'geiser-log-verbose-p 'geiser-log-verbose "0.26.2")
+
 (defvar geiser-log-verbose nil
   "Log purely informational messages.")
+
+(define-obsolete-variable-alias
+  'geiser-log-verbose-debug-p 'geiser-log-verbose-debug "0.26.2")
 
 (defvar geiser-log-verbose-debug nil
   "Log very verbose informational messages. Useful only for debugging.")
@@ -49,14 +55,6 @@
 
 (defvar geiser-log--inhibit nil
   "Set this to t to inhibit all log messages")
-
-(define-obsolete-variable-alias
-  'geiser-log-verbose-p 'geiser-log-verbose "0.26.2")
-
-(define-obsolete-variable-alias
-  'geiser-log-verbose-debug-p 'geiser-log-verbose-debug "0.26.2")
-
-
 
 
 ;;; Log buffer and mode:
@@ -71,14 +69,14 @@
   "Simple mode for Geiser log messages buffer."
   (buffer-disable-undo)
   (add-hook 'after-change-functions
-            (lambda (b e len)
+            (lambda (b _e _len)
               (let ((inhibit-read-only t))
                 (when (> b geiser-log--max-buffer-size)
                   (delete-region (point-min) b))))
             nil t)
   ;; Maybe this feature would better be implemented as a revert-buffer function?
   (add-hook 'after-change-functions
-            (lambda (b e len)
+            (lambda (_b _e _len)
               (when geiser-log-autoscroll-buffer-p
                 (let ((my-window (get-buffer-window (geiser-log--buffer) t)))
                   (when (window-live-p my-window)

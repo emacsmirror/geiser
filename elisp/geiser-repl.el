@@ -53,9 +53,6 @@ See also `geiser-repl-current-project-function' for the function
 used to discover a buffer's project."
   :type 'boolean)
 
-(declare project-root "project.el")
-(declare project-current "project.el")
-
 (defun geiser-repl-project-root ()
   "Use project.el, to determine a buffer's project root."
   (when-let (p (project-current)) (project-root p)))

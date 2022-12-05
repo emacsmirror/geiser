@@ -79,7 +79,6 @@
          (signature (cdr (assoc "signature" xref)))
          (signature-txt (and signature
                              (geiser-autodoc--str* signature)))
-         (module (cdr (assoc "module" xref)))
          (p (point)))
     (when signature
       (insert "   - ")

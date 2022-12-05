@@ -35,6 +35,9 @@
   "Debugging and error display options."
   :group 'geiser)
 
+(define-obsolete-variable-alias 'geiser-debug-always-display-sexp-after-p
+  'geiser-debug-always-display-sexp-after "0.26.2")
+
 (geiser-custom--defcustom geiser-debug-always-display-sexp-after nil
   "Whether to always display the sexp whose evaluation caused an
 error after the error message in the debug pop-up.
@@ -42,9 +45,6 @@ error after the error message in the debug pop-up.
 If nil, expressions shorter than `geiser-debug-long-sexp-lines`
 lines are shown before the error message."
   :type 'boolean)
-
-(define-obsolete-variable-alias 'geiser-debug-always-display-sexp-after-p
-  'geiser-debug-always-display-sexp-after "0.26.2")
 
 (geiser-custom--defcustom geiser-debug-long-sexp-lines 6
   "Length of an expression in order to be relegated to the bottom
@@ -54,6 +54,9 @@ If `geiser-debug-always-display-sexp-after` is t, this variable
 has no effect."
   :type 'int)
 
+(define-obsolete-variable-alias 'geiser-debug-jump-to-debug-p
+  'geiser-debug-jump-to-debug "0.26.2")
+
 (geiser-custom--defcustom geiser-debug-jump-to-debug t
   "When set to t (the default), jump to the debug pop-up buffer
 in case of evaluation errors.
@@ -61,8 +64,8 @@ in case of evaluation errors.
 See also `geiser-debug-show-debug`. "
   :type 'boolean)
 
-(define-obsolete-variable-alias 'geiser-debug-jump-to-debug-p
-  'geiser-debug-jump-to-debug "0.26.2")
+(define-obsolete-variable-alias 'geiser-debug-show-debug-p
+  'geiser-debug-show-debug "0.26.2")
 
 (geiser-custom--defcustom geiser-debug-auto-next-error-p nil
   "When set, automatically invoke `next-error' on of evaluation errors.
@@ -79,8 +82,8 @@ This option takes effect even if `geiser-debug-jump-to-debug`
 is set."
   :type 'boolean)
 
-(define-obsolete-variable-alias 'geiser-debug-show-debug-p
-  'geiser-debug-show-debug "0.26.2")
+(define-obsolete-variable-alias 'geiser-debug-auto-display-images-p
+  'geiser-debug-auto-display-images "0.26.2")
 
 (geiser-custom--defcustom geiser-debug-auto-display-images t
   "Whether to automatically invoke the external viewer to display
@@ -88,9 +91,6 @@ images when they're evaluated.
 
 See also `geiser-repl-auto-display-images-p'."
   :type 'boolean)
-
-(define-obsolete-variable-alias 'geiser-debug-auto-display-images-p
-  'geiser-debug-auto-display-images "0.26.2")
 
 (geiser-custom--defcustom geiser-debug-treat-ansi-colors nil
   "Colorize ANSI escape sequences produced by the scheme process.

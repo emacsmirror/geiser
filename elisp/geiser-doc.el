@@ -137,7 +137,7 @@ value if the default action should be skipped.")
       (with--geiser-implementation impl
         (if (null target)
             (geiser-doc-module module impl)
-          (let ((geiser-eval--get-module-function (lambda (x) module)))
+          (let ((geiser-eval--get-module-function (lambda (_) module)))
             (geiser-doc-symbol target module impl)))))))
 
 (defvar-local geiser-doc--buffer-link nil)

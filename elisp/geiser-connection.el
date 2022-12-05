@@ -170,7 +170,7 @@
     (and tq (tq-close tq))))
 
 (defvar geiser-con--startup-prompt nil)
-(defun geiser-con--startup-prompt (p s)
+(defun geiser-con--startup-prompt (_p s)
   (setq geiser-con--startup-prompt
         (concat geiser-con--startup-prompt s))
   nil)
@@ -188,8 +188,7 @@
 
 (defun geiser-con--connection-activate (c)
   (when (not (car c))
-    (let* ((tq (geiser-con--connection-tq c))
-           (proc (geiser-con--connection-process c))
+    (let* ((proc (geiser-con--connection-process c))
            (tq-filter (geiser-con--connection-tq-filter c)))
       (while (accept-process-output proc 0.01))
       (set-process-filter proc tq-filter)
@@ -269,7 +268,7 @@
          (timeout (/ (or timeout geiser-connection-timeout) 1000.0))
          (step (/ timeout 10)))
     (with-timeout (timeout (geiser-con--request-deactivate req))
-      (condition-case e
+      (condition-case nil
           (while (and (geiser-con--connection-process con)
                       (not (geiser-con--connection-completed-p con id)))
             (accept-process-output proc step))

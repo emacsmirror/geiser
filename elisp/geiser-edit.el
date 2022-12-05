@@ -188,7 +188,7 @@ or following links in error buffers.")
                                 (match-string 2)
                                 (or (match-string 3) 0)
                                 'window)
-        (unless no-fill (fill-region (match-end 0) (point-at-eol)))))))
+        (unless no-fill (fill-region (match-end 0) (line-end-position)))))))
 
 (defun geiser-edit--open-next (&optional n reset)
   (interactive)
@@ -277,7 +277,10 @@ With prefix, asks for the symbol to locate."
 (defun geiser-pop-symbol-stack ()
   "Pop back to where \\[geiser-edit-symbol-at-point] was last invoked."
   (interactive)
-  (xref-pop-marker-stack))
+  (if (fboundp 'xref-go-back)
+      (xref-go-back)
+    (with-no-warnings
+      (xref-pop-marker-stack))))
 
 (defun geiser-edit-module (module &optional method no-error)
   "Asks for a module and opens it in a new buffer."

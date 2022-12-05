@@ -97,7 +97,7 @@
 
 (defvar geiser-completion--symbol-begin-function nil)
 
-(defun geiser-completion--def-symbol-begin (module)
+(defun geiser-completion--def-symbol-begin (_module)
   (save-excursion (skip-syntax-backward "^-()>") (point)))
 
 (geiser-impl--register-local-method
