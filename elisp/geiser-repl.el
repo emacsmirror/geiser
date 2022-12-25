@@ -589,7 +589,7 @@ will be set up using `geiser-connect-local' when a REPL is started.")
     (dolist (f geiser-repl-startup-forms)
       (geiser-log--info "Evaluating startup form %s..." f)
       (geiser-eval--send/wait `(:eval (:scm ,f))))
-    (run-hooks geiser-repl-startup-hook)
+    (run-hooks 'geiser-repl-startup-hook)
     (message "%s up and running!" (geiser-repl--repl-name impl))))
 
 (defvar-local geiser-repl--connection-buffer nil)
