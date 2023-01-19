@@ -1141,7 +1141,7 @@ With a prefix argument, force exit by killing the scheme process."
 When called interactively, this function will ask for the path to
 add, defaulting to the current buffer's directory."
   (interactive "DDirectory to add: ")
-  (let* ((c `(:eval (:ge add-to-load-path ,(expand-file-name path))))
+  (let* ((c `(:eval (:ge add-to-load-path ,(file-local-name (expand-file-name path)))))
          (r (geiser-eval--send/result c)))
     (message "%s%s added to load path" path (if r "" " couldn't be"))))
 

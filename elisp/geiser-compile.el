@@ -57,7 +57,7 @@
 (defun geiser-compile-file (path)
   "Compile and load Scheme file."
   (interactive "FScheme file: ")
-  (geiser-compile--file-op path t "Compiling"))
+  (geiser-compile--file-op (file-local-name path) t "Compiling"))
 
 (defun geiser-compile-current-buffer (&optional restart)
   "Compile and load current Scheme file.
@@ -65,7 +65,7 @@
 With prefix, restart REPL before compiling the file."
   (interactive "P")
   (geiser-compile--ensure-repl restart)
-  (geiser-compile-file (buffer-file-name (current-buffer))))
+  (geiser-compile-file (file-local-name (buffer-file-name (current-buffer)))))
 
 (defun geiser-load-file (path)
   "Load Scheme file."
@@ -79,6 +79,6 @@ With prefix, restart REPL before compiling the file."
 With prefix, restart REPL before loading the file."
   (interactive "P")
   (geiser-compile--ensure-repl restart)
-  (geiser-load-file (buffer-file-name (current-buffer))))
+  (geiser-load-file (file-local-name (buffer-file-name (current-buffer)))))
 
 (provide 'geiser-compile)
