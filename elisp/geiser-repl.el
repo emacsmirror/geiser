@@ -1,6 +1,6 @@
 ;;; geiser-repl.el --- Geiser's REPL  -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2009-2013, 2015-2016, 2018-2022 Jose Antonio Ortega Ruiz
+;; Copyright (C) 2009-2013, 2015-2016, 2018-2023 Jose Antonio Ortega Ruiz
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the Modified BSD License. You should
@@ -290,8 +290,8 @@ will be set up using `geiser-connect-local' when a REPL is started.")
 
 (defvar-local geiser-repl--project nil)
 
-(defsubst geiser-repl--set-this-buffer-repl (r)
-  (setq geiser-repl--repl r))
+(defsubst geiser-repl--set-this-buffer-repl (r &optional this)
+  (with-current-buffer (or this (current-buffer)) (setq geiser-repl--repl r)))
 
 (defsubst geiser-repl--set-this-buffer-project (p)
   (setq geiser-repl--project p))
@@ -321,11 +321,11 @@ will be set up using `geiser-connect-local' when a REPL is started.")
 
 (defun geiser-repl--set-up-repl (impl)
   (or (and (not impl) geiser-repl--repl)
-      (setq geiser-repl--repl
-            (let ((impl (or impl
-                            geiser-impl--implementation
-                            (geiser-impl--guess))))
-              (when impl (geiser-repl--repl/impl impl))))))
+      (geiser-repl--set-this-buffer-repl
+       (let ((impl (or impl
+                       geiser-impl--implementation
+                       (geiser-impl--guess))))
+         (when impl (geiser-repl--repl/impl impl))))))
 
 (defun geiser-repl--active-impls ()
   (let ((act))
@@ -365,9 +365,11 @@ will be set up using `geiser-connect-local' when a REPL is started.")
            (old (geiser-repl--repl/impl impl proj geiser-repl--closed-repls))
            (old (and (buffer-live-p old)
                      (not (get-buffer-process old))
-                     old)))
+                     old))
+           (origin (current-buffer)))
       (geiser-repl--switch-to-buffer
        (or old (generate-new-buffer (geiser-repl--buffer-name impl))))
+      (geiser-repl--set-this-buffer-repl (current-buffer) origin)
       (unless old
         (geiser-repl-mode)
         (geiser-impl--set-buffer-implementation impl)
@@ -1052,7 +1054,8 @@ If no REPL is running, execute `geiser' to start a fresh one."
            (when (and (not (eq repl buffer))
                       (buffer-live-p geiser-repl--last-scm-buffer))
              (geiser-repl--switch-to-buffer geiser-repl--last-scm-buffer)))
-          (repl (geiser-repl--switch-to-buffer repl))
+          (repl (geiser-repl--set-this-buffer-repl repl)
+                (geiser-repl--switch-to-buffer repl))
           ((geiser-repl--remote-p)
            (geiser-connect impl (geiser-repl--host) (geiser-repl--port)))
           ((geiser-repl--local-p)
