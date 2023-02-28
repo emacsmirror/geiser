@@ -47,7 +47,7 @@
 
 (defun geiser-compile--ensure-repl (force)
   (when (or force
-            (and (not (geiser-repl--repl-buffer-p))
+            (and (not (geiser-repl--ensure-repl-buffer))
                  (yes-or-no-p "No REPL is running: start it?")))
     (geiser-repl-restart-repl)))
 

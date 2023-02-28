@@ -1085,15 +1085,18 @@ If no REPL is running, execute `geiser' to start a fresh one."
       (geiser-repl-switch-to-module (geiser-eval--get-module) (current-buffer))
     (geiser-repl-switch nil nil (current-buffer))))
 
-(defun geiser-repl--repl-buffer-p ()
-  (and (buffer-live-p geiser-repl--repl) geiser-repl--repl))
+(defun geiser-repl--ensure-repl-buffer ()
+  (unless (buffer-live-p geiser-repl--repl)
+    (setq geiser-repl--repl
+          (geiser-repl--repl/impl geiser-impl--implementation)))
+  (buffer-live-p geiser-repl--repl))
 
 (defun geiser-repl-restart-repl ()
   "Restarts the REPL associated with the current buffer."
   (interactive)
   (let ((b (current-buffer))
         (impl geiser-impl--implementation))
-    (when (geiser-repl--repl-buffer-p)
+    (when (buffer-live-p geiser-repl--repl)
       (geiser-repl--switch-to-repl nil)
       (comint-kill-subjob)
       (sit-for 0.1)) ;; ugly hack; but i don't care enough to fix it
