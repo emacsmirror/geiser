@@ -1,6 +1,6 @@
 ;;; geiser-eval.el -- sending scheme code for evaluation  -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2009, 2010, 2011, 2012, 2013, 2015, 2021 Jose Antonio Ortega Ruiz
+;; Copyright (C) 2009, 2010, 2011, 2012, 2013, 2015, 2021, 2023 Jose Antonio Ortega Ruiz
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the Modified BSD License. You should
@@ -160,13 +160,14 @@ module-exports, autodoc, callers, callees and generic-methods.")
   (setq geiser-eval--sync-retort (geiser-eval--log s)))
 
 (defun geiser-eval--send/wait (code &optional timeout buffer)
-  (setq geiser-eval--sync-retort nil)
-  (geiser-con--send-string/wait (geiser-eval--connection)
-                                (geiser-eval--code-str code)
-                                'geiser-eval--set-sync-retort
-                                timeout
-                                buffer)
-  geiser-eval--sync-retort)
+  (let ((sync-retort nil))
+    (geiser-con--send-string/wait (geiser-eval--connection)
+                                  (geiser-eval--code-str code)
+                                  (lambda (s)
+                                    (setq sync-retort (geiser-eval--log s)))
+                                  timeout
+                                  buffer)
+    sync-retort))
 
 (defun geiser-eval-interrupt ()
   "Interrupt on-going evaluation, if any."
