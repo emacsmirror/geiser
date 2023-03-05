@@ -155,10 +155,6 @@ module-exports, autodoc, callers, callees and generic-methods.")
 (defun geiser-eval--wait (req timeout)
   (or (geiser-con--wait req timeout) geiser-eval--async-retort))
 
-(defvar geiser-eval--sync-retort nil)
-(defun geiser-eval--set-sync-retort (s)
-  (setq geiser-eval--sync-retort (geiser-eval--log s)))
-
 (defun geiser-eval--send/wait (code &optional timeout buffer)
   (let ((sync-retort nil))
     (geiser-con--send-string/wait (geiser-eval--connection)
