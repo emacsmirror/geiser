@@ -328,6 +328,8 @@ With prefix, try to enter the current buffer's module."
       ("Symbol manual lookup" ("\C-c\C-d\C-i" "\C-c\C-di")
        geiser-doc-look-up-manual :enable (geiser-doc--manual-available-p))
       (mode "Autodoc mode" ("\C-c\C-d\C-a" "\C-c\C-da") geiser-autodoc-mode)
+      (mode "Autoeval mode" ("\C-c\C-d\C-e" "\C-c\C-de")
+            geiser-repl-autoeval-mode)
       --
       ("Compile buffer" "\C-c\C-k" geiser-compile-current-buffer)
       ("Switch to REPL" "\C-c\C-z" geiser-mode-switch-to-repl)

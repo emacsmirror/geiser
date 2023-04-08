@@ -29,6 +29,7 @@
 (require 'scheme)
 (require 'font-lock)
 (require 'project)
+(require 'paren)
 
 (eval-when-compile (require 'subr-x))
 
@@ -217,6 +218,14 @@ This variable is a good candidate for .dir-locals.el.
 
 See also `geiser-repl-startup-hook'."
   :type '(repeat string))
+
+(geiser-custom--defcustom geiser-repl-autoeval-mode-delay 0.125
+  "Delay before autoeval is run after an S-expression is balanced, in seconds."
+  :type 'number)
+
+(geiser-custom--defcustom geiser-repl-autoeval-mode-p nil
+  "Whether `geiser-repl-autoeval-mode' gets enabled by default in REPL buffers."
+  :type 'boolean)
 
 (geiser-custom--defface repl-input
   'comint-highlight-input geiser-repl "evaluated input highlighting")
@@ -783,6 +792,49 @@ If SAVE-HISTORY is non-nil, save CMD in the REPL history."
                         'geiser-repl--sentinel))
 
 
+;;; geiser-repl-autoeval-mode minor mode:
+
+(defun geiser-repl--autoeval-paren-function ()
+  (let* ((data (show-paren--default))
+         (here (nth 0 data))
+         (there (nth 2 data))
+         (mismatch (nth 4 data)))
+    (if (and here
+             (eq 0 (geiser-repl--nesting-level))
+             (not mismatch)
+             (> here there))
+        (geiser-repl--send-input))
+    data))
+
+(defvar-local geiser-repl-autoeval-mode-string " E"
+  "Modeline indicator for geiser-repl-autoeval-mode")
+
+(define-minor-mode geiser-repl-autoeval-mode
+  "Toggle the Geiser REPL's Autoeval mode.
+With no argument, this command toggles the mode.
+Non-null prefix argument turns on the mode.
+Null prefix argument turns off the mode.
+
+When Autoeval mode is enabled, balanced S-expressions are automatically
+evaluated without having to press ENTER.
+
+This mode may cause issues with structural editing modes such as paredit."
+  :init-value nil
+  :lighter geiser-repl-autoeval-mode-string
+  :group 'geiser-repl
+
+  (if (boundp 'show-paren-data-function)
+      (if geiser-repl-autoeval-mode
+          (progn (show-paren-local-mode 1)
+                 (setq-local show-paren-delay geiser-repl-autoeval-delay)
+                 (setq-local show-paren-data-function
+                             'geiser-repl--autoeval-paren-function))
+        (setq-local show-paren-data-function 'show-paren--default)))
+  (when (called-interactively-p nil)
+    (message "Geiser Autoeval %s"
+             (if geiser-repl-autoeval-mode "enabled" "disabled"))))
+
+
 ;;; geiser-repl mode:
 
 (defun geiser-repl--bol ()
@@ -931,6 +983,8 @@ buffer."
        geiser-repl-interrupt)
       --
       (mode "Autodoc mode" ("\C-c\C-da" "\C-c\C-d\C-a") geiser-autodoc-mode)
+      (mode "Autoeval mode" ("\C-c\C-de" "\C-c\C-d\C-e")
+            geiser-repl-autoeval-mode)
       ("Symbol documentation" ("\C-c\C-dd" "\C-c\C-d\C-d")
        geiser-doc-symbol-at-point
        "Documentation for symbol at point" :enable (geiser--symbol-at-point))
@@ -984,6 +1038,9 @@ buffer."
               #'geiser-repl--wrap-fontify-region-function)
   (setq-local font-lock-unfontify-region-function
               #'geiser-repl--wrap-unfontify-region-function)
+  (setq geiser-autodoc-mode-string "/E")
+  (when geiser-repl-autoeval-mode-p
+    (geiser-repl-autoeval-mode 1))
 
   ;; enabling compilation-shell-minor-mode without the annoying highlighter
   (compilation-setup t))
