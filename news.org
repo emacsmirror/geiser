@@ -1,3 +1,9 @@
+* Version 0.29 (Unreleased)
+
+  - Autoeval mode for REPL (thanks to Antero Mejr)
+  - Fixes for jumping and starting new REPLs
+  - Better tramp support (thanks to Brian Cully)
+
 * Version 0.28.1 (November 27 2022)
 
   - Bug fix: ensure geiser-activate-implementation is autoloaded.
