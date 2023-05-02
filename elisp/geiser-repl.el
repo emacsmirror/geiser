@@ -826,7 +826,7 @@ This mode may cause issues with structural editing modes such as paredit."
   (if (boundp 'show-paren-data-function)
       (if geiser-repl-autoeval-mode
           (progn (show-paren-local-mode 1)
-                 (setq-local show-paren-delay geiser-repl-autoeval-delay)
+                 (setq-local show-paren-delay geiser-repl-autoeval-mode-delay)
                  (setq-local show-paren-data-function
                              'geiser-repl--autoeval-paren-function))
         (setq-local show-paren-data-function 'show-paren--default)))
