@@ -323,7 +323,7 @@ positive values and backward for negative."
             (let ((p (point))
                   (round (looking-at-p "(")))
               (forward-sexp)
-              (backward-delete-char 1)
+              (delete-char -1)
               (insert (if round "]" ")"))
               (goto-char p)
               (delete-char 1)
