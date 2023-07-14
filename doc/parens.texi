@@ -560,13 +560,13 @@ if you prefer to stay in the source buffer, set
 @code{geiser-debug-jump-to-debug} to nil.
 
 For schemes with good debug support (Guile is one), the debug buffers
-offer a @i{debugging menu}, accesible via the @code{,} (that's a comma)
+offer a @i{debugging menu}, accessible via the @code{,} (that's a comma)
 key.  If you press it, a transient menu will appear, offering you a
 variety of actions, including showing local variable values or a more
 detailed backtrace or frame display.  This is the same interface you'll
 encounter the in case of interrupted evaluations, either by your
 explicit @kbd{C-c C-i} command or because a breakpoint has been
-previosuly set.
+previously set.
 
 In addition, Geiser will sometimes report warnings for otherwise
 successful evaluations.  In those cases, it won't enter the debugger,

@@ -122,7 +122,7 @@ change that."
   :type 'boolean)
 
 (geiser-custom--defcustom geiser-repl-send-on-return-p t
-  "Wheter to Send input to REPL when ENTER is pressed in a balanced S-expression,
+  "Whether to Send input to REPL when ENTER is pressed in a balanced S-expression,
 regardless of cursor positioning.
 
 When off, pressing ENTER inside a balance S-expression will

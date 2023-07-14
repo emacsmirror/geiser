@@ -55,7 +55,7 @@ With this flag set, the signature of selected completions using
 packages like company, corfu or completion-in-region functions
 will be displayed in the echo area.  For the case of a
 completion-in-region function (e.g. consult's), which collects
-all the docstrings at once, this might have a performace impact:
+all the docstrings at once, this might have a performance impact:
 you can set this variable to nil to avoid them."
   :type 'boolean)
 
