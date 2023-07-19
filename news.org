@@ -1,4 +1,4 @@
-* Version 0.29 (Unreleased)
+* Version 0.29 (July 14 2023)
 
   - Autoeval mode for REPL (thanks to Antero Mejr)
   - Fixes for jumping and starting new REPLs
