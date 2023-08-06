@@ -1,3 +1,7 @@
+* Version 0.29.1 (August 6 2023)
+
+  - Minimun Emacs version upped to 27.1
+
 * Version 0.29 (July 14 2023)
 
   - Autoeval mode for REPL (thanks to Antero Mejr)

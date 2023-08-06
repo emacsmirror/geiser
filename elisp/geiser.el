@@ -11,9 +11,9 @@
 ;; Maintainer: Jose Antonio Ortega Ruiz (jao@gnu.org)
 ;; Keywords: languages, scheme, geiser
 ;; Homepage: https://gitlab.com/emacs-geiser/
-;; Package-Requires: ((emacs "25.1") (project "0.8.1"))
+;; Package-Requires: ((emacs "27.1") (project "0.8.1"))
 ;; SPDX-License-Identifier: BSD-3-Clause
-;; Version: 0.29
+;; Version: 0.29.1
 
 ;;; Commentary:
 
