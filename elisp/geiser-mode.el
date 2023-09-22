@@ -330,6 +330,8 @@ With prefix, try to enter the current buffer's module."
       (mode "Autodoc mode" ("\C-c\C-d\C-a" "\C-c\C-da") geiser-autodoc-mode)
       (mode "Autoeval mode" ("\C-c\C-d\C-e" "\C-c\C-de")
             geiser-repl-autoeval-mode)
+      (mode "Superparen mode" ("\C-c\C-d\C-s" "\C-c\C-ds")
+            geiser-repl-superparen-mode)
       --
       ("Compile buffer" "\C-c\C-k" geiser-compile-current-buffer)
       ("Switch to REPL" "\C-c\C-z" geiser-mode-switch-to-repl)

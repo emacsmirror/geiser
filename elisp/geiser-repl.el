@@ -227,6 +227,14 @@ See also `geiser-repl-startup-hook'."
   "Whether `geiser-repl-autoeval-mode' gets enabled by default in REPL buffers."
   :type 'boolean)
 
+(geiser-custom--defcustom geiser-repl-superparen-mode-p nil
+  "Whether `geiser-repl-superparen-mode' gets enabled by default in REPL buffers."
+  :type 'boolean)
+
+(geiser-custom--defcustom geiser-repl-superparen-character ?\]
+  "The character that represents a closing super parentheses."
+  :type 'character)
+
 (geiser-custom--defface repl-input
   'comint-highlight-input geiser-repl "evaluated input highlighting")
 
@@ -835,6 +843,41 @@ This mode may cause issues with structural editing modes such as paredit."
              (if geiser-repl-autoeval-mode "enabled" "disabled"))))
 
 
+;;; geiser-repl-superparen-mode minor mode:
+
+(defun geiser-repl--superparen-function ()
+  (if (char-equal (char-before) geiser-repl-superparen-character)
+      (progn (delete-backward-char 1)
+             (insert-char ?\) (geiser-repl--nesting-level)))))
+
+(defvar-local geiser-repl-superparen-mode-string " S"
+  "Modeline indicator for geiser-repl-superparen-mode")
+
+(define-minor-mode geiser-repl-superparen-mode
+  "Toggle the Geiser REPL's Superparen mode.
+With no argument, this command toggles the mode.
+Non-null prefix argument turns on the mode.
+Null prefix argument turns off the mode.
+
+When Superparen mode is enabled, entering the `geiser-repl-superparen-char'
+character, which is ']' by default, will close all parentheses of the expression
+currently being typed.
+
+This mode may cause issues with structural editing modes such as paredit."
+  :init-value nil
+  :lighter geiser-repl-superparen-mode-string
+  :group 'geiser-repl
+
+  (if geiser-repl-superparen-mode
+      (add-hook 'post-self-insert-hook #'geiser-repl--superparen-function nil t)
+    (remove-hook 'post-self-insert-hook #'geiser-repl--superparen-function t))
+  (when (called-interactively-p nil)
+    (if geiser-repl-superparen-mode
+        (message "Geiser Superparen enabled, using the %c character."
+                 geiser-repl-superparen-character)
+      (message "Geiser Superparen disabled."))))
+
+
 ;;; geiser-repl mode:
 
 (defun geiser-repl--bol ()
@@ -985,6 +1028,8 @@ buffer."
       (mode "Autodoc mode" ("\C-c\C-da" "\C-c\C-d\C-a") geiser-autodoc-mode)
       (mode "Autoeval mode" ("\C-c\C-de" "\C-c\C-d\C-e")
             geiser-repl-autoeval-mode)
+      (mode "Superparen mode" ("\C-c\C-ds" "\C-c\C-d\C-s")
+            geiser-repl-superparen-mode)
       ("Symbol documentation" ("\C-c\C-dd" "\C-c\C-d\C-d")
        geiser-doc-symbol-at-point
        "Documentation for symbol at point" :enable (geiser--symbol-at-point))
@@ -1041,6 +1086,8 @@ buffer."
   (setq geiser-autodoc-mode-string "/E")
   (when geiser-repl-autoeval-mode-p
     (geiser-repl-autoeval-mode 1))
+  (when geiser-repl-superparen-mode-p
+    (geiser-repl-superparen-mode 1))
 
   ;; enabling compilation-shell-minor-mode without the annoying highlighter
   (compilation-setup t))
