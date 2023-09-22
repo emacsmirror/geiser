@@ -846,9 +846,9 @@ This mode may cause issues with structural editing modes such as paredit."
 ;;; geiser-repl-superparen-mode minor mode:
 
 (defun geiser-repl--superparen-function ()
-  (if (char-equal (char-before) geiser-repl-superparen-character)
-      (progn (delete-backward-char 1)
-             (insert-char ?\) (geiser-repl--nesting-level)))))
+  (when (char-equal (char-before) geiser-repl-superparen-character)
+    (delete-backward-char 1)
+    (insert-char ?\) (geiser-repl--nesting-level))))
 
 (defvar-local geiser-repl-superparen-mode-string " S"
   "Modeline indicator for geiser-repl-superparen-mode")
@@ -859,11 +859,13 @@ With no argument, this command toggles the mode.
 Non-null prefix argument turns on the mode.
 Null prefix argument turns off the mode.
 
-When Superparen mode is enabled, entering the `geiser-repl-superparen-char'
-character, which is ']' by default, will close all parentheses of the expression
-currently being typed.
+When Superparen mode is enabled, entering the
+`geiser-repl-superparen-char' character, which is ']' by default,
+will close all parentheses of the expression currently being
+typed.
 
-This mode may cause issues with structural editing modes such as paredit."
+This mode may cause issues with structural editing modes such as
+paredit."
   :init-value nil
   :lighter geiser-repl-superparen-mode-string
   :group 'geiser-repl
