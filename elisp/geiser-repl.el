@@ -847,7 +847,7 @@ This mode may cause issues with structural editing modes such as paredit."
 
 (defun geiser-repl--superparen-function ()
   (when (char-equal (char-before) geiser-repl-superparen-character)
-    (delete-backward-char 1)
+    (delete-char -1)
     (insert-char ?\) (geiser-repl--nesting-level))))
 
 (defvar-local geiser-repl-superparen-mode-string " S"
