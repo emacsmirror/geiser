@@ -1,6 +1,6 @@
 ;;; geiser-edit.el -- scheme edit locations  -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2009, 2010, 2012, 2013, 2019-2022 Jose Antonio Ortega Ruiz
+;; Copyright (C) 2009, 2010, 2012, 2013, 2019-2023 Jose Antonio Ortega Ruiz
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the Modified BSD License. You should
@@ -148,10 +148,10 @@ or following links in error buffers.")
           (error "Couldn't find location for '%s'" symbol)))))
 
 (defsubst geiser-edit--try-edit (symbol ret &optional method no-error)
-  (geiser-edit--try-edit-location symbol
-                                  (geiser-eval--retort-result ret)
-                                  method
-                                  no-error))
+  (let ((res (geiser-eval--retort-result ret)))
+    (if (listp res)
+        (geiser-edit--try-edit-location symbol res method no-error)
+      (unless no-error (error "Couldn't find location for '%s'" symbol)))))
 
 
 ;;; Links
@@ -292,11 +292,11 @@ With prefix, asks for the symbol to locate."
   "Opens a new window visiting the module at point."
   (interactive)
   (let ((marker (point-marker)))
-    (geiser-edit-module (or (geiser-completion--module-at-point)
-                            (geiser-completion--read-module))
-                        nil no-error)
-    (when marker (xref-push-marker-stack marker))
-    t))
+    (when (geiser-edit-module (or (geiser-completion--module-at-point)
+                                  (geiser-completion--read-module))
+                              nil no-error)
+      (when marker (xref-push-marker-stack marker))
+      t)))
 
 (defun geiser-insert-lambda (&optional full)
   "Insert λ at point.  With prefix, inserts (λ ())."
