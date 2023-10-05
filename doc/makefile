@@ -1,4 +1,4 @@
-# Copyright (C) 2010, 2020, 2021, 2022 Jose Antonio Ortega Ruiz
+# Copyright (C) 2010, 2020, 2021, 2022, 2023 Jose Antonio Ortega Ruiz
 #
 # This file is free software; as a special exception the author gives
 # unlimited permission to copy and/or distribute it, with or without
@@ -18,9 +18,9 @@ clean:
 
 web:
 	rm -f $(output_dir)/*.html
-	makeinfo --output=$(output_dir) \
+	texi2any --output=$(output_dir) \
 	  --html \
-	  --css-include=$(CURDIR)/geiser.css \
+	  --css-ref=geiser.css \
 	  --no-headers \
 	  --no-number-sections \
 	  --no-node-files \
