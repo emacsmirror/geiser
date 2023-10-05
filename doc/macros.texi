@@ -6,7 +6,7 @@
 
 @macro supimpl{NAME,URL,VERS,NM}
 @item
-@uref{\VERS\, \NAME\} \VERS\ or better, via @uref{@value{GITLAB}\NM\, geiser-\NM\}
+@uref{\URL\, \NAME\} \VERS\ or better, via @uref{@value{GITLAB}\NM\, geiser-\NM\}
 @end macro
 
 @macro altr{LINK, TXT, TLINK, TRAIL}
