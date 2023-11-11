@@ -934,7 +934,8 @@ paredit."
         (compilation-forget-errors))
       (geiser-repl--prepare-send)
       (comint-send-input)
-      (when (string-match "^\\s-*$" intxt)
+      ;; match if `intxt' is lines of whitespace
+      (when (string-match "\\`\\(\\s-\\|\n\\)*\\'" intxt)
         (comint-send-string proc (geiser-eval--scheme-str '(:ge no-values)))
         (comint-send-string proc "\n")))))
 
