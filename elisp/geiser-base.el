@@ -1,4 +1,4 @@
-;;; geiser-base.el --- shared bits
+;;; geiser-base.el --- shared bits  -*- lexical-binding: t -*-
 
 ;; Copyright (C) 2009, 2010, 2012, 2013, 2015, 2016, 2019  Jose Antonio Ortega Ruiz
 
