@@ -630,7 +630,8 @@ will be set up using `geiser-connect-local' when a REPL is started.")
     (let ((proc (make-network-process :name (buffer-name buff)
                                       :buffer buff
                                       :family 'local
-                                      :remote address)))
+                                      :remote address
+                                      :service nil)))
       ;; brittleness warning: this is stuff
       ;; make-comint-in-buffer sets up, via comint-exec, when
       ;; it creates its own process, something we're doing
