@@ -1,3 +1,10 @@
+* Version 0.30 (December 15, 2023)
+
+  - New geiser-repl-superparen-mode
+  - Fix: better message for symbol not found error
+  - Fix: better detection of whitespace in REPL
+  - Compilation warnings and all libraries using lexical binding
+
 * Version 0.29.1 (August 6 2023)
 
   - Minimun Emacs version upped to 27.1

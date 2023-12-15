@@ -13,7 +13,7 @@
 ;; Homepage: https://gitlab.com/emacs-geiser/
 ;; Package-Requires: ((emacs "27.1") (project "0.8.1"))
 ;; SPDX-License-Identifier: BSD-3-Clause
-;; Version: 0.29.1
+;; Version: 0.30
 
 ;;; Commentary:
 
