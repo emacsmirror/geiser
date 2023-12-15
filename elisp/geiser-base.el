@@ -20,7 +20,7 @@
   '(when (not (fboundp 'ring-member))
      (defun ring-member (ring item)
        (catch 'found
-         (dotimes (ind (ring-length ring) nil)
+         (dotimes (ind (ring-length ring))
            (when (equal item (ring-ref ring ind))
              (throw 'found ind)))))))
 
