@@ -1,6 +1,6 @@
 ;;; geiser-reload.el -- unload/load geiser packages  -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2009, 2010, 2012, 2020, 2021, 2022 Jose Antonio Ortega Ruiz
+;; Copyright (C) 2009, 2010, 2012, 2020, 2021, 2022, 2024 Jose Antonio Ortega Ruiz
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the Modified BSD License. You should
@@ -44,7 +44,6 @@
            geiser-log
            geiser-popup
            geiser-base
-           geiser-version
            geiser
            )))
 

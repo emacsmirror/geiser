@@ -1,6 +1,6 @@
 ;;; geiser.el --- GNU Emacs and Scheme talk to each other -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2009-2013, 2015, 2018, 2021-2023 Jose Antonio Ortega Ruiz
+;; Copyright (C) 2009-2013, 2015, 2018, 2021-2024 Jose Antonio Ortega Ruiz
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the Modified BSD License. You should
@@ -59,9 +59,6 @@
 
 
 ;;; Autoloads:
-
-;;;###autoload
-(autoload 'geiser-version "geiser-version" "Echo Geiser's version." t)
 
 ;;;###autoload
 (autoload 'geiser-unload "geiser-reload" "Unload all Geiser code." t)
