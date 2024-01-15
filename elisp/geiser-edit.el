@@ -298,13 +298,22 @@ With prefix, asks for the symbol to locate."
       (when marker (xref-push-marker-stack marker))
       t)))
 
+(geiser-custom--defcustom geiser-insert-actual-lambda t
+  "Whether geiser-insert-lambda should insert \"λ\" or \"lambda\"."
+  :type 'boolean)
+
 (defun geiser-insert-lambda (&optional full)
-  "Insert λ at point.  With prefix, inserts (λ ())."
+  "Insert λ or lambda at point.  With prefix, inserts (λ ()) or (lambda ()).
+
+See also `geiser-insert-actual-lambda'."
   (interactive "P")
-  (if (not full)
-      (insert (make-char 'greek-iso8859-7 107))
-    (insert "(" (make-char 'greek-iso8859-7 107) " ())")
-    (backward-char 2)))
+  (let ((sym (if geiser-insert-actual-lambda
+                 (make-char 'greek-iso8859-7 107)
+               "lambda")))
+    (if (not full)
+        (insert sym)
+      (insert "(" sym " ())")
+      (backward-char 2))))
 
 (defun geiser-squarify (n)
   "Toggle between () and [] for current form.
