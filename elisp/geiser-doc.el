@@ -176,6 +176,12 @@ value if the default action should be skipped.")
                         'geiser-link link
                         'help-echo help)))
 
+(define-button-type 'geiser-doc-source
+  'action 'geiser-doc-goto-source
+  'face 'geiser-font-lock-doc-button
+  'help-echo "Go to definition"
+  'follow-link t)
+
 (defun geiser-doc-goto-source ()
   "Go to the definition of this item."
   (interactive)
@@ -184,6 +190,12 @@ value if the default action should be skipped.")
       (if-let (target (geiser-doc--link-target link))
           (geiser-edit-symbol target nil (point-marker))
         (geiser-edit-module (geiser-doc--link-module link))))))
+
+(define-button-type 'geiser-doc-manual
+  'action 'geiser-doc-goto-manual
+  'face 'geiser-font-lock-doc-button
+  'help-echo "Look up in Scheme manual"
+  'follow-link t)
 
 (defun geiser-doc-goto-manual ()
   "Go to the manual for this item."
@@ -194,29 +206,11 @@ value if the default action should be skipped.")
           (impl (geiser-doc--link-impl link)))
       (geiser-doc--external-help impl (or tm mod) mod))))
 
-(defun geiser-doc--xbutton-action (button)
-  (let ((k (button-get button 'x-kind)))
-    (cond ((eq 'source k) (geiser-doc-goto-source))
-          ((eq 'manual k) (geiser-doc-goto-manual)))))
-
-(define-button-type 'geiser-doc--xbutton
-  'action 'geiser-doc--xbutton-action
-  'face 'geiser-font-lock-doc-button
-  'follow-link t)
-
-(defun geiser-doc--insert-xbutton (&optional manual)
-  (let ((label (if manual "[manual]" "[source]"))
-        (help (if manual "Look up in Scheme manual" "Go to definition")))
-    (insert-text-button label
-                        :type 'geiser-doc--xbutton
-                        'help-echo help
-                        'x-kind (if manual 'manual 'source))))
-
-(defun geiser-doc--insert-xbuttons (impl)
+(defun geiser-doc--insert-doc-buttons (impl)
   (when (geiser-impl--method 'external-help impl)
-    (geiser-doc--insert-xbutton t)
+    (insert-text-button "[manual]" :type 'geiser-doc--xbutton)
     (insert " "))
-  (geiser-doc--insert-xbutton))
+  (insert-text-button "[source]" :type 'geiser-doc-source))
 
 (defun geiser-doc--insert-nav-button (next)
   (let* ((lnk (if next (geiser-doc--history-next-link)
@@ -269,7 +263,7 @@ value if the default action should be skipped.")
 
 (defun geiser-doc--insert-footer (impl)
   (newline 2)
-  (geiser-doc--insert-xbuttons impl)
+  (geiser-doc--insert-doc-buttons impl)
   (let* ((prev (and (geiser-doc--history-previous-p) 8))
          (nxt (and (geiser-doc--history-next-p) 10))
          (len (max 1 (- (window-width)
