@@ -1,6 +1,6 @@
 ;;; geiser-mode.el -- minor mode for scheme buffers  -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2009-2017, 2020, 2022 Jose Antonio Ortega Ruiz
+;; Copyright (C) 2009-2017, 2020, 2022, 2024 Jose Antonio Ortega Ruiz
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the Modified BSD License. You should
@@ -38,35 +38,29 @@
 
 (geiser-custom--defcustom geiser-mode-auto-p t
   "Whether `geiser-mode' should be active by default in all scheme buffers."
-  :group 'geiser-mode
   :type 'boolean)
 
 (geiser-custom--defcustom geiser-mode-start-repl-p nil
   "Whether a REPL should be automatically started if one is not
 active when `geiser-mode' is activated in a buffer."
-  :group 'geiser-mode
   :type 'boolean)
 
 (geiser-custom--defcustom geiser-mode-autodoc-p t
   "Whether `geiser-autodoc-mode' gets enabled by default in Scheme buffers."
-  :group 'geiser-mode
   :group 'geiser-autodoc
   :type 'boolean)
 
 (geiser-custom--defcustom geiser-mode-smart-tab-p nil
   "Whether `geiser-smart-tab-mode' gets enabled by default in Scheme buffers."
-  :group 'geiser-mode
   :type 'boolean)
 
 (geiser-custom--defcustom geiser-mode-eval-last-sexp-to-buffer nil
   "Whether `eval-last-sexp' prints results to buffer"
-  :group 'geiser-mode
   :type 'boolean)
 
 (geiser-custom--defcustom geiser-mode-eval-to-buffer-prefix " "
   "When `geiser-mode-eval-last-sexp-to-buffer', the prefix string
 which will be prepended to results."
-  :group 'geiser-mode
   :type 'string)
 
 (geiser-custom--defcustom geiser-mode-eval-to-buffer-transformer nil
@@ -78,7 +72,6 @@ with `geiser-mode-eval-to-buffer-prefix' takes two arguments:
 `msg' and `is-error?'  `msg' is the result string going to be
 transformed, `is-error?' is a boolean indicating whether the
 result is an error msg."
-  :group 'geiser-mode
   :type 'function)
 
 
