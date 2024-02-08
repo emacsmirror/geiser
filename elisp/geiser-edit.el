@@ -1,6 +1,6 @@
 ;;; geiser-edit.el -- scheme edit locations  -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2009, 2010, 2012, 2013, 2019-2023 Jose Antonio Ortega Ruiz
+;; Copyright (C) 2009, 2010, 2012, 2013, 2019-2024 Jose Antonio Ortega Ruiz
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the Modified BSD License. You should
@@ -36,8 +36,16 @@
  "How the new buffer is opened when invoking \\[geiser-edit-symbol-at-point]
 or following links in error buffers.")
 
+(defgroup geiser-edit nil
+  "Customizations for scheme buffers and information about them."
+  :group 'geiser)
+
 (geiser-custom--defface error-link
-  'link geiser-debug "links in error buffers")
+  'link geiser-edit "links in error buffers")
+
+(geiser-custom--defcustom geiser-insert-actual-lambda t
+  "Whether geiser-insert-lambda should insert \"λ\" or \"lambda\"."
+  :type 'boolean)
 
 
 ;;; Auxiliary functions:
@@ -297,10 +305,6 @@ With prefix, asks for the symbol to locate."
                               nil no-error)
       (when marker (xref-push-marker-stack marker))
       t)))
-
-(geiser-custom--defcustom geiser-insert-actual-lambda t
-  "Whether geiser-insert-lambda should insert \"λ\" or \"lambda\"."
-  :type 'boolean)
 
 (defun geiser-insert-lambda (&optional full)
   "Insert λ or lambda at point.  With prefix, inserts (λ ()) or (lambda ()).

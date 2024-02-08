@@ -108,6 +108,7 @@
         (custom-add-load group (symbol-name group))
         (custom-add-load 'geiser (symbol-name group)))
       '(geiser
+        geiser-edit
         geiser-repl
         geiser-autodoc
         geiser-doc
