@@ -87,7 +87,7 @@
           (unwind-protect
               (funcall (tq-queue-head-fn tq)
                        (tq-queue-head-closure tq)
-                       (buffer-substring (point-min) (point)))
+                       (buffer-substring (point-min) (match-beginning 0)))
             (delete-region (point-min) (point-max))
             (tq-queue-pop tq)))))))
 
@@ -202,7 +202,20 @@
          (debugging (geiser-con--has-entered-debugger con answer)))
     (condition-case err
         (let ((start (string-match "((\\(?:result)?\\|error\\) " answer)))
-          (or (and start (car (read-from-string answer start)))
+          (or (and start
+                   (progn
+                     (let ((extra-output (substring answer 0 start)))
+                       (unless (string-blank-p extra-output)
+                         (geiser-log--warn "Extra output (before): %s"
+                                           (string-trim extra-output))))
+                     (let* ((ret (read-from-string answer start)))
+                       (let ((extra-output (substring answer (cdr ret))))
+                         (unless (string-blank-p extra-output)
+                           ;; Usually, the extra output is just the return value
+                           ;; being echoed by the REPL, and not worth noting.
+                           (geiser-log--debug "Extra output (after): %s"
+                                              (string-trim extra-output))))
+                       (car ret))))
               `((error (key . retort-syntax))
                 (output . ,answer)
                 (debug . ,debugging))))
