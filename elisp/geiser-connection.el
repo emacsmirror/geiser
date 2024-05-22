@@ -208,13 +208,13 @@
                        (unless (string-blank-p extra-output)
                          (geiser-log--warn "Extra output (before): %s"
                                            (string-trim extra-output))))
-                     (let* ((ret (read-from-string answer start)))
-                       (let ((extra-output (substring answer (cdr ret))))
-                         (unless (string-blank-p extra-output)
-                           ;; Usually, the extra output is just the return value
-                           ;; being echoed by the REPL, and not worth noting.
-                           (geiser-log--debug "Extra output (after): %s"
-                                              (string-trim extra-output))))
+                     (let* ((ret (read-from-string answer start))
+                            (extra-output (substring answer (cdr ret))))
+                       (unless (string-blank-p extra-output)
+                         ;; Usually, the extra output is just the return value
+                         ;; being echoed by the REPL, and not worth noting.
+                         (geiser-log--debug "Extra output (after): %s"
+                                            (string-trim extra-output)))
                        (car ret))))
               `((error (key . retort-syntax))
                 (output . ,answer)
