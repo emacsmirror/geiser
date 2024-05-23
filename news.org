@@ -1,7 +1,9 @@
-* Version 0.31 (unreleased)
+* Version 0.31 (May 23, 2024)
 
   - New custom variable geiser-insert-actual-lambda
   - Non-existent geiser-version function removed from autoloads
+  - New customization group: geiser-edit
+  - Debug logging improvements
 
 * Version 0.30 (December 15, 2023)
 
