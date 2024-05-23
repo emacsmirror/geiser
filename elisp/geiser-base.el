@@ -1,6 +1,6 @@
 ;;; geiser-base.el --- shared bits  -*- lexical-binding: t -*-
 
-;; Copyright (C) 2009, 2010, 2012, 2013, 2015, 2016, 2019  Jose Antonio Ortega Ruiz
+;; Copyright (C) 2009, 2010, 2012, 2013, 2015, 2016, 2019, 2024  Jose Antonio Ortega Ruiz
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the Modified BSD License. You should
@@ -71,7 +71,7 @@
   (let ((msg (make-symbol "msg")))
     `(let ((,msg (current-message)))
        ,@body
-       (message ,msg))))
+       (message "%s" ,msg))))
 
 (put 'geiser--save-msg 'lisp-indent-function 0)
 
