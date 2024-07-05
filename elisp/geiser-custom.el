@@ -47,9 +47,12 @@ in the macro arguments."
 (defvar geiser-custom--memoized-vars nil)
 
 (defun geiser-custom--memoize (name)
-  ;; FIXME: Why not build this list with mapatoms, filtering on a "\\`'geiser-"
+  ;; Why not build this list with mapatoms, filtering on a "\\`'geiser-"
   ;; prefix and checking that it's a `defcustom', so we don't need
-  ;; `geiser-custom--defcustom'?
+  ;; `geiser-custom--defcustom'? Because implementation-specific modules using
+  ;; geiser may use similarly named custom variables that are, for some reason
+  ;; or another, not meant to partake in the geiser-reload mechanism, and we
+  ;; don't know their names.
   (add-to-list 'geiser-custom--memoized-vars name))
 
 (defmacro geiser-custom--defcustom (name &rest body)
