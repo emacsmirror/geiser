@@ -1,3 +1,7 @@
+* Version 0.31.1 (September 1, 2024)
+
+  - Code cleanups
+
 * Version 0.31 (May 23, 2024)
 
   - New custom variable geiser-insert-actual-lambda
