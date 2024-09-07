@@ -803,17 +803,21 @@ If SAVE-HISTORY is non-nil, save CMD in the REPL history."
 
 ;;; geiser-repl-autoeval-mode minor mode:
 
-(defun geiser-repl--autoeval-paren-function ()
-  (let* ((data (show-paren--default))
-         (here (nth 0 data))
-         (there (nth 2 data))
-         (mismatch (nth 4 data)))
-    (if (and here
-             (eq 0 (geiser-repl--nesting-level))
-             (not mismatch)
-             (> here there))
-        (geiser-repl--send-input))
-    data))
+(defun geiser-repl--autoeval-paren-function (show-paren-enabled)
+  (lambda ()
+    (let* ((data (show-paren--default))
+           (here (nth 0 data))
+           (there (nth 2 data))
+           (mismatch (nth 4 data)))
+      (if (and (= (point) (point-max))
+               here
+               (eq 0 (geiser-repl--nesting-level))
+               (not mismatch)
+               (> here there))
+          (progn (geiser-repl--send-input)
+                 ;; Don't highlight if we're doing an autoeval.
+                 nil)
+        (and show-paren-enabled data)))))
 
 (defvar-local geiser-repl-autoeval-mode-string " E"
   "Modeline indicator for geiser-repl-autoeval-mode")
@@ -825,20 +829,19 @@ Non-null prefix argument turns on the mode.
 Null prefix argument turns off the mode.
 
 When Autoeval mode is enabled, balanced S-expressions are automatically
-evaluated without having to press ENTER.
-
-This mode may cause issues with structural editing modes such as paredit."
+evaluated without having to press ENTER."
   :init-value nil
   :lighter geiser-repl-autoeval-mode-string
   :group 'geiser-repl
 
-  (if (boundp 'show-paren-data-function)
-      (if geiser-repl-autoeval-mode
-          (progn (show-paren-local-mode 1)
-                 (setq-local show-paren-delay geiser-repl-autoeval-mode-delay)
-                 (setq-local show-paren-data-function
-                             'geiser-repl--autoeval-paren-function))
-        (setq-local show-paren-data-function 'show-paren--default)))
+  (if geiser-repl-autoeval-mode
+      (let ((show-paren-enabled show-paren-mode))
+        (progn (show-paren-local-mode 1)
+               (setq-local show-paren-delay geiser-repl-autoeval-mode-delay)
+               (setq-local show-paren-data-function
+                           (geiser-repl--autoeval-paren-function
+                            show-paren-enabled))))
+    (setq-local show-paren-data-function 'show-paren--default))
   (when (called-interactively-p nil)
     (message "Geiser Autoeval %s"
              (if geiser-repl-autoeval-mode "enabled" "disabled"))))
