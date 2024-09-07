@@ -1,3 +1,14 @@
+* Version 0.32
+
+  - REPL: Fix for highlighting of 2-character input prompts (thanks to Macon
+    Gambill)
+
+  - REPL autoeval mode improvements (thanks to Anter Mejr):
+    - Autoeval just once
+    - Stop paren highlighting after autoevaluations
+    - Highlight only if show-paren-mode is enabled
+    - Compatibility with electric-pair-mode
+
 * Version 0.31.1 (September 1, 2024)
 
   - Code cleanups
