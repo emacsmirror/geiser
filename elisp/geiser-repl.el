@@ -852,7 +852,12 @@ evaluated without having to press ENTER."
 (defun geiser-repl--superparen-function ()
   (when (char-equal (char-before) geiser-repl-superparen-character)
     (delete-char -1)
-    (insert-char ?\) (geiser-repl--nesting-level))))
+    (let ((level (geiser-repl--nesting-level)))
+      (if (memq nil (mapcar (lambda (idx)
+                              (= (char-after idx) ?\)))
+                            (number-sequence (point) (- (+ (point) level) 1))))
+          (insert-char ?\) level)
+        (forward-char level)))))
 
 (defvar-local geiser-repl-superparen-mode-string " S"
   "Modeline indicator for geiser-repl-superparen-mode")
