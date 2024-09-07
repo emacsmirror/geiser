@@ -521,7 +521,7 @@ will be set up using `geiser-connect-local' when a REPL is started.")
         (forward-line)
         (when (> (point) geiser-repl--last-output-start)
           (set-marker geiser-repl--last-output-start (point)))))
-    (> (- geiser-repl--last-output-end geiser-repl--last-output-start) 2)))
+    (>= (- geiser-repl--last-output-end geiser-repl--last-output-start) 2)))
 
 (defun geiser-repl--treat-output-region ()
   (with-silent-modifications
