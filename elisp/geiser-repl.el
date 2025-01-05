@@ -1107,24 +1107,20 @@ buffer."
 
 ;;; User commands
 
-;;;###autoload
 (define-obsolete-function-alias 'run-geiser 'geiser "Geiser 0.26")
 
-;;;###autoload
 (defun geiser (impl)
   "Start a new Geiser REPL."
   (interactive
    (list (geiser-repl--get-impl "Start Geiser for scheme implementation: ")))
   (geiser-repl--start-repl impl nil))
 
-;;;###autoload
 (defun geiser-connect (impl &optional host port)
   "Start a new Geiser REPL connected to a remote Scheme process."
   (interactive
    (list (geiser-repl--get-impl "Connect to Scheme implementation: ")))
   (geiser-repl--start-repl impl (geiser-repl--read-address host port)))
 
-;;;###autoload
 (defun geiser-connect-local (impl socket)
   "Start a new Geiser REPL connected to a remote Scheme process
 over a Unix-domain socket."
@@ -1154,7 +1150,6 @@ over a Unix-domain socket."
 
 (define-obsolete-function-alias 'switch-to-geiser 'geiser-repl-switch "0.26")
 
-;;;###autoload
 (defun geiser-repl-switch (&optional ask impl buffer)
   "Switch to running Geiser REPL.
 

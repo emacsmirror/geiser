@@ -51,11 +51,52 @@
 
 
 ;;; Code:
+;;; Locations:
 
 ;;;###autoload
 (defconst geiser-elisp-dir
   (file-name-directory (or load-file-name buffer-file-name))
   "Directory containing Geiser's Elisp files.")
+
+
+;;; Autoloads:
+
+;;;###autoload
+(autoload 'geiser-unload "geiser-reload" "Unload all Geiser code." t)
+
+;;;###autoload
+(autoload 'geiser-reload "geiser-reload" "Reload Geiser code." t)
+
+;;;###autoload
+(autoload 'geiser "geiser-repl" "Start a Geiser REPL." t)
+
+;;;###autoload
+(autoload 'run-geiser "geiser-repl" "Start a Geiser REPL." t)
+
+;;;###autoload
+(autoload 'geiser-connect "geiser-repl"
+  "Start a Geiser REPL connected to a remote server." t)
+
+;;;###autoload
+(autoload 'geiser-connect-local "geiser-repl"
+  "Start a Geiser REPL connected to a remote server over a Unix-domain socket."
+  t)
+
+;;;###autoload
+(autoload 'geiser-repl-switch "geiser-repl"
+  "Switch to a running one Geiser REPL." t)
+
+;;;###autoload
+(autoload 'geiser-mode "geiser-mode"
+  "Minor mode adding Geiser REPL interaction to Scheme buffers." t)
+
+;;;###autoload
+(autoload 'turn-on-geiser-mode "geiser-mode"
+  "Enable Geiser's mode (useful in Scheme buffers)." t)
+
+;;;###autoload
+(autoload 'turn-off-geiser-mode "geiser-mode"
+  "Disable Geiser's mode (useful in Scheme buffers)." t)
 
 (autoload 'geiser-activate-implementation "geiser-impl"
   "Register the given implementation as active.")
@@ -78,6 +119,15 @@
         geiser-image
         geiser-implementation
         geiser-xref))
+
+
+;;; Setup:
+
+;;;###autoload
+(autoload 'geiser-mode--maybe-activate "geiser-mode")
+
+;;;###autoload
+(add-hook 'scheme-mode-hook #'geiser-mode--maybe-activate)
 
 (provide 'geiser)
 ;;; geiser.el ends here

@@ -367,7 +367,6 @@ With prefix, try to enter the current buffer's module."
   (or geiser-mode-string
       (format " %s" (or (geiser-impl--impl-str) "G"))))
 
-;;;###autoload
 (define-minor-mode geiser-mode
   "Toggle Geiser's mode.
 
@@ -396,7 +395,6 @@ interacting with the Geiser REPL is at your disposal.
              (not (geiser-repl--connection*)))
     (save-window-excursion (geiser geiser-impl--implementation))))
 
-;;;###autoload
 (defun turn-on-geiser-mode ()
   "Enable `geiser-mode' (in a Scheme buffer)."
   (interactive)
@@ -407,13 +405,9 @@ interacting with the Geiser REPL is at your disposal.
   (interactive)
   (geiser-mode -1))
 
-;;;###autoload
 (defun geiser-mode--maybe-activate ()
   (when (and geiser-mode-auto-p (eq major-mode 'scheme-mode))
     (turn-on-geiser-mode)))
-
-;;;###autoload
-(add-hook 'scheme-mode-hook 'geiser-mode--maybe-activate)
 
 
 ;;; Reload support:

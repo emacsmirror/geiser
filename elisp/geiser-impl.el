@@ -143,9 +143,9 @@ in order to determine its scheme flavour."
     (push (cons impl file) geiser-impl--load-files)))
 
 ;;;###autoload
-(progn ; Copy the whole definition to the autoloads file.
-  (defun geiser-activate-implementation (impl)
-    (add-to-list 'geiser-active-implementations impl)))
+(progn                               ;Copy the whole def to the autoloads file.
+(defun geiser-activate-implementation (impl)
+  (add-to-list 'geiser-active-implementations impl)))
 
 (defsubst geiser-deactivate-implementation (impl)
   (setq geiser-active-implementations

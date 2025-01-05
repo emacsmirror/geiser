@@ -47,7 +47,6 @@
     geiser
     ))
 
-;;;###autoload
 (defun geiser-unload ()
   "Unload all Geiser modules."
   (interactive)
