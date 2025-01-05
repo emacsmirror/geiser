@@ -1,6 +1,6 @@
 ;;; geiser-impl.el --- Generic support for scheme implementations  -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2009-2010, 2012-2013, 2015-2016, 2019, 2021-2022 Jose Antonio Ortega Ruiz
+;; Copyright (C) 2009-2010, 2012-2013, 2015-2016, 2019, 2021-2022, 2025 Jose Antonio Ortega Ruiz
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the Modified BSD License. You should
@@ -143,9 +143,9 @@ in order to determine its scheme flavour."
     (push (cons impl file) geiser-impl--load-files)))
 
 ;;;###autoload
-(progn                               ;Copy the whole def to the autoloads file.
-(defun geiser-activate-implementation (impl)
-  (add-to-list 'geiser-active-implementations impl)))
+(progn ;Copy the whole def to the autoloads file.
+  (defun geiser-activate-implementation (impl)
+    (add-to-list 'geiser-active-implementations impl)))
 
 (defsubst geiser-deactivate-implementation (impl)
   (setq geiser-active-implementations
