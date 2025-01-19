@@ -1,6 +1,6 @@
 ;;; geiser-connection.el --- Talking to a scheme process  -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2009-2011, 2013, 2021-2022 Jose Antonio Ortega Ruiz
+;; Copyright (C) 2009-2011, 2013, 2021-2022, 2025 Jose Antonio Ortega Ruiz
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the Modified BSD License. You should
@@ -87,7 +87,7 @@
           (unwind-protect
               (funcall (tq-queue-head-fn tq)
                        (tq-queue-head-closure tq)
-                       (buffer-substring (point-min) (match-beginning 0)))
+                       (buffer-substring (point-min) (point)))
             (delete-region (point-min) (point-max))
             (tq-queue-pop tq)))))))
 
