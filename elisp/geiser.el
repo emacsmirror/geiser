@@ -1,6 +1,6 @@
 ;;; geiser.el --- GNU Emacs and Scheme talk to each other -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2009-2013, 2015, 2018, 2021-2024 Jose Antonio Ortega Ruiz
+;; Copyright (C) 2009-2013, 2015, 2018, 2021-2025 Jose Antonio Ortega Ruiz
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the Modified BSD License. You should
@@ -13,7 +13,7 @@
 ;; Homepage: https://gitlab.com/emacs-geiser/
 ;; Package-Requires: ((emacs "27.1") (project "0.8.1"))
 ;; SPDX-License-Identifier: BSD-3-Clause
-;; Version: 0.31.1
+;; Version: 0.32
 
 ;;; Commentary:
 

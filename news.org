@@ -1,4 +1,4 @@
-* Version 0.32
+* Version 0.32 (August 10, 2024)
 
   - REPL: Fix for highlighting of 2-character input prompts (thanks to Macon
     Gambill)
