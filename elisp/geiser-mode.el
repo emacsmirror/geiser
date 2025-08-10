@@ -244,12 +244,12 @@ With prefix, recursively macro-expand the resulting expression."
                         all
                         t))
 
-(defun geiser-set-scheme ()
+(defun geiser-set-scheme (&optional impl)
   "Associates current buffer with a given Scheme implementation."
   (interactive)
   (save-excursion
     (geiser-syntax--remove-kws)
-    (let ((impl (geiser-impl--read-impl)))
+    (let ((impl (or impl (geiser-impl--read-impl))))
       (geiser-impl--set-buffer-implementation impl)
       (geiser-repl--set-up-repl impl)
       (geiser-syntax--add-kws)
