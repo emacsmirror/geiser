@@ -1,6 +1,6 @@
 ;;; geiser-mode.el --- Minor mode for scheme buffers  -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2009-2017, 2020, 2022, 2024 Jose Antonio Ortega Ruiz
+;; Copyright (C) 2009-2017, 2020, 2022, 2024, 2025 Jose Antonio Ortega Ruiz
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the Modified BSD License. You should
@@ -244,16 +244,15 @@ With prefix, recursively macro-expand the resulting expression."
                         all
                         t))
 
-(defun geiser-set-scheme (&optional impl)
+(defun geiser-set-scheme (impl)
   "Associates current buffer with a given Scheme implementation."
-  (interactive)
+  (interactive (list (geiser-impl--read-impl)))
   (save-excursion
     (geiser-syntax--remove-kws)
-    (let ((impl (or impl (geiser-impl--read-impl))))
-      (geiser-impl--set-buffer-implementation impl)
-      (geiser-repl--set-up-repl impl)
-      (geiser-syntax--add-kws)
-      (geiser-syntax--fontify))))
+    (geiser-impl--set-buffer-implementation impl)
+    (geiser-repl--set-up-repl impl)
+    (geiser-syntax--add-kws)
+    (geiser-syntax--fontify)))
 
 (defun geiser-mode-switch-to-repl (arg)
   "Switches to Geiser REPL.
