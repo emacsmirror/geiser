@@ -139,7 +139,7 @@
 
 (defun geiser-con--connection-update-debugging (c txt)
   (let* ((dp (geiser-con--connection-debug-prompt c))
-         (is-d (and (stringp dp) (string-match dp txt))))
+         (is-d (and (stringp dp) (string-match-p dp txt))))
     (geiser-con--connection-set-debugging c is-d)
     is-d))
 

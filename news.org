@@ -9,6 +9,8 @@
     - Highlight only if show-paren-mode is enabled
     - Compatibility with electric-pair-mode
 
+  - REPL: Fix for debugger access affecting mainly Guile.
+
 * Version 0.31.1 (September 1, 2024)
 
   - Code cleanups
