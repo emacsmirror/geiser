@@ -1,6 +1,6 @@
 ;;; geiser-connection.el --- Talking to a scheme process  -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2009-2011, 2013, 2021-2022, 2025 Jose Antonio Ortega Ruiz
+;; Copyright (C) 2009-2011, 2013, 2021-2022, 2025-2026 Jose Antonio Ortega Ruiz
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the Modified BSD License. You should
@@ -23,6 +23,7 @@
 (require 'geiser-impl)
 
 (require 'tq)
+(require 'ansi-color)
 (eval-when-compile (require 'subr-x))
 
 
@@ -81,7 +82,7 @@
           (progn (geiser-log--error "Unexpected queue input:\n %s" in)
                  (delete-region (point-min) (point-max)))
         (goto-char (point-max))
-        (insert in)
+        (insert (ansi-color-filter-apply in))
         (goto-char (point-min))
         (when (re-search-forward (tq-queue-head-regexp tq) nil t)
           (unwind-protect
