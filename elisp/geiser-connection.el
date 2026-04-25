@@ -111,6 +111,9 @@
         (cons :count 0)
         (cons :completed (make-hash-table :weakness 'value))))
 
+(defsubst geiser-con--pending-requests-p (c)
+  (not (tq-queue-empty (geiser-con--connection-tq c))))
+
 (defsubst geiser-con--connection-process (c)
   (tq-process (cdr (assq :tq c))))
 
@@ -274,7 +277,7 @@
       (interrupt-process proc))))
 
 (defun geiser-con--wait (req timeout)
-  "Wait up to TIMEOUT msecs for request REQ to finish, returning its result."
+  "Wait up to TIMEOUT msecs for request REQ to finish."
   (let* ((con (or (geiser-con--request-connection req)
                   (error "Geiser connection not active")))
          (proc (geiser-con--connection-process con))

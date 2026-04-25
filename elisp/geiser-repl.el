@@ -1,6 +1,6 @@
 ;;; geiser-repl.el --- Geiser's REPL  -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2009-2013, 2015-2016, 2018-2023 Jose Antonio Ortega Ruiz
+;; Copyright (C) 2009-2013, 2015-2016, 2018-2023, 2026 Jose Antonio Ortega Ruiz
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the Modified BSD License. You should
@@ -490,8 +490,8 @@ Returns the classification based on the first line of output.
 Only used when `geiser-repl-classify-output-p' is non-nil."
   (save-excursion
     (goto-char start)
-    (let ((first-line (buffer-substring-no-properties 
-                       start 
+    (let ((first-line (buffer-substring-no-properties
+                       start
                        (min end (line-end-position)))))
       (cond
        ((string-match-p "raise-exception" first-line) :error)
@@ -743,20 +743,23 @@ to standard output face."
 (defun geiser-repl--prepare-send ()
   (geiser-image--clean-cache)
   (geiser-autodoc--inhibit-autodoc)
+  (geiser-eval--wait )
   (geiser-con--connection-deactivate geiser-repl--connection))
 
 (defun geiser-repl--send (cmd &optional save-history)
   "Send CMD input string to the current REPL buffer.
 If SAVE-HISTORY is non-nil, save CMD in the REPL history."
   (when (and cmd (eq major-mode 'geiser-repl-mode))
-    (geiser-repl--prepare-send)
-    (goto-char (point-max))
-    (comint-kill-input)
-    (insert cmd)
-    (let ((comint-input-filter (if save-history
-                                   comint-input-filter
-                                 'ignore)))
-      (comint-send-input nil t))))
+    (if (geiser-eval--pending-requests-p)
+        (message "Waiting for scheme process...")
+      (geiser-repl--prepare-send)
+      (goto-char (point-max))
+      (comint-kill-input)
+      (insert cmd)
+      (let ((comint-input-filter (if save-history
+                                     comint-input-filter
+                                   'ignore)))
+        (comint-send-input nil t)))))
 
 (defun geiser-repl-interrupt ()
   (interactive)
