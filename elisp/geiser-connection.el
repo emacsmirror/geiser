@@ -81,7 +81,7 @@
           (progn (geiser-log--error "Unexpected queue input:\n %s" in)
                  (delete-region (point-min) (point-max)))
         (goto-char (point-max))
-        (insert in)
+        (insert (geiser--strip-ansi in))
         (goto-char (point-min))
         (when (re-search-forward (tq-queue-head-regexp tq) nil t)
           (unwind-protect

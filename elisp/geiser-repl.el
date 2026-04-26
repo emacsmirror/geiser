@@ -1154,7 +1154,7 @@ buffer."
     (geiser-repl-autoeval-mode 1))
   (when geiser-repl-superparen-mode-p
     (geiser-repl-superparen-mode 1))
-
+  (add-hook 'comint-preoutput-filter-functions #'geiser--strip-ansi nil t)
   ;; enabling compilation-shell-minor-mode without the annoying highlighter
   (compilation-setup t))
 

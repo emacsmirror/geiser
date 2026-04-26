@@ -41,8 +41,13 @@
 
 ;;; Utilities:
 
+(require 'ansi-color)
+
 (defsubst geiser--chomp (str)
   (if (string-match-p ".*\n$" str) (substring str 0 -1) str))
+
+(defsubst geiser--strip-ansi (s)
+  (replace-regexp-in-string "" "" (ansi-color-filter-apply s)))
 
 (defun geiser--shorten-str (str len &optional sep)
   (let ((str-len (length str)))
