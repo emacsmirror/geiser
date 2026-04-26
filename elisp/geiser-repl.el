@@ -24,7 +24,6 @@
 (require 'geiser-custom)
 (require 'geiser-base)
 
-(require 'ansi-color)
 (require 'comint)
 (require 'compile)
 (require 'scheme)
@@ -1137,7 +1136,6 @@ buffer."
   (set (make-local-variable 'comint-prompt-read-only)
        geiser-repl-read-only-prompt-p)
   (setq comint-process-echoes nil)
-  (add-hook 'comint-preoutput-filter-functions 'ansi-color-filter-apply)
   (set (make-local-variable 'beginning-of-defun-function)
        'geiser-repl--beginning-of-defun)
   (set (make-local-variable 'comint-input-ignoredups)
