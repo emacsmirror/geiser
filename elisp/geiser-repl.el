@@ -744,7 +744,6 @@ to standard output face."
 (defun geiser-repl--prepare-send ()
   (geiser-image--clean-cache)
   (geiser-autodoc--inhibit-autodoc)
-  (geiser-eval--wait )
   (geiser-con--connection-deactivate geiser-repl--connection))
 
 (defun geiser-repl--send (cmd &optional save-history)
