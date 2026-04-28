@@ -78,8 +78,8 @@ gmane.lisp.scheme.geiser}.
 @item
 @cindex bug tracker
 You can submit bug reports either to the mailing list or to
-@uref{https://gitlab.com/groups/emacs-geiser/-/issues, our bug tracker} over at
-Gitlab.
+@uref{https://codeberg.org/org/geiser/issues, our bug tracker} over at
+Codeberg.
 @item
 @cindex IRC channel
 The Freenode IRC channel @i{#geiser} is the Geiserati's meeting point in

@@ -1,3 +1,15 @@
+* Version 0.33 (unreleased)
+
+  - Project migrated to codeberg.org: https://codeberg.org/geiser
+  - New geiser-repl-classify-output-p flag that enables classification of REPL
+    outputs as error/warning/success with customizable faces
+    (geiser-repl-output-*). Thanks, Lorenzo.
+  - Fix completion for local variadic args (thanks, rvs314).
+  - Fix for company code locations (thanks, Daniel).
+  - Fix race condition between REPL and background evaluations (thanks, Ian).
+  - Fix for ansi escapes in connected REPLs (thanks, ewhispers and martian
+    hiauts).
+
 * Version 0.32 (August 10, 2024)
 
   - REPL: Fix for highlighting of 2-character input prompts (thanks to Macon

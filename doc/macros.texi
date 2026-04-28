@@ -1,12 +1,12 @@
-@set VERSION 0.20
+@set VERSION 0.33
 @set VERSION_NICK
-@set RELEASE_DATE December 2021
-@set EMACS_VERSION 24.4
-@set GITLAB https://gitlab.com/emacs-geiser/
+@set RELEASE_DATE May 2025
+@set EMACS_VERSION 27.1
+@set CODEBERG https://codeberg.com/geiser/
 
 @macro supimpl{NAME,URL,VERS,NM}
 @item
-@uref{\URL\, \NAME\} \VERS\ or better, via @uref{@value{GITLAB}\NM\, geiser-\NM\}
+@uref{\URL\, \NAME\} \VERS\ or better, via @uref{@value{CODEBERG}\NM\, geiser-\NM\}
 @end macro
 
 @macro altr{LINK, TXT, TLINK, TRAIL}
