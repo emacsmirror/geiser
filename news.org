@@ -1,4 +1,4 @@
-* Version 0.33 (unreleased)
+* Version 0.33 (May 3, 2025)
 
   - Project migrated to codeberg.org: https://codeberg.org/geiser
   - New geiser-repl-classify-output-p flag that enables classification of REPL
