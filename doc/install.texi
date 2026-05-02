@@ -19,16 +19,16 @@ recent Emacs snapshot) and at least one of the supported Schemes,
 namely:
 
 @itemize @bullet
+@gsupimpl{GNU Kawa, http://www.gnu.org/software/kawa/index.html, 3.1, kawa}
+@gsupimpl{Gauche, http://practical-scheme.net/gauche/, 0.9.6, gauche}
+@gsupimpl{Stklos, https://stklos.net/, 1.50, stklos}
 @supimpl{Chez, http://www.scheme.com, 9.4,chez}
 @supimpl{Chibi, http://synthcode.com/scheme/chibi, 0.7.3,chibi}
 @supimpl{Chicken, http://call-cc.org, 4.8.0, chicken}
 @supimpl{Gambit, http://gambitscheme.org/wiki/index.php/Main_Page, 4.9.3, gambit}
-@supimpl{Gauche, http://practical-scheme.net/gauche/, 0.9.6, gauche}
 @supimpl{Guile, http://www.gnu.org/software/guile, 2.2, guile}
-@supimpl{GNU Kawa, http://www.gnu.org/software/kawa/index.html, 3.1, kawa}
 @supimpl{MIT/GNU Scheme, https://www.gnu.org/software/mit-scheme, 9.0, mit}
 @supimpl{Racket, http://www.racket-lang.org, 7.0, racket}
-@supimpl{Stklos, https://stklos.net/, 1.50, stklos}
 @end itemize
 
 Since Geiser supports multiple REPLs, having all of them will just add
