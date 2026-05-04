@@ -592,6 +592,7 @@ to standard output face."
                                 geiser-repl-auto-display-images-p)
   (when (string-match-p (geiser-con--connection-prompt geiser-repl--connection)
                         txt)
+    (geiser-con--connection-activate geiser-repl--connection)
     (geiser-autodoc--disinhibit-autodoc)))
 
 (defun geiser-repl--check-version (impl)
