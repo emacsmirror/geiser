@@ -585,13 +585,20 @@ to standard output face."
     (geiser--font-lock-ensure geiser-repl--last-output-start
                               geiser-repl--last-output-end)))
 
+(defun geiser-repl--matches-prompt-p (txt)
+  (or (string-match-p
+       (geiser-con--connection-prompt geiser-repl--connection)
+       txt)
+      (string-match-p
+       (geiser-con--connection-debug-prompt geiser-repl--connection)
+       txt)))
+
 (defun geiser-repl--output-filter (txt)
   (when (geiser-repl--find-output-region) (geiser-repl--treat-output-region))
   (geiser-con--connection-update-debugging geiser-repl--connection txt)
   (geiser-image--replace-images geiser-repl-inline-images-p
                                 geiser-repl-auto-display-images-p)
-  (when (string-match-p (geiser-con--connection-prompt geiser-repl--connection)
-                        txt)
+  (when (geiser-repl--matches-prompt-p txt)
     (geiser-con--connection-activate geiser-repl--connection)
     (geiser-autodoc--disinhibit-autodoc)))
 
