@@ -33,15 +33,15 @@
     The following schemes are supported via an independent package,
     installable from either NonGNU ELPA or MELPA:
 
-      - Chez 9.4 or better, via [[https://gitlab.com/emacs-geiser/chez][geiser-chez]]
-      - Chibi 0.7.3 or better, via [[https://gitlab.com/emacs-geiser/chibi][geiser-chibi]]
-      - Chicken 4.8.0 or better, via  [[https://gitlab.com/emacs-geiser/chicken][geiser-chicken]]
-      - Gambit 4.9.3 or better, via [[https://gitlab.com/emacs-geiser/gambit][geiser-gambit]]
+      - Chez 9.4 or better, via [[https://codeberg.org/geiser/chez][geiser-chez]]
+      - Chibi 0.7.3 or better, via [[https://codeberg.org/geiser/chibi][geiser-chibi]]
+      - Chicken 4.8.0 or better, via  [[https://codeberg.org/geiser/chicken][geiser-chicken]]
+      - Gambit 4.9.3 or better, via [[https://codeberg.org/geiser/gambit][geiser-gambit]]
       - Gauche 0.9.6 or better, via [[https://gitlab.com/emacs-geiser/gauche][geiser-gauche]]
-      - Guile 2.2 or better, via  [[https://gitlab.com/emacs-geiser/guile][geiser-guile]]
+      - Guile 2.2 or better, via  [[https://codeberg.org/geiser/guile][geiser-guile]]
       - Kawa 3.1, via [[https://gitlab.com/emacs-geiser/kawa][geiser-kawa]]
-      - MIT/GNU Scheme, via  [[https://gitlab.com/emacs-geiser/mit][geiser-mit]]
-      - Racket 6.0 or better, via [[https://gitlab.com/emacs-geiser/racket][geiser-racket]]
+      - MIT/GNU Scheme, via  [[https://codeberg.org/geiser/mit][geiser-mit]]
+      - Racket 6.0 or better, via [[https://codeberg.org/geiser/racket][geiser-racket]]
       - Stklos 1.50, via [[https://gitlab.com/emacs-geiser/stklos][geiser-stklos]]
 
 * Installation
@@ -118,7 +118,7 @@
 
 * Quick key reference
 
-  (See also [[http://geiser.nongnu.org/geiser_5.html#Cheat-sheet][the user's manual cheat sheet]]')
+  (See also [[https://geiser.nongnu.org/Cheat-sheet.html#Cheat-sheet][the user's manual cheat sheet]]')
 
 ** In Scheme buffers:
 
@@ -214,7 +214,7 @@
   To see what elisp functions one needs to implement, just execute the
   command `M-x geiser-implementation-help` inside emacs with a recent
   version of geiser installed. And then take a look at, say,
-  [[https://gitlab.com/emacs-geiser/guile/-/blob/master/geiser-guile.el][geiser-guile.el]] for examples of how those functions are implemented
+  [[https://codeberg.org/geiser/guile/src/branch/master/geiser-guile.el][geiser-guile.el]] for examples of how those functions are implemented
   for concrete schemes.
 
   Not all schemes can provide introspective information to implement all
