@@ -382,12 +382,12 @@ some related tips.
 Instead of using the generic @command{geiser} command, you can directly
 start your Scheme of choice using any of the following commands:
 @itemize @bullet
-@item @command{run-racket}
-@item @command{run-guile}
-@item @command{run-chicken}
-@item @command{run-mit}
-@item @command{run-chibi}
-@item @command{run-chez}
+@item @command{geiser-racket}
+@item @command{geiser-guile}
+@item @command{geiser-chicken}
+@item @command{geiser-mit}
+@item @command{geiser-chibi}
+@item @command{geiser-chez}
 @end itemize
   @anchor{active-implementations} In addition, the
 variable @code{geiser-active-implementations} contains a list of those

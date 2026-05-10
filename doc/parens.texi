@@ -99,7 +99,7 @@ for you to first call @code{geiser}
 (or @ref{choosing-impl,,one of its variants}),
 @end ifhtml
 @ifnothtml
-(or one of its variants, e.g. @code{run-guile}),
+(or one of its variants, e.g. @code{geiser-guile}),
 @end ifnothtml
 and then open some Scheme files;
 but there's nothing wrong in first opening a couple Scheme buffers and
