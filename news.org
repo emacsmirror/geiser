@@ -1,4 +1,9 @@
-* Version 0.33 (May 3, 2025)
+* Version 0.33.1 (May 23, 2026)
+
+  - Fix: no evaluations sent to REPLs that are waiting for input (e.g.,
+    because a call to =read=).
+
+* Version 0.33 (May 3, 2026)
 
   - Project migrated to codeberg.org: https://codeberg.org/geiser
   - New geiser-repl-classify-output-p flag that enables classification of REPL
