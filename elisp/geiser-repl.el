@@ -586,12 +586,13 @@ to standard output face."
                               geiser-repl--last-output-end)))
 
 (defun geiser-repl--matches-prompt-p (txt)
-  (or (string-match-p
-       (geiser-con--connection-prompt geiser-repl--connection)
-       txt)
-      (string-match-p
-       (geiser-con--connection-debug-prompt geiser-repl--connection)
-       txt)))
+  (cond
+   ((not (stringp txt)) nil) 
+   ((string-empty-p txt) nil)
+   (t (or (let ((prompt1 (geiser-con--connection-prompt geiser-repl--connection)))
+            (and prompt1 (string-match-p prompt1 txt)))
+          (let ((prompt2 (geiser-con--connection-debug-prompt geiser-repl--connection)))
+            (and prompt2 (string-match-p prompt2 txt)))))))
 
 (defun geiser-repl--output-filter (txt)
   (when (geiser-repl--find-output-region) (geiser-repl--treat-output-region))
