@@ -585,10 +585,10 @@ to standard output face."
     (geiser--font-lock-ensure geiser-repl--last-output-start
                               geiser-repl--last-output-end)))
 
-(defun geiser-repl--prompt-rx ()
+(defsubst geiser-repl--prompt-rx ()
   (or (geiser-con--connection-prompt geiser-repl--connection) "\\b\\B"))
 
-(defun geiser-repl--debug-prompt-rx ()
+(defsubst geiser-repl--debug-prompt-rx ()
   (or (geiser-con--connection-debug-prompt geiser-repl--connection) "\\b\\B"))
 
 (defun geiser-repl--matches-prompt-p (txt)
