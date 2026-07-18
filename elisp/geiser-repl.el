@@ -585,13 +585,16 @@ to standard output face."
     (geiser--font-lock-ensure geiser-repl--last-output-start
                               geiser-repl--last-output-end)))
 
+(defun geiser-repl--prompt-rx ()
+  (or (geiser-con--connection-prompt geiser-repl--connection) "\\b\\B"))
+
+(defun geiser-repl--debug-prompt-rx ()
+  (or (geiser-con--connection-debug-prompt geiser-repl--connection) "\\b\\B"))
+
 (defun geiser-repl--matches-prompt-p (txt)
   (and (stringp txt)
-       (not (string-empty-p txt))
-       (or (let ((p (geiser-con--connection-prompt geiser-repl--connection)))
-             (and p (string-match-p p txt)))
-           (let ((p (geiser-con--connection-debug-prompt geiser-repl--connection)))
-             (and p (string-match-p p txt))))))
+       (or (string-match-p (geiser-repl--prompt-rx) txt)
+           (string-match-p (geiser-repl--debug-prompt-rx) txt))))
 
 (defun geiser-repl--output-filter (txt)
   (when (geiser-repl--find-output-region) (geiser-repl--treat-output-region))
